@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { generateKeyPairSync } from "node:crypto";
+import { createPublicKey, generateKeyPairSync, sign as cryptoSign } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import {
   mkdtempSync, mkdirSync, readFileSync, writeFileSync,
@@ -28,6 +28,20 @@ function keys() {
     publicKeyEncoding: { type: "spki", format: "pem" },
     privateKeyEncoding: { type: "pkcs8", format: "pem" },
   });
+}
+
+function resign(record, hashField, privateKeyPem) {
+  const body = structuredClone(record);
+  delete body[hashField];
+  body.signature = null;
+  const hash = contributionDigest(body);
+  const publicKeyPem = createPublicKey(privateKeyPem)
+    .export({ type: "spki", format: "pem" }).toString();
+  return { ...body, [hashField]: hash, signature: {
+    algorithm: "Ed25519", keyId: contributionDigest(createPublicKey(publicKeyPem)
+      .export({ type: "spki", format: "der" })), publicKeyPem,
+    value: cryptoSign(null, Buffer.from(hash), privateKeyPem).toString("base64"),
+  } };
 }
 
 function sealedRun() {
@@ -159,6 +173,14 @@ test("challenge-bound device envelope is quarantined, deduplicated and signed", 
     { now: "2026-08-19T00:03:02.000Z" });
   assert.equal(duplicate.appended, false);
   assert.equal(duplicate.duplicate, true);
+  assert.equal(duplicate.receipt.envelopeHash, duplicateEnvelope.envelopeHash,
+    "the idempotent receipt is bound to the current signed envelope");
+  assert.equal(duplicate.receipt.contributionRecordHash,
+    result.receipt.contributionRecordHash);
+  assert.notEqual(duplicate.receipt.receiptHash, result.receipt.receiptHash);
+  assert.equal(duplicate.canonicalReceiptHash, result.receipt.receiptHash);
+  assert.equal(verifyContributionReceipt(duplicate.receipt,
+    { serverPublicKeyPem: fixture.serverKeys.publicKey }).ok, true);
   assert.equal(fixture.registry.verify().ok, true);
 });
 
@@ -183,6 +205,82 @@ test("send vertical slice pins the server key and persists a verified receipt", 
   const persisted = readFileSync(path.join(fixture.deviceRoot, "receipts",
     `${result.receipt.receiptHash.slice("sha256:".length)}.json`), "utf8");
   assert.equal(JSON.parse(persisted).receiptHash, result.receipt.receiptHash);
+});
+
+test("repeating share send is a verifiable idempotent success, not a receipt mismatch", async () => {
+  const fixture = setup();
+  let cycle = 0;
+  const times = [
+    ["2026-08-19T00:07:00.000Z", "2026-08-19T00:07:02.000Z"],
+    ["2026-08-19T00:08:00.000Z", "2026-08-19T00:08:02.000Z"],
+  ];
+  const fakeFetch = async (url, init) => {
+    const input = JSON.parse(init.body);
+    if (url.endsWith("/challenge")) {
+      return { ok: true, status: 200, json: async () => fixture.registry.issueChallenge({
+        ...input, now: times[cycle][0],
+      }) };
+    }
+    const result = fixture.registry.ingest(input, { now: times[cycle][1] });
+    cycle += 1;
+    return { ok: true, status: 200, json: async () => result };
+  };
+  const first = await sendRunContribution({ runDirectory: fixture.store.directory,
+    shareDirectory: fixture.deviceRoot, fetchImpl: fakeFetch,
+    now: "2026-08-19T00:07:01.000Z" });
+  const second = await sendRunContribution({ runDirectory: fixture.store.directory,
+    shareDirectory: fixture.deviceRoot, fetchImpl: fakeFetch,
+    now: "2026-08-19T00:08:01.000Z" });
+  assert.equal(first.duplicate, false);
+  assert.equal(second.duplicate, true);
+  assert.equal(second.receipt.envelopeHash, second.envelopeHash);
+  assert.equal(second.contributionRecordHash, first.contributionRecordHash);
+  assert.notEqual(second.receipt.receiptHash, first.receipt.receiptHash);
+  assert.equal(fixture.registry.verify().count, 1);
+});
+
+test("known schema fields cannot smuggle arbitrary payloads after rehashing and resigning", () => {
+  const fixture = setup();
+  const preview = previewRunContribution(fixture.store.directory);
+  const privateKeyPem = readFileSync(path.join(fixture.deviceRoot, "device-private.pem"), "utf8");
+  for (const mutate of [
+    (record) => { record.source.observedAt = "PRIVATE_PROMPT_CAN_HITCHHIKE"; },
+    (record) => { record.source.eventCount = "PRIVATE_TRANSCRIPT_CAN_HITCHHIKE"; },
+    (record) => { record.modelFeatures.features.costUsd = "PRIVATE_COMMAND_OUTPUT"; },
+    (record) => { record.learningLabels.causalAttributionClass = "PRIVATE_SOURCE_CODE"; },
+  ]) {
+    const record = structuredClone(preview.contributionRecord);
+    delete record.recordHash;
+    mutate(record);
+    record.recordHash = contributionDigest(record);
+    assert.equal(verifyContributionRecord(record).ok, false);
+  }
+
+  const attestation = createAttestationV2({ runDirectories: [fixture.store.directory],
+    privateKeyPem });
+  const challenge = fixture.registry.issueChallenge({
+    deviceKeyId: fixture.share.config.deviceKeyId,
+    experienceRecordHash: preview.contributionRecord.recordHash,
+    now: "2026-08-19T00:09:00.000Z",
+  });
+  const poisonedAttestation = structuredClone(attestation);
+  poisonedAttestation.included[0].runId = "PRIVATE_RUN_PAYLOAD";
+  const signedPoisonedAttestation = resign(poisonedAttestation, "attestationHash", privateKeyPem);
+  assert.throws(() => createContributionEnvelope({
+    contributionRecord: preview.contributionRecord, attestation: signedPoisonedAttestation,
+    consent: fixture.share.consent, challenge, devicePrivateKeyPem: privateKeyPem,
+    createdAt: "2026-08-19T00:09:01.000Z",
+  }), /ATTESTATION_BINDING_MISMATCH/);
+
+  const envelope = createContributionEnvelope({ contributionRecord: preview.contributionRecord,
+    attestation, consent: fixture.share.consent, challenge,
+    devicePrivateKeyPem: privateKeyPem, createdAt: "2026-08-19T00:09:01.000Z" });
+  const poisonedEnvelope = structuredClone(envelope);
+  poisonedEnvelope.submissionId = "PRIVATE_PROMPT_IN_SUBMISSION_ID";
+  const signedPoisonedEnvelope = resign(poisonedEnvelope, "envelopeHash", privateKeyPem);
+  assert.equal(verifyContributionEnvelope(signedPoisonedEnvelope, { challenge,
+    serverPublicKeyPem: fixture.serverKeys.publicKey,
+    expectedAudience: fixture.endpoint, now: "2026-08-19T00:09:01.000Z" }).ok, false);
 });
 
 test("signed revocation acknowledgment binds erasure without claiming settlement authority", async () => {

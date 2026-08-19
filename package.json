@@ -1,18 +1,18 @@
 {
   "name": "outsider-guard",
-  "version": "1.3.96",
+  "version": "1.3.97",
   "private": false,
   "description": "Transparent attached lifecycle controller and causal-proof supervisor for Claude Code and Cowork",
   "license": "Apache-2.0",
   "author": "Eric",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eric20050115/outsider.git"
+    "url": "git+https://github.com/EZ-VAI/outsider.git"
   },
   "bugs": {
-    "url": "https://github.com/eric20050115/outsider/issues"
+    "url": "https://github.com/EZ-VAI/outsider/issues"
   },
-  "homepage": "https://github.com/eric20050115/outsider#readme",
+  "homepage": "https://github.com/EZ-VAI/outsider#readme",
   "keywords": [
     "ai-agents",
     "claude-code",

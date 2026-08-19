@@ -3,7 +3,7 @@
 ## Install once, keep using Claude normally
 
 ```bash
-npm install -g ./outsider-guard-1.3.96.tgz
+npm install -g ./outsider-guard-1.3.97.tgz
 outsider install --scope user
 outsider doctor
 ```
@@ -16,7 +16,7 @@ User scope writes `~/.claude/settings.json` and affects every Claude project on 
 the Claude/Cowork session you currently depend on. For a one-repository trial, run `outsider install --scope project` from that repository;
 it writes only `.claude/settings.json` there.
 
-For Cowork, upload `outsider-guard-1.3.96-claude.plugin.zip` once in Desktop Plugins/Customize. The plugin is a thin authenticated client
+For Cowork, upload `outsider-guard-1.3.97-claude.plugin.zip` once in Desktop Plugins/Customize. The plugin is a thin authenticated client
 to the explicit system helper and never launches a misleading supervisor inside the hosted sandbox. Ordinary Claude Chat does not
 execute plugin hooks and is therefore not a controlled surface.
 

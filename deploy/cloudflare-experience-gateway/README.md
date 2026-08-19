@@ -9,12 +9,13 @@ single-run ATTEST v2, exact privacy projection, consent, and audience before it
 stores anything. Record hashes are unique, nonces are single-use, receipts are
 server-signed, and every accepted record is appended to a hash chain.
 
-Only `SERVER_PRIVATE_KEY_PEM` is secret. Never place it in this directory or in
-`wrangler.jsonc`:
+`SERVER_PRIVATE_KEY_PEM` and `ADMIN_BEARER_TOKEN` are secrets. Never place
+either in this directory or in `wrangler.jsonc`:
 
 ```bash
 cd deploy/cloudflare-experience-gateway
 npx wrangler@4.124.0 secret put SERVER_PRIVATE_KEY_PEM
+npx wrangler@4.124.0 secret put ADMIN_BEARER_TOKEN
 npx wrangler@4.124.0 deploy
 ```
 
@@ -49,3 +50,15 @@ scheduled trigger.
 `ACCEPTED_INSTRUMENT_HASHES` must only contain audited release instrument
 hashes. Empty means every submission remains L1 unrecognized. Recognition is
 still quarantine-only and never authorizes pricing, guarantees, or settlement.
+
+The operator may export only the verified privacy projection, signed receipt,
+and registry metadata with the admin secret:
+
+```bash
+curl -H "Authorization: Bearer $ADMIN_BEARER_TOKEN" \
+  "https://YOUR-WORKER.workers.dev/internal/quarantine/export?limit=100"
+```
+
+The response is paginated and explicitly marks every item as quarantined. It
+excludes expired or revoked payloads and never performs automatic training or
+evidence promotion.

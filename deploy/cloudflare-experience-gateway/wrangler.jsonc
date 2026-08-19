@@ -7,7 +7,7 @@
   "workers_dev": true,
   "observability": { "enabled": true },
   "triggers": { "crons": ["17 3 * * *"] },
-  "secrets": { "required": ["SERVER_PRIVATE_KEY_PEM"] },
+  "secrets": { "required": ["SERVER_PRIVATE_KEY_PEM", "ADMIN_BEARER_TOKEN"] },
   "vars": {
     "REGISTRY_ID": "outsider-public-contributions-v1",
     "ACCEPTED_INSTRUMENT_HASHES": ""

@@ -10,7 +10,7 @@ body:
     id: version
     attributes:
       label: Outsider version
-      placeholder: 1.3.96
+      placeholder: 1.3.97
     validations:
       required: true
   - type: dropdown

@@ -1,10 +1,10 @@
 import { DurableObject } from "cloudflare:workers";
-import { createPrivateKey, createPublicKey } from "node:crypto";
+import { createHash, createPrivateKey, createPublicKey, timingSafeEqual } from "node:crypto";
 import {
   CONTRIBUTION_POLICY_VERSION, CONTRIBUTION_PURPOSES,
   contributionDigest, contributionKeyId, createContributionChallenge,
   createContributionReceipt, createContributionRevocationReceipt,
-  verifyContributionEnvelope, verifyContributionRevocation,
+  verifyContributionEnvelope, verifyContributionReceipt, verifyContributionRevocation,
 } from "../../../src/outsider-experience-contribution.js";
 
 const HASH = /^sha256:[a-f0-9]{64}$/;
@@ -71,8 +71,50 @@ function errorResponse(error) {
   const status = code === "CONTRIBUTION_ROUTE_NOT_FOUND" ? 404
     : code === "CONTRIBUTION_BODY_TOO_LARGE" ? 413
       : code.includes("RATE_LIMIT") ? 429
-        : code.includes("REVOKED") || code.includes("ALREADY_USED") ? 409 : 400;
+        : code.includes("REVOKED") || code.includes("ALREADY_USED") ? 409
+          : code.includes("STORED_ARTIFACT") ? 500 : 400;
   return json(status, { ok: false, error: code });
+}
+
+function adminAuthorized(request, env) {
+  const expected = String(env.ADMIN_BEARER_TOKEN ?? "");
+  if (expected.length < 32 || expected.length > 512) return false;
+  const header = request.headers.get("authorization") ?? "";
+  const presented = header.startsWith("Bearer ") ? header.slice(7) : "";
+  const left = createHash("sha256").update(presented).digest();
+  const right = createHash("sha256").update(expected).digest();
+  return timingSafeEqual(left, right) && presented.length === expected.length;
+}
+
+function encodeCursor(row) {
+  return Buffer.from(JSON.stringify({ ordinal: Number(row.ordinal), entryHash: row.entry_hash }))
+    .toString("base64url");
+}
+
+function decodeCursor(value) {
+  if (value == null) return { ordinal: 0, entryHash: null };
+  if (!/^[A-Za-z0-9_-]{8,256}$/.test(value)) throw new Error("CONTRIBUTION_EXPORT_CURSOR_INVALID");
+  let parsed;
+  try { parsed = JSON.parse(Buffer.from(value, "base64url").toString("utf8")); }
+  catch { throw new Error("CONTRIBUTION_EXPORT_CURSOR_INVALID"); }
+  if (!exactKeys(parsed, ["ordinal", "entryHash"])
+    || !Number.isSafeInteger(parsed.ordinal) || parsed.ordinal < 1
+    || !HASH.test(String(parsed.entryHash ?? ""))
+    || encodeCursor({ ordinal: parsed.ordinal, entry_hash: parsed.entryHash }) !== value) {
+    throw new Error("CONTRIBUTION_EXPORT_CURSOR_INVALID");
+  }
+  return parsed;
+}
+
+function exportPagination(url) {
+  const keys = [...url.searchParams.keys()];
+  if (keys.some((key) => !["limit", "cursor"].includes(key))
+    || new Set(keys).size !== keys.length) throw new Error("CONTRIBUTION_EXPORT_QUERY_INVALID");
+  const rawLimit = url.searchParams.get("limit") ?? "50";
+  if (!/^[1-9][0-9]{0,2}$/.test(rawLimit) || Number(rawLimit) > 100) {
+    throw new Error("CONTRIBUTION_EXPORT_LIMIT_INVALID");
+  }
+  return { limit: Number(rawLimit), cursor: decodeCursor(url.searchParams.get("cursor")) };
 }
 
 function receiptReasons(recognized) {
@@ -213,16 +255,24 @@ export class ExperienceRegistry extends DurableObject {
       expectedAudience: publicAudience(request, this.env), now: receivedAt });
     if (!checked.ok) throw new Error(`CONTRIBUTION_INGRESS_INVALID:${checked.error}`);
     const existing = one(this.sql,
-      "SELECT receipt_json, purged_at FROM contributions WHERE record_hash = ?",
+      `SELECT receipt_json, purged_at, evidence_level, retention_until
+       FROM contributions WHERE record_hash = ?`,
       envelope.contributionRecord.recordHash);
     if (existing) {
       if (existing.receipt_json == null) {
         throw new Error("CONTRIBUTION_DUPLICATE_PAYLOAD_PURGED");
       }
-      this.sql.exec(`UPDATE challenges SET used_at = ?, envelope_hash = ?
+      const used = this.sql.exec(`UPDATE challenges SET used_at = ?, envelope_hash = ?
         WHERE nonce = ? AND used_at IS NULL`, receivedAt, envelope.envelopeHash, nonce);
+      if (used.rowsWritten !== 1) throw new Error("CONTRIBUTION_CHALLENGE_ALREADY_USED");
+      const original = JSON.parse(existing.receipt_json);
+      const receipt = createContributionReceipt({ envelope,
+        evidenceLevel: existing.evidence_level, reasons: original.reasonCodes,
+        receivedAt, retentionUntil: existing.retention_until,
+        privateKeyPem: this.env.SERVER_PRIVATE_KEY_PEM,
+        registryId: this.env.REGISTRY_ID });
       return json(200, { appended: false, duplicate: true,
-        receipt: JSON.parse(existing.receipt_json) });
+        receipt, canonicalReceiptHash: original.receiptHash });
     }
     const instrumentHash = envelope.contributionRecord.instrument.controllerImplementationHash;
     const recognized = acceptedInstrumentHashes(this.env).has(instrumentHash);
@@ -315,6 +365,58 @@ export class ExperienceRegistry extends DurableObject {
     return { ok: true, purged: purged.rowsWritten, at: now };
   }
 
+  exportQuarantine(request) {
+    const url = new URL(request.url);
+    const { limit, cursor } = exportPagination(url);
+    if (cursor.entryHash != null) {
+      const anchor = one(this.sql,
+        "SELECT entry_hash FROM registry_entries WHERE ordinal = ?", cursor.ordinal);
+      if (anchor?.entry_hash !== cursor.entryHash) {
+        throw new Error("CONTRIBUTION_EXPORT_CURSOR_INVALID");
+      }
+    }
+    const generatedAt = new Date().toISOString();
+    const rows = this.sql.exec(`SELECT r.ordinal, r.entry_hash, r.previous_entry_hash,
+        r.record_hash, r.envelope_hash, r.receipt_hash, r.contributor_key_id,
+        r.consent_hash, r.received_at, r.evidence_level, r.disposition,
+        c.retention_until, c.envelope_json, c.receipt_json
+      FROM registry_entries r JOIN contributions c ON c.record_hash = r.record_hash
+      WHERE r.ordinal > ? AND c.purged_at IS NULL AND c.retention_until > ?
+        AND c.envelope_json IS NOT NULL AND c.receipt_json IS NOT NULL
+      ORDER BY r.ordinal ASC LIMIT ?`, cursor.ordinal, generatedAt, limit + 1).toArray();
+    const page = rows.slice(0, limit);
+    const publicKeyPem = serverPublicKey(this.env.SERVER_PRIVATE_KEY_PEM);
+    const items = page.map((row) => {
+      const envelope = JSON.parse(row.envelope_json);
+      const receipt = JSON.parse(row.receipt_json);
+      const envelopeCheck = verifyContributionEnvelope(envelope, {
+        expectedAudience: publicAudience(request, this.env), now: envelope.createdAt,
+      });
+      const receiptCheck = verifyContributionReceipt(receipt, { serverPublicKeyPem: publicKeyPem });
+      if (!envelopeCheck.ok || !receiptCheck.ok || row.disposition !== "QUARANTINED"
+        || envelope.contributionRecord.recordHash !== row.record_hash
+        || envelope.envelopeHash !== row.envelope_hash || receipt.receiptHash !== row.receipt_hash) {
+        throw new Error("CONTRIBUTION_EXPORT_STORED_ARTIFACT_INVALID");
+      }
+      return {
+        contributionRecord: envelope.contributionRecord,
+        receipt,
+        registry: { ordinal: Number(row.ordinal), entryHash: row.entry_hash,
+          previousEntryHash: row.previous_entry_hash, recordHash: row.record_hash,
+          envelopeHash: row.envelope_hash, receiptHash: row.receipt_hash,
+          contributorKeyId: row.contributor_key_id, consentHash: row.consent_hash,
+          receivedAt: row.received_at, evidenceLevel: row.evidence_level,
+          disposition: row.disposition },
+      };
+    });
+    return json(200, { schema: "outsider/quarantine-export/v1",
+      registryId: this.env.REGISTRY_ID, generatedAt, count: items.length, items,
+      nextCursor: rows.length > limit ? encodeCursor(page.at(-1)) : null,
+      useBoundary: { disposition: "QUARANTINED", automaticTraining: false,
+        permitsCuratePromotion: false, permitsPricing: false,
+        permitsGuarantee: false, permitsSettlement: false } });
+  }
+
   async fetch(request) {
     try {
       const url = new URL(request.url);
@@ -337,6 +439,9 @@ export class ExperienceRegistry extends DurableObject {
       if (request.method === "POST" && url.pathname === "/internal/purge") {
         return json(200, this.purgeExpired());
       }
+      if (request.method === "GET" && url.pathname === "/internal/quarantine/export") {
+        return this.exportQuarantine(request);
+      }
       throw new Error("CONTRIBUTION_ROUTE_NOT_FOUND");
     } catch (error) { return errorResponse(error); }
   }
@@ -344,6 +449,17 @@ export class ExperienceRegistry extends DurableObject {
 
 async function route(request, env) {
   const url = new URL(request.url);
+  if (url.pathname === "/internal/quarantine/export") {
+    if (request.method !== "GET") return errorResponse(new Error("CONTRIBUTION_ROUTE_NOT_FOUND"));
+    if (!adminAuthorized(request, env)) {
+      return json(401, { ok: false, error: "CONTRIBUTION_ADMIN_UNAUTHORIZED" },
+        { "www-authenticate": "Bearer" });
+    }
+    const id = env.REGISTRY.idFromName("global-v1");
+    const headers = new Headers(request.headers);
+    headers.delete("authorization");
+    return env.REGISTRY.get(id).fetch(new Request(request, { headers }));
+  }
   const allowed = new Set(["/healthz", "/v1/contributions/info",
     "/v1/contributions/challenge", "/v1/contributions",
     "/v1/contributions/revocations"]);

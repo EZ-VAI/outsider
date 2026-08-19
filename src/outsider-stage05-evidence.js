@@ -22,7 +22,8 @@ const generatedNames = new Set([
   "r4-recovery-result.json",
 ]);
 
-const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const packageRoot = import.meta.url
+  ? path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..") : ".";
 
 function digest(value) {
   const bytes = Buffer.isBuffer(value) ? value

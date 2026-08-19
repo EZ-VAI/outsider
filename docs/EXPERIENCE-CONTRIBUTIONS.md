@@ -23,15 +23,17 @@ classes, aggregate host-capacity observations and bounded trajectory features.
 
 ## Client workflow
 
-Obtain the contribution service's HTTPS endpoint and Ed25519 public key from
-the operator. Then:
+For the public 1.3.97 beta, use
+`https://outsider-experience-gateway.outsider-guard.workers.dev` and the pinned
+Ed25519 key in
+`deploy/cloudflare-experience-gateway/server-public-key.pem`. Then:
 
 ```bash
 outsider share preview <run-id|run-directory>
 
 outsider share enable \
-  --endpoint https://contributions.example.com \
-  --server-public-key ./server-public.pem \
+  --endpoint https://outsider-experience-gateway.outsider-guard.workers.dev \
+  --server-public-key ./deploy/cloudflare-experience-gateway/server-public-key.pem \
   --purposes stage05-reliability,supervisor-research,routing-research \
   --retention-days 365 \
   --accept-policy

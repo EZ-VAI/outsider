@@ -1,7 +1,7 @@
 {
   "name": "outsider-guard",
   "description": "Outsider Stage 0.5 —— 安装后透明附着 Claude Code/Cowork，在同步边界独立监督、纠偏并验收长任务。",
-  "version": "1.3.95",
+  "version": "1.3.97",
   "author": {
     "name": "Outsider"
   }

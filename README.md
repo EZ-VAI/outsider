@@ -1,36 +1,92 @@
 # Outsider Stage 0.5
 
-> **Open-source beta.** Outsider controls only the Claude Code and Cowork
-> surfaces that pass its runtime conformance checks. It is not yet a stable
-> release, an OS sandbox, an insurer, or a guarantee of universally correct
-> model behavior.
+> **Open-source beta.** Outsider controls only Claude Code and Cowork surfaces
+> that pass its runtime conformance checks. It is not an OS sandbox and cannot
+> guarantee that a model is universally correct.
 
-[Releases](https://github.com/eric20050115/outsider/releases) ·
+[Releases](https://github.com/EZ-VAI/outsider/releases) ·
 [Security](SECURITY.md) · [Privacy](PRIVACY.md) ·
 [Contributing](CONTRIBUTING.md)
 
-Outsider 是本地 work agent 的透明自治监工。安装后，用户继续在原来的 Claude Code 终端、Claude Desktop 的 Code
-标签页或 Cowork 里工作；不需要把日常习惯改成 `outsider run`，也不需要每隔半小时回来点确认。
+Outsider 是一个安装在 Claude 工作流背后的本地 controller。你继续使用原来的 Claude Code、Claude Desktop Code
+标签页或 Cowork；Outsider 在后台保存任务标准、观察长任务和多 Agent 轨迹、发现偏航、送达纠正，并在结束前独立验证结果。
 
-它要解决的不是单条命令是否危险，而是长任务里的慢性偏航：架构逐步做偏、无关分支和 token 浪费、打地鼠式修错、
-遗忘工程核心，以及“测试绿了但发动机是错的”这种 literal completion。
+它重点处理单条安全检查很难发现的长程问题：任务逐步做偏、重复消耗、遗漏约束、子 Agent 之间冲突，以及“公开测试通过、
+实际实现仍然错误”的假绿。正常路径不会增加确认框；需要干预或无法证明完成时，它才会暂停并明确说明原因。
+
+## 能做什么
+
+- 逐字保存用户目标，并在第一次工具动作前冻结本次运行的 operator contract；
+- 自动发现仓库自己的验收命令，也支持 `.outsider.json` 显式配置；
+- 按会话隔离记录工具调用、测试结果、变更、子 Agent 任务图和 controller generation；
+- 周期性做独立语义检查，在同步 hook 边界暂停偏航 worker 并送达最小纠正计划；
+- 在 Stop 前同时检查机械验收、语义结果和反方审计；
+- 对 controller、sidecar 或会话异常进行 fail-closed 恢复，而不是静默变成 open loop；
+- 为每个完成运行生成 hash-chained events、evidence manifest 和可独立验证的终态。
+
+Outsider 不替 Claude 执行模型生成的命令，也不会把“最终结果正确”自动冒充成“Outsider 导致了修复”。证据会区分安全交付、
+正确但无法归因的交付、在控制边界被阻断的错误、保守停机和未完成运行。
+
+## 支持面
+
+| Surface | 当前支持 |
+| --- | --- |
+| Claude Code CLI（macOS / Linux） | 支持；安装 hook 后透明工作 |
+| Claude Desktop Code 标签页 | 支持；使用同一套原生 Claude Code hooks |
+| Claude Desktop Cowork（macOS） | 支持；需要 Release 中的 plugin ZIP 和本机 helper |
+| 远程 Cowork | 仅在实际 hook/helper 握手并留下 conformance 记录后支持 |
+| 普通 Claude Chat | 不支持；该 surface 不运行 hooks |
+| Codex、Trae、DeepSeek Harness | 不在本产品的受控闭环承诺内 |
+
+`outsider doctor` 会分别报告“hook 已安装”“Cowork plugin/helper 已就绪”和“该 surface 在真实运行中触发过”，不会只因插件可见
+就声称监督正在运行。
 
 ## 安装
 
-推荐从 [GitHub Releases](https://github.com/eric20050115/outsider/releases/latest)
-下载最新的 `outsider-guard-<version>.tgz`，先按同一 Release 附带的
-`SHA256SUMS` 校验，再安装：
+需要 Node.js 20 或更高版本。从 [最新 GitHub Release](https://github.com/EZ-VAI/outsider/releases/latest) 下载：
+
+- `outsider-guard-1.3.97.tgz`；
+- `SHA256SUMS`；
+- 若使用 Cowork，再下载 `outsider-guard-1.3.97-claude.plugin.zip`。
+
+先核对下载文件的 SHA-256，再从一个**不依赖当前 Claude/Cowork 会话**的独立终端安装：
 
 ```bash
-npm install -g ./outsider-guard-<version>.tgz
+shasum -a 256 outsider-guard-1.3.97.tgz
+npm install -g ./outsider-guard-1.3.97.tgz
 outsider doctor
 outsider install --scope user
 ```
 
-也可以从源码安装并先运行完整的确定性验证：
+`--scope user` 会明确写入 `~/.claude/settings.json`，并对本机所有 Claude 项目生效。安装完成后关闭旧会话并新开一个会话。
+
+如果 npm 全局目录报 `EACCES`，请使用用户可写的 npm prefix，不要用 `sudo` 安装：
 
 ```bash
-git clone https://github.com/eric20050115/outsider.git
+npm install -g --prefix "$HOME/.local" ./outsider-guard-1.3.97.tgz
+export PATH="$HOME/.local/bin:$PATH"
+outsider doctor
+outsider install --scope user
+```
+
+将 `~/.local/bin` 持久加入 shell 的 `PATH`。若只想控制一个仓库，可在该仓库内安装 project scope：
+
+```bash
+cd your-project
+outsider install --scope project
+```
+
+它只写当前仓库的 `.claude/settings.json`。之后无需使用新的工作入口：
+
+```bash
+cd your-project
+claude
+```
+
+也可以从源码验证并安装：
+
+```bash
+git clone https://github.com/EZ-VAI/outsider.git
 cd outsider
 npm ci
 npm test
@@ -39,94 +95,36 @@ npm install -g .
 outsider install --scope user
 ```
 
-`--scope user` 会明确写入 `~/.claude/settings.json`，对本机所有 Claude 项目生效。不要在正在依赖的 Claude/Cowork
-会话里执行安装；从独立终端安装，然后新开会话。若只想试一个仓库：
+## Claude Desktop / Cowork
 
-```bash
-cd your-project
-outsider install --scope project
-```
+Claude Desktop 的 Code 标签页使用原生 Claude Code hooks；完成上述安装后即可透明工作。
 
-这只写当前仓库的 `.claude/settings.json`，不会注入用户级 Claude settings。之后照常使用：
+Cowork 还需要两部分：
 
-```bash
-cd your-project
-claude
-```
+1. `outsider install --scope user` 注册本机 macOS helper；
+2. 在 Claude Desktop 的 plugin 管理界面上传同一 Release 的
+   `outsider-guard-1.3.97-claude.plugin.zip`，然后新建 Cowork 会话。
 
-## 用户看到的产品
+plugin 是经过认证的薄客户端，controller 状态由 sandbox 外的 helper 持有。如果远程 Cowork 无法访问本机 helper，Outsider 会把
+该会话标为 unsupported，而不是 fail-closed 拦死所有工具调用。
 
-健康路径里 Outsider 默默返回 allow，不增加确认框。只有确实发现偏航时，它才会在 Claude 已经提供的同步工具/Stop
-边界暂停当前 worker，独立诊断，送入具体纠正计划，再观察计划是否被执行。只有 repo 自己的机械验收和独立语义
-验收都通过，才会签成可交付终态；预算耗尽或证明失败会显式终止为红，不会伪称完成，也不会留下无人可恢复的 Stop 墙。
-
-`outsider run` 仍保留给 CI、显式无头任务和 release canary；它不再是普通用户的主入口。
-
-## Claude Desktop
-
-- **Desktop 的 Claude Code / Code 标签页**：与终端 Claude Code 共用原生 hook 配置；`outsider install` 后透明工作。
-- **Cowork**：`outsider install --scope user` 会显式注册一个用户级 macOS LaunchAgent；它在 Claude Hosted Plugin
-  sandbox 外持有独立 supervisor 身份。再从同一 GitHub Release 安装
-  `outsider-guard-<version>-claude.plugin.zip`，以后正常聊天即可。
-  插件只是经过认证的薄客户端，不会在读不到 Keychain 的 sandbox 内静默降级。hooks 只在 Cowork 运行，不在普通 Chat 运行。
-- **普通 Claude Chat**：Anthropic 当前不运行 plugin hooks，因此它不是可同步控制的 agent surface。Outsider 不会把
-  “插件可见”冒充成“监督正在运行”。
-- **远程 Cowork**：只有实际收到 SessionStart/UserPromptSubmit/PreToolUse/Stop 且留下 conformance 记录后才标为受控；
-  不能访问本地 hook/sidecar 的会话明确保持 unsupported。
-
-查看本机能力：
+安装后先检查：
 
 ```bash
 outsider doctor
 ```
 
-`doctor` 会把“插件已打包”“hook 已安装”和“这个 surface 真正触发过”分开报告。
+只有 `runtime seen` 或等价的真实 conformance 结果，才表示对应 surface 已经被实际观测到。
 
-## 真实运行演示
+## 合同与验收
 
-仓库内的 [Stage 0.5 demo](deploy/cloudflare-product-demo/) 回放一条经过隐私投影的、真实封存 Claude Agent Team
-canary。浏览器会重新计算公开证据 artifact 的哈希，并验证从暂停、诊断、纠正送达、行为改变到独立验收的有序因果链；
-它不会伪造一次在线 agent 执行，也不会把评测 canary 说成客户生产数据。公开部署地址以仓库 homepage 和最新
-GitHub Release 为准；本地可运行：
+Outsider 按以下顺序发现 repo-owned acceptance：
 
-```bash
-npm run demo:serve
-```
+1. `.outsider.json` 的 `acceptance`；
+2. `package.json` 的 `test`，其次是 `check` / `verify` / `ci`；
+3. Python、Cargo、Go 或 Make 的标准仓库入口。
 
-## 内核闭环
-
-```text
-用户原话
-  → UserPromptSubmit 冻结逐字 operator ledger 与版本链
-  → 第一个工具边界在动作执行前逐字封印 operator contract（不串行调用 LLM 编译器）
-  → 自动发现并在 t=0 封存 repo-owned acceptance
-  → lazy sidecar 按 session 隔离 controller
-  → Pre/PostToolUse 记录主 agent、子 agent、diff、test exit、token/轨迹
-  → 周期性独立语义巡检（不是等机械 detector 报警）
-  → 偏航时在同步安全边界暂停
-  → fresh supervisor 诊断根因；controller 将其收缩为最小 correction authority
-  → 只审计并送达独立语义缺口、修复步骤、受保护文件哈希和闭集动作；散文遥测没有控制权
-  → authority hash 绑定 audit→delivery→observed→effect→resolved；controller 不执行模型生成命令
-  → Stop 时机械验收 + 独立语义验收 + PASS 反方审计
-  → 因果链和 evidence manifest 完整后才结束
-```
-
-主机拥有 Claude 进程，Outsider 拥有控制边界。这避免强迫用户换入口，同时仍能真正暂停、指导、恢复和验收。
-hook 只是短命 RPC client；唯一可写监管状态的是带租约、可恢复的 controller generation。
-
-## 自动合同与验收
-
-每次用户提交 prompt，Outsider 都把原文写入 controller-owned ledger；第一个工具动作前以确定性、逐字无损合同直接封印，
-不再让多个 LLM 在 worker 开工前串行改写标准。普通无工具聊天不启动 controller。中途追加要求会 supersede 旧 run，以新 seal
-重开，不允许正在偏航的 worker 改写标准，也不会让上下文压缩抹掉合同。
-
-验收发现顺序：
-
-1. `.outsider.json` 的显式 `acceptance`；
-2. `package.json` 的 `test`（其次 `check` / `verify` / `ci`）；
-3. Python、Cargo、Go、Make 的仓库标准入口。
-
-示例：
+需要固定命令时，在仓库根目录添加：
 
 ```json
 {
@@ -134,130 +132,95 @@ hook 只是短命 RPC client；唯一可写监管状态的是带租约、可恢�
 }
 ```
 
-没有 repo-owned acceptance 时，Outsider 会诚实降为 observer-only，并把这个事实注入 Claude 上下文；它不会发明一条
-永远为绿的命令来冒充 Stage 0.5 证明。知识工作/Cowork 任务要获得完整保证，仍需提供可执行验收或后续的 artifact-specific
-acceptance provider。
+没有可执行验收时，Outsider 会明确降为 observer-only；它不会编造一条永远为绿的命令。知识工作或非代码任务若要获得完整终态
+证明，也需要提供可执行的 artifact-specific acceptance。
 
-## 多 agent 与恢复
+## 查看与验证运行
 
-- SubagentStart/SubagentStop 与 Agent Teams 的 TaskCreated/TaskCompleted/TeammateIdle 进入同一任务图；依赖环、未完成依赖、
-  文件冲突和无法唯一归属的任务都显式记录，不靠猜。
-- controller 进程 SIGKILL 后 watchdog 以同一合同 seal、supervisor identity、事件链和预算恢复；旧 generation 失去租约后
-  不能继续判卷。
-- attached daemon 被杀后，下一个正常 hook 会 lazy restart；session ledger 中的 run socket/token 用于重新连接仍存活的
-  controller。边界也死亡时，以同一 operator ledger 和当前 baseline 重建，绝不静默 open-loop。
-- 同一个宿主 session id 若出现在不同 cwd（常见于嵌套启动继承 `CLAUDE_CODE_SESSION_ID`），会记录 identity conflict
-  并 fail-closed；不会把两个仓库的轨迹静默合并。
-- PreCompact 先持久化合同/registry，避免长任务压缩后忘掉目标。
-
-## 证据与边界
-
-状态默认位于 `~/.outsider/attached/`（透明会话）和 `~/.outsider/runs/`（显式 run），目录 0700、证据 0600。
-每个完成 run 都有冻结合同、hash-chained events、私有 evidence manifest、hash-only public derivative 和 canonical projection。
-`run_finalized`/`gate_containment_finalized` 必须是事件流最后一条；controller lease 完全释放后 manifest 才能落盘，且 manifest
-一旦存在，event/state/lease 都进入只读状态。
-
-存证的终态分开计量：`SAFE_DELIVERY` 是交付正确且完整因果链成立；`VERIFIED_DELIVERY_UNATTRIBUTED` 是交付物已独立
-验证为正确、但 Outsider 不能证明自己导致了修复；`CONTROL_BOUNDARY_CONTAINMENT` 是构造性假绿攻击在同步闸门被拦住；
-`CONSERVATIVE_STOP` 是终止为红且未形成交付证明。后三者永远不冒充 Stage 0.5 闭环。`run_finalized` 后不再返回一个没有
-controller 可以恢复的 Stop block；终态会明确披露并幂等结束。
+透明会话状态默认保存在 `~/.outsider/attached/`，显式无头运行保存在 `~/.outsider/runs/`。目录权限为 `0700`，证据文件为
+`0600`。
 
 ```bash
 outsider runs
 outsider show <run-id>
 outsider verify /absolute/path/to/run
-outsider attest /path/run-a /path/run-b --out /path/attestation.json
 ```
 
-当前产品承诺只覆盖经过 hook conformance 的 Claude Code/Cowork surface。Codex、Trae 仍只有旧 observer/日志分析，
-不宣称 Stage 0.5 闭环。Desktop 普通 Chat、无法执行 hooks 的远程 Cowork 也不在保证内。
-
-## 贡献 Experience（默认关闭）
-
-安装 Outsider **不会**把源码、prompt、transcript 或运行数据上传给任何后台。完成 run 的隐私压缩 Experience 默认只留在
-本机。可选的贡献网关必须由用户显式开启，而且每次发送仍需单独执行 `share send`：
+`verify` 会重新检查事件哈希链、合同和验收绑定、终态顺序及 evidence manifest。`outsider run` 仍可用于 CI、显式无头任务和
+release canary，但不是普通用户的主入口：
 
 ```bash
-# 无网络、无同意变更：先看将要贡献的精确白名单记录
+outsider run "完成这个任务" --accept "npm test" --max-budget-usd 20
+```
+
+## 可选贡献运行数据
+
+**默认不上传。** 普通安装不会启用遥测，也不会发送源码、prompt、transcript、文件路径、命令输出、凭证或 raw event stream。
+运行结束后，隐私压缩的 Experience 仍只保存在本机。
+
+用户可以先离线查看将要贡献的精确白名单记录：
+
+```bash
 outsider share preview <run-id>
+```
 
-# 只有官方 Release 给出 HTTPS endpoint 与固定的服务器公钥后才能开启
+`preview` 不发起网络请求。若决定贡献，先从当前 tag 下载并校验网关的 Ed25519 公钥：
+
+```bash
+curl -fsSLo outsider-server-public-key.pem \
+  https://raw.githubusercontent.com/EZ-VAI/outsider/v1.3.97/deploy/cloudflare-experience-gateway/server-public-key.pem
+echo "f6989604603342300aa73c27f5ea27ad681eabf816a976bdfa527468664587cb  outsider-server-public-key.pem" \
+  | shasum -a 256 -c -
+```
+
+然后显式启用当前官方网关：
+
+```bash
 outsider share enable \
-  --endpoint https://contributions.example.com \
-  --server-public-key ./server-public.pem \
+  --endpoint https://outsider-experience-gateway.outsider-guard.workers.dev \
+  --server-public-key ./outsider-server-public-key.pem \
   --accept-policy
+```
 
+`enable` 只写本地同意记录，不会发送历史或未来运行。每一条运行仍必须单独发送：
+
+```bash
 outsider share send <run-id>
 outsider share status
-outsider share disable
-outsider share revoke --reason "user request"
 ```
 
-客户端只发送从已封印 `supervised-experience/v2` 再做一次严格白名单投影的贡献记录，以及绑定该记录的签名 ATTEST；
-不会发送 raw event stream。协议使用一次性服务器 challenge、设备 Ed25519 签名、Experience hash 去重和服务器签名回执。
-服务端接收后的唯一默认状态是 `QUARANTINED`，所有 PRICE/GUARANTEE/SETTLE 权限均为 false。匿名自报数据即使来自已知
-版本，也只是 L1/L2 研究证据；没有 owner confirmation、独立 adjudication 与真实 loss label，不能用于保险定价或赔付。
-
-当前仓库交付的是客户端、可验证协议和 quarantine-only 参考接收服务。只有在 GitHub Release 元数据中同时发布 HTTPS
-endpoint 和服务器公钥后，才应把某个网关视为官方入口；不要信任 issue、评论或聊天里单独出现的 endpoint。
-部署与数据治理边界见 [Experience Contribution Gateway](docs/EXPERIENCE-CONTRIBUTIONS.md)。
-
-## Global Outsider（研究预览）
-
-跨运营商层现在可以把 Codex → DeepSeek Harness → Claude → Trae 表示为同一张可验证图：协调方先签一份不带执行权的
-全局任务计划，冻结 owner、instrument、Way、依赖、scope 和各 surface 的声明上限；每个运营方只有签署自己的
-task-bound checkpoint 才算接受。全局 monitor 拒绝依赖未完成就开工、任务换 run、输入承诺替换和计划外 handoff；
-双边交接仍由发送方 offer 和接收方 receipt 两次独立签名组成。持久化 registry 拒绝 nonce 重放、逐条重验签并按
-tenant 隔离读取。全局节点不持有双方私钥，也不获得任何宿主的 root 权限。
-
-这不是把四个宿主虚构成同一种能力。Claude 的已验证闭环仍只在本地 Claude controller；DeepSeek 当前最多证明纠正已
-持久送达和有限行为效果；Codex/Trae 仍是 observer-only。全局监督记录只进入路由研究，不能进入因果效果、独立可靠性、
-损失、定价、担保或结算分母。plan-aware monitor 会另产出 routing/liveness-only 的监督记录，不会偷渡进本地因果效果模型。
-完整协议与 CLI 见 [Global Outsider federation](docs/GLOBAL-OUTSIDER.md)。
-
-## 构建与验证
+发送内容是已封印运行的严格 allowlist projection 和绑定签名；服务端返回可验证回执并按记录哈希去重。接收记录默认只进入
+`QUARANTINED`，不会因自报数据直接获得更高可信级别。停止未来发送或请求撤回：
 
 ```bash
+outsider share disable
+outsider share revoke --send --reason USER_REQUEST
+```
+
+完整字段、签名、保留和删除规则见 [Experience Contribution Gateway](docs/EXPERIENCE-CONTRIBUTIONS.md) 与
+[Privacy Policy](PRIVACY.md)。只信任同一 GitHub Release 同时发布的 endpoint 与服务器公钥，不要使用 issue、评论或聊天中单独出现的地址。
+
+## Demo 与本地验证
+
+[Stage 0.5 demo](deploy/cloudflare-product-demo/) 回放一条经过隐私投影的真实 Claude Agent Team canary。浏览器会重新计算公开
+artifact 哈希，并验证从暂停、诊断、纠正送达、行为改变到独立验收的有序证据链。它是固定证据回放，不伪装成在线 agent
+执行或客户生产数据。
+
+```bash
+npm run demo:serve
+
+# 完整确定性验证
 npm test
 npm run test:corpus
-npm run release:build
-npm run release:certify
-npm run release:metadata
 ```
 
-Field evidence is never imported by editing a status flag. After the exact
-artifact has completed a gate, pass its immutable result directory back to the
-certifier:
-
-```bash
-npm run release:certify -- \
-  --r1-run /absolute/r1 \
-  --r2-run /absolute/r2 \
-  --r3-run /absolute/r3 \
-  --r4-run /absolute/r4 \
-  --endurance-run /absolute/r5/run-directory
-```
-
-The certifier re-verifies every seal and rejects a different package version,
-artifact hash, runtime closure or evaluator hash. Partial evidence remains
-explicitly `NOT_RUN`/`FAIL`; an older package's PASS cannot be inherited.
-
-发布构建会：
-
-- 跑完整协议测试与 125 条 corpus；
-- 从干净解压的 npm artifact 再跑一遍；
-- 生成 npm 安装包与 Claude Desktop/Cowork plugin zip；
-- 验证正常 `outsider-hook` 能在没有 `outsider run` 环境变量时 lazy 启动认证 sidecar；
-- 把 Desktop plugin “已打包”和“已真机 conformance”分开写入 release certificate。
-
-公开发版的 artifact、隐私投影证书、checksum 和版本冻结规则见
+公开 demo 地址以仓库 homepage 和最新 Release 为准。构建、证书和 release artifact 的复现说明见
 [Public release procedure](docs/PUBLIC-RELEASE.md)。
 
-确定性 release-gate、四类假绿 fixture、多 agent recovery family 与真实 Claude canary 仍保留在 `scripts/`。这些数据只对
-命名 artifact、fixture 和环境成立；不会把单一错误族的 0 假绿外推成真实世界通用正确率。
+## 已知 beta 边界
 
-## Open-source beta 的等待边界
-
-Claude 的同步 hook timeout 是 900 秒，Outsider 自预算是 890 秒，保证 sidecar 卡住时能在宿主杀死 hook 前返回明确 deny。
-代价是一次 PreToolUse/Stop 最坏会可见地等待约 15 分钟。它不会静默放行，但 beta 用户应把这当作已知锐边；
-看到长时间暂停时可从独立终端运行 `outsider doctor`，不要在原会话里重装。
+- 覆盖范围只包括通过 runtime conformance 的 Claude Code/Cowork surface；
+- Outsider 是生命周期 controller 和证据系统，不是进程级或操作系统级 sandbox；
+- 单一 canary 或错误夹具的结果只适用于对应版本、环境和仪器，不能外推为通用正确率；
+- Claude 同步 hook timeout 为 900 秒，Outsider 自预算为 890 秒。sidecar 卡住时一次工具调用最坏可能等待约 15 分钟，之后会返回
+  明确 deny；看到长时间暂停时请从独立终端运行 `outsider doctor`，不要在原会话中重装。

@@ -43,8 +43,20 @@ export const CONTRIBUTION_PURPOSES = Object.freeze([
 ]);
 
 const HASH = /^sha256:[a-f0-9]{64}$/;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const TERMINALS = new Set(["SAFE_DELIVERY", "VERIFIED_DELIVERY_UNATTRIBUTED",
   "CONTROL_BOUNDARY_CONTAINMENT", "CONSERVATIVE_STOP", "UNFINALIZED"]);
+const CAUSAL_ATTRIBUTION_CLASSES = new Set(["AUDITED_INTERVENTION_COMPLETE",
+  "DELIVERY_UNATTRIBUTED", "DELIVERY_NO_INTERVENTION_REQUIRED", "NO_DELIVERY"]);
+const ATTESTATION_EVIDENCE_CLASSES = new Set(["CONTROLLED_STAGE05",
+  "CONTROL_BOUNDARY_CONTAINMENT"]);
+const CLAIM_MODES = new Set(["EXACT_CLAIM", "OBSERVATION_ONLY"]);
+const WORLD_MODES = new Set(["EXACT_WORLD", "OBSERVATION_ONLY"]);
+const EVIDENCE_LEVELS = new Set(["L1_UNRECOGNIZED_INSTRUMENT_SELF_ATTESTED",
+  "L2_RECOGNIZED_INSTRUMENT_SELF_ATTESTED"]);
+const QUARANTINE_REASON_CODES = new Set(["PENDING_CURATE_REVIEW",
+  "CORRELATION_NOT_YET_DISCOUNTED", "OWNER_CONFIRMATION_ABSENT",
+  "EXTERNAL_ADJUDICATION_ABSENT", "INSTRUMENT_NOT_IN_SERVER_ALLOWLIST"]);
 
 function digest(value) {
   const input = Buffer.isBuffer(value) ? value
@@ -86,7 +98,11 @@ function signatureFor(hash, privateKeyPem) {
 
 function verifySignature(hash, signature, expectedPublicKeyPem = null) {
   try {
-    if (signature?.algorithm !== "Ed25519" || !signature.publicKeyPem
+    if (!exactKeys(signature, ["algorithm", "keyId", "publicKeyPem", "value"])
+      || signature.algorithm !== "Ed25519" || !HASH.test(String(signature.keyId ?? ""))
+      || !boundedPem(signature.publicKeyPem)
+      || typeof signature.value !== "string" || signature.value.length > 128
+      || !/^[A-Za-z0-9+/]+={0,2}$/.test(signature.value)
       || signature.keyId !== keyId(signature.publicKeyPem)) return false;
     if (expectedPublicKeyPem && keyId(expectedPublicKeyPem) !== signature.keyId) return false;
     return cryptoVerify(null, Buffer.from(hash), createPublicKey(signature.publicKeyPem),
@@ -112,6 +128,47 @@ function verifySigned(record, hashField, expectedPublicKeyPem = null) {
 function exactKeys(value, keys) {
   return value && typeof value === "object" && !Array.isArray(value)
     && Object.keys(value).sort().join("\0") === [...keys].sort().join("\0");
+}
+
+function plain(value) {
+  return value != null && typeof value === "object" && !Array.isArray(value);
+}
+
+function safeInteger(value) {
+  return Number.isSafeInteger(value) && value >= 0;
+}
+
+function safeNumberOrNull(value) {
+  return value == null || typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+
+function booleanFields(value, fields) {
+  return fields.every((field) => typeof value?.[field] === "boolean");
+}
+
+function canonicalDateOrNull(value) {
+  if (value == null) return true;
+  if (typeof value !== "string" || value.length > 40) return false;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) && new Date(parsed).toISOString() === value;
+}
+
+function uuid(value) {
+  return typeof value === "string" && UUID.test(value);
+}
+
+function boundedPem(value) {
+  return typeof value === "string" && value.length <= 512
+    && /^-----BEGIN PUBLIC KEY-----\n[A-Za-z0-9+/=\n]+-----END PUBLIC KEY-----\n?$/.test(value);
+}
+
+function strictCountMap(value, pattern, maxKeys = 512) {
+  return plain(value) && Object.keys(value).length <= maxKeys
+    && Object.entries(value).every(([key, amount]) => pattern.test(key) && safeInteger(amount));
+}
+
+function token(value, pattern = BOUNDED_TOKEN) {
+  return typeof value === "string" && pattern.test(value);
 }
 
 function clone(value) {
@@ -214,6 +271,76 @@ function contributionCapacity(host = {}) {
     capacityExhaustions: Number(host.capacityExhaustions ?? 0),
     unattendedInteractionAttempts: Number(host.unattendedInteractionAttempts ?? 0),
   };
+}
+
+function validContributionRecordValues(record) {
+  const causalClass = record.learningLabels?.causalAttributionClass;
+  const verified = record.modelFeatures?.verified;
+  const countGroups = [[record.evaluation?.invalidationClasses, UPPER_TOKEN],
+    [record.risk?.classes, UPPER_TOKEN],
+    [record.capacity?.agentTeamCapabilities, BOUNDED_TOKEN]];
+  const integerGroups = [
+    [record.source, ["eventCount"]],
+    [record.risk, ["eventCount"]],
+    [record.causal, ["interventionsObserved", "sealedComplete", "ordered", "authorityHashCount"]],
+    [record.capacity?.toolBoundaries, ["pre", "post", "successfulPostWithExit"]],
+    [record.capacity?.actors, ["registered", "teammateBindings", "directDelegationsBound",
+      "delegationBindingChallenges", "delegationBindingConflicts"]],
+    [record.capacity?.controller, ["generations", "recoveries"]],
+    [record.capacity?.semanticPatrol,
+      ["due", "passed", "finished", "deferredPendingCorrectionEffect"]],
+    [record.capacity?.semanticJudgment, ["insufficient",
+      "insufficiencyReclassifiedAsAdvisory",
+      "correctionAuditInsufficiencyReclassifiedAsAdvisory"]],
+    [record.capacity, ["capacityExhaustions", "unattendedInteractionAttempts"]],
+    [record.modelFeatures?.features, ["nSteps"]],
+    [record.modelFeatures?.trajectory, ["steps"]],
+  ];
+  if (!canonicalDateOrNull(record.source?.observedAt)
+    || integerGroups.some(([value, fields]) => fields.some((field) => !safeInteger(value?.[field])))
+    || !countGroups.every(([value, pattern]) => strictCountMap(value, pattern))
+    || record.evaluation?.gatePassClaimed !== false
+    || typeof record.evaluation?.invalidated !== "boolean"
+    || !booleanFields(record.terminal, ["proofComplete", "deliveryComplete",
+      "interventionRequired", "interventionComplete", "containmentComplete"])
+    || !booleanFields(record.learningLabels, ["deliveryResolved", "outsiderCausalContribution",
+      "eligibleForCorrectionEffectLearning"])
+    || !CAUSAL_ATTRIBUTION_CLASSES.has(causalClass)
+    || record.risk?.observedOnly !== true || record.risk?.establishesLossOrLiability !== false
+    || record.capacity?.observedOnly !== true
+    || !token(record.capacity?.hostProtocol)
+    || !safeNumberOrNull(record.capacity?.eventDurationMs)
+    || !booleanFields(record.modelFeatures?.labels, ["fakedSuccess", "neededCorrection",
+      "escalated", "gatedIrreversible", "correctionSucceeded"])
+    || !safeNumberOrNull(record.modelFeatures?.features?.costUsd)
+    || !booleanFields(verified, ["deliveryResolved", "interventionRequired",
+      "interventionComplete", "outsiderCausalContribution",
+      "eligibleForCorrectionEffectLearning"])
+    || !CAUSAL_ATTRIBUTION_CLASSES.has(verified?.causalAttributionClass)
+    || !TERMINALS.has(verified?.terminalClass)) return false;
+  const invalidationTotal = Object.values(record.evaluation.invalidationClasses)
+    .reduce((sum, value) => sum + value, 0);
+  const riskTotal = Object.values(record.risk.classes).reduce((sum, value) => sum + value, 0);
+  if (record.evaluation.invalidated !== (invalidationTotal > 0)
+    || record.risk.eventCount !== riskTotal
+    || record.causal.sealedComplete > record.causal.interventionsObserved
+    || record.causal.ordered > record.causal.interventionsObserved
+    || record.modelFeatures.features.nSteps !== record.modelFeatures.trajectory.steps
+    || record.modelFeatures.features.nSteps !== record.capacity.toolBoundaries.post
+    || record.learningLabels.deliveryResolved !== verified.deliveryResolved
+    || record.learningLabels.outsiderCausalContribution !== verified.outsiderCausalContribution
+    || record.learningLabels.eligibleForCorrectionEffectLearning
+      !== verified.eligibleForCorrectionEffectLearning
+    || causalClass !== verified.causalAttributionClass
+    || record.terminal.terminalClass !== verified.terminalClass
+    || record.terminal.deliveryComplete !== verified.deliveryResolved
+    || record.terminal.interventionRequired !== verified.interventionRequired
+    || record.terminal.interventionComplete !== verified.interventionComplete) return false;
+  const witness = record.capacity.enduranceWitness;
+  if (witness != null && (typeof witness.passed !== "boolean"
+    || !safeInteger(witness.checkpoints) || !safeNumberOrNull(witness.witnessedDurationMs)
+    || witness.evaluationMode != null && !token(witness.evaluationMode))) return false;
+  return true;
 }
 
 /** Strictly project a local supervised record. Unknown/additional fields from
@@ -386,10 +513,13 @@ export function verifyContributionRecord(record) {
         ["passed", "checkpoints", "witnessedDurationMs", "evaluationMode"])) {
       throw new Error("CONTRIBUTION_RECORD_WITNESS_FIELDS_INVALID");
     }
-    if (!HASH.test(record.source?.supervisedExperienceHash)
-      || !HASH.test(record.source?.manifestHash) || !HASH.test(record.source?.projectionHash)
-      || !HASH.test(record.source?.publicEvidenceHash)
-      || !HASH.test(record.source?.eventChainHash)) throw new Error("CONTRIBUTION_SOURCE_INVALID");
+    if (!token(record.source?.supervisedExperienceHash, HASH)
+      || !token(record.source?.manifestHash, HASH)
+      || !token(record.source?.projectionHash, HASH)
+      || !token(record.source?.publicEvidenceHash, HASH)
+      || !token(record.source?.eventChainHash, HASH)) {
+      throw new Error("CONTRIBUTION_SOURCE_INVALID");
+    }
     if (!TERMINALS.has(record.terminal?.terminalClass)
       || record.disclosure?.rawContentIncluded !== false
       || record.disclosure?.authority !== "none"
@@ -403,23 +533,28 @@ export function verifyContributionRecord(record) {
     }
     const instrumentHashes = ["controllerImplementationHash", "wayHash", "claimRefHash",
       "worldRefHash", "authorityRefHash"];
-    if (!BOUNDED_TOKEN.test(String(record.instrument.extractorId ?? ""))
-      || !BOUNDED_TOKEN.test(String(record.instrument.productVersion ?? ""))
-      || !BOUNDED_TOKEN.test(String(record.instrument.hostProtocol ?? ""))
-      || instrumentHashes.some((field) => !HASH.test(String(record.instrument[field] ?? "")))
+    if (!token(record.instrument.extractorId)
+      || !token(record.instrument.productVersion)
+      || !token(record.instrument.hostProtocol)
+      || instrumentHashes.some((field) => !token(record.instrument[field], HASH))
       || !Array.isArray(record.evaluation.gatesObserved)
+      || record.evaluation.gatesObserved.length > 5
       || record.evaluation.gatesObserved.some((value) => !/^R[1-5]$/.test(value))
+      || canonicalizeStrict(record.evaluation.gatesObserved)
+        !== canonicalizeStrict([...new Set(record.evaluation.gatesObserved)].sort())
       || !boundedTree(record.evaluation.invalidationClasses)
       || !boundedTree(record.risk.classes)
       || !boundedTree(record.capacity)
       || !Array.isArray(record.modelFeatures.signalsSeen)
-      || record.modelFeatures.signalsSeen.some((value) => !UPPER_TOKEN.test(value))
+      || record.modelFeatures.signalsSeen.length > 512
+      || record.modelFeatures.signalsSeen.some((value) => !token(value, UPPER_TOKEN))
+      || canonicalizeStrict(record.modelFeatures.signalsSeen)
+        !== canonicalizeStrict([...new Set(record.modelFeatures.signalsSeen)].sort())
       || !Array.isArray(record.modelFeatures.trajectory.verbSequence)
       || record.modelFeatures.trajectory.verbSequence.length > 4096
-      || record.modelFeatures.trajectory.verbSequence.some((value) => !LOWER_TOKEN.test(value))
-      || Object.keys(record.modelFeatures.trajectory.returnCodes ?? {})
-        .some((value) => !RETURN_CODE.test(value))
-      || !boundedTree(record.modelFeatures.trajectory.returnCodes)
+      || record.modelFeatures.trajectory.verbSequence.some((value) => !token(value, LOWER_TOKEN))
+      || !strictCountMap(record.modelFeatures.trajectory.returnCodes, RETURN_CODE)
+      || !validContributionRecordValues(record)
       || canonicalizeStrict(record.disclosure.excluded)
         !== canonicalizeStrict(["source-code", "prompt", "transcript", "path",
           "command-output", "credentials", "raw-event-stream"])) {
@@ -444,11 +579,17 @@ function normalizePurposes(purposes) {
 }
 
 function validateEndpoint(endpoint) {
+  if (typeof endpoint !== "string" || endpoint.length < 1 || endpoint.length > 2048) {
+    throw new Error("CONTRIBUTION_ENDPOINT_INVALID");
+  }
   let parsed;
   try { parsed = new URL(endpoint); } catch { throw new Error("CONTRIBUTION_ENDPOINT_INVALID"); }
   const local = ["localhost", "127.0.0.1", "::1"].includes(parsed.hostname);
   if (parsed.protocol !== "https:" && !(local && parsed.protocol === "http:")) {
     throw new Error("CONTRIBUTION_ENDPOINT_HTTPS_REQUIRED");
+  }
+  if (parsed.username || parsed.password || parsed.search || parsed.hash) {
+    throw new Error("CONTRIBUTION_ENDPOINT_INVALID");
   }
   return parsed.toString().replace(/\/$/, "");
 }
@@ -481,14 +622,25 @@ export function verifyContributionConsent(consent) {
     const { consentHash, ...body } = consent ?? {};
     if (consent?.schema !== CONTRIBUTION_SCHEMAS.consent
       || consent.policyVersion !== CONTRIBUTION_POLICY_VERSION
+      || !exactKeys(consent, ["schema", "policyVersion", "consentId", "status", "endpoint",
+        "deviceKeyId", "purposes", "dataClasses", "rawContentAllowed", "automaticUpload",
+        "explicitSendOnly", "retentionDays", "grantedAt", "consentHash"])
+      || !uuid(consent.consentId)
       || consent.status !== "ENABLED" || consentHash !== digest(body)
       || consent.rawContentAllowed !== false || consent.automaticUpload !== false
-      || consent.explicitSendOnly !== true || !HASH.test(consent.deviceKeyId)) {
+      || consent.explicitSendOnly !== true || !token(consent.deviceKeyId, HASH)
+      || !safeInteger(consent.retentionDays) || consent.retentionDays < 1
+      || consent.retentionDays > 730
+      || canonicalizeStrict(consent.dataClasses)
+        !== canonicalizeStrict(["CONTRIBUTION_RECORD_V1", "ATTESTATION_V2"])) {
       throw new Error("CONTRIBUTION_CONSENT_INVALID");
     }
     validateEndpoint(consent.endpoint);
-    normalizePurposes(consent.purposes);
-    date(consent.grantedAt, "CONSENT_TIME");
+    const purposes = normalizePurposes(consent.purposes);
+    if (canonicalizeStrict(purposes) !== canonicalizeStrict(consent.purposes)
+      || typeof consent.grantedAt !== "string" || !canonicalDateOrNull(consent.grantedAt)) {
+      throw new Error("CONTRIBUTION_CONSENT_INVALID");
+    }
     return Object.freeze({ ok: true, consentHash });
   } catch (error) {
     return Object.freeze({ ok: false, error: error?.message ?? String(error) });
@@ -516,10 +668,17 @@ export function verifyContributionChallenge(challenge, { serverPublicKeyPem = nu
   now = new Date(), expectedAudience = null } = {}) {
   try {
     if (challenge?.schema !== CONTRIBUTION_SCHEMAS.challenge
+      || !exactKeys(challenge, ["schema", "challengeId", "nonce", "audience", "deviceKeyId",
+        "experienceRecordHash", "issuedAt", "expiresAt", "signature", "challengeHash"])
       || !verifySigned(challenge, "challengeHash", serverPublicKeyPem)
-      || !HASH.test(challenge.deviceKeyId) || !HASH.test(challenge.experienceRecordHash)) {
+      || !uuid(challenge.challengeId)
+      || !/^[A-Za-z0-9_-]{16,128}$/.test(challenge.nonce)
+      || !token(challenge.deviceKeyId, HASH) || !token(challenge.experienceRecordHash, HASH)
+      || !canonicalDateOrNull(challenge.issuedAt)
+      || !canonicalDateOrNull(challenge.expiresAt)) {
       throw new Error("CONTRIBUTION_CHALLENGE_INVALID");
     }
+    validateEndpoint(challenge.audience);
     if (expectedAudience && validateEndpoint(challenge.audience)
       !== validateEndpoint(expectedAudience)) throw new Error("CONTRIBUTION_AUDIENCE_MISMATCH");
     const nowMs = Date.parse(nowIso(now));
@@ -536,6 +695,11 @@ export function verifyContributionChallenge(challenge, { serverPublicKeyPem = nu
 
 function verifyContributionAttestation(attestation, contributionRecord, deviceKeyId) {
   const checked = verifyAttestationV2(attestation);
+  const group = attestation?.groupKey;
+  const included = attestation?.included?.[0];
+  const expectedEvidenceClass = contributionRecord?.terminal?.terminalClass
+    === "CONTROL_BOUNDARY_CONTAINMENT"
+    ? "CONTROL_BOUNDARY_CONTAINMENT" : "CONTROLLED_STAGE05";
   if (!checked.ok || !checked.signed || attestation.signature?.keyId !== deviceKeyId
     || !exactKeys(attestation, ["artifactType", "authority", "evidenceClass", "groupKey",
       "included", "duplicates", "nUnique", "outcomes", "correlation", "validityDomain",
@@ -556,16 +720,46 @@ function verifyContributionAttestation(attestation, contributionRecord, deviceKe
     || !exactKeys(attestation.validityDomain,
       ["claimMode", "worldMode", "generalizesBeyondIncludedEvidence"])
     || !exactKeys(attestation.signature,
-      ["algorithm", "keyId", "publicKeyPem", "value"])) return false;
-  const included = attestation.included[0];
+      ["algorithm", "keyId", "publicKeyPem", "value"])
+    || !verifySignature(attestation.attestationHash, attestation.signature)
+    || !token(attestation.attestationHash, HASH)
+    || !ATTESTATION_EVIDENCE_CLASSES.has(attestation.evidenceClass)
+    || attestation.evidenceClass !== expectedEvidenceClass
+    || !token(group.extractorId) || !token(group.productVersion)
+    || !token(group.hostProtocol)
+    || ["controllerImplementationHash", "wayHash", "claimRefHash", "worldRefHash",
+      "authorityRefHash"].some((field) => !token(group[field], HASH))
+    || !uuid(included.runId)
+    || ["manifestHash", "projectionHash", "supervisedExperienceHash", "evidenceRoot"]
+      .some((field) => !token(included[field], HASH))
+    || !TERMINALS.has(included.terminalClass)
+    || !booleanFields(included, ["proofComplete", "deliveryComplete",
+      "interventionRequired", "interventionComplete"])
+    || Object.values(attestation.outcomes).some((value) => !safeInteger(value))
+    || Object.values(attestation.outcomes).reduce((sum, value) => sum + value, 0) !== 1
+    || attestation.outcomes[included.terminalClass] !== 1
+    || attestation.correlation.independenceClaimed !== false
+    || !Array.isArray(attestation.correlation.correlationRoots)
+    || canonicalizeStrict(attestation.correlation.correlationRoots)
+      !== canonicalizeStrict([group.controllerImplementationHash, group.wayHash])
+    || !CLAIM_MODES.has(attestation.validityDomain.claimMode)
+    || !WORLD_MODES.has(attestation.validityDomain.worldMode)
+    || attestation.validityDomain.generalizesBeyondIncludedEvidence !== false
+    || !token(attestation.commitment, HASH)
+    || attestation.commitment !== digest({ groupKey: group,
+      included: attestation.included, counts: attestation.outcomes })) return false;
   return included.supervisedExperienceHash
       === contributionRecord.source.supervisedExperienceHash
     && included.manifestHash === contributionRecord.source.manifestHash
     && included.projectionHash === contributionRecord.source.projectionHash
+    && included.terminalClass === contributionRecord.terminal.terminalClass
+    && included.proofComplete === contributionRecord.terminal.proofComplete
+    && included.deliveryComplete === contributionRecord.terminal.deliveryComplete
+    && included.interventionRequired === contributionRecord.terminal.interventionRequired
+    && included.interventionComplete === contributionRecord.terminal.interventionComplete
     && canonicalizeStrict(attestation.groupKey)
       === canonicalizeStrict(contributionRecord.instrument)
-    && attestation.correlation.independenceClaimed === false
-    && attestation.validityDomain.generalizesBeyondIncludedEvidence === false;
+    && attestation.correlation.independenceClaimed === false;
 }
 
 export function createContributionEnvelope({ contributionRecord, attestation, consent,
@@ -631,6 +825,14 @@ export function verifyContributionEnvelope(envelope, { challenge = null,
         ["challengeId", "challengeHash", "nonce", "expiresAt"])
       || !exactKeys(envelope.authority, ["mode", "establishesLossOrLiability",
         "permitsPricing", "permitsGuarantee", "permitsSettlement"])
+      || !uuid(envelope.submissionId)
+      || typeof envelope.createdAt !== "string" || !canonicalDateOrNull(envelope.createdAt)
+      || !token(envelope.device?.keyId, HASH) || !boundedPem(envelope.device?.publicKeyPem)
+      || !uuid(envelope.challenge?.challengeId)
+      || !token(envelope.challenge?.challengeHash, HASH)
+      || !/^[A-Za-z0-9_-]{16,128}$/.test(String(envelope.challenge?.nonce ?? ""))
+      || typeof envelope.challenge?.expiresAt !== "string"
+      || !canonicalDateOrNull(envelope.challenge.expiresAt)
       || envelope.evidenceLevelClaimed !== "L2_SEALED_STAGE05_SELF_ATTESTED"
       || !verifySigned(envelope, "envelopeHash", envelope.device?.publicKeyPem)
       || envelope.signature?.keyId !== envelope.device?.keyId
@@ -641,10 +843,11 @@ export function verifyContributionEnvelope(envelope, { challenge = null,
       || envelope.authority?.permitsSettlement !== false
       || envelope.consent?.rawContentAllowed !== false
       || envelope.consent?.policyVersion !== CONTRIBUTION_POLICY_VERSION
-      || !HASH.test(String(envelope.consent?.consentHash ?? ""))
-      || !Number.isInteger(Number(envelope.consent?.retentionDays))
-      || Number(envelope.consent.retentionDays) < 1
-      || Number(envelope.consent.retentionDays) > 730) {
+      || !token(envelope.consent?.consentHash, HASH)
+      || !safeInteger(envelope.consent?.retentionDays)
+      || envelope.consent.retentionDays < 1 || envelope.consent.retentionDays > 730
+      || typeof envelope.consent?.grantedAt !== "string"
+      || !canonicalDateOrNull(envelope.consent.grantedAt)) {
       throw new Error("CONTRIBUTION_ENVELOPE_INVALID");
     }
     const recordCheck = verifyContributionRecord(envelope.contributionRecord);
@@ -662,11 +865,13 @@ export function verifyContributionEnvelope(envelope, { challenge = null,
       if (!challengeCheck.ok || challenge.challengeId !== envelope.challenge?.challengeId
         || challenge.challengeHash !== envelope.challenge?.challengeHash
         || challenge.nonce !== envelope.challenge?.nonce
+        || challenge.expiresAt !== envelope.challenge?.expiresAt
         || challenge.deviceKeyId !== envelope.device.keyId
         || challenge.experienceRecordHash !== envelope.contributionRecord.recordHash) {
         throw new Error("CONTRIBUTION_CHALLENGE_BINDING_INVALID");
       }
     }
+    validateEndpoint(envelope.audience);
     if (expectedAudience && validateEndpoint(envelope.audience)
       !== validateEndpoint(expectedAudience)) throw new Error("CONTRIBUTION_AUDIENCE_MISMATCH");
     const createdAt = Date.parse(date(envelope.createdAt, "CREATED_AT"));
@@ -749,10 +954,28 @@ export function createContributionReceipt({ envelope, evidenceLevel, reasons, re
 export function verifyContributionReceipt(receipt, { serverPublicKeyPem = null } = {}) {
   try {
     if (receipt?.schema !== CONTRIBUTION_SCHEMAS.receipt
+      || !exactKeys(receipt, ["schema", "receiptId", "registryId", "submissionId",
+        "envelopeHash", "contributionRecordHash", "supervisedExperienceHash", "consentHash",
+        "contributorKeyId", "receivedAt", "retentionUntil", "disposition", "evidenceLevel",
+        "reasonCodes", "eligibleFor", "authority", "signature", "receiptHash"])
+      || !exactKeys(receipt.eligibleFor, ["reliabilityResearch", "supervisorResearch",
+        "routingResearch", "correctionEffectLearning", "pricing", "guarantee", "settlement"])
+      || !uuid(receipt.receiptId) || !uuid(receipt.submissionId)
+      || !token(receipt.registryId)
+      || ["envelopeHash", "contributionRecordHash", "supervisedExperienceHash", "consentHash",
+        "contributorKeyId", "receiptHash"].some((field) => !token(receipt[field], HASH))
+      || typeof receipt.receivedAt !== "string" || !canonicalDateOrNull(receipt.receivedAt)
+      || typeof receipt.retentionUntil !== "string" || !canonicalDateOrNull(receipt.retentionUntil)
+      || Date.parse(receipt.retentionUntil) <= Date.parse(receipt.receivedAt)
       || receipt.disposition !== "QUARANTINED"
+      || !EVIDENCE_LEVELS.has(receipt.evidenceLevel)
+      || !Array.isArray(receipt.reasonCodes) || receipt.reasonCodes.length < 4
+      || receipt.reasonCodes.length > 5
+      || receipt.reasonCodes.some((reason) => !QUARANTINE_REASON_CODES.has(reason))
+      || new Set(receipt.reasonCodes).size !== receipt.reasonCodes.length
       || !verifySigned(receipt, "receiptHash", serverPublicKeyPem)
-      || receipt.eligibleFor?.pricing !== false || receipt.eligibleFor?.guarantee !== false
-      || receipt.eligibleFor?.settlement !== false || receipt.authority !== "none") {
+      || Object.values(receipt.eligibleFor).some((eligible) => eligible !== false)
+      || receipt.authority !== "none") {
       throw new Error("CONTRIBUTION_RECEIPT_INVALID");
     }
     return Object.freeze({ ok: true, receiptHash: receipt.receiptHash });
@@ -858,8 +1081,13 @@ export class ExperienceContributionRegistry {
     const recordHash = envelope.contributionRecord.recordHash;
     const prior = this.entries.find((entry) => entry.recordHash === recordHash);
     if (prior) {
-      const receipt = readJson(hashFile(this.directory, "receipts", prior.receiptHash));
-      return Object.freeze({ appended: false, duplicate: true, receipt });
+      const original = readJson(hashFile(this.directory, "receipts", prior.receiptHash));
+      const receipt = createContributionReceipt({ envelope,
+        evidenceLevel: original.evidenceLevel, reasons: original.reasonCodes,
+        receivedAt, retentionUntil: original.retentionUntil,
+        privateKeyPem: this.privateKeyPem, registryId: this.registryId });
+      return Object.freeze({ appended: false, duplicate: true, receipt,
+        canonicalReceiptHash: original.receiptHash });
     }
     const instrumentHash = envelope.contributionRecord.instrument?.controllerImplementationHash;
     const recognized = this.acceptedInstrumentHashes.has(instrumentHash);
@@ -989,7 +1217,7 @@ export function previewRunContribution(runDirectory) {
 }
 
 export async function sendRunContribution({ runDirectory, shareDirectory, fetchImpl = fetch,
-  now = new Date() } = {}) {
+  now = null } = {}) {
   const state = readShareState(shareDirectory);
   if (!state.ok) throw new Error(`CONTRIBUTION_SHARE_STATE_INVALID:${state.error}`);
   if (state.config.enabled !== true) throw new Error("CONTRIBUTION_SHARING_DISABLED");
@@ -1002,15 +1230,16 @@ export async function sendRunContribution({ runDirectory, shareDirectory, fetchI
   });
   if (!challengeResponse.ok) throw new Error(`CONTRIBUTION_CHALLENGE_HTTP_${challengeResponse.status}`);
   const challenge = await challengeResponse.json();
+  const envelopeTime = now ?? new Date();
   const challengeCheck = verifyContributionChallenge(challenge, {
     serverPublicKeyPem: state.config.serverPublicKeyPem,
-    expectedAudience: state.config.endpoint, now,
+    expectedAudience: state.config.endpoint, now: envelopeTime,
   });
   if (!challengeCheck.ok) throw new Error(`CONTRIBUTION_CHALLENGE_INVALID:${challengeCheck.error}`);
   const attestation = createAttestationV2({ runDirectories: [runDirectory], privateKeyPem });
   const envelope = createContributionEnvelope({ contributionRecord: preview.contributionRecord,
     attestation, consent: state.consent, challenge, devicePrivateKeyPem: privateKeyPem,
-    createdAt: now });
+    createdAt: envelopeTime });
   const ingestResponse = await fetchImpl(`${state.config.endpoint}/v1/contributions`, {
     method: "POST", headers: { "content-type": "application/json" },
     body: JSON.stringify(envelope),
@@ -1039,7 +1268,7 @@ export function createContributionRevocation({ shareDirectory, reason = "USER_RE
     revocationId: randomUUID(), consentHash: state.consent.consentHash,
     contributorKeyId: state.consent.deviceKeyId,
     requestedAt: nowIso(now), scope: "FUTURE_USE_AND_RETAINED_CONTRIBUTIONS",
-    reason: String(reason).slice(0, 160),
+    reason: safeToken(reason, UPPER_TOKEN, "USER_REQUEST"),
     note: "Server acknowledgment is required; this local request alone does not prove deletion." },
   "revocationHash", privateKeyPem);
   atomicJson(path.join(shareDirectory, "revocation.json"), record);
@@ -1050,9 +1279,18 @@ export function createContributionRevocation({ shareDirectory, reason = "USER_RE
 export function verifyContributionRevocation(record) {
   try {
     if (record?.schema !== CONTRIBUTION_SCHEMAS.revocation
+      || !exactKeys(record, ["schema", "revocationId", "consentHash", "contributorKeyId",
+        "requestedAt", "scope", "reason", "note", "signature", "revocationHash"])
       || !verifySigned(record, "revocationHash", record.signature?.publicKeyPem)
+      || !uuid(record.revocationId)
       || record.contributorKeyId !== record.signature?.keyId
-      || !HASH.test(record.consentHash)) throw new Error("CONTRIBUTION_REVOCATION_INVALID");
+      || !token(record.consentHash, HASH)
+      || typeof record.requestedAt !== "string" || !canonicalDateOrNull(record.requestedAt)
+      || record.scope !== "FUTURE_USE_AND_RETAINED_CONTRIBUTIONS"
+      || !token(record.reason, UPPER_TOKEN)
+      || record.note !== "Server acknowledgment is required; this local request alone does not prove deletion.") {
+      throw new Error("CONTRIBUTION_REVOCATION_INVALID");
+    }
     return Object.freeze({ ok: true, revocationHash: record.revocationHash });
   } catch (error) {
     return Object.freeze({ ok: false, error: error?.message ?? String(error) });
@@ -1084,21 +1322,25 @@ export function verifyContributionRevocationReceipt(record,
   { serverPublicKeyPem = null } = {}) {
   try {
     if (record?.schema !== CONTRIBUTION_SCHEMAS.revocationReceipt
+      || !exactKeys(record, ["schema", "acknowledgmentId", "registryId", "revocationHash",
+        "contributorKeyId", "consentHash", "processedAt", "deletedContributions",
+        "futureUseBlocked", "retainedAuditMaterial", "deletedMaterial", "authority",
+        "signature", "acknowledgmentHash"])
       || !verifySigned(record, "acknowledgmentHash", serverPublicKeyPem)
-      || !HASH.test(String(record.revocationHash ?? ""))
-      || !HASH.test(String(record.contributorKeyId ?? ""))
-      || !HASH.test(String(record.consentHash ?? ""))
+      || !uuid(record.acknowledgmentId) || !token(record.registryId)
+      || !token(record.revocationHash, HASH)
+      || !token(record.contributorKeyId, HASH)
+      || !token(record.consentHash, HASH)
       || record.futureUseBlocked !== true
       || record.authority !== "none"
-      || !Number.isInteger(Number(record.deletedContributions))
-      || Number(record.deletedContributions) < 0
+      || !safeInteger(record.deletedContributions)
+      || typeof record.processedAt !== "string" || !canonicalDateOrNull(record.processedAt)
       || canonicalizeStrict(record.retainedAuditMaterial)
         !== canonicalizeStrict(["content-hashes", "receipt-hashes", "registry-chain"])
       || canonicalizeStrict(record.deletedMaterial)
         !== canonicalizeStrict(["contribution-envelope", "contribution-record", "attestation"])) {
       throw new Error("CONTRIBUTION_REVOCATION_RECEIPT_INVALID");
     }
-    date(record.processedAt, "REVOCATION_PROCESSED_AT");
     return Object.freeze({ ok: true, acknowledgmentHash: record.acknowledgmentHash });
   } catch (error) {
     return Object.freeze({ ok: false, error: error?.message ?? String(error) });

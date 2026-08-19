@@ -21,6 +21,7 @@ node_modules/
 .dev.vars
 .dev.vars.*
 *.pem
+!deploy/cloudflare-experience-gateway/server-public-key.pem
 *.key
 *.p12
 
