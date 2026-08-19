@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "outsider-experience-gateway",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-08-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "triggers": { "crons": ["17 3 * * *"] },
+  "secrets": { "required": ["SERVER_PRIVATE_KEY_PEM"] },
+  "vars": {
+    "REGISTRY_ID": "outsider-public-contributions-v1",
+    "ACCEPTED_INSTRUMENT_HASHES": ""
+  },
+  "durable_objects": {
+    "bindings": [
+      { "name": "REGISTRY", "class_name": "ExperienceRegistry" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["ExperienceRegistry"] }
+  ],
+  "ratelimits": [
+    {
+      "name": "PUBLIC_RATE_LIMITER",
+      "namespace_id": "170394",
+      "simple": { "limit": 60, "period": 60 }
+    }
+  ]
+}

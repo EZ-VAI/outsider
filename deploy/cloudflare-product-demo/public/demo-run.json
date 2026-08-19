@@ -1,0 +1,156 @@
+{
+  "schema": "outsider/public-stage05-demo/v1",
+  "sourceDisclosure": {
+    "kind": "PREREGISTERED_REAL_HOST_CANARY",
+    "host": "Claude Code Agent Team",
+    "recordedAt": "2026-08-17T03:37:56.510Z",
+    "recordedProductVersion": "1.3.81",
+    "currentProductVersion": "1.3.96",
+    "description": "A real Claude Agent Team reached a red integration boundary. Outsider withheld completion, delivered a fact-audited correction, observed a file effect, and independently re-verified the result.",
+    "limitations": [
+      "This is a preregistered product canary, not a customer production run.",
+      "Raw code, prompts, paths, transcripts, command output and raw events are not embedded.",
+      "The demo proves a supervised software-delivery chain, not insurance coverage or settlement authority."
+    ]
+  },
+  "publicEvidence": {
+    "artifactType": "outsider_stage05_public_evidence_v1",
+    "sourceRunId": "7a9f6e37-9ecc-4bdf-8192-db4a7d2a236a",
+    "bindingHash": "sha256:e229d83acf801f4f919e272c87fe0c0e26227c33530e876872b76ed6a3977554",
+    "manifestHash": "sha256:0e677d24e079aae6504fc5bcd9f23f7e7e588eceeb7aa30cadad0a1ac30007b0",
+    "projectionHash": "sha256:e01ea3c5a1382c10fc5a21b29d52bf7e4ac81d84f4cf1d1fd167916814c315c6",
+    "terminal": {
+      "terminalClass": "SAFE_DELIVERY",
+      "workerStarted": true,
+      "controllerGenerationCount": 1,
+      "acceptanceRan": true,
+      "gateAcceptanceRan": true,
+      "proofComplete": true,
+      "deliveryComplete": true,
+      "interventionRequired": true,
+      "interventionComplete": true,
+      "containmentComplete": false,
+      "containmentClass": null,
+      "runStatus": "complete",
+      "finalFingerprint": "sha256:5b8e94f7bb9eab65dc69b180e142c53a95ed88d0d0aa70bece8e368a5cd22b33"
+    },
+    "commitments": {
+      "rawLocalMerkleRoot": "sha256:c7d9aade825eb4bc6b3f6287f46a7754e158cee0e40a4d42dd9aa2767e5630f2",
+      "publicDerivativeMerkleRoot": "sha256:29f153e8955fa3e07a3f29d48598095bf6e9ff25457d2276c4ff04f7a25b9ba1",
+      "eventChainHash": "sha256:1ba4641f8611f6fbecc051f8ede50ccee9fdc7d905ac6aec677748069c8afa2b"
+    },
+    "rawEvidenceDisclosure": "LOCAL_PRIVATE_NOT_EMBEDDED",
+    "publicEvidenceHash": "sha256:a22e1e346f102ebbcd4a489ce0f04751e34259d5e6557ecf58565cec37585b97"
+  },
+  "runFacts": {
+    "eventCount": 214,
+    "durationMs": 184435,
+    "actorsRegistered": 3,
+    "teammatesBound": 2,
+    "successfulToolBoundaries": 38,
+    "acceptanceBefore": "RED",
+    "acceptanceAfter": "GREEN",
+    "learningLabel": "AUDITED_INTERVENTION_COMPLETE"
+  },
+  "requiredStages": [
+    "boundary_paused",
+    "supervisor_verdict",
+    "correction_factual_audit",
+    "correction_emitted",
+    "correction_observed",
+    "effect_observed",
+    "acceptance_finished",
+    "outcome_verdict",
+    "intervention_resolved"
+  ],
+  "timeline": [
+    {
+      "seq": 154,
+      "type": "acceptance_finished",
+      "title": "Integration acceptance turns red",
+      "detail": "The team attempted to complete while the repository-owned integration check was still failing.",
+      "state": "red",
+      "eventHash": "sha256:d6812a3ed2870ba7bedae7d48b486d6b40824b0f217ddff05ec673ee7a1d3dfc"
+    },
+    {
+      "seq": 155,
+      "type": "boundary_paused",
+      "title": "Outsider pauses completion",
+      "detail": "The control boundary blocks completion and freezes evidence for one intervention.",
+      "state": "amber",
+      "eventHash": "sha256:5cefd6f2a993162181741b5b0ad38409359f7ae72b767016ed24f0c9eabfd904"
+    },
+    {
+      "seq": 165,
+      "type": "supervisor_verdict",
+      "title": "Independent diagnosis: off track",
+      "detail": "A fresh supervisor identifies the integration defect and emits a typed correction authority.",
+      "state": "amber",
+      "eventHash": "sha256:98327bf6f5317f6493d37fa8407f3fb9c1089cfdfcb10b6097fc26b862adbf74"
+    },
+    {
+      "seq": 168,
+      "type": "correction_factual_audit",
+      "title": "Correction passes factual audit",
+      "detail": "A separate audit confirms that the proposed repair is supported by captured evidence.",
+      "state": "amber",
+      "eventHash": "sha256:928c483678649933b276f1498491c834ef45a897d77863b54b8bf5702878315d"
+    },
+    {
+      "seq": 169,
+      "type": "correction_emitted",
+      "title": "Scoped correction is delivered",
+      "detail": "Only the audited repair authority crosses the host boundary; narrative model output has no execution power.",
+      "state": "amber",
+      "eventHash": "sha256:c77df95471bd129f997ec769832277ad828a48ef5d4325748b479e46dd9d9f40"
+    },
+    {
+      "seq": 174,
+      "type": "correction_observed",
+      "title": "Worker observes the correction",
+      "detail": "The next host boundary proves that the worker received the intervention marker.",
+      "state": "amber",
+      "eventHash": "sha256:aeac50ce47bb0789ea94a8a56e788a3a0cfb03692e83743f8c222857dc55e5a0"
+    },
+    {
+      "seq": 186,
+      "type": "effect_observed",
+      "title": "A post-correction effect is observed",
+      "detail": "A successful, hash-bound file effect occurs after delivery and matches the expected action class.",
+      "state": "blue",
+      "eventHash": "sha256:274db25aed0edc9f5255d5b25c0cf9fe78ca6bd3fe01330fa38aaba47a0230c5"
+    },
+    {
+      "seq": 190,
+      "type": "acceptance_finished",
+      "title": "Mechanical acceptance turns green",
+      "detail": "The frozen integration acceptance now passes on the new final fingerprint.",
+      "state": "green",
+      "eventHash": "sha256:027f91833c8abea23eb6c2b42eb24d366f6183dadf452053b023522c394af602"
+    },
+    {
+      "seq": 197,
+      "type": "outcome_verdict",
+      "title": "Independent outcome audit passes",
+      "detail": "A fresh semantic verifier and approval audit confirm the artifact satisfies the intended outcome.",
+      "state": "green",
+      "eventHash": "sha256:e865bfce12094b9710415d1018a420d08119e5006534954eb1f72e7184483001"
+    },
+    {
+      "seq": 198,
+      "type": "intervention_resolved",
+      "title": "Intervention is causally resolved",
+      "detail": "Pause, diagnosis, audit, delivery, observation, effect and verification are bound to one intervention.",
+      "state": "green",
+      "eventHash": "sha256:62bffcc00c9cf9cc9094383f838f7c8157ae093902751848ddda77dcde770613"
+    },
+    {
+      "seq": 214,
+      "type": "run_finalized",
+      "title": "SAFE_DELIVERY is sealed",
+      "detail": "The terminal event reports proofComplete=true, deliveryComplete=true and interventionComplete=true.",
+      "state": "green",
+      "eventHash": "sha256:579e5d12d5c16a6e3d2c4d8ea132e1f3646e4abdd4083c27f77ece1b99f1266a"
+    }
+  ]
+}

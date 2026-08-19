@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "outsider-stage05-demo",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-08-19",
+  "workers_dev": true,
+  "assets": {
+    "directory": "public",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  }
+}

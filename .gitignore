@@ -1,0 +1,28 @@
+# Private run data and local state
+artifacts/
+r2-agent-team-1.3.12-20260813-a/
+.outsider/
+
+# Generated release artifacts
+dist/
+dist.zip
+coverage/
+
+# Dependencies and local build state
+node_modules/
+.wrangler/
+.DS_Store
+*.log
+
+# Credentials and machine-local configuration
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.pem
+*.key
+*.p12
+
+# Incomplete external downloads
+references/*.download-failed

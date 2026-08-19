@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "UserPromptSubmit": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "PreToolUse": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "PostToolUse": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "SubagentStart": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "SubagentStop": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "PreCompact": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "Stop": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "SessionEnd": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "TaskCreated": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "TaskCompleted": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}],
+    "TeammateIdle": [{"hooks":[{"type":"command","command":"node \"${CLAUDE_PLUGIN_ROOT}/bin/outsider-hook.mjs\" claude-desktop","timeout":900}]}]
+  }
+}

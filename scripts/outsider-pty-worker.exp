@@ -1,0 +1,20 @@
+#!/usr/bin/expect -f
+# Allocate the controlling terminal that interactive Claude Agent Teams require,
+# while keeping stdin/stdout connected to the owning Node controller.  macOS
+# /usr/bin/script cannot do this when its own stdin is a pipe: it exits before
+# spawning Claude with tcgetattr/ioctl ENOTTY.
+set timeout -1
+if {$argc < 1} {
+  puts stderr "OUTSIDER_PTY_COMMAND_REQUIRED"
+  exit 64
+}
+
+log_user 1
+spawn -noecho {*}$argv
+interact
+
+set child_status [wait]
+if {[llength $child_status] >= 4 && [lindex $child_status 2] == 0} {
+  exit [lindex $child_status 3]
+}
+exit 1

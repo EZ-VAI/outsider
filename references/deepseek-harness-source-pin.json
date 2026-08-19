@@ -1,0 +1,119 @@
+{
+  "schema": "outsider/external-source-pin/v2",
+  "repository": "https://github.com/deepseek-ai/deepseek-harness",
+  "commit": {
+    "oid": "47f943859bef60e4160492346772ded9b24f765a",
+    "tree": "f904efab9ef435201d6ba4da88a34d6366568272",
+    "parents": [
+      "f26a6f6cfff956dce3af00bad32f1bbed8c6e92a",
+      "abe560f81edebe5f6a5b62706ff502daa0dccd40"
+    ],
+    "authoredAt": "2026-08-13T19:38:46+08:00",
+    "subject": "Merge pull request #2519 from deepseek-harness/feat/npm-public"
+  },
+  "sourcePackageVersion": "0.1.0-rc.5",
+  "reviewedAt": "2026-08-14T18:34:28.411Z",
+  "files": [
+    {
+      "path": "README.md",
+      "gitBlobOid": "8a4bd01332a23ce4144c661784bc549e0ba72d21",
+      "sha256": "sha256:56d143f81cf6d8ea754af1aad3e8ca5901f1e2b59e38e8321968d1fa0e83eb72",
+      "byteLength": 1711
+    },
+    {
+      "path": "docs/architecture.md",
+      "gitBlobOid": "77000ce9d4608d440e1d903eb80a42f2ed6435ef",
+      "sha256": "sha256:c5b2d290be49f06019b412e56fee4c9b36b853813fd927d4e31fe678712a9c70",
+      "byteLength": 9159
+    },
+    {
+      "path": "docs/persistence-catalog.md",
+      "gitBlobOid": "c400298f7d37c590918820bcbda10e6550f197e8",
+      "sha256": "sha256:f58852fb061a0cb71bfa4350e0262167fb7a9813f0e5748a279832eeab1c7ff3",
+      "byteLength": 33386
+    },
+    {
+      "path": "docs/subsystems/core.md",
+      "gitBlobOid": "d14ad52e57572d5b0b110a0b16ff734e3499bdf5",
+      "sha256": "sha256:ef97fe1e7236d73df29f06ff12c2047d5e943b48fd3032a588edee0fe3fe0377",
+      "byteLength": 56916
+    },
+    {
+      "path": "docs/cookbook/extension-cookbook.md",
+      "gitBlobOid": "9618a3522c5566636fe3e49f7eca93d1e113d51a",
+      "sha256": "sha256:f00e246d829ab66b826b3d5a146f99f1fcca3859e3f32ee083d733b90d6f7591",
+      "byteLength": 11282
+    },
+    {
+      "path": "packages/core/session/README.md",
+      "gitBlobOid": "02aae21d71101e626bf2d2ead0bfd5d155723165",
+      "sha256": "sha256:478d5f7c0c868adeedf96e5a0c896322077005f39b8242c51d434ea1ba253981",
+      "byteLength": 16897
+    },
+    {
+      "path": "packages/core/session/package.json",
+      "gitBlobOid": "bb8f24a70e68383fa86f8676fe00fc7a7a7ebe49",
+      "sha256": "sha256:edcfbe150f8a5c8a057894ba41ac99c382e56f407915f3561cab67be4f71b15d",
+      "byteLength": 1732
+    },
+    {
+      "path": "packages/core/session/src/known-event-types.ts",
+      "gitBlobOid": "d65935f1b86934b1de957aa26f9032c296510d3c",
+      "sha256": "sha256:f51d609d08b80f7871c5d6eae9d8960e1427f008760b9885cc7441fec7fdd729",
+      "byteLength": 1909
+    },
+    {
+      "path": "packages/core/session/src/types.ts",
+      "gitBlobOid": "17aacd1dfc2f3a9d241a2fbdea59263323f57d51",
+      "sha256": "sha256:4c566eabcd7f4d927e4dedb865a1644d3afb3ee84b2562dc7e56adab31cab6f1",
+      "byteLength": 19096
+    },
+    {
+      "path": "packages/core/agent/package.json",
+      "gitBlobOid": "13abdcd5f7bf27b2c04eda0b72a1886ae4789f88",
+      "sha256": "sha256:bfeefab12603895fb4530621f32c3df4423275ad4945afa9168a4a770c7f7baa",
+      "byteLength": 1764
+    },
+    {
+      "path": "packages/core/agent/src/index.ts",
+      "gitBlobOid": "81052096dc057b69cc454c4db870a0edb7b4ae9f",
+      "sha256": "sha256:e4986fec8aa6e991378f0195df4e931e4ca5bf31b2af886f55a3242691db6804",
+      "byteLength": 31981
+    },
+    {
+      "path": "packages/core/agent/src/types.ts",
+      "gitBlobOid": "b54e56ea8f9dc61674167dff98dbbe7dc5c857e4",
+      "sha256": "sha256:2353804cf902731cf979f8cb35f0ef830771133bd396a3f0afc368bc72c458bd",
+      "byteLength": 804
+    },
+    {
+      "path": "packages/llm/llm/package.json",
+      "gitBlobOid": "c33f115a6b4cb05493b3a9b8cbd60dcea327cd8e",
+      "sha256": "sha256:0e1eb0f7dceb28a0ee1e1ca20ff684598cd45b31089eef48be1889ac2c7997f5",
+      "byteLength": 1763
+    },
+    {
+      "path": "packages/llm/llm/src/index.ts",
+      "gitBlobOid": "e87c428d060305e416747adac386058d24d8e37d",
+      "sha256": "sha256:71c03b10d948a2dc2403db5c544ee9a2d6db7a45eb0b97d2b0bb2f733507526f",
+      "byteLength": 41274
+    },
+    {
+      "path": "packages/llm/llm/src/message.ts",
+      "gitBlobOid": "608b56475df8dfdef72e104f180cf4dd024eb0be",
+      "sha256": "sha256:5b95dab5facbd284c5bc3534323386aedfdd60e30c17a0012376a2d492fa6c9a",
+      "byteLength": 9449
+    },
+    {
+      "path": "packages/llm/llm/src/types.ts",
+      "gitBlobOid": "326db1cb1473cb435ec98425c2df359977eba4fa",
+      "sha256": "sha256:055b7efeb5cb5bb17379cad419ed6259c2ab9a8ba9d897796cc97c8505bc4ada",
+      "byteLength": 13201
+    }
+  ],
+  "sessionFormatVersion": 0,
+  "integrationMode": "OBSERVATION_AND_AUDITED_DELIVERY_ONLY",
+  "sourceBinaryEquivalence": "UNPROVEN",
+  "claimBoundary": "This record proves the reviewed official source bytes at one commit. The separately pinned rc.6 npm runtime has no gitHead and is not claimed to be this commit's build.",
+  "recordHash": "sha256:ea72f8d52183d0d079dc5d7856583bdf74b5ad0bb94dfb0ede1201786bb44735"
+}

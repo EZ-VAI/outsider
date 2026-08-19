@@ -1,0 +1,76 @@
+{
+  "schema": "outsider/external-runtime-closure/v2",
+  "compiledAt": "2026-08-14T19:25:41.977Z",
+  "adapter": "integrations/deepseek-harness-outsider-plugin/index.ts",
+  "command": "tsc -p integrations/deepseek-harness-outsider-plugin/tsconfig.json",
+  "result": "PASS",
+  "typescript": "5.9.2",
+  "packages": {
+    "@deepseek-ai/cordis": {
+      "version": "4.0.1",
+      "integrity": "sha512-YBdskTU2Po1kru3GgcUWUbkTsPMA9LkSQDAY8rBkFJeajdgcQad3QPJZE26JyK99Xb6HaASvoXg2DSUTeN/0Nw==",
+      "packageJsonSha256": "sha256:905ee8bf60012c7b87386466d89de3eb42eeb5dca5752f840efa4602d35bd609",
+      "main": "lib/index.js",
+      "mainSha256": "sha256:1729cdbf8ee40b17c8839e06bf96491490548559e11ef7e411271e0754e751c5"
+    },
+    "@deepseek-ai/dsh-agent": {
+      "version": "0.1.0-rc.6",
+      "integrity": "sha512-vtqq2pWTrzn0dKfj5kREZRpP82AwtGjGx9V1lYnKvF+Uc/a8zyWbSvjDE7V1d3YQAQJzs2cWO31hURWDekDXIA==",
+      "packageJsonSha256": "sha256:7da3bcda32a64927c238a2d5943bfa24546b7725a19d9c1d051562555baf7be5",
+      "main": "lib/index.js",
+      "mainSha256": "sha256:e7e40c5ca66d9827a5084c5c0c68983f9685842bb9b6d604803d4cb4642bb263"
+    },
+    "@deepseek-ai/dsh-llm": {
+      "version": "0.1.0-rc.6",
+      "integrity": "sha512-kuFGC8bHlzGTwlRxQhXjf3CYWl8M4NzH+EYIkrW8rri4iMc9W53xrdvkil5No/DUlMm8g1u7GdeiWYFy0TMvtA==",
+      "packageJsonSha256": "sha256:359f8432b0074e92a9c9b1564f3684480fdc86fd947a3968c9cddeae8a1701d5",
+      "main": "lib/index.js",
+      "mainSha256": "sha256:7e02740f9b10cfb965453ca26eb23795c4e8dc818038dd2c0f80aaade0100ea1"
+    },
+    "@deepseek-ai/dsh-session": {
+      "version": "0.1.0-rc.6",
+      "integrity": "sha512-8tu8I6VWC7050GAUXWhcEWQw4pakALQc8TlhKr52m7Y4+kIKeNt3FBgP86PaGPBtpK0p5zUPRQNkFpzZbBdxyw==",
+      "packageJsonSha256": "sha256:f7b9a4eb2e34c776aae04647edc795105f380d149c0858af286b3ce26734d6c2",
+      "main": "lib/index.js",
+      "mainSha256": "sha256:9270186b579bc8a4c6c53c256e4471d3f134e94308462c6a413a722e9c7556fb"
+    }
+  },
+  "adapterClosure": [
+    {
+      "path": "integrations/deepseek-harness-outsider-plugin/index.ts",
+      "sha256": "sha256:ae153d1d0afaa3df2b1c5e412afc7cfa7078bf462474e18f0769f7c95da151af"
+    },
+    {
+      "path": "integrations/deepseek-harness-outsider-plugin/index.js",
+      "sha256": "sha256:9f920b796dc59ba235dd618c7435178ab38a37fec934c148f62561d75b80d107"
+    },
+    {
+      "path": "src/outsider-deepseek-harness-plugin-core.js",
+      "sha256": "sha256:345c16010a1bc394aa9591f0abc296d3722b8c57f34c63ec24cf6371fa793cd5"
+    },
+    {
+      "path": "src/outsider-deepseek-harness-gateway.js",
+      "sha256": "sha256:b52caf7078e0fb807c1bc21daa26912d5c1de8dbde82019f2153d24a10902edc"
+    },
+    {
+      "path": "src/outsider-deepseek-harness-protocol.js",
+      "sha256": "sha256:f6a509c3ea30a6070892c2fc420b7fc76e5904f6502a3e385b5c9dd3161bfb1a"
+    },
+    {
+      "path": "src/outsider-deepseek-harness-adapter.js",
+      "sha256": "sha256:e4abdc7a51068e95f5b4651b868bf3aad3a596cf7cab1ec775e246ff56866513"
+    },
+    {
+      "path": "src/canonical.js",
+      "sha256": "sha256:65f328b1c8f2860af21b131aa036fded9c510268c12ae8e6e4b9a44ec74d8d7c"
+    }
+  ],
+  "adapterClosureHash": "sha256:30f54f054f7cffd3d6eccad4a09e42ca6697b3bd7f5b39fd48c63ca3025cb0a2",
+  "sourcePinHash": "sha256:ea72f8d52183d0d079dc5d7856583bdf74b5ad0bb94dfb0ede1201786bb44735",
+  "sourceReviewCommit": "47f943859bef60e4160492346772ded9b24f765a",
+  "sourceReviewPackageVersion": "0.1.0-rc.5",
+  "sourceBinaryEquivalence": "UNPROVEN",
+  "claimBoundary": "The official rc.5 source bytes and publicly installed rc.6 package bytes are independently content-addressed. rc.6 exposes no gitHead, so no source-to-binary equivalence is claimed.",
+  "runtimeClosureHash": "sha256:f7df8a6684a8986fa6550e5d0a29bec0bb50f7f88cf7e1439c1388ba1a403b68",
+  "recordHash": "sha256:e5f1eabecb717235319fd85a99d6658b711c82fe23daa692b08c4c0c2dc38d57"
+}

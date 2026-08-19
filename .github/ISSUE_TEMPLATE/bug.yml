@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a reproducible non-sensitive defect
+title: "[bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not upload raw runs, prompts, transcripts, source code, credentials, keys, or private paths. Use private vulnerability reporting for security issues.
+  - type: input
+    id: version
+    attributes:
+      label: Outsider version
+      placeholder: 1.3.96
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Host surface
+      options:
+        - Claude Code terminal
+        - Claude Desktop Code
+        - Claude Desktop Cowork
+        - Explicit headless run
+        - Contribution gateway
+        - Other / observer-only
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction using synthetic data
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true

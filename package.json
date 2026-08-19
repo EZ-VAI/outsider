@@ -1,0 +1,92 @@
+{
+  "name": "outsider-guard",
+  "version": "1.3.96",
+  "private": false,
+  "description": "Transparent attached lifecycle controller and causal-proof supervisor for Claude Code and Cowork",
+  "license": "Apache-2.0",
+  "author": "Eric",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eric20050115/outsider.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eric20050115/outsider/issues"
+  },
+  "homepage": "https://github.com/eric20050115/outsider#readme",
+  "keywords": [
+    "ai-agents",
+    "claude-code",
+    "agent-supervision",
+    "tamper-evident-evidence",
+    "ai-safety"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "type": "module",
+  "bin": {
+    "outsider": "bin/outsider.mjs",
+    "outsider-run": "bin/outsider-run.mjs",
+    "outsider-hook": "bin/outsider-hook.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "scripts",
+    "test",
+    "README.md",
+    "LICENSE",
+    "PRIVACY.md",
+    "SECURITY.md",
+    "docs",
+    "install.mjs",
+    "try.mjs",
+    "hooks",
+    "integrations/deepseek-harness-outsider-plugin",
+    "deploy/cloudflare-experience-gateway",
+    "deploy/cloudflare-product-demo",
+    "references/deepseek-harness-source-pin.json",
+    "references/deepseek-harness-compile-profile.json",
+    ".claude-plugin"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:corpus": "node scripts/outsider-gate-corpus.mjs",
+    "canary:live": "node scripts/stage05-live-canary.mjs",
+    "canary:reliability": "node scripts/stage05-reliability-batch.mjs",
+    "canary:recovery": "node scripts/stage05-reliability-batch.mjs --suite recovery",
+    "canary:false-green": "node scripts/stage05-reliability-batch.mjs --suite false-green",
+    "canary:release-gate": "node scripts/stage05-release-gate-canary.mjs",
+    "canary:release-gate:transport": "OUTSIDER_RELEASE_GATE_SUPERVISOR='node scripts/stage05-release-gate-oracle.mjs' node scripts/stage05-release-gate-canary.mjs",
+    "canary:release-gate:family": "node scripts/stage05-release-gate-family.mjs",
+    "canary:release-gate:family:tally": "node scripts/stage05-release-gate-family-tally.mjs",
+    "canary:recovery:family": "node scripts/stage05-recovery-family.mjs",
+    "canary:recovery:family:tally": "node scripts/stage05-recovery-family-tally.mjs",
+    "canary:r1": "node scripts/stage05-r1-repeatability.mjs",
+    "canary:r1:tally": "node scripts/stage05-r1-repeatability-tally.mjs",
+    "canary:r4": "node scripts/stage05-r4-recovery.mjs",
+    "canary:agent-team:probe": "node scripts/stage05-agent-team-probe.mjs --interactive-pty",
+    "canary:endurance": "node scripts/stage05-endurance-canary.mjs",
+    "canary:cowork": "node scripts/stage05-cowork-conformance.mjs",
+    "canary:deepseek": "node scripts/stage05-deepseek-harness-canary.mjs",
+    "canary:tally": "node scripts/stage05-reliability-tally.mjs",
+    "release:build": "node scripts/build-release.mjs",
+    "release:certify": "node scripts/stage05-release-certify.mjs",
+    "release:metadata": "node scripts/stage05-public-release-metadata.mjs",
+    "risk:shadow": "node scripts/stage05-risk-factor-shadow.mjs",
+    "experience:report": "node scripts/stage05-supervised-corpus-report.mjs",
+    "experience:serve": "node scripts/stage05-experience-contribution-server.mjs",
+    "experience:deploy:cloudflare": "wrangler deploy --config deploy/cloudflare-experience-gateway/wrangler.jsonc",
+    "experience:deploy:cloudflare:dry": "wrangler deploy --dry-run --config deploy/cloudflare-experience-gateway/wrangler.jsonc",
+    "demo:serve": "wrangler dev --config deploy/cloudflare-product-demo/wrangler.jsonc",
+    "demo:deploy": "wrangler deploy --config deploy/cloudflare-product-demo/wrangler.jsonc",
+    "demo:deploy:dry": "wrangler deploy --dry-run --config deploy/cloudflare-product-demo/wrangler.jsonc"
+  },
+  "devDependencies": {
+    "wrangler": "4.124.0"
+  }
+}

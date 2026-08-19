@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Replay and verify a real, sealed Outsider Stage 0.5 intervention chain.">
+  <title>Outsider Stage 0.5 — Real intervention demo</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="#top" aria-label="Outsider home">OUTSIDER<span>/</span></a>
+    <div class="nav-links">
+      <a href="#proof">Proof</a>
+      <a href="#install">Install</a>
+      <a class="github-link" href="https://github.com/eric20050115/outsider">GitHub ↗</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="eyebrow"><span class="pulse"></span> Replay of a sealed real-host run</div>
+      <h1>The agent tried to finish.<br><em>Outsider made it finish correctly.</em></h1>
+      <p class="lede">A real Claude Agent Team reached a red integration boundary. Watch Outsider pause it, audit a correction, observe the repair, and independently verify the final delivery.</p>
+      <div class="hero-actions">
+        <button id="play" class="primary">Play the intervention <span>→</span></button>
+        <button id="reset" class="secondary">Reset</button>
+      </div>
+      <p class="disclosure">Preregistered canary · recorded with v1.3.81 · replayed by the current public demo · no raw code or prompts embedded</p>
+    </section>
+
+    <section class="run-panel" aria-label="Intervention replay">
+      <div class="run-header">
+        <div>
+          <span class="mono muted">CONTROLLED RUN</span>
+          <h2>Multi-agent integration</h2>
+        </div>
+        <div id="run-status" class="status neutral">READY TO REPLAY</div>
+      </div>
+      <div class="flow">
+        <article class="lane worker">
+          <span class="lane-label">WORKER</span>
+          <strong id="worker-state">Completion requested</strong>
+          <small>Claude Agent Team · 3 actors</small>
+        </article>
+        <div class="flow-arrow">→</div>
+        <article class="lane controller">
+          <span class="lane-label">OUTSIDER</span>
+          <strong id="controller-state">Waiting at boundary</strong>
+          <small>Typed correction authority</small>
+        </article>
+        <div class="flow-arrow">→</div>
+        <article class="lane evidence">
+          <span class="lane-label">EVIDENCE</span>
+          <strong id="evidence-state">Unresolved</strong>
+          <small>Hash chain + independent audit</small>
+        </article>
+      </div>
+      <div class="event-stage">
+        <div class="sequence"><span>SEQ</span><strong id="event-seq">—</strong></div>
+        <div class="event-copy">
+          <span id="event-type" class="mono muted">awaiting_start</span>
+          <h3 id="event-title">Press play to inspect the proof chain.</h3>
+          <p id="event-detail">This page replays privacy-projected fields from a sealed Stage 0.5 run.</p>
+          <code id="event-hash">sha256:—</code>
+        </div>
+      </div>
+      <div id="timeline" class="timeline" aria-label="Causal proof timeline"></div>
+    </section>
+
+    <section class="facts">
+      <article><strong>214</strong><span>hash-chained events</span></article>
+      <article><strong>38</strong><span>successful tool boundaries</span></article>
+      <article><strong>9/9</strong><span>required causal stages</span></article>
+      <article><strong>SAFE</strong><span>terminal delivery class</span></article>
+    </section>
+
+    <section id="proof" class="proof-section">
+      <div class="section-intro">
+        <span class="kicker">VERIFY, DON'T TRUST</span>
+        <h2>The browser checks the public artifact.</h2>
+        <p>The raw event stream stays private. The page recomputes the canonical public-evidence hash and verifies that all nine causal stages appear once, in order, before terminal delivery.</p>
+      </div>
+      <div class="proof-card">
+        <div class="proof-row"><span>Public evidence hash</span><code id="public-hash">loading…</code></div>
+        <div class="proof-row"><span>Event-chain commitment</span><code id="chain-hash">loading…</code></div>
+        <div class="proof-row"><span>Final fingerprint</span><code id="fingerprint">loading…</code></div>
+        <div class="proof-result" id="proof-result"><span class="spinner"></span> Verifying locally…</div>
+      </div>
+    </section>
+
+    <section class="privacy-section">
+      <div><span>STAYS LOCAL</span><strong>Code · prompts · transcripts · credentials · paths · command output</strong></div>
+      <div><span>CAN BE CONTRIBUTED WITH CONSENT</span><strong>Signed outcome · correlation roots · bounded event commitments · causal coverage</strong></div>
+    </section>
+
+    <section id="install" class="install-section">
+      <span class="kicker">OPEN-SOURCE BETA</span>
+      <h2>Install once. Keep using Claude normally.</h2>
+      <div class="terminal">
+        <div class="terminal-bar"><i></i><i></i><i></i><span>Terminal</span></div>
+        <pre><code># Download the current GitHub release, then:
+npm install -g ./outsider-guard-1.3.96.tgz
+outsider install --scope user
+outsider doctor
+
+# Continue working normally
+claude</code></pre>
+      </div>
+      <p>Supported after runtime conformance: Claude Code terminal, Claude Desktop Code, and local Cowork with the helper installed. Ordinary Claude Chat and remote sessions without a reachable helper are not claimed as controlled.</p>
+      <a class="primary link-button" href="https://github.com/eric20050115/outsider">View source and install guide →</a>
+    </section>
+  </main>
+
+  <footer>
+    <strong>OUTSIDER/</strong>
+    <span>Measure → Attest → Curate → Price → Guarantee → Settle</span>
+    <span>Open-source Stage 0.5 beta · no insurance coverage issued</span>
+  </footer>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+#!/usr/bin/env node
+/*
+ * Outsider Stage 0.5 transparent-attached 安装器。
+ *   node install.mjs            装
+ *   node install.mjs --check    只体检,不改任何文件
+ *   node install.mjs --strict   所有提醒都升级成硬拦(默认只硬拦不可逆动作)
+ *   node install.mjs --scope project  只写当前项目 .claude/settings.json
+ *   node install.mjs --stage-only     写入隔离目录但不注册 LaunchAgent（发布认证用）
+ *
+ * 这个目录本身就是插件。Claude 桌面版直接指向它;Codex / Claude Code 跑这个脚本。
+ */
+import { existsSync, readFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { homedir, platform, tmpdir } from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { stageClaudeHostedPlugin } from "./scripts/claude-plugin-package.mjs";
+import { decideToolCall } from "./src/outsider-hook.js";
+import { hookConfigFor, mergeHookConfig } from "./src/outsider-agents.js";
+import { installSystemHelper } from "./src/outsider-system-helper.js";
+
+const HOME = homedir();
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const HOOK = `"${String(process.execPath).replaceAll('"', '\\"')}" "${path.join(HERE, "bin", "outsider-hook.mjs")}"`;
+const A = process.argv.slice(2);
+const CHECK = A.includes("--check"), STRICT = A.includes("--strict");
+const STAGE_ONLY = A.includes("--stage-only");
+const scopeIndex = A.indexOf("--scope");
+const SCOPE = scopeIndex >= 0 ? A[scopeIndex + 1] : "user";
+const PROJECT_ROOT = path.resolve(process.env.OUTSIDER_INSTALL_PROJECT_ROOT || process.cwd());
+const say = (s = "") => console.log(s);
+const rule = (c = "─") => say(c.repeat(74));
+
+if (!["user", "project"].includes(SCOPE)) {
+  console.error("用法: outsider install [--scope user|project] [--check] [--strict] [--stage-only]");
+  process.exit(2);
+}
+if (STAGE_ONLY && (SCOPE !== "user" || CHECK)) {
+  console.error("--stage-only 仅用于 user-scope 发布认证，且不能与 --check 同用");
+  process.exit(2);
+}
+
+const USER_SURFACES = [
+  { key: "codex", label: "Codex(终端版 / 桌面版 / IDE 插件)", probe: path.join(HOME, ".codex") },
+  { key: "claude-code", label: "Claude Code 终端版 + 桌面版 Code 标签页", probe: path.join(HOME, ".claude") },
+];
+const SURFACES = SCOPE === "project"
+  ? [{ key: "claude-code", label: "Claude Code（仅当前项目）", probe: PROJECT_ROOT }]
+  : USER_SURFACES;
+
+say(""); rule("═");
+say("  Outsider Stage 0.5 —— 安装后透明监督 Claude 的长任务");
+say("  模式:transparent attached（照常使用 claude / Claude Desktop）");
+rule("═"); say("");
+say(`  Node ${process.version} · ${platform()} · ${CHECK ? "体检模式" : STRICT ? "严格模式" : "标准模式"}`);
+say(`  安装 scope: ${SCOPE === "user" ? "user（本机所有 Claude 项目）" : `project（${PROJECT_ROOT}）`}`);
+if (SCOPE === "user") {
+  say(`  ⚠ 将写入 ${path.join(HOME, ".claude", "settings.json").replace(HOME, "~")}；下一次 hook 起全机生效。`);
+  say("    不要在你正依赖的 Claude/Cowork 会话里执行安装；请从独立终端安装并新开会话。");
+} else {
+  say(`  ✓ 不写用户级 Claude settings；只写 ${path.join(PROJECT_ROOT,
+    ".claude", "settings.json")}`);
+}
+
+if (Number(process.version.slice(1).split(".")[0]) < 20) {
+  say("  ✗ 需要 Node 20 以上。"); process.exit(1);
+}
+
+/* Cowork plugin hooks execute inside Claude's hosted sandbox. That sandbox can
+   reach the selected workspace but cannot read the user's macOS Keychain, so a
+   daemon spawned there cannot open an independently authenticated supervisor
+   session. Install one explicit, user-visible LaunchAgent; the plugin remains
+   a thin authenticated RPC client and normal Claude Code keeps its lazy local
+   sidecar path. */
+if (SCOPE === "user" && platform() === "darwin") {
+  if (CHECK) {
+    say(`  Cowork system helper（体检不写）: ${path.join(HOME,
+      "Library", "LaunchAgents", "ai.outsider.stage05.plist").replace(HOME, "~")}`);
+  } else {
+    try {
+      const helper = installSystemHelper({ sourceRoot: HERE, home: HOME,
+        register: !STAGE_ONLY });
+      say(STAGE_ONLY
+        ? `  ✓ Cowork system helper ${helper.version} 已写入隔离目录（未注册 ${helper.label}）`
+        : `  ✓ Cowork system helper ${helper.version} 已注册（${helper.label}）`);
+    } catch (error) {
+      say(`  ✗ Cowork system helper 安装失败：${error?.message ?? error}`);
+      say("    Hosted Plugin 不会退回 sandbox 内假装受控；本次安装按失败处理。");
+      process.exit(1);
+    }
+  }
+}
+
+/* Cowork's picker needs a stable, user-visible plugin directory. A global npm
+   module path is both hard to find and may move on upgrade, so install a
+   self-contained copy under Outsider-owned state. */
+const PLUGIN_TARGET = path.join(HOME, ".outsider", "plugin", "outsider-guard");
+if (SCOPE === "project") {
+  say("  Cowork 插件不属于 project scope，本次不写 ~/.outsider/plugin。可单独上传发布包里的 plugin zip。");
+} else if (CHECK) {
+  say(`  Cowork 插件目标（体检不写）: ${PLUGIN_TARGET.replace(HOME, "~")}`);
+} else {
+  try {
+    stageClaudeHostedPlugin({ sourceRoot: HERE, targetRoot: PLUGIN_TARGET });
+    JSON.parse(readFileSync(path.join(PLUGIN_TARGET, ".claude-plugin", "plugin.json"), "utf8"));
+    JSON.parse(readFileSync(path.join(PLUGIN_TARGET, "hooks", "hooks.json"), "utf8"));
+    say(`  ✓ Cowork 插件已准备在 ${PLUGIN_TARGET.replace(HOME, "~")}`);
+  } catch (error) {
+    say(`  ✗ Cowork 插件无法准备：${error?.message ?? error}`);
+    process.exit(1);
+  }
+}
+
+/* ---- 自检:引擎在这台机器上到底行不行 ---- */
+say(""); rule();
+say("  自检 —— 真实引擎跑真实场景,不碰你任何文件");
+rule();
+const reads = (n) => Array.from({ length: n }, () => ({ action: "Read(/src/app.js)", exit: 0 }));
+const CASES = [
+  ["同一个文件读了 5 次(纯浪费 token)", reads(5), ["Read", { file_path: "/src/app.js" }], "warn"],
+  ["失败的测试反复重跑,中间没改代码",
+    [{ action: "pytest -q", isTest: true, exit: 1 }, { action: "pytest -q", isTest: true, exit: 1 }],
+    ["Bash", { command: "ls" }], "warn"],
+  ["全程没跑过测试就要提交",
+    ["a", "b", "c"].map((f) => ({ action: `Edit(${f}.js)`, isEdit: true, exit: 0 })),
+    ["Bash", { command: "git commit -am done" }], "warn"],
+  ["正常干活(不该被打扰)",
+    [{ action: "Read(a.js)", exit: 0 }, { action: "Edit(a.js)", isEdit: true, exit: 0 }, { action: "pytest", isTest: true, exit: 0 }],
+    ["Bash", { command: "git status" }], "allow"],
+];
+let ok = true;
+for (const [name, steps, call, want] of CASES) {
+  let d; try { d = decideToolCall({ toolName: call[0], toolInput: call[1], priorSteps: steps, agent: "claude-code" }); }
+  catch (e) { say(`    ✗ ${name} —— 引擎报错 ${e.message}`); ok = false; continue; }
+  const good = d.verdict === want; if (!good) ok = false;
+  say(`    ${good ? "✓" : "✗"} ${name}  →  ${d.verdict}`);
+  if (d.corrective) say(`        它会对 agent 说:${d.corrective}`);
+}
+if (!ok) { say("\n  ✗ 自检没过,装了也不会起作用。把上面这段发回去。"); process.exit(1); }
+
+/* ---- 装 ---- */
+const done = [], yours = [], failed = [];
+for (const s of SURFACES) {
+  if (!existsSync(s.probe)) { say(`\n  ○ 没找到 ${s.label}(${s.probe.replace(HOME, "~")})—— 跳过`); continue; }
+  const cfg = hookConfigFor(s.key, HOOK + (STRICT ? " --strict" : ""));
+  if (SCOPE === "project" && s.key === "claude-code") {
+    cfg.path = path.join(PROJECT_ROOT, ".claude", "settings.json");
+  }
+  say(""); rule(); say(`  ${s.label}`); rule();
+  if (CHECK) { say(`    体检模式:不写。目标文件 ${cfg.path.replace(HOME, "~")}`); continue; }
+  let cur = {};
+  if (existsSync(cfg.path)) { try { cur = JSON.parse(readFileSync(cfg.path, "utf8")); } catch { cur = {}; } }
+  const merged = mergeHookConfig(cur, cfg.value);
+  mkdirSync(path.dirname(cfg.path), { recursive: true });
+  writeFileSync(cfg.path, JSON.stringify(merged, null, 2));
+  const back = JSON.parse(readFileSync(cfg.path, "utf8"));
+  /*
+   * ── 每一个声明的事件都要落地，而且命令要真的能跑 ──────────────────────
+   * This checked PreToolUse only, and separately the config declared three
+   * events while the merger copied one — so 收工拦截 was "installed" on every
+   * machine and present on none. Checking the string was written is not
+   * checking anything: the very next edit to the entry shipped a syntax error
+   * and every check still said ✓.
+   */
+  const want = Object.keys(cfg.value.hooks ?? {});
+  const got = want.filter((ev) => (back.hooks?.[ev] ?? [])
+    .some((e) => (e.hooks ?? []).some((h) => /outsider/.test(h.command))));
+  const landed = got.length === want.length;
+  say(`    ${landed ? "✓" : "✗"} 写入 ${cfg.path.replace(HOME, "~")} —— 事件 ${got.join(" ")}${landed ? "（都读回确认过）" : ` ✗ 少了 ${want.filter((e) => !got.includes(e)).join(" ")}`}`);
+  /*
+   * 命令要真的跑一次,而且【不能按空格拆】。
+   * 上一版 split(/\s+/) 在一个叫 "outsider 2" 的目录下会把路径拆成两段,于是
+   * 刚加的这条冒烟检查在真实路径下自己先坏掉。更糟的是它坏了也不影响结论:
+   * 配置已经写入、landed 仍为 true、最后照样打印「✓ 已做完」。
+   * 发现一条检查不够 → 加一条冒烟检查 → 冒烟检查没进成功判定,这是同一个病。
+   */
+  let ran = false;
+  let smokeRoot = null;
+  try {
+    const { execFileSync } = await import("node:child_process");
+    const entry = path.join(HERE, "bin", "outsider-hook.mjs");
+    const argv = [entry, "hook", s.key].concat(STRICT ? ["--strict"] : []);
+    if (s.key === "claude-code") smokeRoot = mkdtempSync(path.join(tmpdir(), "outsider-install-smoke-"));
+    const env = smokeRoot ? { ...process.env, OUTSIDER_ATTACHED_ROOT: smokeRoot,
+      OUTSIDER_BUDGET_MS: "12000" } : process.env;
+    const out = execFileSync(process.execPath, argv, { encoding: "utf8", timeout: 15000, env,
+      input: JSON.stringify(s.key === "claude-code"
+        ? { _outsiderAttachedPing: true, hook_event_name: "SessionStart",
+          session_id: "install-smoke", cwd: HERE }
+        : { tool_name: "Bash", tool_input: { command: "ls" }, cwd: HERE }) });
+    JSON.parse(out || "{}");
+    if (smokeRoot) {
+      const descriptor = JSON.parse(readFileSync(path.join(smokeRoot, "daemon.json"), "utf8"));
+      if (!descriptor.pid || !descriptor.socketPath || !descriptor.token) {
+        throw new Error("sidecar descriptor 不完整");
+      }
+      try { process.kill(descriptor.pid, "SIGTERM"); } catch { /* already stopped */ }
+    }
+    ran = true;
+    say(s.key === "claude-code"
+      ? "    ✓ 正常 hook 已自动启动 sidecar，并完成健康握手"
+      : "    ✓ observer hook 命令实际跑通，返回合法 JSON");
+  } catch (e) {
+    say(`    ✗ 钩子写进去了,但跑不起来:${String(e.message).slice(0, 200)}`);
+    say("      这条钩子在你的 agent 里会被静默跳过。把这一段发回来。");
+  } finally { if (smokeRoot) rmSync(smokeRoot, { recursive: true, force: true }); }
+  if (!ran) failed.push(s.label);
+  for (const r of merged.__removedLegacy ?? []) say(`      ⟲ 移除一条旧的 outsider 钩子(${r.why})`);
+  if (landed && ran) done.push(s.label); else if (!landed) failed.push(s.label);
+  if (s.key === "codex") yours.push(["打开 Codex → 输入 /hooks → 信任 outsider 这一条。",
+    "没被信任的钩子会被静默跳过 —— 不报错、不提示、就是不跑。"]);
+}
+
+if (SCOPE === "user" && !STAGE_ONLY) {
+  yours.push([`Claude 桌面版 Cowork 标签页:设置 → 插件 → 从目录安装 → 选 ${PLUGIN_TARGET}`,
+    "装完在会话里运行 /reload-plugins。插件是薄客户端；系统 helper 已由本次安装显式注册。"]);
+} else if (SCOPE === "user") {
+  yours.push(["这是隔离发布认证安装；LaunchAgent 没有注册，不能当作真实 Cowork 安装。",
+    "真实用户安装必须省略 --stage-only，并在新会话中完成宿主 conformance。"]);
+} else {
+  yours.push(["project scope 只覆盖当前仓库的 Claude Code / Desktop Code。",
+    "Cowork 必须另行上传发布包里的 .plugin.zip；普通 Chat 仍不运行 hooks。"]);
+}
+yours.push(["可选验证 —— 照常启动一次 claude 并提交一个项目任务，然后运行 outsider doctor。",
+  "native Claude 的 runtime 应显示 seen；这证明宿主真的触发过 hook，而不只是配置文件写在磁盘上。",
+  "普通 Chat 不触发 hook；Cowork 的 runtime 证明必须来自 Cowork 自己的会话环境。"]);
+
+if (failed.length) {
+  say(""); rule("═");
+  say("  ✗ 安装没有成功 —— 下面这些宿主上,钩子装了但跑不起来或没落地:");
+  for (const x of failed) say(`      · ${x}`);
+  say("  在修好之前,请当作【没有装】。把上面的报错原样发回来。");
+  rule("═"); say("");
+  process.exit(1);
+}
+say(""); rule("═");
+if (CHECK) {
+  say("  ✓ 体检完成（没有写配置，也没有声称宿主已加载 hook）");
+  rule("═");
+  say("    真实安装后才会执行 sidecar 健康握手；完整 readiness 仍以 outsider doctor 和首次真实会话 conformance 为准。");
+} else {
+  say(STAGE_ONLY
+    ? "  ✓ 隔离 staging 已做完（配置、插件、helper 字节都读回；没有注册 LaunchAgent）"
+    : "  ✓ 已做完(都读回确认过,而且命令实际跑通过)");
+  rule("═");
+  say(STAGE_ONLY
+    ? "    这只证明可安装字节和 hook 配置；不声称系统 helper 或真实宿主已运行。"
+    : "    Claude Code transparent attached 控制链已安装；无需改用 outsider run。");
+  say("    sidecar 运输已实测，完整 Stage 0.5 readiness 仍以 outsider doctor 和首次真实会话 conformance 为准。");
+}
+for (const d of done) say(`    ✓ ${d}`);
+if (!done.length && !CHECK) say("    (没有找到需要写配置的终端 agent —— 桌面版走下面的插件安装)");
+say(""); rule("═"); say("  ○ 只有你能做的"); rule("═");
+yours.forEach((b, i) => { say(""); say(`  ${i + 1}. ${b[0]}`); b.slice(1).forEach((l) => say(`     ${l}`)); });
+say(""); rule("═"); say("  ⚠ 我担保不了的"); rule("═");
+say("    · Claude 普通 Chat 不运行 hooks；Desktop 中受控面是 Claude Code 与 Cowork。Cowork 必须通过插件安装。\n"
+  + "      若该版本/远程会话不触发 hooks，Outsider 会把 surface 标为未受控，不能提供 Stage 0.5 证明。");
+say("    · Codex 桌面版钩子近期有过回归(openai/codex#21639)。");
+say("    · Claude 控制面失联时 PreToolUse/Stop 会 fail-closed；Codex 当前仍是 observer，保持 fail-visible。 ");
+say("    · 别挪这个文件夹,钩子里是绝对路径。挪了就重跑一次 node install.mjs。");
+say("");
