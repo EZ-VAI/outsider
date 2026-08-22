@@ -127,6 +127,14 @@ outsider federation-status \
 Raw prompts, source, stdout, stderr, credentials, email and private keys are
 forbidden from the public projection.
 
+For code-level integrations, `src/outsider-federation-producers.js` is the
+provider-aware entry point. `createClaudeFederatedWay` and
+`createDeepSeekFederatedWay` first invoke their source-specific verifier;
+`createCodexFederatedWay` and `createTraeFederatedWay` enforce the observer-only
+ceiling. `createProviderWayDescriptor` binds the adapter, runtime, provider,
+topology, model, data and toolchain roots before signing. These convenience
+producers never relax the underlying federation verifier or grant authority.
+
 ## What reaches the learning and clearing pipeline
 
 Every verified packet creates one `outsider/federated-supervision/v1` record.

@@ -10,8 +10,9 @@
  *   - Claude Code : PreToolUse hook. Output
  *       {hookSpecificOutput:{permissionDecision:"deny"|"allow", permissionDecisionReason, additionalContext}}
  *     covers ALL tools. `additionalContext` is injected into the model's context.
- *   - Codex CLI   : ~/.codex/hooks.json PreToolUse. Only "deny" is honoured, and it
- *     intercepts the SHELL tool only — where deploy/rm/db live.
+ *   - Codex CLI   : ~/.codex/hooks.json lifecycle hooks. The current native
+ *     schema exposes pre/post tool, context, updated input and Stop boundaries;
+ *     trust and live conformance are still established per installation.
  *   - CodeBuddy   : Claude-Code-style hooks.
  *
  * This module is the tool-agnostic DECISION plus a translator to each tool's
@@ -44,11 +45,10 @@ import { injectMandate } from "./outsider-mandate-inject.js";
 import { openCorrection, judgeOpen, ledgerLine, hashText, statePath, escalation,
   LEDGER_PATH } from "./outsider-intervention-observer.js";
 import { observerUsable, supports } from "./outsider-host-support.js";
-import { readContract, CONTRACT_GUARD } from "./outsider-work-contract.js";
-import { askSupervisor, supervisorPacket, correctionFrom } from "./outsider-supervisor-session.js";
-import { readRunState, emit } from "./outsider-run.js";
+import { CONTRACT_GUARD } from "./outsider-work-contract.js";
 import { requestProbe, readProbe, ARCHDRIFT_RUNNER } from "./outsider-probe.js";
-import { armOf, complianceProbe, shadowRecord, SHADOW_PATH } from "./outsider-compliance.js";
+import { appendComplianceLedgerRecord, armOf, complianceProbe,
+  shadowRecord } from "./outsider-compliance.js";
 
 /* every rm target provably made by this run — see the gate's note */
 function undoesOwnWork(action, steps, cwd = null) {
@@ -69,7 +69,7 @@ function undoesOwnWork(action, steps, cwd = null) {
   } catch { return false; }
 }
 import { readFileSync, writeFileSync, mkdirSync, appendFileSync } from "node:fs";
-import { spawn, execSync } from "node:child_process";
+import { spawn } from "node:child_process";
 
 const isTestFile = (f) => /(^|[/\\])(?:tests?|specs?)[/\\]|[._-](?:test|spec)\.\w+$|(?:^|[/\\])(?:test|spec)_/i.test(String(f));
 
@@ -132,25 +132,6 @@ function requestFaultCard({ cwd, key, cmd, spawnFn = spawn, writeFn = null }) {
   } catch { return false; }
 }
 
-/*
- * 什么时候把监工叫过来 —— 用【现有的】检测器，一个新的都不加。
- * 检测器从此只负责「这里值得看一眼」，看什么、怎么办由独立会话决定。
- */
-function pendingTrigger(steps, proposed, { delivery, mismatches } = {}) {
-  if (delivery && !delivery.passed) return `delivery:${delivery.result.gaps[0]?.kind ?? "gap"}`;
-  if (proposed?.isSubmit) return "submit";
-  if ((mismatches ?? []).length) return `said-vs-did:${mismatches[0].signal}`;
-  try {
-    const pa = assessPatrol(steps, { proposed });
-    if (pa.detected) return `patrol:${pa.kind}`;
-  } catch { /* */ }
-  try {
-    const a = assessWhackAMole({ steps });
-    if (a?.detected && a.rung !== "nudge") return "whack-a-mole";
-  } catch { /* */ }
-  return null;
-}
-
 /* one place that writes observer state, so the two call sites cannot drift */
 function writeState(cwd, p, body, writeFileFn) {
   if (writeFileFn) { writeFileFn(p, body); return; }
@@ -189,14 +170,8 @@ export { classifyToolCall, trajectoryFromTranscript, eventsFromTranscriptLine };
  *
  * `authority: "none"` rides along unchanged. Minting a card grants nothing.
  */
-/*
- * DID THE SENTENCE ACTUALLY REACH THE MODEL. Measured, not assumed: on this
- * machine's codex-cli, `allow` + `additionalContext` runs the command and the
- * model never sees the context — it is not even in the session JSONL. So on
- * Codex a warn is delivered to the OPERATOR and to nobody else, and pooling
- * those rows with Claude Code's would compute a treatment effect for a treatment
- * that was never administered.
- */
+/* DID THE SENTENCE ACTUALLY REACH THE MODEL. Legacy treatment capture remains
+ * conservative: engine schema discovery is not per-install delivery proof. */
 function payloadCarries(agent, d) {
   /*
    * ── 送达与否，从真实 adapter 的输出算，不从 verdict 推 ──────────────────
@@ -252,10 +227,11 @@ export function decideToolCall(opts = {}) {
   const d0 = decideToolCallInner({ ...opts, _ctx: ctx });
   /*
    * ── THE COMPLIANCE LEDGER ────────────────────────────────────────────────
-   * ALWAYS RECORD; the mode only decides whether to SPEAK. That is what makes
-   * one machine produce both arms: a shadow install contributes controls, a live
-   * install contributes interventions, and they are scored by the same code
-   * against a definition pinned before the data existed.
+   * ALWAYS FORM THE IN-MEMORY PRIVACY PROJECTION; the mode only decides whether
+   * to SPEAK. Durable recording is separate and defaults off. Only an operator
+   * who sets OUTSIDER_COMPLIANCE_LEDGER=1 creates the bounded local v2 ledger.
+   * That separation keeps hook behavior deterministic without treating
+   * installation as consent to collect an experiment.
    *
    * A destructive refusal is never withheld and never assigned an arm —
    * withholding an `rm -rf` block to collect a data point would be running an
@@ -408,22 +384,23 @@ function decideToolCallInner({
   freeStop = process.env.OUTSIDER_FREESTOP !== "0",
   /* 控制状态机：结算上一条纠正、登记下一条。`OUTSIDER_CONTROL=0` to disable. */
   control = process.env.OUTSIDER_CONTROL !== "0",
-  /*
-   * controlled 模式由磁盘上的 run.json 决定,不由环境变量猜。没有它就是
-   * observer-only —— 而且 run.json 里那个 mode 字段会明写出来。
-   */
-  controlled = null,
 } = {}) {
   /* SCOPE FIRST. A session is not a task: without a recency and a same-repo
      bound this reconstructs every step the operator has taken today, then
      grounds its corrections in whichever of them parsed. `cwd` comes straight
      off the hook payload — both hosts have been sending it all along. */
-  /* controller 的存在与否是磁盘上的事实 */
-  const _run = controlled === null && cwd ? readRunState(cwd, { readFile: readFileFn }) : null;
-  const _controlled = controlled ?? (_run?.mode === "controlled" && _run.supervisorCmd
-    ? { supervisorCmd: _run.supervisorCmd } : null);
-  controlled = _controlled;
-  if (_ctx && (_run?.mode === "controlled" || process.env.OUTSIDER_RUN === "1")) _ctx.unattended = true;
+  /*
+   * COMMAND AUTHORITY NEVER COMES FROM THE WORKSPACE.
+   *
+   * This evaluator is also the unauthenticated fallback used by adapters that
+   * have no controller channel. A previous version promoted
+   * `.outsider/run.json` into a controller credential and then accepted the
+   * neighbouring sealed contract as authority to launch a supervisor. Both
+   * files live inside the worker-writable repository, so a repository could
+   * manufacture its own shell authority. The authenticated kernel/RunStore
+   * path owns supervisor and acceptance execution now; this standalone path is
+   * deliberately commandless. `OUTSIDER_RUN=1` is not authentication either.
+   */
 
   const usageByOrigin = fleet && !priorSteps ? {} : null;
   const raw = priorSteps ?? (fleet
@@ -1204,59 +1181,11 @@ function decideToolCallInner({
     } catch { /* 巡检 never breaks the gate */ }
   }
 
-  /*
-   * ── 2·0 在工具边界暂停，交给独立监工 ────────────────────────────────────
-   *
-   * This is the whole point of the round, and it is deliberately NOT a detector.
-   * Everything above already decided that something is wrong; this decides who
-   * gets to say what to do about it — and the answer is a session that has never
-   * seen this run and cannot read the worker's account of itself.
-   *
-   * The pause is this function not returning yet. The host is blocked on our
-   * answer, no tool has executed, nothing is half-written. That is the safe
-   * boundary, and holding it costs a run that nobody is watching nothing at all.
-   *
-   * Only in `controlled` mode, only with a sealed contract, and never on a call
-   * that is already being refused for danger — a destructive command does not
-   * become a question for a supervisor.
-   */
-  if (controlled && cwd && !proposed.isEdit) {
-    const trigger = pendingTrigger(steps, proposed, { delivery, mismatches });
-    if (trigger) {
-      const { contract, reason } = readContract(cwd, { readFile: readFileFn });
-      if (!contract) {
-        /* 合同没了或者被改过 —— 这一轮没有标准，明说，不假装 */
-        emit(cwd, { type: "supervisor_skipped", why: reason });
-      } else {
-        emit(cwd, { type: "paused_at_tool_boundary", trigger,
-          action: String(proposed.action ?? "").slice(0, 160) });
-        const packet = supervisorPacket({ contract, steps,
-          lastTest: [...steps].reverse().find((x) => x.isTest && x.exit != null) ?? null });
-        emit(cwd, { type: "evidence_sent", bytes: JSON.stringify(packet).length,
-          containsWorkerNarration: false, fields: Object.keys(packet) });
-        const r = askSupervisor({ cmd: controlled.supervisorCmd, packet });
-        if (!r.ok) {
-          emit(cwd, { type: "supervisor_failed", error: r.error });
-        } else if (r.verdict.insufficient) {
-          emit(cwd, { type: "supervisor_insufficient", missing: String(r.verdict.insufficient).slice(0, 200) });
-        } else if (r.verdict.onTrack) {
-          emit(cwd, { type: "supervisor_verdict", onTrack: true });
-        } else {
-          const correction = correctionFrom(r.verdict, contract);
-          emit(cwd, { type: "supervisor_verdict", onTrack: false,
-            drift: String(r.verdict.drift ?? "").slice(0, 300),
-            planSteps: (r.verdict.plan ?? []).length });
-          emit(cwd, { type: "correction_delivered", channel: "PreToolUse.deny",
-            bytes: correction.length, trigger });
-          return { verdict: "deny", proposed, risk: proposed.risk,
-            reason: `独立监工：这条轨迹偏离了冻结的原话（${trigger}）`,
-            corrective: correction, supervised: { trigger, drift: r.verdict.drift } };
-        }
-      }
-    }
-  }
-
-  const waste = assessHookWaste({ steps, mismatches, proposed });
+  /* Standalone analysis ends here without consulting a workspace-authored
+     supervisor command. Semantic supervision belongs to the authenticated
+     kernel controller, not this evaluator. */
+  const waste = assessHookWaste({ steps, mismatches, proposed,
+    acceptanceCommand: contract?.acceptance ?? null });
   if (waste.worst) {
     const extra = waste.findings.length > 1 ? ` (+${waste.findings.length - 1} more this run)` : "";
     return { verdict: "warn", proposed, risk: proposed.risk,
@@ -1393,7 +1322,8 @@ function applyComplianceMode(d, opts, ctx) {
    */
   if (d.verdict !== "allow") {
     out._shadow = shadowRecord({ decision: d, probe,
-      arm: exempt ? "exempt" : mode, spoke, origin: ctx?.fleet?.origin ?? "main" });
+      arm: exempt ? "exempt" : mode, spoke, origin: ctx?.fleet?.origin ?? "main",
+      workspaceRoot: opts.cwd ?? null });
   }
   /* silenced: the operator still gets the line on stderr, the agent gets nothing.
      A supervisor running an experiment must never be invisible to its owner. */
@@ -1525,18 +1455,17 @@ export function toClaudeCodeHookOutput(decision) {
  * the CLI printed a confident-looking deny to anyone who tested it by hand. A
  * supervisor that cannot be seen failing is worse than no supervisor.
  *
- * WRONG #2 (mine, one round old): "Codex has no context-injection channel, so a
- * warn must either evaporate or be escalated to a hard deny." False. Codex's
- * PreToolUse supports `additionalContext` — "added as extra developer context" —
- * exactly like Claude Code. I built `--strict` on a premise I had not checked,
- * and its default-on setting turned every advisory into a wall. The grounded
- * correction now rides the channel that was there the whole time.
+ * `additionalContext` exists in the Codex hook output schema, so Outsider may
+ * carry a correction in the host payload without turning every advisory into a
+ * wall. A real-host probe found no authenticated evidence that the model sees
+ * that field, however. Every such output is therefore marked
+ * `_outsiderUndeliverable`; payload presence must never be reported as delivery.
  *
  * What Codex genuinely does NOT support: `permissionDecision: "ask"` is "parsed
  * but not supported yet". So an `ask` (an action Outsider cannot prove safe)
- * cannot become a real human escalation here. It degrades to allow + a context
- * note telling the model to ask its user — and the degradation is DISCLOSED
- * rather than presented as an escalation that happened.
+ * cannot become a real human escalation here. It degrades to allow plus an
+ * unverified context payload, and both the missing escalation and missing
+ * delivery conformance are disclosed.
  *
  * `--strict` survives with an honest, narrower meaning: turn advisories into
  * hard blocks. That is a real operator preference. It is no longer the default,
@@ -1558,7 +1487,8 @@ export function toCodexHookOutput(decision, { strict = false } = {}) {
     }
     return { ...PRE({ permissionDecision: "allow",
       additionalContext: `⚠︎ outsider: ${decision.reason}. ${ctx ?? ""} Ask your user to confirm before proceeding.`.trim() }),
-      _outsiderDegraded: `ask→allow+context: Codex does not honour "ask"; the escalation reached the model as context, not as a prompt to the human` };
+      _outsiderDegraded: `ask→allow+context: Codex does not honour "ask"`,
+      _outsiderUndeliverable: "Codex context delivery lacks authenticated live conformance" };
   }
   if (decision.verdict === "warn") {
     if (strict) {
@@ -1566,17 +1496,16 @@ export function toCodexHookOutput(decision, { strict = false } = {}) {
         permissionDecisionReason: `outsider: ${decision.corrective ?? decision.reason}`.trim() }),
         _outsiderEscalated: "warn→deny (strict): operator chose hard blocks over advisories" };
     }
-    /*
-     * MEASURED, AND IT CHANGES THE MEANING OF THIS BRANCH: on codex-cli 0.145.0,
-     * `allow` + `additionalContext` runs the command and the model never sees the
-     * context — it is not injected, and it does not appear in the session JSONL.
-     * The advisory is emitted anyway (a future build may honour it) but the
-     * operator is told, every time, that it did not land. Previously this branch
-     * silently produced nothing and read like a delivered warning.
-     */
     return { ...PRE({ permissionDecision: "allow",
       additionalContext: `⚠︎ outsider: ${decision.corrective ?? decision.reason}` }),
-      _outsiderUndeliverable: "additionalContext 在本机 Codex 上不进模型（实测）—— 这条提醒只有你看得到" };
+      _outsiderUndeliverable: "Codex context delivery lacks authenticated live conformance" };
+  }
+  if (decision.rewrite) {
+    return { ...PRE({ permissionDecision: "allow",
+      permissionDecisionReason: `outsider: ${decision.rewrite.kind}`,
+      updatedInput: decision.rewrite.updatedInput,
+      additionalContext: decision.rewrite.note }),
+      _outsiderUndeliverable: "Codex updatedInput lacks authenticated live conformance" };
   }
   /* NOT `defer`: it is absent from Codex's permissionDecision enum, and an
      unrecognised value makes the whole item be ignored. Empty is the honest
@@ -1737,48 +1666,8 @@ export function handleStopHook({ input = {}, agent = "claude-code",
     if (!steps.length) return approve;
     const acc = usageByOrigin?.[origin] ?? {};
 
-    /*
-     * ── 收工那一刻，controller 自己跑一遍冻结的验收命令 ────────────────────
-     *
-     * 这是无头运行里最可靠的一个时刻，也是唯一一个「worker 认为自己做完了」的
-     * 时刻。它说什么在这里没有任何权重：命令是合同里冻结的那一条，由我们跑，
-     * 退出码是我们看到的。这就是「不给自己判卷」的具体含义。
-     *
-     * 红了就叫独立监工 —— 一个没参与过这项工作、看不到 worker 任何自述的全新
-     * 会话 —— 由它诊断并给出纠正计划，然后 block 把 worker 送回去继续做。
-     */
-    const runState = readRunState(cwd, { readFile: readFileFn });
-    if (runState?.mode === "controlled" && runState.supervisorCmd) {
-      const { contract } = readContract(cwd, { readFile: readFileFn });
-      if (contract?.acceptance) {
-        let exit = 0, out = "";
-        try { out = execSync(contract.acceptance, { cwd, encoding: "utf8", timeout: 600000,
-          stdio: ["ignore", "pipe", "pipe"], env: unsupervisedCommandEnvironment(process.env) }); }
-        catch (e) { exit = e?.status ?? 1; out = String(e?.stdout ?? e?.message ?? ""); }
-        emit(cwd, { type: "independent_acceptance_at_stop", command: contract.acceptance, exit });
-        if (exit !== 0) {
-          emit(cwd, { type: "paused_at_stop", why: "冻结的验收命令是红的" });
-          const packet = supervisorPacket({ contract, steps,
-            lastTest: { exit, observation: out.slice(-2000) } });
-          emit(cwd, { type: "evidence_sent", bytes: JSON.stringify(packet).length,
-            containsWorkerNarration: false, fields: Object.keys(packet) });
-          const r = askSupervisor({ cmd: runState.supervisorCmd, packet });
-          if (!r.ok) emit(cwd, { type: "supervisor_failed", error: r.error });
-          else {
-            emit(cwd, { type: "supervisor_verdict", onTrack: Boolean(r.verdict.onTrack),
-              drift: String(r.verdict.drift ?? "").slice(0, 300),
-              planSteps: (r.verdict.plan ?? []).length });
-            const correction = correctionFrom(r.verdict, contract)
-              ?? `【独立验收】冻结的验收命令 \`${contract.acceptance}\` 退出码 ${exit}。\n`
-                 + `运行器原话：\n${out.slice(-1200)}\n\n继续做，不要停。`;
-            emit(cwd, { type: "correction_delivered", channel: "Stop.block", bytes: correction.length });
-            return { decision: "block", reason: correction,
-              systemMessage: `outsider: 独立验收未通过（${contract.acceptance} exit ${exit}）—— 已打回` };
-          }
-        }
-      }
-    }
-
+    /* Standalone Stop is analysis-only. Repository files are evidence, never
+       authority to execute acceptance or launch a supervisor. */
     const findings = stopGateFindings({ steps, operatorTurns: acc.operator ?? [],
       usage: acc.usage ?? null, boundaries: acc.boundaries ?? [] });
     if (!findings.length) return approve;
@@ -1839,7 +1728,8 @@ export function handleStopHook({ input = {}, agent = "claude-code",
   return approve;
 }
 
-export function handleHookInvocation({ agent = "claude-code", input = {}, contract = {}, executor, world, strict = false } = {}) {
+export function handleHookInvocation({ agent = "claude-code", input = {}, contract = {}, executor,
+  world, strict = false, env = process.env, spawnFn = spawn } = {}) {
   /* Stop / SubagentStop arrive on the same entry point and carry no tool */
   const ev = String(input.hook_event_name ?? input.hookEventName ?? "");
   if (ev === "Stop" || ev === "SubagentStop") {
@@ -1847,23 +1737,32 @@ export function handleHookInvocation({ agent = "claude-code", input = {}, contra
     return { decision: { verdict: out.decision === "block" ? "warn" : "allow",
       reason: out.systemMessage ?? null, corrective: out.reason ?? null }, output: out };
   }
+  /* These are observation/finalization boundaries, never proposed actions.
+     Treating PostToolUse as PreToolUse re-ran the policy after execution and
+     could manufacture a second "decision" over an already completed action.
+     Installed Codex control routes them through the attached controller; this
+     standalone fallback is deliberately transparent and non-authoritative. */
+  if (["SessionStart", "UserPromptSubmit", "PostToolUse", "PreCompact"].includes(ev)) {
+    return { decision: { verdict: "allow", reason: "standalone lifecycle observation only" },
+      output: {} };
+  }
   const toolName = input.tool_name ?? input.toolName ?? "";
   const toolInput = input.tool_input ?? input.toolInput ?? {};
   const transcriptPath = input.transcript_path ?? input.transcriptPath ?? null;
   const cwd = input.cwd ?? input.workingDirectory ?? input.working_directory ?? null;
-  const decision = decideToolCall({ toolName, toolInput, transcriptPath, contract, executor, world, agent, cwd });
+  const decision = decideToolCall({ toolName, toolInput, transcriptPath, contract, executor,
+    world, agent, cwd, complianceMode: complianceMode(env),
+    /* No authenticated controller channel: diagnostics may read, never spawn. */
+    faultCards: false, archBench: false, judgeCmd: null, spawnFn });
   /*
-   * APPEND-ONLY, ONE LINE, STRUCTURAL ONLY. The ledger is what a volunteer sends
-   * back, so it holds file paths and signatures — never source text, never a
-   * traceback body. Appending cannot corrupt what is already there, which
-   * matters because this file is the only artefact of the experiment.
+   * The compliance ledger is OFF unless the operator explicitly opts in with
+   * OUTSIDER_COMPLIANCE_LEDGER=1. Its writer reprojects the record, hashes every
+   * path/action identifier, enforces a bounded retention window and refuses
+   * symlinks. It is local diagnostic state, never an automatic contribution.
    */
   if (decision?._shadow && cwd) {
     try {
-      const dir = `${String(cwd).replace(/\/+$/, "")}/.outsider`;
-      mkdirSync(dir, { recursive: true });
-      appendFileSync(`${String(cwd).replace(/\/+$/, "")}/${SHADOW_PATH}`,
-        JSON.stringify({ ...decision._shadow, ts: Date.now() }) + "\n");
+      appendComplianceLedgerRecord({ cwd, record: decision._shadow, env });
     } catch { /* the ledger is best effort; it never changes a verdict */ }
   }
   const fmt = OUTPUT_BY_AGENT[agent] ?? toClaudeCodeHookOutput;

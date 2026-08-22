@@ -1,5 +1,8 @@
 import { runFreshJsonCommand } from "./outsider-json-command.js";
 import {
+  externalSupervisorPrompt, projectExternalSupervisorValue,
+} from "./outsider-supervisor-projection.js";
+import {
   compactTrajectory, currentSourceEvidence, frozenAcceptanceEvidence,
 } from "./outsider-supervisor-session.js";
 
@@ -118,7 +121,7 @@ export function outcomePacket({ contract, baseline, current, diff, acceptance,
     status: !current?.files?.[file.path] ? "deleted"
       : current.files[file.path].sha === file.sha256 ? "unchanged" : "modified",
   })).filter((entry) => entry.status !== "unchanged");
-  return compactOutcomePacket({
+  return projectExternalSupervisorValue(compactOutcomePacket({
     frozenOperatorWords: contract?.ask ?? null,
     semanticContract: contract?.semantic ?? null,
     acceptance: {
@@ -145,7 +148,7 @@ export function outcomePacket({ contract, baseline, current, diff, acceptance,
     finalFingerprint: current?.fingerprint ?? null,
     diff,
     currentSourceEvidence: currentSourceEvidence(current, contract),
-  });
+  }));
 }
 
 export function verifyOutcome({ cmd, contract, baseline, current, diff, acceptance,
@@ -158,7 +161,8 @@ export function verifyOutcome({ cmd, contract, baseline, current, diff, acceptan
   const feedback = validationFeedback
     ? `\n────── 上一次响应的 schema 错误（必须逐条修正） ──────\n${String(validationFeedback).slice(0, 4000)}\n`
     : "";
-  const input = `${OUTCOME_PROMPT}\n\n────── 冻结合同与客观证据 ──────\n${JSON.stringify(packet, null, 2)}\n${feedback}`;
+  const input = externalSupervisorPrompt({ prompt: OUTCOME_PROMPT,
+    heading: "────── 冻结合同与客观证据 ──────", packet, suffix: feedback });
   const result = execute({ cmd, input, validate: validOutcomeVerdict });
   if (!result?.ok) return { ok: false, error: result?.error ?? "OUTCOME_VERIFIER_FAILED",
     failure: result?.failure ?? null, packet };

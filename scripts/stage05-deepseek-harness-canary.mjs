@@ -13,6 +13,8 @@ import { createDeepSeekHarnessCorrection, createDeepSeekHarnessHandshake,
   verifyDeepSeekHarnessCorrectionAck,
   verifyDeepSeekHarnessEffectEvidence } from
   "../src/outsider-deepseek-harness-protocol.js";
+import { createDeepSeekWorkerObservation, verifyDeepSeekWorkerObservation } from
+  "../src/outsider-deepseek-worker-adapter.js";
 import { canonicalizeStrict } from "../src/canonical.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -89,6 +91,21 @@ const gateway = {
   },
   async recordAck(ack) { acknowledgements.push(ack); },
 };
+/* Loading the optional plugin without configuration must still register its
+   handlers and preserve Harness availability. Its first enter is one visible
+   UNSUPERVISED notice, never a plugin-load TypeError or host rejection. */
+const noConfigContext = new Context();
+await noConfigContext.plugin((pluginContext) => outsiderPlugin(pluginContext));
+const noConfigDecision = await noConfigContext.waterfall("agent/pre-step", {
+  agent: { id: "no-config-agent" }, turn: 0, step: 0,
+}, async () => ({ kind: "enter", messages: [] }));
+if (noConfigDecision?.kind !== "enter"
+  || noConfigDecision.messages?.length !== 1
+  || !String(noConfigDecision.messages[0]?.content?.[0]?.text ?? "")
+    .includes("OUTSIDER_UNSUPERVISED:OUTSIDER_DEEPSEEK_GATEWAY_CONFIG_REQUIRED")) {
+  throw new Error("DEEPSEEK_NO_CONFIG_FAIL_VISIBLE_SMOKE_FAILED");
+}
+await noConfigContext.fiber.dispose();
 const ctx = new Context();
 await ctx.plugin((pluginContext) => outsiderPlugin(pluginContext, { handshake, gateway }));
 const events = [
@@ -126,6 +143,14 @@ const effect = createDeepSeekHarnessEffectEvidence({ correction, handshake, ack,
   afterObservation: observation });
 const effectVerification = verifyDeepSeekHarnessEffectEvidence(effect, { correction,
   handshake, ack, afterObservation: observation });
+const workerObservation = createDeepSeekWorkerObservation({
+  harnessObservation: observation, runtimeHandshake: handshake,
+  correction, correctionAck: ack, effectEvidence: effect,
+});
+const workerVerification = verifyDeepSeekWorkerObservation(workerObservation, {
+  harnessObservation: observation, runtimeHandshake: handshake,
+  correction, correctionAck: ack, effectEvidence: effect,
+});
 const way = deepSeekHarnessWayBinding(handshake);
 const result = {
   schema: "outsider/deepseek-harness-protocol-canary/v1",
@@ -135,11 +160,15 @@ const result = {
     runtimeProfileHash: runtimeProfile.recordHash,
     runtimeClosureHash, adapterClosureHash, packages: observedPackages },
   protocol: { realCordisWaterfall: true, officialMessageFactory: true,
+    applyWithoutConfigFailVisible: true,
     offerCount, injectedMessageSource: decision.messages[0]?.source,
     correctionRecordHash: correction.recordHash,
     ackRecordHash: ack?.recordHash ?? null,
     observationRecordHash: observation.recordHash,
-    effectRecordHash: effect.recordHash },
+    effectRecordHash: effect.recordHash,
+    workerObservationRecordHash: workerObservation.recordHash,
+    workerDeclaredControlLevel: workerObservation.capabilityHandshake.declaredControlLevel,
+    workerClaimableControlLevel: workerVerification.claimableControlLevel },
   authority: { lane: "RESEARCH", establishesObservedDelivery: ackVerification.ok,
     establishesEffect: effectVerification.ok, establishesOutcome: false,
     establishesLossOrLiability: false, clearingAuthority: "none" },
@@ -149,7 +178,8 @@ const result = {
     runtimeClosureMatches: runtimeClosureHash === runtimeProfile.runtimeClosureHash,
     adapterClosureMatches: adapterClosureHash === runtimeProfile.adapterClosureHash,
     sourcePinMatches: sourcePin.recordHash === runtimeProfile.sourcePinHash,
-    sourceBinaryEquivalenceProven: false },
+    sourceBinaryEquivalenceProven: false,
+    workerAdapter: workerVerification },
 };
 result.ok = ackVerification.ok && observationVerification.ok
   && effectVerification.ok && offerCount === 1
@@ -158,6 +188,11 @@ result.ok = ackVerification.ok && observationVerification.ok
   && result.checks.runtimeClosureMatches === true
   && result.checks.adapterClosureMatches === true
   && result.checks.sourcePinMatches === true
+  && workerVerification.ok === true
+  && workerVerification.adapterEvidenceReverified === true
+  && workerVerification.claimableControlLevel === "DELIVERY_SUPERVISED"
+  && workerVerification.learningDisposition === "QUARANTINE_SHADOW_ONLY"
+  && workerVerification.threatBoundary.maliciousWorkerOrOsAttestation === false
   && result.checks.sourceBinaryEquivalenceProven === false
   && sourcePin.sourceBinaryEquivalence === "UNPROVEN";
 result.recordHash = hash(result);

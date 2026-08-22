@@ -1,0 +1,19 @@
+{
+  "description": "Codex-only boundary notice for the Outsider universal plugin. This is not the Stage 0.5 control hook.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${PLUGIN_ROOT}/scripts/surface-boundary.mjs\"",
+            "statusMessage": "Checking Outsider surface boundary",
+            "additionalContextLimit": 700,
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

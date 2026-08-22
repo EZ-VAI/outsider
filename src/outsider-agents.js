@@ -9,7 +9,7 @@
  *                      additionalContext, every tool except EndConversation.
  *   Claude Desktop   : TWO TABS, TWO DIFFERENT ANSWERS.
  *                      · Code tab   — runs the bundled Claude Code engine and DOES
- *                        read the host settings.json. `setup claude-code` covers it.
+ *                        read the host settings.json. `outsider install` covers it.
  *                      · Cowork tab — runs inside a Linux VM with CLAUDE_CONFIG_DIR
  *                        pointed INSIDE the VM; the host ~/.claude/settings.json is
  *                        never mounted (anthropics/claude-code#40495, still open).
@@ -17,10 +17,10 @@
  *                        `claude-desktop` spec below, which builds one rather than
  *                        writing a settings file that would be silently ignored.
  *   Codex (CLI, desktop app, IDE extension) : ONE shared config — ~/.codex/config.toml
- *                      and ~/.codex/hooks.json — across all three surfaces. Hooks are
- *                      GA. PreToolUse fires for shell, apply_patch, MCP and local
- *                      function tools, and supports deny, allow AND additionalContext.
- *                      "ask" is parsed but not honoured yet.
+ *                      and ~/.codex/hooks.json — across all three surfaces. The
+ *                      installed 0.144.5 schema exposes lifecycle hooks, but the
+ *                      local Outsider hook is currently untrusted and no authenticated
+ *                      execution canary exists. Treat it as an engine candidate only.
  *   CodeBuddy   : logs under ~/.codebuddy/logs ; Claude-Code-style hooks.
  *   trae-agent  : trajectory JSON under ./trajectories ; no pre-exec hook → wrap.
  *
@@ -29,7 +29,12 @@
  * installed build instead of trusting this file.
  */
 
-import { existsSync, statSync, readdirSync } from "node:fs";
+import { randomUUID } from "node:crypto";
+import {
+  closeSync, constants, fchmodSync, fstatSync, fsyncSync, lstatSync, mkdirSync,
+  openSync, readFileSync, readdirSync, realpathSync, renameSync, statSync, unlinkSync,
+  writeFileSync, existsSync,
+} from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
 
@@ -83,24 +88,41 @@ export const AGENT_SPECS = {
       /* The nested {hooks:{PreToolUse:[{matcher,hooks:[{type,command}]}]}} shape is
          the real one. The flat {PreToolUse:[{command}]} written before was valid
          JSON that registered NOTHING — the hook never ran, on any Codex surface. */
-      value: {
-        hooks: {
-          PreToolUse: [{
-            matcher: "",                        // "" / "*" / omitted = every tool
-            hooks: [{ type: "command", command: `${cli} hook codex`, timeout: 30,
-              statusMessage: "outsider 正在核对这个动作" }],
-          }],
-        },
-      },
+      /*
+       * Codex 0.144.5 exposes all of these lifecycle boundaries.  They share
+       * one command intentionally: /hooks trusts the exact command hash, so a
+       * Pre-only command and a later, different Stop command would create two
+       * independently drifting authorities.  --attached-control is not a
+       * cosmetic flag.  It selects the authenticated local controller path;
+       * invoking `outsider hook codex` by hand remains fail-visible observer
+       * mode and cannot be mistaken for the installed control surface.
+       */
+      value: { hooks: Object.fromEntries([
+        ["SessionStart", "outsider 正在建立 Codex 会话身份"],
+        ["UserPromptSubmit", "outsider 正在冻结本轮任务"],
+        ["PreToolUse", "outsider 正在核对这个动作"],
+        ["PostToolUse", "outsider 正在记录动作结果"],
+        ["PreCompact", "outsider 正在持久化压缩前状态"],
+        ["Stop", "outsider 正在做最终验收"],
+      ].map(([event, statusMessage]) => [event, [{
+        ...(event === "PreToolUse" || event === "PostToolUse" ? { matcher: "" } : {}),
+        hooks: [{ type: "command",
+          command: `${cli} hook codex --attached-control`, timeout: 900, statusMessage }],
+      }]])) },
       note: "这一份配置同时管住 Codex 的终端版、桌面版和 IDE 插件——它们共用 ~/.codex/。\n"
         + "  ① 钩子默认已开;要确认,可在 ~/.codex/config.toml 写 [features] 下 hooks = true\n"
         + "     (旧名 codex_hooks 已废弃,别再用)。\n"
-        + "  ② Codex 要求你先信任这条钩子:运行 /hooks 审阅并信任。钩子内容改了哈希就变,需要重新信任——\n"
+        + "  ② Codex 要求你在 /hooks 逐项审阅并信任 SessionStart / UserPromptSubmit / PreToolUse /\n"
+        + "     PostToolUse / PreCompact / Stop；缺一项都只能机器标成未受控。\n"
+        + "     钩子内容改了哈希就变,需要重新信任——\n"
         + "     在你点头之前它会被跳过。这是它的设计,不是故障。\n"
-        + "  ③ 默认不带 --strict:『红测试就提交』走 additionalContext 注入模型上下文(不打断),\n"
-        + "     只有真正不可逆的动作才硬拦。想让所有告警都变硬拦:加 --strict。\n"
+        + "  ③ 默认不带 --strict:软告警按 schema 写入 additionalContext；在本机 live canary 证明送达前,\n"
+        + "     它只算候选通道,不计为已送达模型。真正不可逆的动作仍硬拦；--strict 会把软告警也硬拦。\n"
         + "  ④ hooks.json 不能带 UTF-8 BOM,否则 Codex 解析失败且不会告诉你。\n"
-        + "  ⑤ 桌面版钩子近期有过回归(openai/codex#21639)。装完请实测一次,别假设它在跑。",
+        + "  ⑤ 安装器注册当前 Stage 0.5 必需的 6 个候选事件，但不是 Codex 全部生命周期；\n"
+        + "     `hooks/list` 显示 discovered/enabled 仍不等于执行过；\n"
+        + "     只有 source-bound app-server conformance 才能把它从候选提升为真实控制。\n"
+        + "     不得用 --dangerously-bypass-hook-trust 把候选能力冒充成用户已授权。",
     }),
   },
   "claude-desktop": {
@@ -124,7 +146,7 @@ export const AGENT_SPECS = {
         + "  你主机上的 ~/.claude/settings.json 它根本读不到(anthropics/claude-code#40495,至今未修)。\n"
         + "  所以这里装的不是配置文件,是一个插件:钩子只有走插件才进得去 Cowork。\n"
         + "  ⚠ 官方文档没有列出 Cowork 里哪些钩子事件会触发,PreToolUse 我无法从文档确认——装完必须实测。\n"
-        + "  桌面版的 Code 标签页读主机配置,用 `outsider setup claude-code` 即可。",
+        + "  桌面版的 Code 标签页读主机配置,用 `outsider install` 即可。",
     }),
   },
   codebuddy: {
@@ -144,7 +166,9 @@ export const AGENT_SPECS = {
     match: (f) => f.endsWith(".json"),
     hook: () => ({
       path: null, kind: "none",
-      note: "trae-agent 没有前置钩子。实时检测:`outsider wrap -- trae-cli run \"…\"`;事后监督:`outsider run <trajectory>.json`。",
+      note: "trae-agent 没有已验证的前置钩子，因此当前不宣称 Stage 0.5 实时控制。"
+        + "源码工作区可用 `node try.mjs <trajectory.json>` 做只读、脱敏的事后回放；"
+        + "不要把该回放冒充 `outsider run` 的受控执行。",
     }),
   },
 };
@@ -301,4 +325,165 @@ export function mergeHookConfig(existing, value) {
   /* non-enumerable so it never lands in the JSON we write to the user's config */
   Object.defineProperty(merged, "__removedLegacy", { value: removedLegacy, enumerable: false });
   return merged;
+}
+
+function lstatOrNull(file) {
+  try { return lstatSync(file, { bigint: true }); }
+  catch (error) { if (error?.code === "ENOENT") return null; throw error; }
+}
+
+function sameDirectoryIdentity(left, right) {
+  return Boolean(left && right && left.isDirectory() && right.isDirectory()
+    && left.dev === right.dev && left.ino === right.ino && left.mode === right.mode);
+}
+
+function ensurePrivateSettingsDirectory(directory, trustedRoot) {
+  const canonicalRoot = realpathSync(path.resolve(trustedRoot));
+  const rootStatus = lstatOrNull(canonicalRoot);
+  if (!rootStatus?.isDirectory()) throw new Error("SETTINGS_TRUSTED_ROOT_INVALID");
+  const relative = path.relative(canonicalRoot, path.resolve(directory));
+  if (relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error("SETTINGS_PATH_OUTSIDE_TRUSTED_ROOT");
+  }
+  const chain = [{ path: canonicalRoot, identity: rootStatus }];
+  let cursor = canonicalRoot;
+  for (const segment of relative.split(path.sep).filter(Boolean)) {
+    cursor = path.join(cursor, segment);
+    let status = lstatOrNull(cursor);
+    if (!status) {
+      mkdirSync(cursor, { mode: 0o700 });
+      status = lstatOrNull(cursor);
+    }
+    if (status?.isSymbolicLink()) throw new Error("SETTINGS_DIRECTORY_SYMLINK_REFUSED");
+    if (!status?.isDirectory()) throw new Error("SETTINGS_DIRECTORY_NOT_DIRECTORY");
+    chain.push({ path: cursor, identity: status });
+  }
+  return { canonicalRoot, directory: cursor, chain };
+}
+
+function settingsDirectoryChainStable(chain) {
+  return chain.every((entry) => sameDirectoryIdentity(entry.identity,
+    lstatOrNull(entry.path)));
+}
+
+function sameFileIdentity(left, right) {
+  return Boolean(left && right && left.isFile() && right.isFile()
+    && left.dev === right.dev && left.ino === right.ino
+    && left.size === right.size && left.mode === right.mode
+    && left.mtimeNs === right.mtimeNs && left.ctimeNs === right.ctimeNs);
+}
+
+function privateExclusiveWrite(file, bytes) {
+  const flags = constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL
+    | (constants.O_NOFOLLOW ?? 0);
+  let descriptor = null;
+  try {
+    descriptor = openSync(file, flags, 0o600);
+    fchmodSync(descriptor, 0o600);
+    writeFileSync(descriptor, bytes);
+    fsyncSync(descriptor);
+  } catch (error) {
+    try { if (descriptor != null) closeSync(descriptor); } catch { /* */ }
+    try { unlinkSync(file); } catch { /* */ }
+    throw error;
+  }
+  closeSync(descriptor);
+}
+
+function stableSettingsRead(file) {
+  const identity = lstatOrNull(file);
+  if (!identity) return { identity: null, bytes: null, value: {} };
+  if (identity.isSymbolicLink()) throw new Error("SETTINGS_SYMLINK_REFUSED");
+  if (!identity.isFile()) throw new Error("SETTINGS_NOT_REGULAR_FILE");
+  const flags = constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0);
+  let descriptor;
+  try {
+    descriptor = openSync(file, flags);
+    const opened = fstatSync(descriptor, { bigint: true });
+    if (!sameFileIdentity(identity, opened)) throw new Error("SETTINGS_IDENTITY_CHANGED");
+    const bytes = readFileSync(descriptor);
+    if (!sameFileIdentity(opened, fstatSync(descriptor, { bigint: true }))) {
+      throw new Error("SETTINGS_IDENTITY_CHANGED");
+    }
+    let value;
+    try { value = JSON.parse(bytes.toString("utf8")); }
+    catch (error) {
+      throw new Error(`SETTINGS_JSON_INVALID:${String(error?.message ?? error).slice(0, 200)}`);
+    }
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      throw new Error("SETTINGS_JSON_ROOT_INVALID");
+    }
+    return { identity, bytes, value };
+  } finally {
+    if (descriptor != null) closeSync(descriptor);
+  }
+}
+
+/** Safely merge an Outsider hook into a host-owned JSON settings file.
+ *
+ * Malformed or symlinked settings are never reinterpreted as an empty object.
+ * The replacement is a same-directory 0600 O_EXCL file, fsynced before an
+ * atomic rename. Existing bytes remain in a private, unique backup. The inode
+ * read at the start must still be the inode at commit, so a concurrent editor
+ * is surfaced instead of silently clobbered. */
+export function securelyMergeHookConfigFile({ file, value, trustedRoot,
+  beforeCommit = null } = {}) {
+  if (typeof file !== "string" || !file.trim()) throw new Error("SETTINGS_PATH_REQUIRED");
+  if (typeof trustedRoot !== "string" || !trustedRoot.trim()) {
+    throw new Error("SETTINGS_TRUSTED_ROOT_REQUIRED");
+  }
+  const requestedRoot = path.resolve(trustedRoot);
+  const requestedFile = path.resolve(file);
+  const relativeFile = path.relative(requestedRoot, requestedFile);
+  if (relativeFile.startsWith("..") || path.isAbsolute(relativeFile)) {
+    throw new Error("SETTINGS_PATH_OUTSIDE_TRUSTED_ROOT");
+  }
+  const prepared = ensurePrivateSettingsDirectory(path.join(
+    realpathSync(requestedRoot), path.dirname(relativeFile)), requestedRoot);
+  const directory = prepared.directory;
+  const canonicalFile = path.join(directory, path.basename(relativeFile));
+  const original = stableSettingsRead(canonicalFile);
+  const merged = mergeHookConfig(original.value, value);
+  const serialized = `${JSON.stringify(merged, null, 2)}\n`;
+  const temporary = path.join(directory,
+    `.${path.basename(file)}.outsider-${process.pid}-${randomUUID()}.tmp`);
+  let backupPath = null;
+  try {
+    privateExclusiveWrite(temporary, serialized);
+    if (!settingsDirectoryChainStable(prepared.chain)) {
+      throw new Error("SETTINGS_DIRECTORY_IDENTITY_CHANGED");
+    }
+    const beforeBackup = lstatOrNull(canonicalFile);
+    if (original.identity
+      ? !sameFileIdentity(original.identity, beforeBackup) : beforeBackup != null) {
+      throw new Error("SETTINGS_IDENTITY_CHANGED");
+    }
+    if (original.bytes != null) {
+      backupPath = path.join(directory,
+        `.${path.basename(file)}.outsider-backup-${Date.now()}-${randomUUID()}`);
+      privateExclusiveWrite(backupPath, original.bytes);
+    }
+    if (typeof beforeCommit === "function") beforeCommit();
+    if (!settingsDirectoryChainStable(prepared.chain)) {
+      throw new Error("SETTINGS_DIRECTORY_IDENTITY_CHANGED");
+    }
+    const atCommit = lstatOrNull(canonicalFile);
+    if (original.identity
+      ? !sameFileIdentity(original.identity, atCommit) : atCommit != null) {
+      throw new Error("SETTINGS_IDENTITY_CHANGED");
+    }
+    renameSync(temporary, canonicalFile);
+    let directoryDescriptor = null;
+    try {
+      directoryDescriptor = openSync(directory, constants.O_RDONLY);
+      fsyncSync(directoryDescriptor);
+    } finally {
+      if (directoryDescriptor != null) closeSync(directoryDescriptor);
+    }
+    const committed = stableSettingsRead(canonicalFile);
+    return { merged, committed: committed.value, backupPath };
+  } catch (error) {
+    try { unlinkSync(temporary); } catch { /* already renamed or absent */ }
+    throw error;
+  }
 }

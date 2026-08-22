@@ -65,18 +65,22 @@ test("a same-id durable message rewrite cannot acknowledge a correction", async 
     createMessage: (input) => ({ ...input, id: "same-id", role: "user" }) });
   const entered = await core.preStep({}, async () => ({ kind: "enter", messages: [] }));
   const durable = entered.messages[0];
-  await assert.rejects(() => core.sessionEvent({ type: "user/message", seq: 0, time: 0,
-    data: { message: { ...durable, content: [{ type: "text", text: `${text} altered` }] } } }),
-  /DURABLE_MESSAGE_HASH_INVALID/);
+  const rejectedAck = await core.sessionEvent({ type: "user/message", seq: 0, time: 0,
+    data: { message: { ...durable, content: [{ type: "text", text: `${text} altered` }] } } });
+  assert.equal(rejectedAck, null, "an invalid durable event must never acknowledge delivery");
   assert.equal(acks.length, 0);
   assert.equal(core.diagnostics().pendingAckCount, 1);
+  assert.equal(core.diagnostics().lastFailure, "DEEPSEEK_DURABLE_MESSAGE_HASH_INVALID");
+  const visible = await core.preStep({}, async () => ({ kind: "enter", messages: [] }));
+  assert.match(visible.messages[0].content[0].text,
+    /OUTSIDER_UNSUPERVISED:DEEPSEEK_DURABLE_MESSAGE_HASH_INVALID/);
   const ack = await core.sessionEvent({ type: "user/message", seq: 1, time: 1,
     data: { message: durable } });
   assert.equal(acks.length, 1);
   assert.equal(verifyDeepSeekHarnessCorrectionAck(ack, { correction, handshake }).ok, true);
 });
 
-test("stale floors, altered text and downstream rejection fail closed", async () => {
+test("stale floors and altered text stay unacknowledged and visibly unsupervised", async () => {
   const handshake = makeHandshake();
   const text = "audited correction";
   const base = (overrides = {}) => createDeepSeekHarnessCorrection({
@@ -92,9 +96,19 @@ test("stale floors, altered text and downstream rejection fail closed", async ()
   const rejected = build({ correction: base(), correctionText: text });
   assert.deepEqual(await rejected.preStep({}, async () => ({ kind: "reject" })), { kind: "reject" });
   const altered = build({ correction: base(), correctionText: `${text}!` });
-  await assert.rejects(() => altered.preStep({}, async () => ({ kind: "enter", messages: [] })),
-    /TEXT_HASH_INVALID/);
+  const alteredDecision = await altered.preStep({},
+    async () => ({ kind: "enter", messages: [] }));
+  assert.match(alteredDecision.messages[0].content[0].text,
+    /OUTSIDER_UNSUPERVISED:DEEPSEEK_CORRECTION_TEXT_HASH_INVALID/);
+  assert.equal(altered.diagnostics().pendingAckCount, 0);
+  assert.equal(altered.diagnostics().deliveredCorrectionCount, 0);
+  assert.equal(altered.diagnostics().lastFailure,
+    "DEEPSEEK_CORRECTION_TEXT_HASH_INVALID");
   const stale = build({ correction: base({ harnessEventSeqFloor: 0 }), correctionText: text });
-  await assert.rejects(() => stale.preStep({}, async () => ({ kind: "enter", messages: [] })),
-    /STALE_HARNESS_FLOOR/);
+  const staleDecision = await stale.preStep({},
+    async () => ({ kind: "enter", messages: [] }));
+  assert.match(staleDecision.messages[0].content[0].text,
+    /OUTSIDER_UNSUPERVISED:DEEPSEEK_CORRECTION_STALE_HARNESS_FLOOR/);
+  assert.equal(stale.diagnostics().pendingAckCount, 0);
+  assert.equal(stale.diagnostics().deliveredCorrectionCount, 0);
 });

@@ -2,7 +2,8 @@
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolveClaudeExecutable, startKernelRun } from "../src/outsider-kernel-runner.js";
+import { startKernelRun } from "../src/outsider-kernel-runner.js";
+import { validatedSupervisorCommand } from "../src/outsider-system-helper.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
@@ -23,13 +24,54 @@ function parseArgs(argv) {
   return { positional, options };
 }
 
+export function runSupervisorConfiguration({ options = {}, env = process.env } = {}) {
+  const optionString = Object.hasOwn(options, "supervisor");
+  const optionArgv = Object.hasOwn(options, "supervisor-argv");
+  const stringCommand = optionString ? options.supervisor
+    : optionArgv ? null : env.OUTSIDER_SUPERVISOR ?? null;
+  const argvSource = optionArgv ? options["supervisor-argv"]
+    : optionString ? null : env.OUTSIDER_SUPERVISOR_ARGV ?? null;
+  if (stringCommand && argvSource) {
+    return { ok: false, command: null, consented: false,
+      error: "SUPERVISOR_COMMAND_AMBIGUOUS: choose --supervisor or --supervisor-argv" };
+  }
+  const consented = options["allow-external-supervisor"] === true
+    || env.OUTSIDER_ALLOW_EXTERNAL_SUPERVISOR === "1";
+  if (stringCommand != null
+    && (typeof stringCommand !== "string" || stringCommand.trim().length === 0)) {
+    return { ok: false, command: null, consented,
+      error: "SUPERVISOR_COMMAND_INVALID" };
+  }
+  let command = stringCommand;
+  if (argvSource != null) {
+    try { command = JSON.parse(String(argvSource)); } catch {
+      return { ok: false, command: null, consented: false,
+        error: "SUPERVISOR_ARGV_INVALID_JSON" };
+    }
+    if (!Array.isArray(command) || command.length === 0
+      || command.some((item) => typeof item !== "string" || item.length === 0)) {
+      return { ok: false, command: null, consented: false,
+        error: "SUPERVISOR_ARGV_INVALID" };
+    }
+  }
+  if (!command) return { ok: false, command: null, consented,
+    error: "EXTERNAL_SUPERVISOR_COMMAND_REQUIRED" };
+  if (!consented) return { ok: false, command: null, consented: false,
+    error: "EXTERNAL_SUPERVISOR_CONSENT_REQUIRED" };
+  try { validatedSupervisorCommand(command); } catch (error) {
+    return { ok: false, command: null, consented: true,
+      error: error?.message ?? "EXTERNAL_SUPERVISOR_COMMAND_INVALID" };
+  }
+  return { ok: true, command, consented: true, error: null };
+}
+
 export async function main(argv = process.argv.slice(2)) {
   const { positional, options } = parseArgs(argv);
   const ask = positional[0];
   const cwd = path.resolve(options.cwd || process.cwd());
   const acceptance = options.accept || null;
-  const supervisorCommand = options.supervisor || process.env.OUTSIDER_SUPERVISOR
-    || [resolveClaudeExecutable(options.worker || null), "-p"];
+  const supervisor = runSupervisorConfiguration({ options });
+  const supervisorCommand = supervisor.command;
   const stateRoot = options["state-root"] ? path.resolve(options["state-root"]) : undefined;
   const hookEntry = path.join(here, "outsider-hook.mjs");
   const maxBudgetUsd = Number(options["max-budget-usd"]);
@@ -43,10 +85,11 @@ export async function main(argv = process.argv.slice(2)) {
     }
   }
 
-  if (!ask || !acceptance || !existsSync(hookEntry)
+  if (!ask || !acceptance || !existsSync(hookEntry) || !supervisor.ok
     || !Number.isFinite(maxBudgetUsd) || maxBudgetUsd <= 0) {
-    console.error("用法: outsider run \"<操作方原话>\" --accept \"<验收命令>\" --max-budget-usd <金额> [--supervisor \"claude -p\"] [--cwd <repo>] [--semantic-patrol-every 96] [--semantic-patrol-min-evidence 6] [--max-controller-restarts 3]");
-    console.error("Stage 0.5 controlled mode 不允许缺少合同、验收、独立 supervisor 或 worker 成本上限；只观察请继续使用普通 hook。\n");
+    console.error("用法: outsider run \"<操作方原话>\" --accept \"<验收命令>\" --max-budget-usd <金额> (--supervisor \"claude -p\" | --supervisor-argv '[\"claude\",\"-p\"]') --allow-external-supervisor [--cwd <repo>] [--semantic-patrol-every 96] [--semantic-patrol-min-evidence 6] [--max-controller-restarts 3]");
+    console.error("Stage 0.5 controlled mode 要求显式 supervisor 命令和独立 --allow-external-supervisor 同意；缺任一项都不会启动或发送 workspace/prompt/tool/output。"
+      + `${supervisor.error ? ` (${supervisor.error})` : ""}\n`);
     return 2;
   }
 
@@ -118,7 +161,10 @@ export async function main(argv = process.argv.slice(2)) {
 }
 
 let directEntry = false;
-try { directEntry = realpathSync(process.argv[1]) === fileURLToPath(import.meta.url); } catch { /* imported */ }
+try {
+  directEntry = realpathSync(process.argv[1])
+    === realpathSync(fileURLToPath(import.meta.url));
+} catch { /* imported */ }
 if (directEntry) {
   process.exitCode = await main();
 }

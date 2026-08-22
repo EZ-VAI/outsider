@@ -19,13 +19,15 @@
  *    per-Way data — NOT a "trained model" and NOT frontier. It keys on executor
  *    identity and counts labels; it is described as exactly that.
  *
- * 2. A REAL TRAINED MODEL (trainBehaviorModel, this file, over outsider-model.js):
+ * 2. A LEGACY EXPLORATORY TRAINER (trainBehaviorModel over outsider-model.js):
  *    logistic regression fit by gradient descent over the FEATURES the record
  *    captures (steps, cost, cost-vs-peer, claim flags) AND the World's
- *    reversible/externality — with a held-out split for honest metrics. It USES
- *    the features (the audit's "ignores features" fix) and improves with data (a
- *    real learning curve). The same machinery is validated on REAL labels by
- *    scripts/outsider-train-model.mjs (SWE-bench matrix).
+ *    reversible/externality. Its historical API uses a random ROW holdout, so
+ *    its metrics are exploratory only: executor/task/correlation roots can cross
+ *    the split, missing costs are implicitly mapped by the v1 featurizer, and
+ *    completed-run fields are not pre-action predictors. The governed v2 path
+ *    lives in `outsider-governed-behavior-model.js`; it is intentionally not
+ *    re-exported through this public Stage 0.5 legacy barrel.
  *
  * No LLM, no GPU, local-first. The frontier CM-1/CM-2 research models are a
  * SEPARATE track and are NOT called from here — this file no longer pretends they
@@ -231,8 +233,11 @@ export function predictBehavior(model, { executor, world = null } = {}) {
  * counting, not "training"). It keeps running per-executor k/n sufficient
  * statistics, updates them in O(batch), and recomputes pPop/K on demand
  * (O(#executors)) — so the per-Way rate stays current as telemetry streams in.
- * The REAL model training over features is trainBehaviorModel (SGD logistic);
- * the flywheel runs both. keyBy lets the backend key by a PRIVACY-HASHED id.
+ * The legacy exploratory feature fit is trainBehaviorModel (SGD logistic).
+ * It may run beside this updater for retrospective analysis, but its row-random
+ * split and completed-run features are not governed prospective validation and
+ * cannot support pre-action, PRICE, or responsibility claims. keyBy lets the
+ * backend key by a PRIVACY-HASHED id.
  */
 export function makeRunningBehaviorModel({ priorRates = {}, defaultK = 8, keyBy } = {}) {
   const key = keyBy ?? ((rec) => rec.executorHash ?? rec.executor?.id ?? "unknown");
@@ -281,25 +286,43 @@ export function makeRunningBehaviorModel({ priorRates = {}, defaultK = 8, keyBy 
 }
 
 /*
- * trainBehaviorModel — the PRODUCT's REAL training path. Fit a logistic
+ * trainBehaviorModel — legacy exploratory trainer. Fit a logistic
  * regression (SGD+L2) over the FEATURES of accumulated Experience records to
- * predict a behavior label, with a held-out split for honest metrics. This is
- * real supervised learning over the operator's own data — the same machinery the
- * SWE-bench training script validates on real labels — not a frequency count.
+ * predict a behavior label, with a random row split. This is real supervised
+ * learning, but the split is not correlation-root or time safe and its features
+ * are completed-run observations. It is retained as an exploratory baseline,
+ * not as responsibility-grade validation.
  * Returns { trained:false, reason } until there is enough labeled, two-class data.
  */
 export function trainBehaviorModel(records, {
   signal = "fakedSuccess", testFrac = 0.25, minRecords = 40,
   l2 = 1e-3, lr = 0.2, epochs = 150, seed = 13,
 } = {}) {
+  const legacyGovernance = {
+    trainerVersion: "LEGACY_RANDOM_ROW_SPLIT_V1",
+    randomRowSplitUsed: true,
+    correlationRootsPreserved: false,
+    temporalHoldoutEstablished: false,
+    outOfDomainHoldoutEstablished: false,
+    separateCalibrationSplitEstablished: false,
+    missingCostMayBeMappedToZeroByV1Featurizer: true,
+    missingCostVsPeerMayBeMappedToOneByV1Featurizer: true,
+    completedRunFeaturesArePreActionPredictors: false,
+    retrospectiveExploratoryUseOnly: true,
+    responsibilityUseEligible: false,
+    operationalAuthorityGranted: false,
+    governedReplacement: "trainGovernedBehaviorModel",
+  };
   const rows = recordsOf(records)
     .filter((r) => r?.labels && r.labels[signal] != null);
   if (rows.length < minRecords) {
-    return { trained: false, reason: `need ≥${minRecords} labeled records, have ${rows.length}` };
+    return { trained: false, reason: `need ≥${minRecords} labeled records, have ${rows.length}`,
+      governance: legacyGovernance };
   }
   const y = rows.map((r) => (r.labels[signal] ? 1 : 0));
   const pos = y.reduce((a, b) => a + b, 0);
-  if (pos === 0 || pos === y.length) return { trained: false, reason: `only one class present for '${signal}'` };
+  if (pos === 0 || pos === y.length) return { trained: false,
+    reason: `only one class present for '${signal}'`, governance: legacyGovernance };
 
   const rng = mulberry32(seed);
   const order = rows.map((_, i) => [rng(), i]).sort((a, b) => a[0] - b[0]).map((x) => x[1]);
@@ -310,13 +333,16 @@ export function trainBehaviorModel(records, {
   const Xtr = trainIdx.map((i) => Xall[i]), ytr = trainIdx.map((i) => y[i]);
   const std = fitStandardizer(Xtr);
   const model = trainLogistic(applyStandardizer(Xtr, std), ytr, { l2, lr, epochs, seed });
-  const serialized = serializeModel(model, std, RECORD_FEATURE_NAMES, { signal, nTrain: trainIdx.length });
+  const serialized = serializeModel(model, std, RECORD_FEATURE_NAMES, {
+    signal, nTrain: trainIdx.length, validationGovernance: legacyGovernance,
+  });
 
   const scores = testIdx.map((i) => predictFromRaw(serialized, Xall[i]));
   const yte = testIdx.map((i) => y[i]);
   const metrics = { auc: aucOf(scores, yte), logloss: loglossOf(scores, yte), nTest: testIdx.length };
   serialized.meta.test = metrics;
-  return { trained: true, model: serialized, metrics, n: rows.length };
+  return { trained: true, model: serialized, metrics, n: rows.length,
+    governance: legacyGovernance };
 }
 
 /* predict a behavior probability for ONE record from a trained model */

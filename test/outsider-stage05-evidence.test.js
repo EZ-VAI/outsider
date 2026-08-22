@@ -485,6 +485,28 @@ test("the unified CLI verifies runs and writes a verifiable unsigned attestation
   assert.equal(JSON.parse(checked.stdout).signed, false);
 });
 
+test("the unified CLI refuses unknown canonical schemas instead of misrouting them", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "outsider-unsupported-schema-"));
+  const artifact = path.join(root, "canonical.json");
+  writeFileSync(artifact, JSON.stringify({
+    schema: "outsider/local-research/v1",
+    schemaVersion: "1.2.0",
+    artifactHash: "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  }));
+  const checked = spawnSync(process.execPath,
+    [path.resolve("bin/outsider.mjs"), "verify", artifact], {
+      cwd: process.cwd(), encoding: "utf8",
+    });
+  assert.equal(checked.status, 1, checked.stderr);
+  const result = JSON.parse(checked.stdout);
+  assert.equal(result.ok, false);
+  assert.equal(result.error, "UNSUPPORTED_SCHEMA");
+  assert.equal(result.schema, "outsider/local-research/v1");
+  assert.equal(result.verificationMode, "NO_VERIFIER_DISPATCHED");
+  assert.equal(result.sourceArtifactsReverified, false);
+  assert.doesNotMatch(JSON.stringify(result), /ATTESTATION_HASH_BROKEN/);
+});
+
 test("run evidence verification fails after raw evidence or the event chain is changed", () => {
   const fixture = completedRun();
   finalizeStage05Evidence({ directory: fixture.store.directory });

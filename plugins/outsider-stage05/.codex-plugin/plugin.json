@@ -1,0 +1,27 @@
+{
+  "name": "outsider-stage05",
+  "version": "1.3.98",
+  "description": "Truthful Stage 0.5 install guidance, evidence verification, and Codex lifecycle boundary reporting for Outsider.",
+  "author": {
+    "name": "Outsider"
+  },
+  "homepage": "https://github.com/EZ-VAI/outsider",
+  "repository": "https://github.com/EZ-VAI/outsider",
+  "license": "Apache-2.0",
+  "keywords": ["agent", "codex", "chatgpt", "verification", "stage-0.5"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Outsider Stage 0.5",
+    "shortDescription": "Install and verify Outsider without overstating control",
+    "longDescription": "Guides ChatGPT and Codex users through Outsider installation, surface-specific capability checks, privacy boundaries, and evidence verification. Codex can additionally load the bundled boundary-notice hook; full control still requires the companion runtime, explicit hook trust, and a real conformance receipt.",
+    "developerName": "Outsider",
+    "category": "Developer tools",
+    "capabilities": ["Installation guidance", "Evidence verification", "Codex boundary reporting"],
+    "websiteURL": "https://github.com/EZ-VAI/outsider",
+    "privacyPolicyURL": "https://github.com/EZ-VAI/outsider/blob/main/PRIVACY.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use Outsider Stage 0.5 to check this surface's installation and control status without upgrading any unsupported capability."
+    ]
+  }
+}

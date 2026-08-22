@@ -20,6 +20,7 @@
  * heuristic transcript reader, so the hook and the watchers share one classifier.
  */
 
+import { createHash } from "node:crypto";
 import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from "node:fs";
 import { operatorTurnFromLine, boundaryFromLine, pushBoundary } from "./outsider-mandate.js";
 import { deltaOf } from "./outsider-ratchet.js";
@@ -974,7 +975,12 @@ function rebuiltBy(target, later) {
  * IS the identity. For a tool call the identity is the whole input.
  */
 function sigOf(toolName, toolInput, cmd) {
-  if (cmd) return `sh:${cmd.trim().replace(/\s+/g, " ").slice(0, 200)}`;
+  if (cmd) {
+    const normalized = cmd.trim().replace(/\s+/g, " ");
+    const digest = createHash("sha256")
+      .update("outsider:session-action-signature:shell:v2\0").update(normalized).digest("hex");
+    return `sh:sha256:${digest}`;
+  }
   let body = "";
   try {
     const keys = Object.keys(toolInput ?? {}).sort();
@@ -986,12 +992,13 @@ function sigOf(toolName, toolInput, cmd) {
        three different file sets read as the same action repeated three times. */
     body = JSON.stringify(keys.map((k) => {
       let v; try { v = JSON.stringify(toolInput[k]); } catch { v = String(toolInput[k]); }
-      return [k, String(v ?? "").slice(0, 400)];
+      return [k, String(v ?? "")];
     }));
   } catch { body = String(toolInput); }
-  let h = 5381;
-  for (let i = 0; i < body.length; i++) h = (((h << 5) + h) ^ body.charCodeAt(i)) >>> 0;
-  return `${toolName}:${h.toString(36)}`;
+  const digest = createHash("sha256")
+    .update("outsider:session-action-signature:tool:v2\0")
+    .update(String(toolName)).update("\0").update(body).digest("hex");
+  return `tool:sha256:${digest}`;
 }
 
 /*
@@ -1306,11 +1313,13 @@ export function makeCodexParser() {
         let args = {};
         try { args = JSON.parse(String(p.arguments ?? "{}")); } catch { args = {}; }
         const cmd = args.cmd ?? args.command ?? "";
-        pending.set(p.call_id, classifyToolCall("Bash", { command: String(cmd) }));
+        pending.set(p.call_id, { ...classifyToolCall("Bash", { command: String(cmd) }),
+          uid: p.call_id });
       } else if (p.type === "custom_tool_call") {
         /* apply_patch: the edited paths arrive later on patch_apply_end, so the
            call is held open until then */
-        pending.set(p.call_id, { ...classifyToolCall(String(p.name ?? "apply_patch"), {}), isEdit: true });
+        pending.set(p.call_id, { ...classifyToolCall(String(p.name ?? "apply_patch"), {}),
+          isEdit: true, uid: p.call_id });
       } else if (p.type === "patch_apply_end") {
         const files = Object.keys(p.changes ?? {});
         const call = pending.get(p.call_id) ?? classifyToolCall("apply_patch", {});
@@ -1318,7 +1327,7 @@ export function makeCodexParser() {
         /* one step per edited file: the loop detector localises by file, and a
            single step naming three paths cannot be compared against a traceback */
         for (const f of files.length ? files : [null]) {
-          out.push({ ...call, isEdit: true, file: f,
+          out.push({ ...call, uid: call.uid ?? p.call_id, isEdit: true, file: f,
             action: f ? `apply_patch(${f})` : "apply_patch()",
             exit: p.success === false ? 1 : 0,
             observation: keepObs(`${p.stdout ?? ""}\n${p.stderr ?? ""}`, false) });
@@ -1334,7 +1343,8 @@ export function makeCodexParser() {
         /* the body after "Output:" is the part a traceback lives in; the header
            lines are Codex's own accounting */
         const body = raw.includes("\nOutput:\n") ? raw.slice(raw.indexOf("\nOutput:\n") + 9) : raw;
-        out.push({ ...call, exit, observation: keepObs(body, call.isTest) });
+        out.push({ ...call, uid: call.uid ?? p.call_id, exit,
+          observation: keepObs(body, call.isTest) });
       } else if (p.type === "message" && p.role === "assistant") {
         const text = Array.isArray(p.content)
           ? p.content.map((b) => b?.text ?? "").join("\n") : String(p.content ?? "");

@@ -140,6 +140,8 @@ If the host does not expose enough identity to prove this mapping, the result is
 `UNSUPPORTED_HOST_PROTOCOL`, not a guessed PASS.
 
 ```sh
+# Source-workspace/operator command; this script is intentionally absent from
+# the staged public runtime npm package.
 npm run canary:agent-team:probe -- \
   --artifact dist/outsider-guard-<version>.tgz \
   --output /absolute/fresh/r2-directory \

@@ -21,6 +21,9 @@ const stableFieldEvidence = () => ({
   desktopCoworkPlugin: { status: "PASS" },
   multiHourEndurance: { status: "PASS" },
   independentSecondMachineInstall: { status: "PASS" },
+  codexLifecycleControl: { status: "PASS" },
+  chatgptLivePluginInstall: { status: "PASS" },
+  chatgptNewChatSkillEvaluation: { status: "PASS" },
 });
 
 test("stable release cannot collapse the four live reliability gates into one canary", () => {
@@ -68,6 +71,19 @@ test("stable release requires real Desktop Cowork conformance without blocking p
   });
 });
 
+test("stable public release cannot bypass advertised Codex control or ChatGPT live skill evidence", () => {
+  for (const gate of ["codexLifecycleControl", "chatgptLivePluginInstall",
+    "chatgptNewChatSkillEvaluation"]) {
+    for (const status of ["NOT_ESTABLISHED", "NOT_RUN", "FAIL", undefined]) {
+      const fieldEvidence = stableFieldEvidence();
+      fieldEvidence[gate] = status ? { status } : undefined;
+      const result = assessReleaseReadiness({ deterministicReady: true, fieldEvidence });
+      assert.equal(result.releaseDecision, "PRIVATE_BETA_READY", `${gate}:${status}`);
+      assert.equal(result.stablePublicReleaseReady, false, `${gate}:${status}`);
+    }
+  }
+});
+
 test("deterministic failure blocks private beta even when every field canary passes", () => {
   assert.deepEqual(assessReleaseReadiness({
     deterministicReady: false,
@@ -86,6 +102,37 @@ test("the release certifier has evidence inputs for Cowork and a signed distinct
   assert.match(source, /options\["second-machine-record"\]/);
   assert.match(source, /options\["second-machine-public-key"\]/);
   assert.match(source, /verifySecondMachineConformance/);
+});
+
+test("the release certifier consumes multi-surface doctor v2 without laundering diagnostic health into Claude conformance", () => {
+  const source = readFileSync(path.resolve("scripts/stage05-release-certify.mjs"), "utf8");
+  assert.match(source, /outsider\/product-doctor\/v2/);
+  assert.doesNotMatch(source, /outsider\/product-doctor\/v1/);
+  assert.match(source, /readiness\?\.diagnosticOperational === true/);
+  assert.match(source, /readiness\?\.claudeProtocolAndAuthReady === true/);
+  assert.match(source, /status: claudeHostReady \? "PASS" : "BLOCKED_PRECONDITION"/);
+  assert.match(source, /options\.live && claudeHostReady/);
+  assert.match(source, /captureFullStdout: true/);
+  assert.match(source, /semanticOk && doctorExpectedOk/);
+  assert.match(source, /OPERATOR_CERTIFIER_SOURCE_PLUS_INSTALLED_PUBLIC_MANIFEST_VERIFIER_BOUNDARY/);
+  assert.match(source, /certifierShippedInsidePublicRuntime: false/);
+  assert.match(source, /validateOpenAIUniversalPlugin/);
+  assert.match(source, /validateOpenAIUniversalPlugin\(\{ root: installedRoot \}\)/);
+  assert.match(source, /chatgptLivePluginInstall: \{ status: "NOT_RUN" \}/);
+  assert.match(source, /chatgptNewChatSkillEvaluation: \{ status: "NOT_RUN" \}/);
+  assert.match(source, /openAIPluginsDirectoryPublication: \{ status: "NOT_RUN" \}/);
+  assert.match(source, /codexLifecycleControl: \{ status: "NOT_ESTABLISHED" \}/);
+  assert.match(source, /plugin packaging does not establish ChatGPT live install or Codex lifecycle control/);
+  assert.match(source, /installedFilesAvailable/);
+  assert.match(source, /--cache/);
+  assert.match(source, /installedCertificationBoundaryAvailable/);
+  assert.match(source, /R2 evaluator closure is not present in the reviewed public runtime/);
+  assert.match(source, /R3 evaluator closure is not present in the reviewed public runtime/);
+  assert.match(source, /R4 evaluator closure is not present in the reviewed public runtime/);
+  assert.match(source, /second-machine evaluator closure is not present in the reviewed public runtime/);
+  assert.match(source, /TaskCreated/);
+  assert.match(source, /TaskCompleted/);
+  assert.match(source, /TeammateIdle/);
 });
 
 test("endurance certification requires duration, patrol verdict and complete proof", () => {

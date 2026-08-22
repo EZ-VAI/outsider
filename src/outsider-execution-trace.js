@@ -16,8 +16,9 @@
  * error/success signals, and some of its steps touch shared reality
  * irreversibly. Those are universal and priced for all Worlds.
  *
- * The JUDGEMENTS do not. "Never ran a test" and "empty submission" are pathology
- * signals VALIDATED ON CODING AGENTS (99% fail base rate on 22,871 code runs).
+ * The JUDGEMENTS do not. "Never ran a test" and "empty submission" are
+ * code-specific process facts. Historical v49 corpus rates are quarantined
+ * because their claimed derivation is not source-replayable in this tree.
  * Applying them to a robot is meaningless. So the trace carries a `world.kind`,
  * and the World-specific flags are gated on it. Judging a warehouse robot with a
  * coding agent's ruler is exactly the instrument error this project audits out.
@@ -220,7 +221,7 @@ export function fleetSummary(steps = [], { usageByOrigin = null } = {}) {
      * proportionally more truncated and this ratio overstates the children. The
      * session-level figure that has no window in it (375 parent calls vs 326
      * child calls on this repo's own run) comes from whole-file counting in
-     * `scripts/outsider-fleet-audit.mjs`. A ratio whose denominator is an
+     * `tools/outsider-fleet-audit.mjs`. A ratio whose denominator is an
      * implementation detail must carry that in its name, or it will be quoted
      * as if it were the session.
      */

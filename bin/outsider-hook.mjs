@@ -3,6 +3,9 @@
 import { handleHookInvocation } from "../src/outsider-hook.js";
 import { requestController } from "../src/outsider-controller-rpc.js";
 import { requestAttached } from "../src/outsider-attached-client.js";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { workerDigest } from "../src/outsider-worker-adapter.js";
 
 /*
  * ── WHICH HOST IS THIS, ACTUALLY ────────────────────────────────────────────
@@ -64,7 +67,14 @@ const finish = (payload, note, exitCode = 0) => {
  */
 const CONTROLLER_SOCKET = process.env.OUTSIDER_CONTROLLER_SOCKET || null;
 const CONTROLLER_TOKEN = process.env.OUTSIDER_CONTROLLER_TOKEN || null;
-const ATTACHED_MODE = !CONTROLLER_SOCKET && (agent === "claude-code" || agent === "claude-desktop");
+const CODEX_ATTACHED_CONTROL = agent === "codex" && process.argv.includes("--attached-control");
+const CODEX_RUNTIME = CODEX_ATTACHED_CONTROL ? {
+  hookMetadataFile: process.env.OUTSIDER_CODEX_HOOK_METADATA_FILE ?? null,
+  entrypointHash: workerDigest(readFileSync(fileURLToPath(import.meta.url))),
+  argvHash: workerDigest(process.argv.slice(2)),
+} : null;
+const ATTACHED_MODE = !CONTROLLER_SOCKET
+  && (agent === "claude-code" || agent === "claude-desktop" || CODEX_ATTACHED_CONTROL);
 /* In normal installed use the host owns the Claude process, while Outsider's
    lazy sidecar owns the synchronous hook boundary.  That path is every bit as
    controlled as outsider run and therefore gets the same bounded semantic
@@ -109,7 +119,8 @@ if (!done) {
         timeoutMs: Math.max(1000, BUDGET_MS - 1000),
       })
       : ATTACHED_MODE
-        ? await requestAttached({ payload: { agent, input, strict },
+        ? await requestAttached({ payload: { agent, input, strict,
+          ...(CODEX_RUNTIME ? { codexRuntime: CODEX_RUNTIME } : {}) },
           timeoutMs: Math.max(1000, BUDGET_MS - 1000) })
         : handleHookInvocation({ agent, input, strict });
     if (!done) {
@@ -137,9 +148,11 @@ if (!done) {
           ? { hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "deny",
             permissionDecisionReason: `outsider controller 不可用：${err?.message ?? err}` } }
           : {};
+      const codexReceiptFailureExit = CODEX_ATTACHED_CONTROL
+        && !["PreToolUse", "Stop"].includes(event) ? 1 : 0;
       finish(lifecycleExit2 ? "" : JSON.stringify(ATTACHED_MODE || CONTROLLER_SOCKET ? failed : {}),
         "监督器自身出错，本次动作没有被放行 —— " + (err?.message ?? err),
-        lifecycleExit2 ? 2 : 0);
+        lifecycleExit2 ? 2 : codexReceiptFailureExit);
     }
   }
 }

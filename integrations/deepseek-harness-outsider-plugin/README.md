@@ -14,6 +14,11 @@ as a durable `user/message` event. The adapter never executes supervisor text,
 never grants new tool authority, and never declares effect, outcome, loss, or
 liability.
 
+If the controller/gateway is unavailable, a stale or altered correction is
+received, or a durable message fails verification, the plugin adds one bounded
+`OUTSIDER_UNSUPERVISED` notice and lets Harness continue under its native policy.
+It does not turn an unsupported integration into a host-wide fail-closed block.
+
 The reference adapter can use an injected gateway for tests or the authenticated
 local socket client in `src/outsider-deepseek-harness-gateway.js`. The socket
 token only authenticates transport; the gateway independently verifies the
@@ -26,3 +31,7 @@ official message factory but never calls a model. It produces research-lane
 observation and durable-delivery evidence only. The rc.5-source/rc.6-package
 equivalence remains explicitly unproven; a real Harness work session and an
 independent effect/outcome chain remain required before any authority promotion.
+Even full protocol replay assumes a cooperative pinned host: the content-addressed
+handshake and ack are not independently signed controller or OS attestations.
+Behavioral effects therefore remain quarantine/shadow learning evidence until a
+sealed controller run or trusted ingress policy accepts them.

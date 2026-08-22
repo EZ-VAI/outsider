@@ -4,9 +4,10 @@
  * WHY THIS FILE EXISTS
  * ====================
  * I published "518/518 UID unique" as a product-level result. It was the Claude
- * Code path only; the Codex parser never carried `call_id`, so on Codex every
- * anchor is null, every judgement comes back `unknown`, and the observer is
- * silently inert. A cross-host table made one working path look like four.
+ * Code path only; the original Codex parser did not carry `call_id`, so Codex
+ * anchors were null and judgements came back `unknown`. The parser now binds
+ * real-shaped function_call/function_call_output pairs through `call_id`, and
+ * this file keeps that capability tied to executable evidence rather than prose.
  *
  * So the claim moves out of prose and into a test. Each host declares which
  * capabilities it has; a capability this file cannot demonstrate on real
@@ -73,9 +74,9 @@ test("每一条能力都要么被证明，要么是 false", () => {
       assert.equal(typeof val, "boolean", `${host}.${cap} 必须是明确的真假，不能是"大概"`);
     }
   }
-  /* 实测过的两条硬事实，不许被悄悄改成 true */
+  /* 实测过的两条硬事实，不许被悄悄改坏 */
   assert.equal(supports("codex", "contextToModel"), false,
     "实测：codex 上 allow+additionalContext 里的内容模型看不到，session JSONL 里也没有");
-  assert.equal(supports("codex", "uid"), false,
-    "codex parser 目前不带 call_id —— 改好了就在这里改，并让上面那条测试证明它");
+  assert.equal(supports("codex", "uid"), true,
+    "实测：Codex function_call/function_call_output 的 call_id 被保留为唯一事件身份");
 });

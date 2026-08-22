@@ -1,6 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import {
+  externalSupervisorEnvironment, redactExternalSupervisorText,
+} from "./outsider-supervisor-projection.js";
 
 const managedCommandRunner = fileURLToPath(new URL("./outsider-json-command-process.mjs",
   import.meta.url));
@@ -177,6 +180,11 @@ export function runFreshJsonCommand({
   execute = execFileSync,
 } = {}) {
   if (!cmd) return { ok: false, error: "NO_COMMAND" };
+  /* Every caller should structurally project its packet first.  This final
+     text pass is defense in depth for future/unknown packet fields and retry
+     prompts, so a new call site cannot silently reintroduce credentials. */
+  const supervisorInput = redactExternalSupervisorText(input);
+  const supervisorEnvironment = externalSupervisorEnvironment(process.env);
   let output;
   try {
     if (execute === execFileSync) {
@@ -189,9 +197,9 @@ export function runFreshJsonCommand({
         && generation > 0 ? { directory: ownershipDirectory, ownerId, generation,
           logicalOperationId: randomUUID() } : null;
       const envelopeRaw = execute(process.execPath, [managedCommandRunner], {
-        input: JSON.stringify({ executable, argv, input, timeoutMs,
+        input: JSON.stringify({ executable, argv, input: supervisorInput, timeoutMs,
           ownership,
-          env: { ...process.env, CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1" } }),
+          env: supervisorEnvironment }),
         encoding: "utf8", timeout: timeoutMs + 5_000, maxBuffer: 20 * 1024 * 1024,
       });
       const envelope = JSON.parse(envelopeRaw);
@@ -207,13 +215,13 @@ export function runFreshJsonCommand({
       output = envelope.stdout;
     } else if (Array.isArray(cmd)) {
       output = execute(cmd[0], cmd.slice(1), {
-        input, encoding: "utf8", timeout: timeoutMs, maxBuffer: 8 * 1024 * 1024,
-        env: { ...process.env, CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1" },
+        input: supervisorInput, encoding: "utf8", timeout: timeoutMs,
+        maxBuffer: 8 * 1024 * 1024, env: supervisorEnvironment,
       });
     } else {
       output = execute(process.env.SHELL || "/bin/sh", ["-lc", String(cmd)], {
-        input, encoding: "utf8", timeout: timeoutMs, maxBuffer: 8 * 1024 * 1024,
-        env: { ...process.env, CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1" },
+        input: supervisorInput, encoding: "utf8", timeout: timeoutMs,
+        maxBuffer: 8 * 1024 * 1024, env: supervisorEnvironment,
       });
     }
   } catch (error) {
@@ -234,7 +242,7 @@ export function runFreshJsonCommand({
     return {
       ok: false,
       error: `SCHEMA_INVALID_RESPONSE:${schemaViolations.join("; ").slice(0, 1200)}`,
-      retryInput: `${String(input ?? "")}\n\n────── SCHEMA REPAIR REQUIRED ──────\n${retryInstruction}\n`,
+      retryInput: `${supervisorInput}\n\n────── SCHEMA REPAIR REQUIRED ──────\n${retryInstruction}\n`,
       failure: {
         kind: "schema-invalid", code: null, status: 0, signal: null,
         timedOut: false, retryable: true, stderrTail: "", stdoutTail: tail(output),
@@ -245,7 +253,7 @@ export function runFreshJsonCommand({
   }
   const retryInstruction = "Return exactly one syntactically valid JSON object and no prose.";
   return { ok: false, error: `INVALID_JSON_RESPONSE:${String(output).trim().slice(0, 240)}`,
-    retryInput: `${String(input ?? "")}\n\n────── JSON REPAIR REQUIRED ──────\n${retryInstruction}\n`,
+    retryInput: `${supervisorInput}\n\n────── JSON REPAIR REQUIRED ──────\n${retryInstruction}\n`,
     failure: { kind: "invalid-json", code: null, status: 0, signal: null,
       timedOut: false, retryable: true, stderrTail: "", stdoutTail: tail(output),
       schemaViolations: [],

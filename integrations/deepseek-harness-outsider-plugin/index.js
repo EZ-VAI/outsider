@@ -9,12 +9,18 @@ export const name = 'outsider-stage05'
  * The plugin can establish durable delivery only. It cannot execute the
  * correction or declare an effect, outcome, loss, or liability.
  * @param {import('@deepseek-ai/cordis').Context} ctx
- * @param {{handshake: unknown, gateway?: object, gatewaySocketPath?: string, gatewayToken?: string}} config
+ * @param {{handshake?: unknown, gateway?: object, gatewaySocketPath?: string, gatewayToken?: string}} [config]
  */
-export function apply(ctx, config) {
+export function apply(ctx, config = {}) {
   const gateway = config.gateway ?? (() => {
     if (!config.gatewaySocketPath || !config.gatewayToken) {
-      throw new Error('OUTSIDER_DEEPSEEK_GATEWAY_CONFIG_REQUIRED')
+      /* Plugin discovery is not proof that the local controller is reachable.
+         Keep Harness usable and let the core inject one durable, visible
+         UNSUPERVISED notice at the first boundary. */
+      return {
+        async claimCorrection() { throw new Error('OUTSIDER_DEEPSEEK_GATEWAY_CONFIG_REQUIRED') },
+        async recordAck() { throw new Error('OUTSIDER_DEEPSEEK_GATEWAY_CONFIG_REQUIRED') },
+      }
     }
     return createDeepSeekHarnessGatewayClient({
       socketPath: config.gatewaySocketPath,

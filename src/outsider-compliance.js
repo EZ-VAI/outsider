@@ -51,7 +51,100 @@
  * that finding would be hidden.
  */
 
+import { createHash } from "node:crypto";
+import {
+  chmodSync, closeSync, constants, existsSync, fchmodSync, fstatSync, fsyncSync,
+  ftruncateSync, lstatSync, mkdirSync, openSync, readFileSync, statSync, unlinkSync,
+  writeSync,
+} from "node:fs";
+import path from "node:path";
+
 export const SHADOW_PATH = ".outsider/shadow.jsonl";
+export const COMPLIANCE_LEDGER_ENABLE_ENV = "OUTSIDER_COMPLIANCE_LEDGER";
+export const COMPLIANCE_LEDGER_RETENTION_ENV = "OUTSIDER_COMPLIANCE_RETENTION_DAYS";
+export const COMPLIANCE_LEDGER_DEFAULT_RETENTION_DAYS = 7;
+export const COMPLIANCE_LEDGER_MAX_RETENTION_DAYS = 30;
+export const COMPLIANCE_LEDGER_MAX_BYTES = 8 * 1024 * 1024;
+
+const HASH = /^sha256:[0-9a-f]{64}$/;
+const PROBE_KINDS = new Set([
+  "edit-the-named-file", "do-not-submit-yet", "declare-a-charter",
+  "run-the-acceptance", "stop-repeating", "edit-before-rerun", "stop-rereading",
+  "run-a-test", "back-it-up", "chose-another-path",
+]);
+const RISK_KINDS = new Set(["safe", "build", "unknown", "destructive", "deploy"]);
+
+const privateDigest = (domain, value) => value == null ? null
+  : `sha256:${createHash("sha256").update(`outsider:compliance-ledger:${domain}:v2\0`)
+    .update(String(value)).digest("hex")}`;
+
+const projectedFile = (value, workspaceRoot = null) => {
+  const normalized = String(value ?? "").replace(/\\/g, "/").replace(/\/+$/, "");
+  if (!normalized) return { basis: "UNRESOLVED", value: "" };
+  if (workspaceRoot) {
+    const absolute = path.isAbsolute(normalized) ? path.resolve(normalized)
+      : path.resolve(String(workspaceRoot), normalized);
+    return { basis: "WORKSPACE_RESOLVED", value: absolute.replace(/\\/g, "/") };
+  }
+  return { basis: path.isAbsolute(normalized) ? "ABSOLUTE_EXACT" : "RELATIVE_EXACT",
+    value: normalized };
+};
+const projectedAction = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
+const projectedWorkspaceRoot = (value) => value == null ? null
+  : path.resolve(String(value)).replace(/\\/g, "/").replace(/\/+$/, "");
+
+const toolClass = (value) => {
+  const name = String(value ?? "").toLowerCase();
+  if (["bash", "shell", "sh", "run", "exec", "exec_command", "terminal"].includes(name)) {
+    return "shell";
+  }
+  if (["write", "edit", "multiedit", "apply_patch", "create_file", "notebookedit"].includes(name)) {
+    return "file-edit";
+  }
+  if (["read", "view", "cat", "glob", "grep", "search"].includes(name)) return "file-read";
+  return name ? "other-tool" : null;
+};
+
+const boundedInteger = (value, min, max) => Number.isInteger(value)
+  && value >= min && value <= max ? value : null;
+
+function projectedExpectation(probe, workspaceRoot = null) {
+  if (!probe?.expect || typeof probe.expect !== "object") return null;
+  const output = {};
+  for (const key of ["notSubmit", "charter", "runsTest", "editOrTest"]) {
+    if (probe.expect[key] === true) output[key] = true;
+  }
+  if (probe.expect.file != null) {
+    const projected = projectedFile(probe.expect.file, workspaceRoot);
+    output.fileIdentityBasis = projected.basis;
+    output.fileHash = privateDigest("expected-file", projected.value);
+    if (workspaceRoot != null) {
+      output.workspaceRootHash = privateDigest("workspace-root",
+        projectedWorkspaceRoot(workspaceRoot));
+    }
+  }
+  if (probe.expect.action != null) {
+    output.actionHash = privateDigest("expected-action", projectedAction(probe.expect.action));
+  }
+  if (probe.expect.differentSig != null) {
+    output.differentSignatureHash = privateDigest("expected-signature", probe.expect.differentSig);
+  }
+  return Object.keys(output).length ? output : null;
+}
+
+export function complianceLedgerEnabled(env = process.env) {
+  return env?.[COMPLIANCE_LEDGER_ENABLE_ENV] === "1";
+}
+
+function retentionDays(env = process.env) {
+  const requested = env?.[COMPLIANCE_LEDGER_RETENTION_ENV];
+  if (requested == null || requested === "") return COMPLIANCE_LEDGER_DEFAULT_RETENTION_DAYS;
+  const parsed = Number(requested);
+  if (!Number.isInteger(parsed) || parsed < 1 || parsed > COMPLIANCE_LEDGER_MAX_RETENTION_DAYS) {
+    throw new Error("COMPLIANCE_LEDGER_RETENTION_INVALID");
+  }
+  return parsed;
+}
 
 /* stable, dependency-free, and NOT Math.random(): the arm has to be recomputable
    from the record months later, or the experiment cannot be audited */
@@ -239,26 +332,226 @@ export function scoreProbe(probe, following = []) {
 }
 
 /*
- * shadowRecord — one line of the ledger. Deliberately structural: file paths and
- * signatures, no source text, no traceback bodies. This file is the thing a
- * volunteer would be asked to send back, so it has to be readable by them in
- * ten seconds and contain nothing they would mind sending.
+ * shadowRecord — the privacy projection used by the optional local ledger.
+ * Commands, paths, signatures, reasons, prompts and source text never enter the
+ * record. This is still local diagnostic data, not an upload envelope and not a
+ * request that a user share it.
  */
-export function shadowRecord({ decision, probe, arm, spoke, ts = null, origin = "main" }) {
+export function shadowRecord({ decision, probe, arm, spoke, ts = null, origin = "main",
+  workspaceRoot = null }) {
   return {
-    v: 1, ts, arm, spoke, origin,
-    verdict: decision?.verdict ?? null,
-    kind: probe?.kind ?? null,
-    expect: probe?.expect ?? null,
-    window: probe?.window ?? null,
-    weak: probe?.weak ?? false,
-    tool: decision?.proposed?.toolName ?? null,
-    sig: decision?.proposed?.sig ?? null,
-    file: decision?.proposed?.file ?? null,
-    risk: decision?.proposed?.risk ?? null,
-    loopAttempts: decision?.loop?.attempts ?? null,
-    ratchet: decision?.ratchet?.total ?? null,
+    v: 2,
+    ts,
+    expiresAt: null,
+    retentionDays: null,
+    arm: ["live", "shadow", "experiment", "exempt"].includes(arm) ? arm : "unknown",
+    spoke: spoke === true,
+    originClass: origin === "main" ? "main" : "subagent",
+    originHash: privateDigest("origin", origin),
+    verdict: ["warn", "deny", "ask"].includes(decision?.verdict) ? decision.verdict : null,
+    kind: PROBE_KINDS.has(probe?.kind) ? probe.kind : null,
+    expect: projectedExpectation(probe, workspaceRoot),
+    window: boundedInteger(probe?.window, 1, 100),
+    weak: probe?.weak === true,
+    toolClass: toolClass(decision?.proposed?.toolName),
+    signatureHash: privateDigest("action-signature", decision?.proposed?.sig),
+    fileHash: privateDigest("proposed-file", decision?.proposed?.file),
+    risk: RISK_KINDS.has(decision?.proposed?.risk) ? decision.proposed.risk : null,
+    loopAttempts: boundedInteger(decision?.loop?.attempts, 0, 1_000_000),
+    ratchet: boundedInteger(decision?.ratchet?.total, 0, 1_000_000),
   };
+}
+
+/* Score a v2 privacy projection without reconstructing the private expectation.
+   Raw following steps stay in memory; only domain-separated hashes are compared. */
+export function scoreProjectedProbe(record, following = [], { workspaceRoot = null } = {}) {
+  if (record?.v !== 2 || !PROBE_KINDS.has(record?.kind)) return "unknown";
+  const sameOrigin = following.filter((step) => privateDigest("origin", step?.origin ?? "main")
+    === record.originHash);
+  const win = sameOrigin.slice(0, record.window ?? 6);
+  if (!win.length) return "unknown";
+  const expected = record.expect ?? {};
+  if (expected.workspaceRootHash != null
+    && privateDigest("workspace-root", projectedWorkspaceRoot(workspaceRoot))
+      !== expected.workspaceRootHash) return "unknown";
+  const projectedStepFile = (step) => projectedFile(step?.file, workspaceRoot);
+  const comparableFile = (step) => step?.file != null && expected.fileHash != null
+    && projectedStepFile(step).basis === expected.fileIdentityBasis;
+  const fileMatches = (step) => comparableFile(step)
+    && privateDigest("expected-file", projectedStepFile(step).value) === expected.fileHash;
+  const actionMatches = (step) => expected.actionHash != null
+    && privateDigest("expected-action", projectedAction(step?.action)) === expected.actionHash;
+
+  if (record.kind === "edit-the-named-file") {
+    const edits = win.filter((step) => step.isEdit);
+    if (!edits.length) return "unknown";
+    if (!edits.some(comparableFile)) return "unknown";
+    return edits.some(fileMatches) ? "complied" : "did-not";
+  }
+  if (record.kind === "do-not-submit-yet") {
+    if (win.some((step) => step.isSubmit)) return "did-not";
+    return win.some((step) => step.isTest || step.isEdit) ? "complied" : "unknown";
+  }
+  if (record.kind === "run-the-acceptance") {
+    return win.some((step) => step.isTest) ? "complied" : "did-not";
+  }
+  if (record.kind === "stop-repeating") return win.some(actionMatches) ? "did-not" : "complied";
+  if (record.kind === "edit-before-rerun") {
+    const reran = win.findIndex(actionMatches);
+    const edited = win.findIndex((step) => step.isEdit);
+    if (edited < 0 && reran < 0) return "unknown";
+    if (edited < 0) return "did-not";
+    return reran < 0 || edited < reran ? "complied" : "did-not";
+  }
+  if (record.kind === "stop-rereading") {
+    if (!win.some(comparableFile)) return "unknown";
+    return win.some((step) => fileMatches(step) && !step.isEdit) ? "did-not" : "complied";
+  }
+  if (record.kind === "run-a-test") {
+    if (win.some((step) => step.isTest)) return "complied";
+    return win.some((step) => step.isSubmit) ? "did-not" : "unknown";
+  }
+  if (record.kind === "back-it-up") {
+    if (win.some((step) => step.isEdit)) return "complied";
+    return win.some((step) => step.isSubmit || step.isTest) ? "did-not" : "unknown";
+  }
+  if (record.kind === "declare-a-charter") {
+    return win.some((step) => step.charterBody
+      || /charter\.json/.test(String(step.file ?? ""))) ? "complied" : "did-not";
+  }
+  if (record.kind === "chose-another-path") {
+    if (!expected.differentSignatureHash) return "unknown";
+    return win.some((step) => step.sig
+      && privateDigest("expected-signature", step.sig) !== expected.differentSignatureHash)
+      ? "complied" : "did-not";
+  }
+  return "unknown";
+}
+
+const LEDGER_KEYS = Object.freeze([
+  "v", "ts", "expiresAt", "retentionDays", "arm", "spoke", "originClass",
+  "originHash", "verdict", "kind", "expect", "window", "weak", "toolClass", "signatureHash",
+  "fileHash", "risk", "loopAttempts", "ratchet",
+]);
+
+function safeRecord(record, now, days) {
+  const expectKeys = record?.expect == null ? [] : Object.keys(record.expect).sort();
+  const allowedExpectKeys = new Set(["notSubmit", "charter", "runsTest", "editOrTest",
+    "fileIdentityBasis", "fileHash", "workspaceRootHash", "actionHash",
+    "differentSignatureHash"]);
+  const expectValid = record?.expect == null || (typeof record.expect === "object"
+    && !Array.isArray(record.expect)
+    && expectKeys.every((key) => allowedExpectKeys.has(key))
+    && expectKeys.every((key) => key === "fileIdentityBasis"
+      ? ["WORKSPACE_RESOLVED", "ABSOLUTE_EXACT", "RELATIVE_EXACT", "UNRESOLVED"]
+        .includes(record.expect[key])
+      : key.endsWith("Hash") ? HASH.test(record.expect[key]) : record.expect[key] === true));
+  if (!record || typeof record !== "object" || Array.isArray(record)
+    || JSON.stringify(Object.keys(record).sort()) !== JSON.stringify([...LEDGER_KEYS].sort())
+    || record.v !== 2 || ![null, ...PROBE_KINDS].includes(record.kind)
+    || ![null, "warn", "deny", "ask"].includes(record.verdict)
+    || !["live", "shadow", "experiment", "exempt", "unknown"].includes(record.arm)
+    || typeof record.spoke !== "boolean"
+    || !["main", "subagent"].includes(record.originClass)
+    || !HASH.test(record.originHash)
+    || ![null, "shell", "file-edit", "file-read", "other-tool"].includes(record.toolClass)
+    || ![null, ...RISK_KINDS].includes(record.risk)
+    || !expectValid
+    || (record.window !== null && boundedInteger(record.window, 1, 100) === null)
+    || (record.loopAttempts !== null
+      && boundedInteger(record.loopAttempts, 0, 1_000_000) === null)
+    || (record.ratchet !== null && boundedInteger(record.ratchet, 0, 1_000_000) === null)
+    || (record.signatureHash !== null && !HASH.test(record.signatureHash))
+    || (record.fileHash !== null && !HASH.test(record.fileHash))) {
+    throw new Error("COMPLIANCE_LEDGER_RECORD_INVALID");
+  }
+  return { ...record, ts: now, retentionDays: days,
+    expiresAt: now + (days * 24 * 60 * 60 * 1000) };
+}
+
+function ledgerPaths(cwd) {
+  const root = path.resolve(String(cwd));
+  return { root, directory: path.join(root, ".outsider"), file: path.join(root, SHADOW_PATH) };
+}
+
+function secureLedgerDirectory(directory) {
+  if (existsSync(directory)) {
+    const stat = lstatSync(directory);
+    if (stat.isSymbolicLink() || !stat.isDirectory()) {
+      throw new Error("COMPLIANCE_LEDGER_DIRECTORY_UNSAFE");
+    }
+  } else mkdirSync(directory, { mode: 0o700 });
+  chmodSync(directory, 0o700);
+}
+
+export function appendComplianceLedgerRecord({ cwd, record, env = process.env,
+  now = Date.now() } = {}) {
+  if (!complianceLedgerEnabled(env)) return { written: false, reason: "EXPLICIT_OPT_IN_REQUIRED" };
+  if (!Number.isSafeInteger(now) || now < 0) throw new Error("COMPLIANCE_LEDGER_TIME_INVALID");
+  const days = retentionDays(env);
+  const projected = safeRecord(record, now, days);
+  const { directory, file } = ledgerPaths(cwd);
+  secureLedgerDirectory(directory);
+  if (existsSync(file)) {
+    const stat = lstatSync(file);
+    if (stat.isSymbolicLink() || !stat.isFile()) throw new Error("COMPLIANCE_LEDGER_FILE_UNSAFE");
+    if (stat.size > COMPLIANCE_LEDGER_MAX_BYTES) throw new Error("COMPLIANCE_LEDGER_SIZE_LIMIT");
+  }
+  const descriptor = openSync(file,
+    constants.O_CREAT | constants.O_RDWR | (constants.O_NOFOLLOW ?? 0), 0o600);
+  try {
+    const stat = fstatSync(descriptor);
+    if (!stat.isFile()) throw new Error("COMPLIANCE_LEDGER_FILE_UNSAFE");
+    fchmodSync(descriptor, 0o600);
+    const existing = stat.size === 0 ? "" : readFileSync(descriptor, "utf8");
+    const cutoff = now - (days * 24 * 60 * 60 * 1000);
+    const kept = [];
+    for (const line of existing.split(/\r?\n/).filter(Boolean)) {
+      let prior;
+      try { prior = JSON.parse(line); }
+      catch { throw new Error("COMPLIANCE_LEDGER_CORRUPT"); }
+      if (!Number.isSafeInteger(prior?.ts)) throw new Error("COMPLIANCE_LEDGER_CORRUPT");
+      /* v1 stored raw paths/signatures. Never carry those rows forward: an
+         explicit v2 write is also a privacy migration that purges legacy data. */
+      if (prior.v !== 2) continue;
+      const safePrior = safeRecord({ ...prior, ts: null, expiresAt: null,
+        retentionDays: null }, prior.ts, days);
+      if (prior.ts >= cutoff) kept.push(JSON.stringify(safePrior));
+    }
+    kept.push(JSON.stringify(projected));
+    const bytes = Buffer.from(`${kept.join("\n")}\n`);
+    if (bytes.length > COMPLIANCE_LEDGER_MAX_BYTES) throw new Error("COMPLIANCE_LEDGER_SIZE_LIMIT");
+    ftruncateSync(descriptor, 0);
+    writeSync(descriptor, bytes, 0, bytes.length, 0);
+    fsyncSync(descriptor);
+  } finally { closeSync(descriptor); }
+  return { written: true, path: file, retentionDays: days, expiresAt: projected.expiresAt };
+}
+
+export function complianceLedgerStatus(cwd, env = process.env) {
+  const { directory, file } = ledgerPaths(cwd);
+  if (existsSync(directory) && (lstatSync(directory).isSymbolicLink()
+    || !lstatSync(directory).isDirectory())) throw new Error("COMPLIANCE_LEDGER_DIRECTORY_UNSAFE");
+  if (!existsSync(file)) return { enabled: complianceLedgerEnabled(env), exists: false,
+    path: file, defaultRetentionDays: COMPLIANCE_LEDGER_DEFAULT_RETENTION_DAYS,
+    maxRetentionDays: COMPLIANCE_LEDGER_MAX_RETENTION_DAYS };
+  const stat = lstatSync(file);
+  if (stat.isSymbolicLink() || !stat.isFile()) throw new Error("COMPLIANCE_LEDGER_FILE_UNSAFE");
+  return { enabled: complianceLedgerEnabled(env), exists: true, path: file,
+    bytes: statSync(file).size, mode: stat.mode & 0o777,
+    defaultRetentionDays: COMPLIANCE_LEDGER_DEFAULT_RETENTION_DAYS,
+    maxRetentionDays: COMPLIANCE_LEDGER_MAX_RETENTION_DAYS };
+}
+
+export function eraseComplianceLedger(cwd) {
+  const { directory, file } = ledgerPaths(cwd);
+  if (existsSync(directory) && (lstatSync(directory).isSymbolicLink()
+    || !lstatSync(directory).isDirectory())) throw new Error("COMPLIANCE_LEDGER_DIRECTORY_UNSAFE");
+  if (!existsSync(file)) return { erased: false, path: file };
+  const stat = lstatSync(file);
+  if (stat.isSymbolicLink() || !stat.isFile()) throw new Error("COMPLIANCE_LEDGER_FILE_UNSAFE");
+  unlinkSync(file);
+  return { erased: true, path: file };
 }
 
 /*

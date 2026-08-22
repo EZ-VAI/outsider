@@ -22,9 +22,9 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run test:corpus
+      - run: npm run plugin:validate
       - run: npm run experience:deploy:cloudflare:dry
       - run: npm run demo:deploy:dry
-      - run: npm pack --dry-run
 
   package-macos:
     runs-on: macos-15

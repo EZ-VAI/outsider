@@ -6415,8 +6415,8 @@ export class OutsiderKernelController {
   }
 
   handleHook({ input = {}, agent = "claude-code", strict = false } = {}) {
-    if (agent !== "claude-code") {
-      throw new Error(`UNSUPPORTED_HOST: Stage 0.5 controller only supports claude-code, got ${agent}`);
+    if (!["claude-code", "codex"].includes(agent)) {
+      throw new Error(`UNSUPPORTED_HOST: Stage 0.5 controller supports claude-code/codex, got ${agent}`);
     }
     this.lastTranscriptPath = actorTranscriptPath(input) ?? this.lastTranscriptPath;
     this.recordEvaluatorFault(input);

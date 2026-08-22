@@ -1,6 +1,6 @@
 {
   "schema": "outsider/external-runtime-closure/v2",
-  "compiledAt": "2026-08-14T19:25:41.977Z",
+  "compiledAt": "2026-08-20T17:47:46.028Z",
   "adapter": "integrations/deepseek-harness-outsider-plugin/index.ts",
   "command": "tsc -p integrations/deepseek-harness-outsider-plugin/tsconfig.json",
   "result": "PASS",
@@ -38,15 +38,15 @@
   "adapterClosure": [
     {
       "path": "integrations/deepseek-harness-outsider-plugin/index.ts",
-      "sha256": "sha256:ae153d1d0afaa3df2b1c5e412afc7cfa7078bf462474e18f0769f7c95da151af"
+      "sha256": "sha256:d23aca31d27992701ab9afecb93f4cc6ed2982cf457cdf6f71e8fa54ddf96751"
     },
     {
       "path": "integrations/deepseek-harness-outsider-plugin/index.js",
-      "sha256": "sha256:9f920b796dc59ba235dd618c7435178ab38a37fec934c148f62561d75b80d107"
+      "sha256": "sha256:8aa4c5374c2cd3d7dc0bd277926216059b658f84514cec4de84ece36764ebfd9"
     },
     {
       "path": "src/outsider-deepseek-harness-plugin-core.js",
-      "sha256": "sha256:345c16010a1bc394aa9591f0abc296d3722b8c57f34c63ec24cf6371fa793cd5"
+      "sha256": "sha256:6cdd7ca3c4bfbf1b3996d33b84a122e12cc0f4a0c5483b9c21932fee8667c016"
     },
     {
       "path": "src/outsider-deepseek-harness-gateway.js",
@@ -65,12 +65,12 @@
       "sha256": "sha256:65f328b1c8f2860af21b131aa036fded9c510268c12ae8e6e4b9a44ec74d8d7c"
     }
   ],
-  "adapterClosureHash": "sha256:30f54f054f7cffd3d6eccad4a09e42ca6697b3bd7f5b39fd48c63ca3025cb0a2",
+  "adapterClosureHash": "sha256:c433672efce561a00ac5acc610d6baf4bbd7cab2c6911a18be422bc1b88e684b",
   "sourcePinHash": "sha256:ea72f8d52183d0d079dc5d7856583bdf74b5ad0bb94dfb0ede1201786bb44735",
   "sourceReviewCommit": "47f943859bef60e4160492346772ded9b24f765a",
   "sourceReviewPackageVersion": "0.1.0-rc.5",
   "sourceBinaryEquivalence": "UNPROVEN",
   "claimBoundary": "The official rc.5 source bytes and publicly installed rc.6 package bytes are independently content-addressed. rc.6 exposes no gitHead, so no source-to-binary equivalence is claimed.",
-  "runtimeClosureHash": "sha256:f7df8a6684a8986fa6550e5d0a29bec0bb50f7f88cf7e1439c1388ba1a403b68",
-  "recordHash": "sha256:e5f1eabecb717235319fd85a99d6658b711c82fe23daa692b08c4c0c2dc38d57"
+  "runtimeClosureHash": "sha256:340245a534fab635a0ea2aff5ff89bd75bd7218bb65a19f239f2723479ac3229",
+  "recordHash": "sha256:05f7759747df021ed4933aade967fd687e40017f4c881177fa19d44c94d73551"
 }

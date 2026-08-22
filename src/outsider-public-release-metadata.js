@@ -1,6 +1,7 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import {
-  existsSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync,
+  closeSync, constants, fchmodSync, fstatSync, fsyncSync, lstatSync, mkdirSync, openSync,
+  readFileSync, renameSync, unlinkSync, writeFileSync,
 } from "node:fs";
 import path from "node:path";
 
@@ -16,6 +17,9 @@ export const PUBLIC_FIELD_GATES = Object.freeze([
   "multiHourEndurance",
   "independentSecondMachineInstall",
   "codexLifecycleControl",
+  "chatgptLivePluginInstall",
+  "chatgptNewChatSkillEvaluation",
+  "openAIPluginsDirectoryPublication",
   "traeLifecycleControl",
 ]);
 
@@ -29,6 +33,7 @@ export const PUBLIC_DETERMINISTIC_CHECKS = Object.freeze([
   "transparentInstall",
   "projectScopedInstall",
   "desktopPluginPackage",
+  "openAIUniversalPluginPackage",
   "certifierSourceClosure",
 ]);
 
@@ -36,11 +41,14 @@ export const PUBLIC_CLAIM_BOUNDARIES = Object.freeze([
   "certificate covers the named artifact on the recorded environment only",
   "deterministic tests do not prove multi-hour semantic reliability",
   "NOT_RUN and UNSUPPORTED are never counted as PASS",
+  "plugin packaging does not establish ChatGPT live install or Codex lifecycle control",
 ]);
 
 const SHA256 = /^sha256:[a-f0-9]{64}$/;
 const STATUS = /^[A-Z][A-Z0-9_:-]{0,63}$/;
 const SAFE_FILE = /^[A-Za-z0-9][A-Za-z0-9._-]{0,254}$/;
+const NOFOLLOW = constants.O_NOFOLLOW ?? 0;
+const DIRECTORY = constants.O_DIRECTORY ?? 0;
 
 function fail(code) {
   throw new Error(code);
@@ -76,10 +84,95 @@ function claimBoundary(value) {
   return [...value];
 }
 
-function readRequired(file, code) {
+function fileError(code, file) {
+  const error = new Error(`${code}:${file}`);
+  error.code = code;
+  return error;
+}
+
+function lstatOrNull(file) {
+  try {
+    return lstatSync(file, { bigint: true });
+  } catch (error) {
+    if (error?.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+function sameFile(left, right) {
+  return Boolean(left && right && left.isFile() && right.isFile()
+    && left.dev === right.dev && left.ino === right.ino && left.mode === right.mode
+    && left.size === right.size && left.mtimeNs === right.mtimeNs
+    && left.ctimeNs === right.ctimeNs);
+}
+
+function sameDirectory(left, right) {
+  return Boolean(left && right && left.isDirectory() && right.isDirectory()
+    && left.dev === right.dev && left.ino === right.ino && left.mode === right.mode);
+}
+
+function sameNode(left, right) {
+  return Boolean(left && right && left.dev === right.dev && left.ino === right.ino
+    && left.mode === right.mode && left.size === right.size);
+}
+
+function sameInode(left, right) {
+  return Boolean(left && right && left.dev === right.dev && left.ino === right.ino);
+}
+
+function readRequired(file, code, testOnlyReadObserver) {
   const absolute = path.resolve(file);
-  if (!existsSync(absolute)) fail(code);
-  return { absolute, bytes: readFileSync(absolute), size: statSync(absolute).size };
+  const before = lstatOrNull(absolute);
+  if (!before) fail(code);
+  if (before.isSymbolicLink()) throw fileError("PUBLIC_RELEASE_INPUT_SYMLINK_REFUSED", absolute);
+  if (!before.isFile()) throw fileError("PUBLIC_RELEASE_INPUT_TYPE_REFUSED", absolute);
+  const descriptor = openSync(absolute, constants.O_RDONLY | NOFOLLOW);
+  try {
+    const opened = fstatSync(descriptor, { bigint: true });
+    if (!sameFile(before, opened)) {
+      throw fileError("PUBLIC_RELEASE_INPUT_IDENTITY_CHANGED", absolute);
+    }
+    testOnlyReadObserver?.({ phase: "input-opened", file: absolute });
+    const bytes = readFileSync(descriptor);
+    testOnlyReadObserver?.({ phase: "input-read", file: absolute });
+    const after = fstatSync(descriptor, { bigint: true });
+    const current = lstatOrNull(absolute);
+    if (!sameFile(opened, after) || !sameFile(after, current)) {
+      throw fileError("PUBLIC_RELEASE_INPUT_IDENTITY_CHANGED", absolute);
+    }
+    return { absolute, bytes, size: Number(after.size), stats: after };
+  } finally {
+    closeSync(descriptor);
+  }
+}
+
+function revalidateRequiredInputs(inputs) {
+  for (const input of inputs) {
+    const current = readRequired(input.absolute, "PUBLIC_RELEASE_INPUT_MISSING");
+    if (!sameFile(input.stats, current.stats) || !input.bytes.equals(current.bytes)) {
+      throw fileError("PUBLIC_RELEASE_INPUT_IDENTITY_CHANGED", input.absolute);
+    }
+  }
+}
+
+function stableReadOutput(file) {
+  const before = lstatOrNull(file);
+  if (!before || before.isSymbolicLink() || !before.isFile()) {
+    throw fileError("PUBLIC_RELEASE_OUTPUT_IDENTITY_CHANGED", file);
+  }
+  const descriptor = openSync(file, constants.O_RDONLY | NOFOLLOW);
+  try {
+    const opened = fstatSync(descriptor, { bigint: true });
+    const bytes = readFileSync(descriptor);
+    const after = fstatSync(descriptor, { bigint: true });
+    const current = lstatOrNull(file);
+    if (!sameFile(before, opened) || !sameFile(opened, after) || !sameFile(after, current)) {
+      throw fileError("PUBLIC_RELEASE_OUTPUT_IDENTITY_CHANGED", file);
+    }
+    return { bytes, stats: after };
+  } finally {
+    closeSync(descriptor);
+  }
 }
 
 function readJson(bytes) {
@@ -192,10 +285,157 @@ export function renderSha256Sums(entries) {
   )).join("\n")}\n`;
 }
 
-function atomicWrite(file, bytes) {
-  const temporary = `${file}.tmp-${process.pid}`;
-  writeFileSync(temporary, bytes, { mode: 0o644 });
-  renameSync(temporary, file);
+function secureOutputDirectory(outputDirectory, trustedOutputRoot) {
+  const root = path.resolve(trustedOutputRoot);
+  const directory = path.resolve(outputDirectory);
+  const relative = path.relative(root, directory);
+  if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    throw fileError("PUBLIC_RELEASE_OUTPUT_OUTSIDE_TRUSTED_ROOT", directory);
+  }
+  const rootStats = lstatSync(root, { bigint: true });
+  if (rootStats.isSymbolicLink()) throw fileError("PUBLIC_RELEASE_OUTPUT_SYMLINK_REFUSED", root);
+  if (!rootStats.isDirectory()) throw fileError("PUBLIC_RELEASE_OUTPUT_DIRECTORY_REQUIRED", root);
+  const chain = [{ file: root, stats: rootStats }];
+  let current = root;
+  for (const component of relative.split(path.sep).filter(Boolean)) {
+    current = path.join(current, component);
+    let stats = lstatOrNull(current);
+    if (!stats) {
+      try {
+        mkdirSync(current, { mode: 0o755 });
+      } catch (error) {
+        if (error?.code !== "EEXIST") throw error;
+      }
+      stats = lstatSync(current, { bigint: true });
+    }
+    if (stats.isSymbolicLink()) throw fileError("PUBLIC_RELEASE_OUTPUT_SYMLINK_REFUSED", current);
+    if (!stats.isDirectory()) {
+      throw fileError("PUBLIC_RELEASE_OUTPUT_DIRECTORY_REQUIRED", current);
+    }
+    chain.push({ file: current, stats });
+  }
+  return { directory, chain };
+}
+
+function stableDirectoryChain(chain) {
+  return chain.every(({ file, stats }) => {
+    const current = lstatOrNull(file);
+    return current && !current.isSymbolicLink() && sameDirectory(stats, current);
+  });
+}
+
+function fsyncDirectory(directory) {
+  const descriptor = openSync(directory, constants.O_RDONLY | DIRECTORY | NOFOLLOW);
+  try {
+    fsyncSync(descriptor);
+  } finally {
+    closeSync(descriptor);
+  }
+}
+
+function atomicWrite(file, bytes, secured, testOnlyWriteObserver) {
+  const before = lstatOrNull(file);
+  if (before?.isSymbolicLink()) throw fileError("PUBLIC_RELEASE_OUTPUT_SYMLINK_REFUSED", file);
+  if (before && !before.isFile()) throw fileError("PUBLIC_RELEASE_OUTPUT_TYPE_REFUSED", file);
+  let descriptor;
+  let temporary;
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    temporary = path.join(secured.directory,
+      `.${path.basename(file)}.${randomUUID()}.tmp`);
+    try {
+      descriptor = openSync(temporary,
+        constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | NOFOLLOW, 0o644);
+      break;
+    } catch (error) {
+      if (error?.code !== "EEXIST") throw error;
+    }
+  }
+  if (descriptor == null) throw fileError("PUBLIC_RELEASE_TEMP_CREATE_FAILED", file);
+  let temporaryExists = true;
+  let written;
+  let owned;
+  try {
+    try {
+      owned = fstatSync(descriptor, { bigint: true });
+      fchmodSync(descriptor, 0o644);
+      writeFileSync(descriptor, bytes);
+      fsyncSync(descriptor);
+      written = fstatSync(descriptor, { bigint: true });
+    } finally {
+      closeSync(descriptor);
+    }
+    testOnlyWriteObserver?.({ phase: "output-temp-durable", file, temporary });
+    if (!stableDirectoryChain(secured.chain)) {
+      throw fileError("PUBLIC_RELEASE_OUTPUT_PARENT_IDENTITY_CHANGED", file);
+    }
+    const stableTemporary = stableReadOutput(temporary);
+    if (!sameFile(written, stableTemporary.stats) || !Buffer.from(bytes).equals(stableTemporary.bytes)) {
+      throw fileError("PUBLIC_RELEASE_TEMP_IDENTITY_CHANGED", temporary);
+    }
+    const current = lstatOrNull(file);
+    if (current?.isSymbolicLink()) throw fileError("PUBLIC_RELEASE_OUTPUT_SYMLINK_REFUSED", file);
+    if ((before == null) !== (current == null) || (before && !sameFile(before, current))) {
+      throw fileError("PUBLIC_RELEASE_OUTPUT_IDENTITY_CHANGED", file);
+    }
+    renameSync(temporary, file);
+    temporaryExists = false;
+    fsyncDirectory(secured.directory);
+    const stableInstalled = stableReadOutput(file);
+    if (!sameNode(written, stableInstalled.stats)
+      || (Number(stableInstalled.stats.mode) & 0o777) !== 0o644
+      || !Buffer.from(bytes).equals(stableInstalled.bytes)
+      || !stableDirectoryChain(secured.chain)) {
+      throw fileError("PUBLIC_RELEASE_OUTPUT_PUBLISH_VERIFY_FAILED", file);
+    }
+    return stableInstalled;
+  } finally {
+    if (temporaryExists) {
+      const current = lstatOrNull(temporary);
+      if (current && sameInode(owned, current)) unlinkSync(temporary);
+      else if (current) throw fileError("PUBLIC_RELEASE_TEMP_IDENTITY_CHANGED", temporary);
+    }
+  }
+}
+
+function optionalOutputSnapshot(file) {
+  const stats = lstatOrNull(file);
+  if (!stats) return null;
+  if (stats.isSymbolicLink()) throw fileError("PUBLIC_RELEASE_OUTPUT_SYMLINK_REFUSED", file);
+  if (!stats.isFile()) throw fileError("PUBLIC_RELEASE_OUTPUT_TYPE_REFUSED", file);
+  return stableReadOutput(file);
+}
+
+function rollbackOutput(file, original, attemptedBytes, secured, published) {
+  const current = optionalOutputSnapshot(file);
+  if (!current) {
+    if (original) throw fileError("PUBLIC_RELEASE_OUTPUT_ROLLBACK_IDENTITY_CHANGED", file);
+    return;
+  }
+  if (original && current.bytes.equals(original.bytes)) return;
+  if (!Buffer.from(attemptedBytes).equals(current.bytes)
+    && !(published && sameInode(published.stats, current.stats))) {
+    throw fileError("PUBLIC_RELEASE_OUTPUT_ROLLBACK_IDENTITY_CHANGED", file);
+  }
+  if (original) {
+    atomicWrite(file, original.bytes, secured, null);
+  } else {
+    const before = lstatSync(file, { bigint: true });
+    const verified = stableReadOutput(file);
+    if (!sameFile(before, verified.stats) || !verified.bytes.equals(current.bytes)) {
+      throw fileError("PUBLIC_RELEASE_OUTPUT_ROLLBACK_IDENTITY_CHANGED", file);
+    }
+    unlinkSync(file);
+    fsyncDirectory(secured.directory);
+  }
+}
+
+function revalidatePublishedOutput(file, expectedBytes, published) {
+  const current = stableReadOutput(file);
+  if (!sameFile(published.stats, current.stats)
+    || (Number(current.stats.mode) & 0o777) !== 0o644
+    || !Buffer.from(expectedBytes).equals(current.bytes)) {
+    throw fileError("PUBLIC_RELEASE_OUTPUT_IDENTITY_CHANGED", file);
+  }
 }
 
 export function writePublicReleaseMetadata({
@@ -203,11 +443,17 @@ export function writePublicReleaseMetadata({
   npmArtifactPath,
   pluginArtifactPath,
   outputDirectory,
+  trustedOutputRoot = path.dirname(path.resolve(outputDirectory)),
   expectedProduct,
+  testOnlyReadObserver = null,
+  testOnlyWriteObserver = null,
 } = {}) {
-  const exact = readRequired(certificatePath, "PUBLIC_RELEASE_CERTIFICATE_MISSING");
-  const npm = readRequired(npmArtifactPath, "PUBLIC_RELEASE_NPM_ARTIFACT_MISSING");
-  const plugin = readRequired(pluginArtifactPath, "PUBLIC_RELEASE_PLUGIN_ARTIFACT_MISSING");
+  const exact = readRequired(certificatePath, "PUBLIC_RELEASE_CERTIFICATE_MISSING",
+    testOnlyReadObserver);
+  const npm = readRequired(npmArtifactPath, "PUBLIC_RELEASE_NPM_ARTIFACT_MISSING",
+    testOnlyReadObserver);
+  const plugin = readRequired(pluginArtifactPath, "PUBLIC_RELEASE_PLUGIN_ARTIFACT_MISSING",
+    testOnlyReadObserver);
   const projection = buildPublicReleaseCertificate({
     exactCertificateBytes: exact.bytes,
     npmArtifactBytes: npm.bytes,
@@ -217,7 +463,7 @@ export function writePublicReleaseMetadata({
     expectedProduct,
   });
   const directory = path.resolve(outputDirectory);
-  mkdirSync(directory, { recursive: true });
+  const secured = secureOutputDirectory(directory, trustedOutputRoot);
   const publicFile = `release-certificate-public-${projection.product.version}.json`;
   const publicBytes = Buffer.from(`${JSON.stringify(projection, null, 2)}\n`);
   const sums = renderSha256Sums([
@@ -228,8 +474,30 @@ export function writePublicReleaseMetadata({
   ]);
   const publicPath = path.join(directory, publicFile);
   const sumsPath = path.join(directory, "SHA256SUMS");
-  atomicWrite(publicPath, publicBytes);
-  atomicWrite(sumsPath, sums);
+  revalidateRequiredInputs([exact, npm, plugin]);
+  const originals = {
+    publicCertificate: optionalOutputSnapshot(publicPath),
+    sha256Sums: optionalOutputSnapshot(sumsPath),
+  };
+  let publishedPublic;
+  let publishedSums;
+  try {
+    publishedPublic = atomicWrite(publicPath, publicBytes, secured, testOnlyWriteObserver);
+    publishedSums = atomicWrite(sumsPath, sums, secured, testOnlyWriteObserver);
+    revalidatePublishedOutput(publicPath, publicBytes, publishedPublic);
+    revalidatePublishedOutput(sumsPath, sums, publishedSums);
+    revalidateRequiredInputs([exact, npm, plugin]);
+  } catch (error) {
+    try {
+      rollbackOutput(sumsPath, originals.sha256Sums, sums, secured, publishedSums);
+      rollbackOutput(publicPath, originals.publicCertificate, publicBytes, secured,
+        publishedPublic);
+    } catch (rollbackError) {
+      rollbackError.cause = error;
+      throw rollbackError;
+    }
+    throw error;
+  }
   return {
     publicCertificate: publicPath,
     publicCertificateSha256: sha256Bytes(publicBytes),

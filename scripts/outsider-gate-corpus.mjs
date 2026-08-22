@@ -12,6 +12,8 @@
  * Every entry carries `want`, the verdict a correct classifier owes it. The
  * corpus is the fixture; the classifier is what moves.
  */
+import { realpathSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { classifyToolCall } from "../src/outsider-session-adapters.js";
 import { decideToolCall } from "../src/outsider-hook.js";
 
@@ -248,7 +250,12 @@ export function scoreCorpus(decide = decideToolCall) {
   };
 }
 
-if (process.argv[1]?.endsWith("outsider-gate-corpus.mjs")) {
+let directEntry = false;
+try {
+  directEntry = realpathSync(process.argv[1])
+    === realpathSync(fileURLToPath(import.meta.url));
+} catch { /* imported */ }
+if (directEntry) {
   const r = scoreCorpus();
   const pad = (s, n) => String(s).padEnd(n);
   console.log(`\n语料 ${r.total} 条 · 正确 ${r.correct} · 准确率 ${(r.accuracy * 100).toFixed(1)}%`);

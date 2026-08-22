@@ -1,0 +1,20 @@
+{
+  "name": "outsider",
+  "interface": {
+    "displayName": "Outsider"
+  },
+  "plugins": [
+    {
+      "name": "outsider-stage05",
+      "source": {
+        "source": "local",
+        "path": "./plugins/outsider-stage05"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "developer-tools"
+    }
+  ]
+}

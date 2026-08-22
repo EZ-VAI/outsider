@@ -1,24 +1,66 @@
 # Outsider Stage 0.5 product guide
 
-## Install once, keep using Claude normally
+## Install once; external control remains an explicit choice
 
 ```bash
-npm install -g ./outsider-guard-1.3.97.tgz
+npm install -g ./outsider-guard-1.3.98.tgz
 outsider install --scope user
 outsider doctor
 ```
 
 Then use `claude` or Claude Desktop Code exactly as before. Native Claude Code lazily starts an authenticated local sidecar. On macOS,
 the same installer registers a user LaunchAgent for Cowork because Hosted Plugin sandboxes cannot read the user's Claude credentials.
-There is no `outsider run` wrapper in the normal workflow.
+The default is deliberately `local-only/no-external`: it sends no supervisor packet and permits only bounded read-only diagnosis. There
+is no `outsider run` wrapper in the normal workflow, but full semantic control is not implied by installation alone.
+
+To enable an operator-selected external supervisor, both the command and a
+separate consent flag are required. User-scope install persists both gates in
+the Claude/Codex hook and, on macOS, the Cowork helper:
+
+```bash
+outsider install --scope user \
+  --supervisor-argv '["claude","-p"]' \
+  --allow-external-supervisor
+```
+
+For a CLI-owned sidecar without that helper, set `OUTSIDER_SUPERVISOR` or
+`OUTSIDER_SUPERVISOR_ARGV` together with
+`OUTSIDER_ALLOW_EXTERNAL_SUPERVISOR=1` in the environment that launches the
+host. The selected command receives only the bounded supervisor projection, but
+that projection can contain non-sensitive source excerpts, the prompt and tool
+or acceptance summaries. Provider handling is outside Outsider; see
+`PRIVACY.md` before opting in.
+
+The installer accepts only supervisor executable/argv identity. It refuses
+inline credentials, private-key material and query-bearing URLs; use the
+supervisor's protected login store. Malformed, symlinked, non-regular or
+concurrently changed settings fail closed without being replaced. A successful
+merge preserves the prior bytes in a unique hidden mode-`0600` backup.
 
 User scope writes `~/.claude/settings.json` and affects every Claude project on the machine. Install from a separate terminal, not from
 the Claude/Cowork session you currently depend on. For a one-repository trial, run `outsider install --scope project` from that repository;
 it writes only `.claude/settings.json` there.
 
-For Cowork, upload `outsider-guard-1.3.97-claude.plugin.zip` once in Desktop Plugins/Customize. The plugin is a thin authenticated client
+For Cowork, upload `outsider-guard-1.3.98-claude.plugin.zip` once in Desktop Plugins/Customize. The plugin is a thin authenticated client
 to the explicit system helper and never launches a misleading supervisor inside the hosted sandbox. Ordinary Claude Chat does not
 execute plugin hooks and is therefore not a controlled surface.
+
+For ChatGPT and Codex, the same Git repository exposes the validated
+`outsider-stage05` universal plugin through `.agents/plugins/marketplace.json`:
+
+```bash
+codex plugin marketplace add EZ-VAI/outsider --ref v1.3.98
+codex plugin add outsider-stage05@outsider
+```
+
+Restart the desktop app after installation. In Codex, `/hooks` must be used to
+review and trust the exact current hook definition. Plugin discovery, companion
+runtime installation, hook configuration, hook trust, runtime observation and
+controlled status are distinct. The universal plugin gives ChatGPT the
+installation/evidence skill, not a hidden global lifecycle interceptor. The
+Codex plugin hook is a boundary notice; actual Stage 0.5 control remains in the
+companion runtime and requires a real conformance receipt. Hosted tools and
+specialized paths may not traverse Codex tool hooks.
 
 ## What happens per task
 
@@ -28,16 +70,22 @@ execute plugin hooks and is therefore not a controlled surface.
    `.outsider.json#acceptance` is authoritative; semantic judgment happens against real trajectory/outcome evidence, not a pre-work
    chain of LLM contract paraphrases.
 4. Pre/PostToolUse and agent/team lifecycle events feed the recoverable controller.
-5. Quiet drift is checked periodically by an isolated semantic supervisor.
+5. When the external dual gate is enabled, quiet drift is checked periodically by the selected isolated semantic supervisor.
 6. The controller projects diagnosis into a minimal correction authority. Narrative telemetry cannot steer the worker; arbitrary model
    commands are never executed by the controller. One canonical authority hash binds factual audit, delivery, observation, effect and resolution.
 7. Stop is blocked only while a live controller can still diagnose and resume work. A finalized run exits visibly as SAFE delivery,
    verified-but-unattributed delivery, or conservative red stop; it never becomes a permanent block with no executor.
 
-Healthy calls are silent. A controller outage fails closed for mutations and Stop. If bootstrap itself is temporarily unavailable,
+Healthy controlled calls are silent. Missing external consent is a local-only state that blocks mutations before acceptance discovery.
+A configured controller outage fails closed for mutations and Stop. If bootstrap itself is temporarily unavailable,
 Outsider allows only named read-only diagnostic tools, records the degraded state, and retries with bounded exponential backoff; it does
-not trap every Read/Glob/Grep call in the same permanent error loop. A project with no acceptance runs observer-only and
-is never labeled as a complete Stage 0.5 delivery.
+not trap every Read/Glob/Grep call in the same permanent error loop. Only after the external dual gate is enabled, a project with no
+acceptance can run observer-only; neither state is labeled as a complete Stage 0.5 delivery.
+
+Standalone and legacy adapters never treat repository-writable
+`.outsider/run.json` or `.outsider/contract.json` as acceptance or supervisor
+command authority. Only an authenticated controller/RunStore can execute those
+commands; the CodeBuddy/Trae paths remain observer/unsupported surfaces.
 
 An inherited host session id observed under a second cwd is an identity conflict: Outsider records it and fails closed instead of merging
 the repositories. Start a fresh Claude session or remove the inherited `CLAUDE_CODE_SESSION_ID` from the nested launcher.
@@ -58,10 +106,17 @@ outsider attest <run-directory>... --out <attestation.json>
 Use explicit controlled mode only in CI/headless workflows:
 
 ```bash
-outsider run "<operator words>" --accept "npm test" --max-budget-usd 20 --cwd /absolute/repo
+outsider run "<operator words>" --accept "npm test" --max-budget-usd 20 \
+  --supervisor-argv '["claude","-p"]' --allow-external-supervisor \
+  --cwd /absolute/repo
 ```
 
 ## Stable-release field evidence
+
+The commands in this section are **source-workspace/operator release tools**.
+They are not included in the staged Stage 0.5 runtime npm package. Run them from
+an exact tagged source checkout (or a separately reviewed release-operator
+bundle); an installed runtime package intentionally cannot execute them.
 
 The release certifier never accepts handwritten PASS flags. A real Cowork run
 is supplied by its local state root and exact workspace; the certifier reopens
@@ -103,7 +158,9 @@ field evidence, not hardware remote attestation.
 | Claude Desktop Cowork | user installer + plugin zip | Supported only when helper is running and hooks actually fire locally |
 | Claude ordinary Chat | plugin may be visible, hooks do not run | Unsupported |
 | remote Cowork without local hook boundary | none | Unsupported |
-| Codex / Trae | legacy observer only | Not Stage 0.5 |
+| ChatGPT desktop / Work with repo plugin access | `outsider-stage05` universal skill plugin | Install and evidence-verification skill only; no universal pre/post/stop interception and therefore not globally controlled Stage 0.5 |
+| Codex CLI/Desktop 0.144.5 | native hook + authenticated attached-controller candidate; current audited host cannot exact-item-bind app-server hook delivery, so evidence remains observation-only | Not Stage 0.5 on the audited host |
+| Trae / CodeBuddy | standalone legacy observer; repository state cannot grant command authority | Not Stage 0.5 |
 
 The distinction between “packaged”, “installed”, and “observed at runtime” is intentional. A file on disk is not proof that a host loaded it.
 Evidence likewise separates `SAFE_DELIVERY`, `VERIFIED_DELIVERY_UNATTRIBUTED`, `CONTROL_BOUNDARY_CONTAINMENT`, and `CONSERVATIVE_STOP`.

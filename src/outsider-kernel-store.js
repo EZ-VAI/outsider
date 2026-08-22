@@ -6,6 +6,7 @@ import {
 import { homedir } from "node:os";
 import path from "node:path";
 import { canonicalizeStrict } from "./canonical.js";
+import { isSensitiveSupervisorPath } from "./outsider-supervisor-projection.js";
 
 const sha256 = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;
 const EVENT_CHAIN_GENESIS = sha256("outsider/kernel-event-chain/genesis/v2");
@@ -82,7 +83,13 @@ export function snapshotWorkspace(cwd, {
       let body;
       try { body = readFileSync(absolute); } catch { continue; }
       const record = { sha: sha256(body), size: body.length };
-      if (body.length > maxFileBytes) {
+      /* Credentials remain part of the local content-addressed manifest, so a
+         change is still detected, but their plaintext is never captured into
+         a snapshot that can later become supervisor evidence. */
+      if (isSensitiveSupervisorPath(relative)) {
+        record.textStatus = "not-captured";
+        record.captureReason = "sensitive-path-denylist";
+      } else if (body.length > maxFileBytes) {
         record.textStatus = "not-captured";
         record.captureReason = "file-size-limit";
       } else if (captured + body.length > maxCapturedBytes) {

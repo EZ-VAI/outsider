@@ -29,6 +29,10 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { commandFailure } from "./outsider-json-command.js";
 import { canonicalizeStrict } from "./canonical.js";
+import {
+  externalSupervisorEnvironment, externalSupervisorPrompt, isSensitiveSupervisorPath,
+  projectExternalSupervisorValue,
+} from "./outsider-supervisor-projection.js";
 
 export const SUPERVISOR_TIMEOUT_MS = 240_000;
 
@@ -63,7 +67,8 @@ function contractProtectionText(contract) {
  * being a test file, and dropping it merely because the evidence byte budget is
  * full makes a correct correction proposal structurally unauditable. */
 function frozenProtectedPaths(snapshot, contract, currentSnapshot, { maxProtectedPaths = 64 } = {}) {
-  const entries = Object.entries(snapshot?.files ?? {}).filter(([, value]) => value?.sha);
+  const entries = Object.entries(snapshot?.files ?? {})
+    .filter(([name, value]) => value?.sha && !isSensitiveSupervisorPath(name));
   const protectionText = contractProtectionText(contract);
   const protectedSentences = protectionText.split(/(?<=[.!?。！？;；])|\n/u)
     .map((item) => item.trim()).filter((item) => item && PROTECTION_DIRECTIVE.test(item));
@@ -176,7 +181,7 @@ export function frozenAcceptanceEvidence(snapshot, contract, {
     ...(contract?.semantic?.architecturalConstraints ?? [])]
     .map((value) => String(value ?? "").toLowerCase()).join("\n");
   const candidates = Object.entries(snapshot?.files ?? {})
-    .filter(([name, value]) => value?.text != null
+    .filter(([name, value]) => !isSensitiveSupervisorPath(name) && value?.text != null
       && (TEST_OR_SPEC.test(name) || ACCEPTANCE_CONFIG.test(name)))
     .sort(([left], [right]) => {
       const score = (name) => {
@@ -228,7 +233,8 @@ export function frozenAcceptanceEvidence(snapshot, contract, {
 export function currentSourceEvidence(snapshot, contract, {
   maxFiles = 14, maxBytes = 56_000,
 } = {}) {
-  const entries = Object.entries(snapshot?.files ?? {});
+  const entries = Object.entries(snapshot?.files ?? {})
+    .filter(([name]) => !isSensitiveSupervisorPath(name));
   const scopeHints = [
     ...(contract?.semantic?.scope?.in ?? []),
     ...(contract?.semantic?.successCriteria ?? []),
@@ -338,7 +344,7 @@ export function supervisorPacket({ contract, steps = [], diff = null, lastTest =
     ...shellReads.flatMap((entry) => entry.files),
   ])];
   const isTestFile = (f) => /(^|[/\\])(?:tests?|specs?)[/\\]|[._-](?:test|spec)\.\w+$/i.test(String(f ?? ""));
-  return {
+  const packet = {
     /* 冻结的，逐字 */
     ask: contract?.ask ?? null,
     /* Diagnosis must see the exact standard used by semanticOutcome. v9b sent
@@ -455,10 +461,15 @@ export function supervisorPacket({ contract, steps = [], diff = null, lastTest =
     /* controller 生成的内容级变更证据，不是 worker 对改动的复述。 */
     diff: diff && typeof diff === "object" ? diff : (diff ? String(diff).slice(0, 12000) : null),
   };
+  return projectExternalSupervisorValue(packet);
 }
 
 export function supervisorStdin(packet) {
-  return `${SUPERVISOR_PROMPT}\n\n────── 证据 ──────\n${JSON.stringify(packet, null, 2)}\n`;
+  return externalSupervisorPrompt({
+    prompt: SUPERVISOR_PROMPT,
+    heading: "────── 证据 ──────",
+    packet,
+  });
 }
 
 /*
@@ -931,13 +942,13 @@ export function askSupervisor({ cmd, packet, timeoutMs = SUPERVISOR_TIMEOUT_MS,
     if (Array.isArray(cmd)) {
       out = exec(cmd[0], cmd.slice(1), { input, encoding: "utf8",
         timeout: timeoutMs, maxBuffer: 8 * 1024 * 1024,
-        env: { ...process.env, CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1" } });
+        env: externalSupervisorEnvironment(process.env) });
     } else {
       /* The operator owns this command. A shell preserves quoted paths and model
          arguments; whitespace splitting silently corrupted both. */
       out = exec(process.env.SHELL || "/bin/sh", ["-lc", String(cmd)], {
         input, encoding: "utf8", timeout: timeoutMs, maxBuffer: 8 * 1024 * 1024,
-        env: { ...process.env, CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1" },
+        env: externalSupervisorEnvironment(process.env),
       });
     }
   } catch (e) {

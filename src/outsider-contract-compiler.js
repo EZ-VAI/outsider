@@ -1,4 +1,5 @@
 import { runFreshJsonCommand } from "./outsider-json-command.js";
+import { externalSupervisorPrompt } from "./outsider-supervisor-projection.js";
 import { frozenAcceptanceEvidence } from "./outsider-supervisor-session.js";
 
 export const CONTRACT_COMPILER_PROMPT = `你是工作的合同工程师，不是执行这项工作的 worker。
@@ -161,7 +162,8 @@ export function losslessOperatorContract({ ask } = {}) {
 export function compileSemanticContract({ cmd, ask, acceptance, baseline, baselineAcceptance = null,
   revision = null, execute = runFreshJsonCommand } = {}) {
   const packet = contractCompilerPacket({ ask, acceptance, baseline, baselineAcceptance, revision });
-  const input = `${CONTRACT_COMPILER_PROMPT}\n\n────── 冻结输入 ──────\n${JSON.stringify(packet, null, 2)}\n`;
+  const input = externalSupervisorPrompt({ prompt: CONTRACT_COMPILER_PROMPT,
+    heading: "────── 冻结输入 ──────", packet });
   let attempts = 1;
   let result = execute({ cmd, input, validate: validSemanticContract });
   /* There is no worker yet, so a transient compiler failure cannot be repaired
@@ -187,7 +189,8 @@ export function auditSemanticContract({ cmd, ask, acceptance, baseline, baseline
     frozenInput: compilerInput,
     proposedSemanticContract: semantic ?? null,
   };
-  const input = `${CONTRACT_AUDITOR_PROMPT}\n\n────── 待审计合同 ──────\n${JSON.stringify(packet, null, 2)}\n`;
+  const input = externalSupervisorPrompt({ prompt: CONTRACT_AUDITOR_PROMPT,
+    heading: "────── 待审计合同 ──────", packet });
   let attempts = 1;
   let result = execute({ cmd, input, validate: validContractAudit });
   if (!result?.ok && result?.failure?.retryable === true) {

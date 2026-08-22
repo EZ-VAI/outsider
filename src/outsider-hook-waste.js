@@ -68,7 +68,8 @@ function finding(kind, detail, corrective, confidence, evidence = null) {
  * `steps` is the reconstructed trajectory. Nothing else is required, and nothing
  * else is consulted: no disk, no network, no model.
  */
-export function assessHookWaste({ steps = [], mismatches = [], proposed = null } = {}) {
+export function assessHookWaste({ steps = [], mismatches = [], proposed = null,
+  acceptanceCommand = null } = {}) {
   const findings = [];
 
   /*
@@ -119,17 +120,17 @@ export function assessHookWaste({ steps = [], mismatches = [], proposed = null }
   }
 
   /*
-   * 3) NEVER RAN A TEST — checked only at the moment of submit, where it is
-   *    actionable. The 22,871-run corpus behind this puts the failure rate of a
-   *    run that submits without ever testing far above base; the number lives in
-   *    v49-agent-pathology.js and is cited, not re-derived here.
+   * 3) FROZEN ACCEPTANCE NOT OBSERVED — checked only when the operator supplied
+   *    an executable acceptance command. This is a current-run process fact;
+   *    it carries no corpus failure rate or generic claim that every task needs
+   *    a test.
    */
-  if (proposed?.isSubmit && steps.length > 2 && !steps.some((s) => s.isTest)) {
+  if (proposed?.isSubmit && typeof acceptanceCommand === "string"
+    && acceptanceCommand.trim() && steps.length > 2 && !steps.some((s) => s.isTest)) {
     findings.push(finding("never-ran-a-test",
-      `about to submit after ${steps.length} steps with no test executed at any point in this run`,
-      "run the project's test command once before finishing; a run that submits without ever testing "
-      + "fails far more often than one that does",
-      0.85));
+      `about to submit after ${steps.length} steps without an observed test-class command`,
+      `run the frozen acceptance command (${acceptanceCommand}) and inspect its result before finishing`,
+      1));
   }
 
   findings.sort((a, b) => b.confidence - a.confidence);

@@ -13,6 +13,9 @@ const STABLE_PUBLIC_FIELD_EVIDENCE = [
   "desktopCoworkPlugin",
   "multiHourEndurance",
   "independentSecondMachineInstall",
+  "codexLifecycleControl",
+  "chatgptLivePluginInstall",
+  "chatgptNewChatSkillEvaluation",
 ];
 
 export function assessReleaseReadiness({ deterministicReady, fieldEvidence } = {}) {

@@ -2,11 +2,12 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { discoverAcceptance } from "./outsider-acceptance-discovery.js";
 import { AttachedLedger, attachedPrompt, attachedSessionKey } from "./outsider-attached-ledger.js";
-import { resolveClaudeExecutable, startKernelRun, workerMandate } from "./outsider-kernel-runner.js";
+import { startKernelRun, workerMandate } from "./outsider-kernel-runner.js";
 import { requestController } from "./outsider-controller-rpc.js";
 import { startControllerWatchdog, reconcileTerminalControllerRun } from "./outsider-controller-watchdog.js";
 import { finalizeStage05Evidence } from "./outsider-stage05-evidence.js";
 import { defaultStateRoot } from "./outsider-kernel-store.js";
+import { CodexLiveReceiptStore } from "./outsider-codex-live-receipts.js";
 
 const eventName = (input) => String(input?.hook_event_name ?? input?.hookEventName ?? "PreToolUse");
 const stopBlock = (reason) => ({ decision: { verdict: "deny", corrective: reason },
@@ -39,6 +40,22 @@ const OBSERVER_ONLY_TERMINAL = "本轮仅以 observer-only 运行：Outsider 没
 const BOOTSTRAP_FAILED_READ_ONLY_TERMINAL = "仓库验收预检不可用，本轮只能完成只读分析。"
   + "Outsider 没有允许任何写入，也没有建立受控闭环、独立验收或 Stage 0.5 交付证明；"
   + "本次回答只能作为未受控的只读建议。修复项目验收环境后，新任务会自动重新尝试受控模式。";
+const LOCAL_ONLY_CONTEXT = "OUTSIDER_LOCAL_ONLY: 未同时配置 external supervisor 命令与明确同意，"
+  + "Outsider 没有启动任何外部 supervisor。当前仅允许本地只读诊断；写入、执行和其他"
+  + "潜在世界变更会 fail-closed，且本轮不能声称 Stage 0.5 受控交付。";
+const LOCAL_ONLY_TERMINAL = "本轮以 local-only/no-external 模式结束：没有向外部 supervisor"
+  + " 发送 workspace、prompt、tool 或 output；仅允许了只读诊断，所有潜在世界变更均被拒绝。"
+  + "本轮没有形成独立验收、因果证明或 Stage 0.5 交付。";
+
+/* Claude Desktop/Cowork emits Claude-shaped trajectories even though its
+   transport label is different.  Only Codex selects the Codex rollout parser;
+   passing `claude-desktop` into the kernel would reject the public Claude
+   product while fixing the new adapter. */
+export function kernelAgentForAttachedHost(agent) {
+  if (agent === "codex") return "codex";
+  if (["claude-code", "claude-desktop"].includes(agent)) return "claude-code";
+  throw new Error(`UNSUPPORTED_ATTACHED_HOST:${agent}`);
+}
 
 function isDiagnosticRead(input = {}) {
   return DIAGNOSTIC_READ_TOOLS.has(String(input.tool_name ?? input.toolName ?? "").toLowerCase());
@@ -225,9 +242,10 @@ async function restartRecoveredController(active, { hookEntry, supervisorCommand
   return recoveredRun(active, { watchdog });
 }
 
-export function attachedSupervisorCommand({ explicit = null, env = process.env } = {}) {
-  if (explicit != null) return explicit;
-  if (env.OUTSIDER_SUPERVISOR_ARGV) {
+export function attachedSupervisorCommand({ explicit = null, consent = null,
+  env = process.env } = {}) {
+  let configured = explicit;
+  if (configured == null && env.OUTSIDER_SUPERVISOR_ARGV) {
     let parsed;
     try { parsed = JSON.parse(env.OUTSIDER_SUPERVISOR_ARGV); } catch {
       throw new Error("OUTSIDER_SUPERVISOR_ARGV_INVALID_JSON");
@@ -236,26 +254,31 @@ export function attachedSupervisorCommand({ explicit = null, env = process.env }
       || parsed.some((item) => typeof item !== "string" || item.length === 0)) {
       throw new Error("OUTSIDER_SUPERVISOR_ARGV_INVALID");
     }
-    return parsed;
+    configured = parsed;
   }
-  if (env.OUTSIDER_SUPERVISOR) return env.OUTSIDER_SUPERVISOR;
-  return [resolveClaudeExecutable(), "-p"];
+  if (configured == null && env.OUTSIDER_SUPERVISOR) configured = env.OUTSIDER_SUPERVISOR;
+  if (configured == null) return null;
+  const allowed = consent === true || (consent == null
+    && env.OUTSIDER_ALLOW_EXTERNAL_SUPERVISOR === "1");
+  return allowed ? configured : null;
 }
 
 export class AttachedDaemonController {
   constructor({ root, hookEntry, supervisorCommand = null,
-    startRun = startKernelRun, runStateRoot = process.env.OUTSIDER_STATE_ROOT || defaultStateRoot() } = {}) {
+    allowExternalSupervisor = null, startRun = startKernelRun,
+    runStateRoot = process.env.OUTSIDER_STATE_ROOT || defaultStateRoot() } = {}) {
     if (!root || !hookEntry) throw new Error("ATTACHED_DAEMON_CONFIG_REQUIRED");
     this.root = root;
     this.hookEntry = hookEntry;
-    /* The built-in Claude supervisor must be a direct argv transport. A shell
-       timeout kills only the shell and can leave Claude holding the pipe; one
-       observed 240s audit consequently blocked for 112 minutes during a
-       network outage. Explicit operator commands remain strings by choice. */
-    this.supervisorCommand = attachedSupervisorCommand({ explicit: supervisorCommand });
+    /* No external process is implicit.  A command and a distinct consent bit
+       are both required; otherwise bootstrap enters a local read-only boundary
+       and never sends workspace evidence outside the controller. */
+    this.supervisorCommand = attachedSupervisorCommand({ explicit: supervisorCommand,
+      consent: allowExternalSupervisor });
     this.startRun = startRun;
     this.runStateRoot = runStateRoot;
     this.sessions = new Map();
+    this.codexReceiptStore = new CodexLiveReceiptStore({ root });
   }
 
   session(agent, input) {
@@ -313,7 +336,10 @@ export class AttachedDaemonController {
           });
           if (active?.ask) {
             const acceptance = discoverAcceptance(session.cwd);
-            if (acceptance.discovered) {
+            if (!this.supervisorCommand) {
+              session.ledger.setActive({ ...active, status: "local-only", acceptance,
+                reason: "external-supervisor-not-configured-and-consented" });
+            } else if (acceptance.discovered) {
               session.bootstrapEpoch = Math.max(1, Number(session.bootstrapEpoch ?? 0));
               session.ledger.setActive({ ...active, status: "pending-bootstrap", acceptance });
               session.pendingBootstrap = { epoch: session.bootstrapEpoch, ask: active.ask };
@@ -360,6 +386,15 @@ export class AttachedDaemonController {
 
   async bootstrap(session, ask, epoch = session.bootstrapEpoch) {
     const acceptance = discoverAcceptance(session.cwd);
+    /* Disclosure authority is checked before repository capability.  An empty
+       repository must not fall through to permissive observer-only merely
+       because no external supervisor was configured or consented. */
+    if (!this.supervisorCommand) {
+      session.ledger.setActive({ status: "local-only", ask, acceptance,
+        reason: "external-supervisor-not-configured-and-consented",
+        startedAt: new Date().toISOString() });
+      return { controlled: false, localOnly: true, acceptance };
+    }
     if (!acceptance.discovered) {
       session.ledger.setActive({ status: "observer-only", ask, acceptance,
         startedAt: new Date().toISOString() });
@@ -464,6 +499,13 @@ export class AttachedDaemonController {
       session.ledger.completeActive("superseded", { supersededByRevision: revision.entry.revision });
       session.run = null;
     }
+    if (!this.supervisorCommand) {
+      const acceptance = discoverAcceptance(session.cwd);
+      session.ledger.setActive({ status: "local-only", ask: revision.combinedPrompt,
+        acceptance, reason: "external-supervisor-not-configured-and-consented",
+        startedAt: new Date().toISOString() });
+      return promptContext(LOCAL_ONLY_CONTEXT);
+    }
     const acceptance = discoverAcceptance(session.cwd);
     if (!acceptance.discovered) {
       session.ledger.setActive({ status: "observer-only", ask: revision.combinedPrompt,
@@ -493,7 +535,8 @@ export class AttachedDaemonController {
       }
     }
     const active = session.ledger.value.active;
-    if (session.run || !active?.ask || active.status === "observer-only") return;
+    if (session.run || !active?.ask
+      || ["observer-only", "local-only"].includes(active.status)) return;
     if (active.status === "bootstrap-failed"
       && Date.now() < Date.parse(active.retryAt ?? 0)) return;
     /* A daemon may die while its controller host survives. Prefer reconnecting
@@ -533,7 +576,7 @@ export class AttachedDaemonController {
     catch (error) { this.recordBootstrapFailure(session, active.ask, error); }
   }
 
-  async handleHook({ agent = "claude-code", input = {}, strict = false } = {}) {
+  async handleHookCore({ agent = "claude-code", input = {}, strict = false } = {}) {
     if (input?._outsiderAttachedPing) return allow("attached daemon ready");
     const event = eventName(input);
     const session = this.session(agent, input);
@@ -586,7 +629,8 @@ export class AttachedDaemonController {
           }
           if (completed.status === "read-only-unverified") {
             return terminalStop("idempotent-read-only-unverified",
-              BOOTSTRAP_FAILED_READ_ONLY_TERMINAL);
+              completed.terminalReason === "external-supervisor-not-configured-and-consented"
+                ? LOCAL_ONLY_TERMINAL : BOOTSTRAP_FAILED_READ_ONLY_TERMINAL);
           }
           return terminalStop("idempotent-conservative-stop",
             "本轮已终止，但没有形成安全交付证明。请把它视为保守停机，而不是完成。");
@@ -616,6 +660,28 @@ export class AttachedDaemonController {
           return terminalStop("observer-only", OBSERVER_ONLY_TERMINAL);
         }
         return allow("observer-only: lifecycle recorded without control authority");
+      }
+      if (active?.status === "local-only") {
+        if (event === "PreToolUse" && isDiagnosticRead(input)) {
+          const response = preToolAllow("local-only: diagnostic read only");
+          if (!session.degradedNoticeDelivered) {
+            response.output.hookSpecificOutput.additionalContext = LOCAL_ONLY_CONTEXT;
+            session.degradedNoticeDelivered = true;
+          }
+          return response;
+        }
+        if (event === "Stop") {
+          session.ledger.completeActive("read-only-unverified", {
+            proofComplete: false, deliveryComplete: false, evidenceComplete: false,
+            terminalReason: "external-supervisor-not-configured-and-consented",
+          });
+          return terminalStop("local-only-no-external", LOCAL_ONLY_TERMINAL);
+        }
+        if (event === "PreToolUse") {
+          return preToolBlock("Outsider local-only/no-external 模式仅允许只读诊断；"
+            + "外部 supervisor 未同时配置并获得明确同意，潜在世界变更已 fail-closed。");
+        }
+        return allow("local-only: lifecycle recorded without external disclosure");
       }
       if (active?.status === "bootstrap-failed" && event === "PreToolUse"
         && isDiagnosticRead(input)) {
@@ -650,7 +716,13 @@ export class AttachedDaemonController {
         : event === "PreToolUse" ? preToolBlock(reason) : allow(reason);
     }
     let response;
-    try { response = await session.run.handleHook({ agent: "claude-code", input, strict }); }
+    /* Codex uses the same native decision envelopes, but its trajectory is a
+       different JSONL dialect. Select its measured parser without sending the
+       Claude Desktop transport label into a kernel that correctly treats
+       Cowork/Desktop trajectories as Claude-shaped. */
+    try { response = await session.run.handleHook({
+      agent: kernelAgentForAttachedHost(session.agent), input, strict,
+    }); }
     catch (error) {
       const reason = `Outsider controller 不可用：${error?.message ?? error}`;
       return event === "Stop" || event === "SubagentStop" ? stopBlock(reason)
@@ -707,6 +779,45 @@ export class AttachedDaemonController {
         "独立验收或结果证明不完整。本轮已终止为红，不得视为交付；controller 已终态，因此不再无执行器地阻塞 Stop。");
     }
     return response;
+  }
+
+  async handleHook(payload = {}) {
+    const { agent = "claude-code", input = {} } = payload;
+    if (agent !== "codex" || input?._outsiderAttachedPing) {
+      return this.handleHookCore(payload);
+    }
+    const before = this.session(agent, input);
+    const kernelBefore = Boolean(before?.run);
+    const result = await this.handleHookCore(payload);
+    const after = this.session(agent, input);
+    const kernelAfter = Boolean(after?.run);
+    const serialized = JSON.stringify(result);
+    const controllerFailure = /controller 不可用|attach 未进入受控模式|启动预检暂时失败/.test(serialized);
+    const failClosed = controllerFailure
+      && (result?.output?.decision === "block"
+        || result?.output?.hookSpecificOutput?.permissionDecision === "deny");
+    const controllerPath = failClosed ? "ATTACHED_FAIL_CLOSED"
+      : controllerFailure ? "ATTACHED_FAIL_VISIBLE"
+      : kernelBefore || kernelAfter ? "KERNEL_CONTROLLER" : "ATTACHED_POLICY";
+    try {
+      const persisted = this.codexReceiptStore.record({ input, result,
+        runtime: { ...(payload.codexRuntime ?? {}) }, controllerPath,
+        controllerAvailable: !controllerFailure });
+      after?.ledger?.save({ codexControllerReceiptHead: {
+        receiptHash: persisted.receipt.receiptHash,
+        sourceHash: persisted.source.sourceHash,
+        controllerKeyId: persisted.controllerKeyId,
+        signingKeySource: persisted.signingKeySource,
+        recordedAt: persisted.receipt.recordedAt,
+      } });
+      return result;
+    } catch (error) {
+      const reason = `Outsider Codex controller receipt 未能安全持久化：${error?.message ?? error}`;
+      const event = eventName(input);
+      if (event === "PreToolUse") return preToolBlock(reason);
+      if (event === "Stop") return stopBlock(reason);
+      throw new Error(`CODEX_CONTROLLER_RECEIPT_PERSIST_FAILED:${error?.message ?? error}`);
+    }
   }
 
   async close() {

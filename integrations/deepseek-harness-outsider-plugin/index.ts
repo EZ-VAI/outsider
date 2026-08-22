@@ -13,7 +13,7 @@ export interface OutsiderGateway {
 }
 
 export interface Config {
-  handshake: unknown
+  handshake?: unknown
   gateway?: OutsiderGateway
   gatewaySocketPath?: string
   gatewayToken?: string
@@ -25,10 +25,13 @@ export interface Config {
  * The gateway transport is deliberately injected: this package does not
  * invent socket authority, execute correction text, or declare outcomes.
  */
-export function apply(ctx: Context, config: Config) {
+export function apply(ctx: Context, config: Config = {}) {
   const gateway = config.gateway ?? (() => {
     if (!config.gatewaySocketPath || !config.gatewayToken) {
-      throw new Error('OUTSIDER_DEEPSEEK_GATEWAY_CONFIG_REQUIRED')
+      return {
+        async claimCorrection() { throw new Error('OUTSIDER_DEEPSEEK_GATEWAY_CONFIG_REQUIRED') },
+        async recordAck() { throw new Error('OUTSIDER_DEEPSEEK_GATEWAY_CONFIG_REQUIRED') },
+      }
     }
     return createDeepSeekHarnessGatewayClient({
       socketPath: config.gatewaySocketPath,

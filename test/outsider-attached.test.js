@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, statSync,
-  writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdtempSync, mkdirSync, readFileSync, readdirSync,
+  renameSync, rmSync, statSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
@@ -9,12 +9,17 @@ import { discoverAcceptance } from "../src/outsider-acceptance-discovery.js";
 import { attachedSessionKey, AttachedLedger } from "../src/outsider-attached-ledger.js";
 import { AttachedDaemonController, attachedSupervisorCommand, resolveAttachedWorkspace,
   resolvePromptWorkspace } from "../src/outsider-attached-daemon.js";
-import { desktopSessionCapabilityFile } from "../src/outsider-attached-client.js";
+import { desktopSessionCapabilityFile, readAttachedDescriptor, writeAttachedDescriptor,
+  writeDesktopCapability } from "../src/outsider-attached-client.js";
 import { startKernelRun, workerMandate } from "../src/outsider-kernel-runner.js";
 import { RunStore } from "../src/outsider-kernel-store.js";
 import { verifyStage05RunDirectory } from "../src/outsider-stage05-evidence.js";
 
 const temp = () => mkdtempSync(path.join(tmpdir(), "outsider-attached-test-"));
+const CONSENTED_TEST_SUPERVISOR = {
+  supervisorCommand: [process.execPath, "test-supervisor.mjs"],
+  allowExternalSupervisor: true,
+};
 
 test("acceptance discovery prefers repository-owned explicit and ecosystem commands", () => {
   const cwd = temp();
@@ -123,7 +128,8 @@ test("Cowork keeps one identity while refining its selected folder to the named 
   }));
   const calls = [];
   const daemon = new AttachedDaemonController({ root: path.join(root, "attached"),
-    hookEntry: "/hook.mjs", startRun: fakeRunFactory(calls) });
+    hookEntry: "/hook.mjs", ...CONSENTED_TEST_SUPERVISOR,
+    startRun: fakeRunFactory(calls) });
   const base = { session_id: "cowork-refinement", cwd: outputs };
   await daemon.handleHook({ agent: "claude-desktop", input: {
     ...base, hook_event_name: "SessionStart",
@@ -171,7 +177,8 @@ test("Cowork promotes a late selected-folder identity before the first tool acti
   }));
   const calls = [];
   const daemon = new AttachedDaemonController({ root: path.join(root, "attached"),
-    hookEntry: "/hook.mjs", startRun: fakeRunFactory(calls) });
+    hookEntry: "/hook.mjs", ...CONSENTED_TEST_SUPERVISOR,
+    startRun: fakeRunFactory(calls) });
   const identity = { session_id: "cowork-late-folder" };
   await daemon.handleHook({ agent: "claude-desktop", input: {
     ...identity, cwd: outputs, hook_event_name: "SessionStart",
@@ -206,7 +213,8 @@ test("observer-only attached mode explicitly allows tools instead of deferring t
   const root = temp();
   const cwd = path.join(root, "no-acceptance");
   mkdirSync(cwd);
-  const daemon = new AttachedDaemonController({ root, hookEntry: "/hook.mjs" });
+  const daemon = new AttachedDaemonController({ root, hookEntry: "/hook.mjs",
+    ...CONSENTED_TEST_SUPERVISOR });
   const base = { agent: "claude-desktop", input: { session_id: "observer", cwd } };
   await daemon.handleHook({ ...base,
     input: { ...base.input, hook_event_name: "SessionStart" } });
@@ -251,6 +259,7 @@ test("a bootstrap preflight failure allows only diagnostic reads, backs off, and
   const calls = [];
   let attempts = 0;
   const daemon = new AttachedDaemonController({ root, hookEntry: "/hook.mjs",
+    ...CONSENTED_TEST_SUPERVISOR,
     startRun: async (options) => {
       attempts += 1;
       if (attempts === 1) {
@@ -300,6 +309,7 @@ test("a persistent bootstrap failure releases a read-only review with an explici
   mkdirSync(cwd);
   writeFileSync(path.join(cwd, "package.json"), JSON.stringify({ scripts: { test: "vitest run" } }));
   const daemon = new AttachedDaemonController({ root, hookEntry: "/hook.mjs",
+    ...CONSENTED_TEST_SUPERVISOR,
     startRun: async () => {
       throw new Error("ACCEPTANCE_PREFLIGHT_FAILED:acceptance command unavailable (exit 127): vitest: command not found");
     } });
@@ -364,15 +374,45 @@ test("attached mandate makes the pre-action boundary explicit", () => {
   assert.doesNotMatch(text, /before the worker started/);
 });
 
-test("attached default supervisor is direct argv so timeout owns the Claude process", () => {
+test("attached mode never starts an implicit external supervisor", () => {
   const root = temp();
   try {
     const daemon = new AttachedDaemonController({ root, hookEntry: "/hook.mjs" });
-    assert.ok(Array.isArray(daemon.supervisorCommand));
-    assert.equal(daemon.supervisorCommand[1], "-p");
+    assert.equal(daemon.supervisorCommand, null);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+test("unconsented attached mode stays local-only without acceptance and keeps mutation fail-closed", async () => {
+  const root = temp();
+  const cwd = path.join(root, "empty-repo");
+  mkdirSync(cwd);
+  let starts = 0;
+  const daemon = new AttachedDaemonController({ root, hookEntry: "/hook.mjs",
+    supervisorCommand: [process.execPath, "would-be-external.mjs"],
+    allowExternalSupervisor: false,
+    startRun: async () => { starts += 1; throw new Error("must not start"); } });
+  const base = { agent: "claude-code", input: { session_id: "local-only", cwd } };
+  await daemon.handleHook({ ...base, input: { ...base.input,
+    hook_event_name: "UserPromptSubmit", prompt: "inspect the repository" } });
+  const read = await daemon.handleHook({ ...base, input: { ...base.input,
+    hook_event_name: "PreToolUse", tool_name: "Read",
+    tool_input: { file_path: "src/value.js" } } });
+  assert.equal(starts, 0);
+  assert.equal(read.output.hookSpecificOutput.permissionDecision, "allow");
+  assert.match(read.output.hookSpecificOutput.additionalContext, /LOCAL_ONLY/);
+  const destructive = await daemon.handleHook({ ...base, input: { ...base.input,
+    hook_event_name: "PreToolUse", tool_name: "Bash",
+    tool_input: { command: "rm important.db" } } });
+  assert.equal(destructive.output.hookSpecificOutput.permissionDecision, "deny");
+  assert.match(destructive.output.hookSpecificOutput.permissionDecisionReason, /fail-closed/);
+  const stopped = await daemon.handleHook({ ...base, input: { ...base.input,
+    hook_event_name: "Stop" } });
+  assert.equal(stopped.output.decision, "approve");
+  assert.match(stopped.output.systemMessage, /没有向外部 supervisor/);
+  await daemon.close();
+  rmSync(root, { recursive: true, force: true });
 });
 
 test("attached helper accepts typed supervisor argv without shell string coercion", () => {
@@ -380,10 +420,15 @@ test("attached helper accepts typed supervisor argv without shell string coercio
   assert.deepEqual(attachedSupervisorCommand({ env: {
     OUTSIDER_SUPERVISOR_ARGV: JSON.stringify(argv),
     OUTSIDER_SUPERVISOR: "must not win",
+    OUTSIDER_ALLOW_EXTERNAL_SUPERVISOR: "1",
   } }), argv);
   assert.throws(() => attachedSupervisorCommand({ env: {
     OUTSIDER_SUPERVISOR_ARGV: "not-json",
+    OUTSIDER_ALLOW_EXTERNAL_SUPERVISOR: "1",
   } }), /OUTSIDER_SUPERVISOR_ARGV_INVALID_JSON/);
+  assert.equal(attachedSupervisorCommand({ env: {
+    OUTSIDER_SUPERVISOR_ARGV: JSON.stringify(argv),
+  } }), null, "a configured command still needs distinct external-disclosure consent");
 });
 
 test("attached kernel owns the control boundary without spawning a replacement worker", async (t) => {
@@ -508,6 +553,7 @@ test("normal host lifecycle transparently boots the kernel, stays silent, and fi
   writeFileSync(path.join(cwd, "package.json"), JSON.stringify({ scripts: { test: "node test.mjs" } }));
   const calls = [];
   const daemon = new AttachedDaemonController({ root, hookEntry: "/hook.mjs",
+    ...CONSENTED_TEST_SUPERVISOR,
     startRun: fakeRunFactory(calls) });
   const base = { agent: "claude-code", input: { session_id: "native-1", cwd } };
   assert.deepEqual((await daemon.handleHook({ ...base,
@@ -537,6 +583,7 @@ test("verified delivery without causal attribution ends visibly and repeated Sto
   writeFileSync(path.join(cwd, "package.json"), JSON.stringify({ scripts: { test: "node test.mjs" } }));
   const calls = [];
   const daemon = new AttachedDaemonController({ root, hookEntry: "/hook.mjs",
+    ...CONSENTED_TEST_SUPERVISOR,
     startRun: fakeRunFactory(calls, { finishResult: {
       acceptance: { passed: true }, evidence: { ok: true },
       proof: { complete: false, deliveryComplete: true,
@@ -572,6 +619,7 @@ test("a finalized conservative stop discloses red and never creates an unrecover
   writeFileSync(path.join(cwd, "package.json"), JSON.stringify({ scripts: { test: "node test.mjs" } }));
   const calls = [];
   const daemon = new AttachedDaemonController({ root, hookEntry: "/hook.mjs",
+    ...CONSENTED_TEST_SUPERVISOR,
     startRun: fakeRunFactory(calls, { finishResult: {
       acceptance: { passed: false }, evidence: { ok: true },
       proof: { complete: false, deliveryComplete: false,
@@ -721,6 +769,7 @@ test("daemon and controller can restart together on the same attached run identi
 
   const restarted = new AttachedDaemonController({ root,
     hookEntry: path.resolve("bin/outsider-hook.mjs"), supervisorCommand,
+    allowExternalSupervisor: true,
     startRun: async () => { throw new Error("must recover the existing run, not bootstrap"); } });
   try {
     const response = await restarted.handleHook({ agent: "claude-code", input: {
@@ -840,7 +889,7 @@ test("a Cowork session loses tools only after its authenticated helper handshake
     status: "controlled",
     reason: "authenticated-system-helper-handshake",
     establishedAt: new Date().toISOString(),
-  }));
+  }), { mode: 0o600 });
   const result = spawnSync(process.execPath, [hook, "claude-desktop"], {
     input: JSON.stringify(input), encoding: "utf8", timeout: 15_000,
     env: { ...process.env, OUTSIDER_ATTACHED_ROOT: root, OUTSIDER_BUDGET_MS: "12000" },
@@ -850,6 +899,101 @@ test("a Cowork session loses tools only after its authenticated helper handshake
   assert.equal(denied.permissionDecision, "deny");
   assert.match(denied.permissionDecisionReason, /DESKTOP_SYSTEM_HELPER_REQUIRED/);
   rmSync(root, { recursive: true, force: true });
+});
+
+test("attached descriptor writer refuses temp, final, ancestor, and parent-swap symlink attacks",
+  async (t) => {
+    await t.test("old predictable temp symlink is ignored", () => {
+      const root = temp();
+      try {
+        const victim = path.join(root, "temp-victim");
+        const predictable = path.join(root, `daemon.json.${process.pid}.tmp`);
+        writeFileSync(victim, "TEMP-VICTIM-MUST-STAY\n", { mode: 0o600 });
+        symlinkSync(victim, predictable);
+        writeAttachedDescriptor(root, { socketPath: "/tmp/s", token: "private-token" });
+        assert.equal(readFileSync(victim, "utf8"), "TEMP-VICTIM-MUST-STAY\n");
+        assert.equal(lstatSync(predictable).isSymbolicLink(), true);
+      } finally { rmSync(root, { recursive: true, force: true }); }
+    });
+    await t.test("final symlink and read routing are refused", () => {
+      const root = temp();
+      try {
+        const victim = path.join(root, "descriptor-victim");
+        const descriptor = path.join(root, "daemon.json");
+        writeFileSync(victim, JSON.stringify({ socketPath: "/tmp/attacker", token: "stolen" }),
+          { mode: 0o600 });
+        symlinkSync(victim, descriptor);
+        assert.throws(() => readAttachedDescriptor(descriptor),
+          /ATTACHED_PRIVATE_FILE_SYMLINK_REFUSED/);
+        assert.throws(() => writeAttachedDescriptor(root, { token: "real-secret" }),
+          /ATTACHED_PRIVATE_FILE_SYMLINK_REFUSED/);
+        assert.match(readFileSync(victim, "utf8"), /stolen/);
+      } finally { rmSync(root, { recursive: true, force: true }); }
+    });
+    await t.test("intermediate root symlink is refused", () => {
+      const base = temp();
+      try {
+        const victim = path.join(base, "redirected");
+        mkdirSync(victim, { mode: 0o700 });
+        symlinkSync(victim, path.join(base, "root-link"));
+        assert.throws(() => writeAttachedDescriptor(path.join(base, "root-link", "attached"),
+          { token: "secret" }), /ATTACHED_DIRECTORY_SYMLINK_REFUSED/);
+        assert.deepEqual(readdirSync(victim), []);
+      } finally { rmSync(base, { recursive: true, force: true }); }
+    });
+    await t.test("descriptor mutation during stable read is refused", () => {
+      const root = temp();
+      try {
+        const descriptor = writeAttachedDescriptor(root,
+          { socketPath: "/tmp/real", token: "original-secret" });
+        let mutated = false;
+        assert.throws(() => readAttachedDescriptor(descriptor, {
+          testOnlyReadObserver: (event) => {
+            if (!mutated && event.phase === "private-file-read") {
+              writeFileSync(descriptor,
+                JSON.stringify({ socketPath: "/tmp/attacker", token: "changed-secret" }));
+              mutated = true;
+            }
+          },
+        }), /ATTACHED_PRIVATE_FILE_IDENTITY_CHANGED/);
+      } finally { rmSync(root, { recursive: true, force: true }); }
+    });
+    await t.test("parent replacement after durable temp fails before publish", () => {
+      const base = temp();
+      const root = path.join(base, "attached");
+      const displaced = path.join(base, "attached-displaced");
+      mkdirSync(root, { mode: 0o700 });
+      let swapped = false;
+      try {
+        assert.throws(() => writeAttachedDescriptor(root, { token: "secret" }, {
+          trustedRoot: base, testOnlyWriteObserver: (event) => {
+            if (!swapped && event.phase === "private-temp-durable") {
+              renameSync(root, displaced);
+              mkdirSync(root, { mode: 0o700 });
+              swapped = true;
+            }
+          } }), /ATTACHED_PRIVATE_PARENT_IDENTITY_CHANGED/);
+        assert.deepEqual(readdirSync(root), []);
+        assert.equal(readdirSync(displaced).some((name) => name.endsWith(".tmp")), true);
+      } finally { rmSync(base, { recursive: true, force: true }); }
+    });
+  });
+
+test("desktop capability uses the same private no-follow reader and writer", () => {
+  const root = temp();
+  try {
+    const payload = { agent: "claude-desktop", input: { session_id: "cap-symlink" } };
+    const capability = desktopSessionCapabilityFile(root, payload);
+    const victim = path.join(root, "capability-victim");
+    mkdirSync(path.dirname(capability), { recursive: true, mode: 0o700 });
+    writeFileSync(victim, "CAPABILITY-VICTIM-MUST-STAY\n", { mode: 0o600 });
+    symlinkSync(victim, capability);
+    assert.throws(() => readAttachedDescriptor(capability),
+      /ATTACHED_PRIVATE_FILE_SYMLINK_REFUSED/);
+    assert.throws(() => writeDesktopCapability(root, payload, "controlled", "handshake"),
+      /ATTACHED_PRIVATE_FILE_SYMLINK_REFUSED/);
+    assert.equal(readFileSync(victim, "utf8"), "CAPABILITY-VICTIM-MUST-STAY\n");
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 function statOrNull(file) {

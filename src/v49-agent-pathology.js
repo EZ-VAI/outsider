@@ -7,63 +7,40 @@
  * action, which needs outcome labels, repeated trials, counterparties. All of
  * that is data- and relationship-limited right now.
  *
- * Stage 0.5 needs none of it. An agent's WASTE and FAKING are visible in the
- * trajectory itself, with no outcome label required: a run that submits nothing,
- * that never executes a test, that burns 70x the tokens a peer used on the same
- * task — you can see all of that from the trace alone. That is a product a
- * developer running coding agents wants this quarter, and it is pure measurement
- * on their OWN agent's output.
+ * Stage 0.5 can still report facts that are visible in the trajectory itself:
+ * a run submitted no diff, no matching acceptance command appears in the trace,
+ * or measured resource use exceeded a caller-supplied peer denominator. Those
+ * are measurements of the current run. They are not outcome probabilities.
  *
  * THE ONE RULE: MEASUREMENT, NOT JUDGMENT
  * =======================================
- * This module reports FACTS and EMPIRICAL BASE RATES, never verdicts. It says
- * "submitted 0 diff bytes; in a 22,871-run corpus, 99.0% of empty submissions
- * did not resolve the task" — a fact plus a measured reference. It never says
- * "your agent is lazy". A verdict can be wrong and indefensible on someone
- * else's machine; a measurement of their own data plus a corpus base rate
- * cannot. This is the same safety line the whole project holds: arithmetic on
- * the user's own data is safe; judging a partner's specific action is not.
- *
- * All base rates below are VALIDATED and pinned by scripts/v49-pathology-
- * validate.mjs against the sealed 22,871-run corpus + the authoritative
- * 39-agent cost matrix. A test re-derives them so they cannot drift.
+ * This module reports facts, never verdicts. An older implementation also
+ * shipped numeric corpus references whose claimed rebuild script and source
+ * receipt are not present in the current tree. Those values are therefore
+ * quarantined rather than used by any product decision or user-facing finding.
  */
 
 /*
- * Empirically validated base rates. Each is a measured fact about the corpus,
- * not an assumption. `flaggable: true` means the signal is clean enough to
- * surface; `flaggable: false` signals are computed but reported as weak/
- * confounded, because pretending a confounded signal is clean is the failure
- * mode this project audits out.
+ * Compatibility export for the retired v49 reference surface. Nulls are
+ * deliberate: Git history preserves the old constants, but current code has no
+ * source-aware receipt with which to reproduce them. Reintroducing a numeric
+ * value requires a pinned source, deterministic derivation and focused test.
  */
 export const PATHOLOGY_BASE_RATES_V49 = {
-  corpusRuns: 22871,
-  corpusFailRate: 0.407,
-  emptySubmission: { failRate: 0.990, n: 702, flaggable: true,
-    reads: "empty or trivial (<50 byte) diff — in-corpus 99.0% of these did not resolve" },
-  aboveMedianErrorRate: { failRate: 0.428, vsBelow: 0.393, flaggable: true, weak: true,
-    reads: "more shell errors than the median run on the same task — a +3.5pp "
-      + "failure gradient within-Claim, real but small" },
-  highThrash: { failRate: 0.353, vsLow: 0.438, flaggable: false,
-    reads: "consecutive repeated verbs — NOT a clean signal; productive edit/view "
-      + "loops look identical to thrashing, so this is reported, not flagged" },
-  /*
-   * Measured on the p12 UNCAPPED streams, where every step carries its true exit
-   * code (the capped corpus only has an aggregate returnCodes dict). With real
-   * per-step exits the error-rate signal is 3.5x stronger: runs with any errored
-   * command fail 90.9% vs 78.5%, a +12.4pp gradient, against the +3.5pp the
-   * capped data showed. Caveat pinned with the number: this is ONE weak system
-   * (Llama-4-Maverick, 79% base fail); the direction is trustworthy, the
-   * magnitude is single-system and awaits multi-system stream data.
-   */
-  errorRateUncapped: { failWithErrors: 0.909, failWithout: 0.785, deltaPp: 12.4,
-    flaggable: true, scope: "single-system (Llama), suggestive not definitive",
-    reads: "on true per-step exit codes, any errored command raises measured "
-      + "failure by ~12pp — stronger than the capped corpus could see" },
-  costSpreadSameTaskSolved: { medianRatio: 73.7, p90Ratio: 211.7, flaggable: true,
-    reads: "among agents that ALL solved the same task, cost varied 73.7x (median)" },
-  costSpreadSameTaskAll: { medianRatio: 201.9, p90Ratio: 782.2 },
-  apiCallSpreadSameTask: { medianRatio: 22.7, p90Ratio: 74.0 },
+  status: "QUARANTINED_UNREPLAYABLE_LEGACY_REFERENCE",
+  sourceArtifactHash: null,
+  sourceReplayEstablished: false,
+  decisionUseEligible: false,
+  corpusRuns: null,
+  corpusFailRate: null,
+  emptySubmission: { failRate: null, n: null, flaggable: false },
+  aboveMedianErrorRate: { failRate: null, vsBelow: null, flaggable: false },
+  highThrash: { failRate: null, vsLow: null, flaggable: false },
+  errorRateUncapped: { failWithErrors: null, failWithout: null, deltaPp: null,
+    flaggable: false },
+  costSpreadSameTaskSolved: { medianRatio: null, p90Ratio: null, flaggable: false },
+  costSpreadSameTaskAll: { medianRatio: null, p90Ratio: null },
+  apiCallSpreadSameTask: { medianRatio: null, p90Ratio: null },
 };
 
 const TEST_RE = /\b(pytest|tox|unittest|nosetests|test)\b/i;
@@ -129,19 +106,16 @@ export function agentProcessFactsV49(record, { peerCostMedianUsd = null, peerApi
 }
 
 /*
- * Turn facts into FLAGS, each carrying the validated corpus base rate. A flag is
- * "observed X; in the corpus, base rate Y" — fact plus reference, never verdict.
- * Only `flaggable` signals raise a flag; weak/confounded ones are omitted here
- * and left in the fact sheet for the reader to see raw.
+ * Turn facts into deterministic process findings. No corpus probability is
+ * attached: the current tree cannot source-replay the retired v49 references.
  */
 export function flagPathologiesV49(facts) {
   const flags = [];
-  const B = PATHOLOGY_BASE_RATES_V49;
   if (facts.faking.emptyOrTrivialSubmission === true) {
     flags.push({ kind: "faking", signal: "empty-or-trivial-submission",
       observed: `${facts.faking.submissionBytes ?? 0} diff bytes`,
-      corpusBaseRate: B.emptySubmission.failRate,
-      reads: B.emptySubmission.reads });
+      corpusBaseRate: null,
+      reads: "empty or trivial submission observed; task resolution and consequence are not inferred" });
   }
   if (facts.faking.ranAnyTest === false) {
     flags.push({ kind: "faking", signal: "never-ran-a-test",
@@ -158,15 +132,15 @@ export function flagPathologiesV49(facts) {
   if (facts.waste.costVsPeerMedian && facts.waste.costVsPeerMedian >= 3) {
     flags.push({ kind: "waste", signal: "cost-far-above-peers",
       observed: `${facts.waste.costVsPeerMedian}x the median cost for this task`,
-      reads: `among agents that solved the same task, cost spread is `
-        + `${B.costSpreadSameTaskSolved.medianRatio}x (median) in the reference corpus` });
+      corpusBaseRate: null,
+      reads: "caller-supplied same-task peer denominator exceeded; no outcome effect is inferred" });
   }
   if (facts.mistakes.shellErrorRate != null && facts.mistakes.shellErrorRate > 0.5) {
     flags.push({ kind: "mistakes", signal: "high-shell-error-rate",
       observed: `${(facts.mistakes.shellErrorRate * 100).toFixed(0)}% of commands errored`,
-      corpusBaseRate: B.aboveMedianErrorRate.failRate,
+      corpusBaseRate: null,
       weak: true,
-      reads: B.aboveMedianErrorRate.reads });
+      reads: "descriptive within-run error fraction; task failure probability is not inferred" });
   }
   return flags;
 }
@@ -185,7 +159,8 @@ export function processReportCardV49(record, peers = {}) {
     system: record.system ?? record.modelName ?? null,
     facts,
     flags,
-    disclaimer: "measurement of this run only; base rates are corpus references, "
-      + "not predictions or judgments of this agent",
+    referenceBoundary: PATHOLOGY_BASE_RATES_V49.status,
+    disclaimer: "measurement of this run only; no replayable corpus base rate, "
+      + "outcome prediction, or judgment of this agent is attached",
   };
 }

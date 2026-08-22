@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import {
-  mkdtempSync, readFileSync, rmSync, writeFileSync,
+  existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync,
+  rmSync, symlinkSync, writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -159,4 +160,216 @@ test("the release metadata CLI writes the same constrained public artifacts", (t
   assert.equal(output.stablePublicReleaseReady, false);
   assert.equal(path.dirname(output.publicCertificate), value.root);
   assert.equal(path.dirname(output.sha256Sums), value.root);
+});
+
+test("random exclusive output temps ignore the old predictable temp symlink", (t) => {
+  const value = fixture(t);
+  const publicFile = path.join(value.root,
+    `release-certificate-public-${value.certificate.product.version}.json`);
+  const predictable = `${publicFile}.tmp-${process.pid}`;
+  const victim = path.join(value.root, "predictable-temp-victim");
+  writeFileSync(victim, "PREDICTABLE-VICTIM-MUST-STAY\n");
+  symlinkSync(victim, predictable);
+
+  writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+    npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+    outputDirectory: value.root });
+
+  assert.equal(readFileSync(victim, "utf8"), "PREDICTABLE-VICTIM-MUST-STAY\n");
+  assert.equal(lstatSync(predictable).isSymbolicLink(), true);
+  assert.equal(existsSync(publicFile), true);
+});
+
+test("final output symlink is refused without touching its victim", (t) => {
+  const value = fixture(t);
+  const publicFile = path.join(value.root,
+    `release-certificate-public-${value.certificate.product.version}.json`);
+  const victim = path.join(value.root, "final-output-victim");
+  writeFileSync(victim, "FINAL-VICTIM-MUST-STAY\n");
+  symlinkSync(victim, publicFile);
+
+  assert.throws(() => writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+    npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+    outputDirectory: value.root }), /PUBLIC_RELEASE_OUTPUT_SYMLINK_REFUSED/);
+  assert.equal(readFileSync(victim, "utf8"), "FINAL-VICTIM-MUST-STAY\n");
+  assert.equal(lstatSync(publicFile).isSymbolicLink(), true);
+});
+
+test("intermediate output symlink below the trusted root is refused", (t) => {
+  const value = fixture(t);
+  const victim = path.join(value.root, "intermediate-victim");
+  const first = path.join(value.root, "output");
+  mkdirSync(victim);
+  mkdirSync(first);
+  writeFileSync(path.join(victim, "keep"), "INTERMEDIATE-VICTIM\n");
+  symlinkSync(victim, path.join(first, "redirect"));
+
+  assert.throws(() => writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+    npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+    outputDirectory: path.join(first, "redirect", "nested"), trustedOutputRoot: value.root }),
+  /PUBLIC_RELEASE_OUTPUT_SYMLINK_REFUSED/);
+  assert.deepEqual(readdirSync(victim), ["keep"]);
+});
+
+test("output parent substitution after durable temp fails before publication", (t) => {
+  const value = fixture(t);
+  const output = path.join(value.root, "output");
+  const displaced = path.join(value.root, "output-displaced");
+  mkdirSync(output);
+  let swapped = false;
+  assert.throws(() => writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+    npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+    outputDirectory: output, trustedOutputRoot: value.root,
+    testOnlyWriteObserver: (event) => {
+      if (!swapped && event.phase === "output-temp-durable") {
+        renameSync(output, displaced);
+        mkdirSync(output);
+        swapped = true;
+      }
+    } }), /PUBLIC_RELEASE_OUTPUT_PARENT_IDENTITY_CHANGED/);
+  assert.equal(swapped, true);
+  assert.deepEqual(readdirSync(output), []);
+  assert.equal(readdirSync(displaced).some((name) => name.endsWith(".tmp")), true,
+    "the displaced owned temp is preserved rather than deleting through a substituted path");
+});
+
+test("all three release inputs refuse symlinks and stable-read identity drift", async (t) => {
+  await t.test("input symlink", () => {
+    const value = fixture(t);
+    const link = path.join(value.root, "certificate-link.json");
+    symlinkSync(value.certificatePath, link);
+    assert.throws(() => writePublicReleaseMetadata({ certificatePath: link,
+      npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+      outputDirectory: value.root }), /PUBLIC_RELEASE_INPUT_SYMLINK_REFUSED/);
+  });
+  await t.test("in-place mutation after read", () => {
+    const value = fixture(t);
+    let mutated = false;
+    assert.throws(() => writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+      npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+      outputDirectory: value.root, testOnlyReadObserver: (event) => {
+        if (!mutated && event.phase === "input-read" && event.file === value.certificatePath) {
+          writeFileSync(value.certificatePath, "MUTATED-DURING-STABLE-READ\n");
+          mutated = true;
+        }
+      } }), /PUBLIC_RELEASE_INPUT_IDENTITY_CHANGED/);
+  });
+  await t.test("pathname replacement after descriptor open", () => {
+    const value = fixture(t);
+    const displaced = `${value.certificatePath}.displaced`;
+    let replaced = false;
+    assert.throws(() => writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+      npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+      outputDirectory: value.root, testOnlyReadObserver: (event) => {
+        if (!replaced && event.phase === "input-opened" && event.file === value.certificatePath) {
+          renameSync(value.certificatePath, displaced);
+          writeFileSync(value.certificatePath, "REPLACEMENT\n");
+          replaced = true;
+        }
+      } }), /PUBLIC_RELEASE_INPUT_IDENTITY_CHANGED/);
+  });
+});
+
+test("global input snapshot rejects early asset drift during later reads and output publication",
+  async (t) => {
+    await t.test("early npm changes while plugin is read", () => {
+      const value = fixture(t);
+      let mutated = false;
+      assert.throws(() => writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+        npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+        outputDirectory: value.root, testOnlyReadObserver: (event) => {
+          if (!mutated && event.phase === "input-opened" && event.file === value.pluginArtifactPath) {
+            const bytes = readFileSync(value.npmArtifactPath);
+            bytes[0] ^= 1;
+            writeFileSync(value.npmArtifactPath, bytes);
+            mutated = true;
+          }
+        } }), /PUBLIC_RELEASE_INPUT_IDENTITY_CHANGED/);
+    });
+    await t.test("npm changes while an output temp is durable", () => {
+      const value = fixture(t);
+      let mutated = false;
+      assert.throws(() => writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+        npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+        outputDirectory: value.root, testOnlyWriteObserver: (event) => {
+          if (!mutated && event.phase === "output-temp-durable") {
+            const bytes = readFileSync(value.npmArtifactPath);
+            bytes[0] ^= 1;
+            writeFileSync(value.npmArtifactPath, bytes);
+            mutated = true;
+          }
+        } }), /PUBLIC_RELEASE_INPUT_IDENTITY_CHANGED/);
+    });
+  });
+
+test("same-length durable output-temp mutation is detected and never published", (t) => {
+  const value = fixture(t);
+  let mutated = false;
+  assert.throws(() => writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+    npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+    outputDirectory: value.root, testOnlyWriteObserver: (event) => {
+      if (!mutated && event.phase === "output-temp-durable") {
+        const bytes = readFileSync(event.temporary);
+        bytes.fill(bytes[0] ^ 1);
+        writeFileSync(event.temporary, bytes);
+        mutated = true;
+      }
+    } }), /PUBLIC_RELEASE_TEMP_IDENTITY_CHANGED/);
+  assert.equal(existsSync(path.join(value.root,
+    `release-certificate-public-${value.certificate.product.version}.json`)), false);
+});
+
+test("output modes are exact 0644 even under umask 077", (t) => {
+  const value = fixture(t);
+  const prior = process.umask(0o077);
+  try {
+    const result = writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+      npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+      outputDirectory: value.root });
+    assert.equal(lstatSync(result.publicCertificate).mode & 0o777, 0o644);
+    assert.equal(lstatSync(result.sha256Sums).mode & 0o777, 0o644);
+  } finally {
+    process.umask(prior);
+  }
+});
+
+test("second-output failure rolls the first output back to the prior generation", (t) => {
+  const value = fixture(t);
+  const publicFile = path.join(value.root,
+    `release-certificate-public-${value.certificate.product.version}.json`);
+  const sumsFile = path.join(value.root, "SHA256SUMS");
+  const oldPublic = Buffer.from("OLD-PUBLIC-GENERATION\n");
+  const oldSums = Buffer.from("OLD-SUMS-GENERATION\n");
+  writeFileSync(publicFile, oldPublic, { mode: 0o644 });
+  writeFileSync(sumsFile, oldSums, { mode: 0o644 });
+  assert.throws(() => writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+    npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+    outputDirectory: value.root, testOnlyWriteObserver: (event) => {
+      if (path.basename(event.file) === "SHA256SUMS") throw new Error("SECOND_OUTPUT_FAILED");
+    } }), /SECOND_OUTPUT_FAILED/);
+  assert.deepEqual(readFileSync(publicFile), oldPublic);
+  assert.deepEqual(readFileSync(sumsFile), oldSums);
+});
+
+test("joint output revalidation rejects cert mutation during sums staging and rolls back", (t) => {
+  const value = fixture(t);
+  const publicFile = path.join(value.root,
+    `release-certificate-public-${value.certificate.product.version}.json`);
+  const sumsFile = path.join(value.root, "SHA256SUMS");
+  let mutated = false;
+  assert.throws(() => writePublicReleaseMetadata({ certificatePath: value.certificatePath,
+    npmArtifactPath: value.npmArtifactPath, pluginArtifactPath: value.pluginArtifactPath,
+    outputDirectory: value.root, testOnlyWriteObserver: (event) => {
+      if (!mutated && event.phase === "output-temp-durable"
+        && path.basename(event.file) === "SHA256SUMS") {
+        const bytes = readFileSync(publicFile);
+        bytes.fill(bytes[0] ^ 1);
+        writeFileSync(publicFile, bytes);
+        mutated = true;
+      }
+    } }), /PUBLIC_RELEASE_OUTPUT_IDENTITY_CHANGED/);
+  assert.equal(mutated, true);
+  assert.equal(existsSync(publicFile), false,
+    "the owned mutated generation is rolled back rather than returned as success");
+  assert.equal(existsSync(sumsFile), false);
 });

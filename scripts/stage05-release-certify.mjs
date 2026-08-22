@@ -22,6 +22,7 @@ import {
   machineIdentity,
   verifySecondMachineConformance,
 } from "../src/outsider-second-machine-conformance.js";
+import { validateOpenAIUniversalPlugin } from "./openai-universal-plugin-validate.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const pkg = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
@@ -38,16 +39,20 @@ function parse(argv) {
   return options;
 }
 
-function execute(command, args, { cwd = root, env = process.env, timeout = 120_000 } = {}) {
+function execute(command, args, {
+  cwd = root, env = process.env, timeout = 120_000, captureFullStdout = false,
+} = {}) {
   const started = Date.now();
   const result = spawnSync(command, args, { cwd, env, timeout, encoding: "utf8", stdio: "pipe" });
+  const stdout = String(result.stdout ?? "");
   return {
     ok: result.status === 0 && !result.error,
     status: result.status,
     signal: result.signal ?? null,
     error: result.error?.message ?? null,
     durationMs: Date.now() - started,
-    stdoutTail: String(result.stdout ?? "").slice(-4000),
+    stdoutTail: stdout.slice(-4000),
+    ...(captureFullStdout ? { stdout } : {}),
     stderrTail: String(result.stderr ?? "").slice(-4000),
   };
 }
@@ -99,13 +104,17 @@ const certificate = {
     multiHourEndurance: { status: "NOT_RUN" },
     independentSecondMachineInstall: { status: options["second-machine-record"]
       && options["second-machine-public-key"] ? "PENDING" : "NOT_RUN" },
-    codexLifecycleControl: { status: "UNSUPPORTED" },
+    codexLifecycleControl: { status: "NOT_ESTABLISHED" },
+    chatgptLivePluginInstall: { status: "NOT_RUN" },
+    chatgptNewChatSkillEvaluation: { status: "NOT_RUN" },
+    openAIPluginsDirectoryPublication: { status: "NOT_RUN" },
     traeLifecycleControl: { status: "UNSUPPORTED" },
   },
   claimBoundary: [
     "certificate covers the named artifact on the recorded environment only",
     "deterministic tests do not prove multi-hour semantic reliability",
     "NOT_RUN and UNSUPPORTED are never counted as PASS",
+    "plugin packaging does not establish ChatGPT live install or Codex lifecycle control",
   ],
 };
 
@@ -124,41 +133,40 @@ if (options["endurance-run"]) {
 
 try {
   certificate.checks.cleanInstall = execute("npm", ["install", "--offline", "--ignore-scripts",
-    "--no-audit", "--no-fund", "--prefix", installation, artifact], { timeout: 180_000 });
+    "--no-audit", "--no-fund", "--cache", path.join(installation, "npm-cache"),
+    "--prefix", installation, artifact], { timeout: 180_000 });
   const installedRoot = path.join(installation, "node_modules", pkg.name);
+  const runtimeSourceFiles = {
+    controller: "src/outsider-kernel-controller.js",
+    runner: "src/outsider-kernel-runner.js",
+    hook: "bin/outsider-hook.mjs",
+    contractCompiler: "src/outsider-contract-compiler.js",
+    outcomeVerifier: "src/outsider-outcome-verifier.js",
+  };
   const installedRuntimeReady = certificate.checks.cleanInstall.ok
-    && existsSync(path.join(installedRoot, "src", "outsider-kernel-controller.js"));
-  const runtimeHashes = installedRuntimeReady ? {
-    controller: sha256(path.join(installedRoot, "src", "outsider-kernel-controller.js")),
-    runner: sha256(path.join(installedRoot, "src", "outsider-kernel-runner.js")),
-    hook: sha256(path.join(installedRoot, "bin", "outsider-hook.mjs")),
-    contractCompiler: sha256(path.join(installedRoot, "src", "outsider-contract-compiler.js")),
-    outcomeVerifier: sha256(path.join(installedRoot, "src", "outsider-outcome-verifier.js")),
-  } : {};
-  const agentTeamSourceHashes = installedRuntimeReady ? {
-    controller: runtimeHashes.controller.slice("sha256:".length),
-    runner: runtimeHashes.runner.slice("sha256:".length),
-    hook: runtimeHashes.hook.slice("sha256:".length),
-    probeHook: sha256(path.join(installedRoot, "scripts",
-      "stage05-agent-team-probe-hook.mjs")).slice("sha256:".length),
-    conformance: sha256(path.join(installedRoot, "src",
-      "outsider-agent-team-conformance.js")).slice("sha256:".length),
-    probe: sha256(path.join(installedRoot, "scripts",
-      "stage05-agent-team-probe.mjs")).slice("sha256:".length),
-    artifactBinding: sha256(path.join(installedRoot, "scripts",
-      "stage05-release-artifact-binding.mjs")).slice("sha256:".length),
-  } : {};
+    && Object.values(runtimeSourceFiles).every((relative) =>
+      existsSync(path.join(installedRoot, relative)));
+  const runtimeHashes = installedRuntimeReady ? Object.fromEntries(
+    Object.entries(runtimeSourceFiles).map(([name, relative]) =>
+      [name, sha256(path.join(installedRoot, relative))])) : {};
+  const agentTeamSourceFiles = {
+    probeHook: "scripts/stage05-agent-team-probe-hook.mjs",
+    conformance: "src/outsider-agent-team-conformance.js",
+    probe: "scripts/stage05-agent-team-probe.mjs",
+    artifactBinding: "scripts/stage05-release-artifact-binding.mjs",
+  };
   const r4SourceFiles = [
     "scripts/stage05-r4-recovery.mjs", "scripts/stage05-r4-recovery-oracle.mjs",
     "src/outsider-controller-watchdog.js", "src/outsider-controller-host.js",
     "src/outsider-controller-rpc.js", "src/outsider-intervention-recovery.js",
     "src/outsider-attached-daemon.js", "src/outsider-supervised-experience.js",
   ];
-  const r4SourceHashes = installedRuntimeReady
-    ? Object.fromEntries(r4SourceFiles.map((relative) =>
-      [relative, sha256(path.join(installedRoot, relative))])) : {};
-  const failUnavailableFieldEvidence = (gate) => ({ status: "FAIL", ok: false, gate,
-    errors: ["release artifact clean install is unavailable for field-evidence verification"] });
+  const installedFilesAvailable = (files) => installedRuntimeReady
+    && files.every((relative) => existsSync(path.join(installedRoot, relative)));
+  const failUnavailableFieldEvidence = (gate, reason =
+    "release artifact clean install is unavailable for field-evidence verification") => ({
+    status: "FAIL", ok: false, gate, errors: [reason],
+  });
   if (options["r1-run"]) {
     if (!installedRuntimeReady) {
       certificate.fieldEvidence.r1Repeatability = failUnavailableFieldEvidence("R1");
@@ -168,49 +176,75 @@ try {
         "experiment.json"), "utf8")); } catch { return null; }
     })();
     const expectedEvaluatorHashes = {};
+    const missingEvaluatorFiles = [];
     for (const entry of experiment?.preregistration?.evaluator?.files ?? []) {
       const basename = path.basename(entry.path);
       const category = basename.startsWith("outsider-") ? "src" : "scripts";
       const current = path.join(installedRoot, category, basename);
       if (existsSync(current)) expectedEvaluatorHashes[entry.path] = sha256(current);
+      else missingEvaluatorFiles.push(entry.path);
     }
-    certificate.fieldEvidence.r1Repeatability = certifyR1RepeatabilityEvidence(
-      path.resolve(options["r1-run"]), {
-        expectedArtifactHash: certificate.artifact.sha256,
-        expectedVersion: pkg.version,
-        expectedEvaluatorHashes,
-      });
+    certificate.fieldEvidence.r1Repeatability = missingEvaluatorFiles.length > 0
+      ? failUnavailableFieldEvidence("R1",
+        "R1 evaluator closure is not present in the reviewed public runtime")
+      : certifyR1RepeatabilityEvidence(path.resolve(options["r1-run"]), {
+          expectedArtifactHash: certificate.artifact.sha256,
+          expectedVersion: pkg.version,
+          expectedEvaluatorHashes,
+        });
     }
   }
   if (options["r2-run"]) {
-    certificate.fieldEvidence.r2AgentTeamDelivery = installedRuntimeReady
-      ? certifyAgentTeamEvidence(
-      path.resolve(options["r2-run"]), {
-        expectedArtifactHash: certificate.artifact.sha256,
-        expectedVersion: pkg.version,
-        expectedRuntimeHashes: runtimeHashes,
-        expectedSourceHashes: agentTeamSourceHashes,
-      }) : failUnavailableFieldEvidence("R2");
+    const available = installedFilesAvailable(Object.values(agentTeamSourceFiles));
+    const agentTeamSourceHashes = available ? {
+      controller: runtimeHashes.controller.slice("sha256:".length),
+      runner: runtimeHashes.runner.slice("sha256:".length),
+      hook: runtimeHashes.hook.slice("sha256:".length),
+      ...Object.fromEntries(Object.entries(agentTeamSourceFiles).map(([name, relative]) =>
+        [name, sha256(path.join(installedRoot, relative)).slice("sha256:".length)])),
+    } : {};
+    certificate.fieldEvidence.r2AgentTeamDelivery = available
+      ? certifyAgentTeamEvidence(path.resolve(options["r2-run"]), {
+          expectedArtifactHash: certificate.artifact.sha256,
+          expectedVersion: pkg.version,
+          expectedRuntimeHashes: runtimeHashes,
+          expectedSourceHashes: agentTeamSourceHashes,
+        })
+      : failUnavailableFieldEvidence("R2",
+        "R2 evaluator closure is not present in the reviewed public runtime");
   }
   if (options["r3-run"]) {
-    certificate.fieldEvidence.r3IntegrationCorrection = installedRuntimeReady
-      ? certifyAgentTeamEvidence(
-      path.resolve(options["r3-run"]), {
-        expectedArtifactHash: certificate.artifact.sha256,
-        expectedVersion: pkg.version,
-        expectedRuntimeHashes: runtimeHashes,
-        expectedSourceHashes: agentTeamSourceHashes,
-        requireIntegrationCorrection: true,
-      }) : failUnavailableFieldEvidence("R3");
+    const available = installedFilesAvailable(Object.values(agentTeamSourceFiles));
+    const agentTeamSourceHashes = available ? {
+      controller: runtimeHashes.controller.slice("sha256:".length),
+      runner: runtimeHashes.runner.slice("sha256:".length),
+      hook: runtimeHashes.hook.slice("sha256:".length),
+      ...Object.fromEntries(Object.entries(agentTeamSourceFiles).map(([name, relative]) =>
+        [name, sha256(path.join(installedRoot, relative)).slice("sha256:".length)])),
+    } : {};
+    certificate.fieldEvidence.r3IntegrationCorrection = available
+      ? certifyAgentTeamEvidence(path.resolve(options["r3-run"]), {
+          expectedArtifactHash: certificate.artifact.sha256,
+          expectedVersion: pkg.version,
+          expectedRuntimeHashes: runtimeHashes,
+          expectedSourceHashes: agentTeamSourceHashes,
+          requireIntegrationCorrection: true,
+        })
+      : failUnavailableFieldEvidence("R3",
+        "R3 evaluator closure is not present in the reviewed public runtime");
   }
   if (options["r4-run"]) {
-    certificate.fieldEvidence.r4CrashRecovery = installedRuntimeReady
-      ? certifyR4CrashRecoveryEvidence(
-      path.resolve(options["r4-run"]), {
-        expectedArtifactHash: certificate.artifact.sha256,
-        expectedVersion: pkg.version,
-        expectedSourceHashes: r4SourceHashes,
-      }) : failUnavailableFieldEvidence("R4");
+    const available = installedFilesAvailable(r4SourceFiles);
+    const r4SourceHashes = available ? Object.fromEntries(r4SourceFiles.map((relative) =>
+      [relative, sha256(path.join(installedRoot, relative))])) : {};
+    certificate.fieldEvidence.r4CrashRecovery = available
+      ? certifyR4CrashRecoveryEvidence(path.resolve(options["r4-run"]), {
+          expectedArtifactHash: certificate.artifact.sha256,
+          expectedVersion: pkg.version,
+          expectedSourceHashes: r4SourceHashes,
+        })
+      : failUnavailableFieldEvidence("R4",
+        "R4 evaluator closure is not present in the reviewed public runtime");
   }
   if (options["second-machine-record"] && options["second-machine-public-key"]) {
     let record = null;
@@ -223,7 +257,11 @@ try {
         status: "FAIL", ok: false, errors: [`second-machine evidence cannot be read:${error.message}`],
       };
     }
-    if (record && publicKeyPem) {
+    const secondMachineFiles = [
+      "scripts/stage05-second-machine-conformance.mjs",
+      "src/outsider-second-machine-conformance.js",
+    ];
+    if (record && publicKeyPem && installedFilesAvailable(secondMachineFiles)) {
       certificate.fieldEvidence.independentSecondMachineInstall = verifySecondMachineConformance(
         record, { publicKeyPem, expectedArtifactHash: certificate.artifact.sha256,
           expectedVersion: pkg.version,
@@ -234,6 +272,9 @@ try {
               "outsider-second-machine-conformance.js")),
           },
           primaryMachineIdentityHash: certificate.environment.machineIdentityHash });
+    } else if (record && publicKeyPem) {
+      certificate.fieldEvidence.independentSecondMachineInstall = failUnavailableFieldEvidence(
+        "SECOND_MACHINE", "second-machine evaluator closure is not present in the reviewed public runtime");
     }
   }
   const enduranceEvidence = certificate.fieldEvidence.multiHourEndurance;
@@ -264,25 +305,29 @@ try {
     && /outsider install/.test(certificate.checks.help.stdoutTail);
   certificate.checks.help.ok = certificate.checks.help.semanticOk;
   certificate.checks.doctor = execute(cli, ["doctor", "--json", "--state-root", stateRoot],
-    { timeout: 60_000 });
+    { timeout: 60_000, captureFullStdout: true });
   try {
-    certificate.checks.doctor.report = JSON.parse(certificate.checks.doctor.stdoutTail);
+    certificate.checks.doctor.report = JSON.parse(certificate.checks.doctor.stdout);
   } catch { certificate.checks.doctor.report = null; }
+  delete certificate.checks.doctor.stdout;
   const doctorReport = certificate.checks.doctor.report;
-  const doctorExpectedOk = doctorReport?.checks
-    && Object.values(doctorReport.checks).every((check) => check.ok === true);
+  const doctorExpectedOk = doctorReport?.readiness?.diagnosticOperational === true;
   certificate.checks.doctor.semanticOk = !certificate.checks.doctor.error
     && [0, 1].includes(certificate.checks.doctor.status)
-    && doctorReport?.schema === "outsider/product-doctor/v1"
+    && doctorReport?.schema === "outsider/product-doctor/v2"
+    && doctorReport?.mode === "MULTI_SURFACE_STAGE05_DIAGNOSTIC"
     && doctorReport?.version === pkg.version
     && doctorReport.ok === doctorExpectedOk
     && certificate.checks.doctor.status === (doctorReport.ok ? 0 : 1);
-  certificate.checks.doctor.ok = certificate.checks.doctor.semanticOk;
+  certificate.checks.doctor.diagnosticOperational = doctorExpectedOk;
+  certificate.checks.doctor.ok = certificate.checks.doctor.semanticOk && doctorExpectedOk;
+  const claudeHostReady = doctorReport?.readiness?.claudeProtocolAndAuthReady === true;
   certificate.fieldEvidence.localClaudeHost = {
-    status: doctorReport?.ok ? "PASS" : "BLOCKED_PRECONDITION",
+    status: claudeHostReady ? "PASS" : "BLOCKED_PRECONDITION",
     worker: doctorReport?.worker ?? null,
-    reason: doctorReport?.ok ? null
-      : doctorReport?.checks?.claudeProtocolAndAuth?.error ?? "doctor did not pass",
+    reason: claudeHostReady ? null
+      : doctorReport?.checks?.claudeProtocolAndAuth?.error
+        ?? doctorReport?.checks?.claudeProtocolAndAuth?.detail ?? "Claude host is not ready",
   };
   certificate.checks.packageTests = execute("npm", ["test"], {
     cwd: installedRoot, timeout: 180_000,
@@ -307,7 +352,8 @@ try {
     catch { return null; }
   })();
   const requiredAttachedEvents = ["SessionStart", "UserPromptSubmit", "PreToolUse", "PostToolUse",
-    "SubagentStart", "SubagentStop", "PreCompact", "Stop", "SessionEnd"];
+    "SubagentStart", "SubagentStop", "PreCompact", "Stop", "SessionEnd", "TaskCreated",
+    "TaskCompleted", "TeammateIdle"];
   const installedAttachedEvents = requiredAttachedEvents.filter((event) =>
     (installedSettings?.hooks?.[event] ?? []).some((entry) => (entry.hooks ?? [])
       .some((hook) => /outsider-hook/.test(String(hook.command ?? "")))));
@@ -356,6 +402,14 @@ try {
     status: existsSync(pluginArtifact) ? 0 : 1,
     artifact: existsSync(pluginArtifact) ? path.basename(pluginArtifact) : null,
   };
+  const universalPlugin = validateOpenAIUniversalPlugin({ root: installedRoot });
+  certificate.checks.openAIUniversalPluginPackage = {
+    ok: universalPlugin.ok === true,
+    memberCount: universalPlugin.memberCount ?? null,
+    errors: universalPlugin.errors ?? [],
+    chatgptLiveInstallEstablished: false,
+    codexControlledByPackageValidationAlone: false,
+  };
   certificate.fieldEvidence.desktopCoworkPlugin = {
     status: existsSync(pluginArtifact) ? "PACKAGED_NOT_CONFORMED" : "MISSING",
     artifact: existsSync(pluginArtifact) ? path.basename(pluginArtifact) : null,
@@ -372,7 +426,8 @@ try {
       artifact: path.basename(pluginArtifact), pluginSha256: sha256(pluginArtifact),
     };
   }
-  if (options.live && doctorReport?.ok) {
+  if (options.live && claudeHostReady
+    && existsSync(path.join(installedRoot, "scripts", "stage05-live-canary.mjs"))) {
     const liveState = path.join(installation, "live-state");
     mkdirSync(liveState, { recursive: true });
     const live = execute(process.execPath, [path.join(installedRoot, "scripts", "stage05-live-canary.mjs")], {
@@ -385,7 +440,8 @@ try {
   } else if (options.live) {
     certificate.fieldEvidence.liveCanary = {
       status: "BLOCKED_PRECONDITION",
-      reason: certificate.fieldEvidence.localClaudeHost.reason,
+      reason: certificate.fieldEvidence.localClaudeHost.reason
+        ?? "live canary evaluator is not present in the reviewed public runtime",
     };
   }
   const certifierClosure = [
@@ -395,14 +451,33 @@ try {
     "src/outsider-cowork-conformance.js",
     "src/outsider-second-machine-conformance.js",
   ];
+  const installedCertificationBoundary = [
+    "public-package-manifest.json",
+    "release-public-files.json",
+    "scripts/stage05-public-package-smoke.mjs",
+    "scripts/openai-universal-plugin-validate.mjs",
+  ];
+  const operatorCertifierAvailable = certifierClosure.every((relative) =>
+    existsSync(path.join(root, relative)));
+  const installedCertificationBoundaryAvailable = installedCertificationBoundary.every((relative) =>
+    existsSync(path.join(installedRoot, relative)));
   certificate.checks.certifierSourceClosure = {
-    ok: installedRuntimeReady && certifierClosure.every((relative) =>
-      existsSync(path.join(installedRoot, relative))
-      && sha256(path.join(root, relative)) === sha256(path.join(installedRoot, relative))),
-    files: certifierClosure,
+    ok: installedRuntimeReady
+      && operatorCertifierAvailable
+      && installedCertificationBoundaryAvailable
+      && certificate.checks.packageTests.ok === true,
+    scope: "OPERATOR_CERTIFIER_SOURCE_PLUS_INSTALLED_PUBLIC_MANIFEST_VERIFIER_BOUNDARY",
+    operatorSourceFiles: operatorCertifierAvailable
+      ? Object.fromEntries(certifierClosure.map((relative) =>
+          [relative, sha256(path.join(root, relative))])) : {},
+    installedBoundaryFiles: installedCertificationBoundaryAvailable
+      ? Object.fromEntries(installedCertificationBoundary.map((relative) =>
+          [relative, sha256(path.join(installedRoot, relative))])) : {},
+    certifierShippedInsidePublicRuntime: false,
   };
   const deterministicReady = ["cleanInstall", "version", "help", "doctor", "packageTests", "corpus",
-    "transparentInstall", "projectScopedInstall", "desktopPluginPackage", "certifierSourceClosure"]
+    "transparentInstall", "projectScopedInstall", "desktopPluginPackage",
+    "openAIUniversalPluginPackage", "certifierSourceClosure"]
     .every((name) => certificate.checks[name]?.ok === true);
   const readiness = assessReleaseReadiness({ deterministicReady,
     fieldEvidence: certificate.fieldEvidence });

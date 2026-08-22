@@ -1,4 +1,5 @@
 import { runFreshJsonCommand } from "./outsider-json-command.js";
+import { externalSupervisorPrompt } from "./outsider-supervisor-projection.js";
 
 const AUDIT_SHAPE = `只输出以下 JSON，不得混用 passed/errors/insufficient 旧字段：
 {
@@ -207,7 +208,8 @@ function runAudit({ cmd, prompt, packet, validationFeedback = null,
   const feedback = validationFeedback
     ? `\n────── 上一次响应的 schema 错误（必须逐条修正） ──────\n${String(validationFeedback).slice(0, 4000)}\n`
     : "";
-  const input = `${prompt}\n\n────── 待审计材料 ──────\n${JSON.stringify(packet, null, 2)}\n${feedback}`;
+  const input = externalSupervisorPrompt({ prompt, heading: "────── 待审计材料 ──────",
+    packet, suffix: feedback });
   const result = execute({ cmd, input, validate: validSemanticAudit,
     describeValidationErrors: semanticAuditSchemaViolations });
   if (!result?.ok) return { ok: false, error: result?.error ?? "SEMANTIC_AUDIT_FAILED",

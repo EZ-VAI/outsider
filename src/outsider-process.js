@@ -10,10 +10,10 @@
  *     universal signal and the reason a physical World is priced differently
  *     from a sandbox.
  *
- *   - CODE flags (empty submission, never-ran-a-test) carry base rates
- *     VALIDATED ON 22,871 CODING RUNS. They fire only in code Worlds. Applying
- *     them to a warehouse robot would be the instrument error this project
- *     audits out, so the World gate refuses to.
+ *   - CODE flags (empty submission, never-ran-a-test) are code-specific process
+ *     facts. The historical v49 corpus constants are not source-replayable in
+ *     the current tree, so no base rate is attached or transferred to another
+ *     World.
  */
 
 import { sha256 } from "./canonical.js";
@@ -60,7 +60,7 @@ export function measureExecutionTrace(trace, peers = {}) {
         + `World this is the highest-consequence signal — a wrong action that cannot be undone` });
   }
   /* UNIVERSAL — waste vs peers. In code Worlds the v49 delegate already raises
-     this with its validated wording, so it is added here only for the Worlds
+     the same caller-denominator fact, so it is added here only for the Worlds
      v49 does not cover, avoiding a double flag. */
   const isCodeWorld = CODE_WORLDS.has(trace.world?.kind);
   if (!isCodeWorld && costVsPeer && costVsPeer >= 3) {
@@ -75,7 +75,7 @@ export function measureExecutionTrace(trace, peers = {}) {
       reads: "a weak signal on its own; strong only combined with irreversibility" });
   }
 
-  /* CODE-ONLY — delegate the validated coding-agent pathology, gated on World */
+  /* CODE-ONLY — delegate coding-agent process facts, gated on World */
   let codeCard = null;
   if (isCodeWorld) {
     codeCard = processReportCardV49({
@@ -85,7 +85,7 @@ export function measureExecutionTrace(trace, peers = {}) {
       instanceCost: cost, apiCalls: trace.resources?.apiCalls,
     }, peers);
     for (const f of codeCard.flags) {
-      flags.push({ ...f, scope: "code worlds (base rate validated on 22,871 code runs)" });
+      flags.push({ ...f, scope: "code worlds; descriptive current-run fact only" });
     }
   }
 
@@ -95,10 +95,10 @@ export function measureExecutionTrace(trace, peers = {}) {
     facts, flags,
     worldGate: isCodeWorld
       ? "code World — coding-agent pathology applied"
-      : `non-code World (${trace.world?.kind}) — coding pathology base rates do NOT `
+      : `non-code World (${trace.world?.kind}) — coding-specific process findings do NOT `
         + "apply and are withheld; only universal resource/error/irreversibility signals shown",
-    disclaimer: "measurement of this run only; no verdict; base rates are corpus "
-      + "references scoped to their validation World",
+    disclaimer: "measurement of this run only; no verdict, replayable corpus base rate, "
+      + "outcome probability, or authority",
   };
   return card;
 }

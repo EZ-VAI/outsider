@@ -19,18 +19,26 @@ export const SUPPORT = {
   },
   codex: {
     /*
-     * FALSE UNTIL PROVEN. 不是"暂不支持"这种客气话 —— 没有唯一事件身份，观察器
-     * 的锚点恒为 null，它不是有 bug，是根本没在运行。
+     * Runtime-proven legacy treatment capabilities only.  call_id now really
+     * survives the rollout parser, so uid is true.  The installed 0.144.5
+     * schema advertises the remaining hook features, but its Outsider hook is
+     * currently untrusted and has not produced authenticated delivery evidence;
+     * schema metadata cannot turn those treatment booleans true.
      */
-    uid: false,
-    contextToModel: false,  /* 实测：模型看不到，session JSONL 里也没有 */
-    denyReason: true,       /* 拒绝理由到 CLI stderr —— 到操作方，不一定到模型 */
+    uid: true,
+    contextToModel: false,
+    denyReason: true,
     stopHook: false,
     updatedInput: false,
   },
   codebuddy: { uid: false, contextToModel: false, denyReason: true, stopHook: false, updatedInput: false },
   trae: { uid: false, contextToModel: false, denyReason: false, stopHook: false, updatedInput: false },
 };
+
+/* Discovery metadata only; never consumed as treatment or delivery proof. */
+export const ENGINE_CAPABILITY_CANDIDATES = Object.freeze({
+  codex: Object.freeze({ contextToModel: true, stopHook: true, updatedInput: true }),
+});
 
 export function supports(host, cap) {
   return Boolean(SUPPORT[host]?.[cap]);

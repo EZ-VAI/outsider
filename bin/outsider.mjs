@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,7 +9,7 @@ import {
 } from "../src/outsider-stage05-evidence.js";
 import {
   inspectProductRun, listProductRuns, productVersion, runProductDoctor,
-  resolveRunDirectory,
+  projectProductDoctorForSharing, resolveRunDirectory,
 } from "../src/outsider-product.js";
 import { defaultStateRoot } from "../src/outsider-kernel-store.js";
 import {
@@ -20,6 +20,14 @@ import {
 import {
   createDeepSeekHarnessObservation, verifyDeepSeekHarnessObservation,
 } from "../src/outsider-deepseek-harness-adapter.js";
+import {
+  createCodexWorkerObservation, readCodexRolloutSnapshot,
+  verifyCodexWorkerObservation,
+} from "../src/outsider-codex-worker-adapter.js";
+import {
+  createDeepSeekWorkerObservation, verifyDeepSeekWorkerObservation,
+} from "../src/outsider-deepseek-worker-adapter.js";
+import { verifyWorkerObservation } from "../src/outsider-worker-adapter.js";
 import { createFederatedSupervisionRecord,
   acceptFederatedHandoffOffer, createFederatedEvidencePacket,
   createFederatedHandoffOffer, createFederatedWayAttestation,
@@ -31,12 +39,14 @@ import { DurableGlobalOutsiderMonitor } from "../src/outsider-federation-monitor
 import { createFederatedTaskPlan, createTaskBoundFederatedCheckpoint,
   verifyFederatedTaskHandoff, verifyFederatedTaskHandoffOffer,
   verifyFederatedTaskPlan } from "../src/outsider-federation-plan.js";
+import { complianceLedgerStatus, eraseComplianceLedger } from
+  "../src/outsider-compliance.js";
 
 function usage() {
   console.log(`Outsider Stage 0.5\n\n`
-    + `  outsider run "<目标>" --accept "npm test" --max-budget-usd 20 [--supervisor "claude -p"]\n`
-    + `  outsider install [--scope user|project] [--check] [--strict]\n`
-    + `  outsider doctor [--worker <claude>] [--state-root <directory>] [--json]\n`
+    + `  outsider run "<目标>" --accept "npm test" --max-budget-usd 20 (--supervisor "claude -p"|--supervisor-argv '["claude","-p"]') --allow-external-supervisor\n`
+    + `  outsider install [--scope user|project] [--check] [--strict] [--supervisor <cmd>|--supervisor-argv <json>] [--allow-external-supervisor]\n`
+    + `  outsider doctor [--worker <claude>] [--state-root <directory>] [--json|--share-json]\n`
     + `  outsider runs [--state-root <directory>] [--json]\n`
     + `  outsider show <run-id|run-directory> [--state-root <directory>]\n`
     + `  outsider evidence <run-directory>\n`
@@ -47,7 +57,11 @@ function usage() {
     + `  outsider share status [--state-root <directory>]\n`
     + `  outsider share disable [--state-root <directory>]\n`
     + `  outsider share revoke [--send] [--reason <text>] [--state-root <directory>]\n`
+    + `  outsider compliance-ledger status [--cwd <directory>]\n`
+    + `  outsider compliance-ledger erase [--cwd <directory>]\n`
     + `  outsider observe-dsh <session-events.json|jsonl> --out <observation.json> [--session-id <id>]\n`
+    + `  outsider worker inspect <codex|deepseek-harness> <source> --out <observation.json> [provider evidence options]\n`
+    + `  outsider worker verify <observation.json> [--source <source>] [provider evidence options]\n`
     + `  outsider federation-verify <packet.json> --trust-store <trust.json>\n`
     + `  outsider federation-supervise <packet.json> --trust-store <trust.json> --out <record.json>\n`
     + `  outsider federation-sign-way <way-spec.json> --signing-key <private.pem> --out <attestation.json>\n`
@@ -87,7 +101,8 @@ export async function main(argv = process.argv.slice(2)) {
   }
   const commands = new Set(["run", "install", "doctor", "runs", "show", "evidence", "attest",
     "share",
-    "observe-dsh", "federation-verify", "federation-supervise", "federation-sign-way",
+    "compliance-ledger",
+    "observe-dsh", "worker", "federation-verify", "federation-supervise", "federation-sign-way",
     "federation-offer", "federation-accept", "federation-pack", "federation-ingest",
     "federation-status", "federation-checkpoint", "federation-monitor-ingest",
     "federation-monitor-status", "federation-plan", "federation-plan-verify",
@@ -112,6 +127,27 @@ export async function main(argv = process.argv.slice(2)) {
   }
   const { positional, options } = parse(rest);
   const stateRoot = options["state-root"] ? path.resolve(options["state-root"]) : undefined;
+  if (command === "compliance-ledger") {
+    const action = positional[0] ?? "status";
+    const cwd = path.resolve(options.cwd ?? process.cwd());
+    try {
+      if (action === "status") {
+        console.log(JSON.stringify({ ok: true, explicitOptInRequired: true,
+          automaticUpload: false, ...complianceLedgerStatus(cwd) }, null, 2));
+        return 0;
+      }
+      if (action === "erase") {
+        console.log(JSON.stringify({ ok: true, ...eraseComplianceLedger(cwd),
+          futureRecordingEnabled: false,
+          note: "Erasure does not enable future recording; opt-in is environment-scoped." }, null, 2));
+        return 0;
+      }
+      usage(); return 2;
+    } catch (error) {
+      console.error(`compliance-ledger ${action} failed: ${error?.message ?? error}`);
+      return 1;
+    }
+  }
   if (command === "share") {
     const action = positional[0] ?? "status";
     const runValue = positional[1];
@@ -216,9 +252,11 @@ export async function main(argv = process.argv.slice(2)) {
   }
   if (command === "doctor") {
     const report = runProductDoctor({ workerExecutable: options.worker || null, stateRoot });
-    if (options.json) console.log(JSON.stringify(report, null, 2));
+    if (options["share-json"]) console.log(JSON.stringify(projectProductDoctorForSharing(report), null, 2));
+    else if (options.json) console.log(JSON.stringify(report, null, 2));
     else {
-      console.log(`Outsider ${report.version} · ${report.ok ? "READY" : "NOT READY"}`);
+      console.log(`Outsider ${report.version} · ${report.ok ? "DIAGNOSTIC OK" : "DIAGNOSTIC FAILED"}`
+        + ` · control ${report.readiness?.anyControlledSurfaceEstablished ? "seen" : "not established"}`);
       for (const [name, check] of Object.entries(report.checks)) {
         console.log(`${check.ok ? "✓" : "✗"} ${name}: ${check.detail ?? (check.ok ? "ok" : "failed")}`);
       }
@@ -229,6 +267,13 @@ export async function main(argv = process.argv.slice(2)) {
       console.log(`Desktop Cowork: ${surfaces.desktopCowork?.pluginPackaged ? "plugin ready" : "plugin missing"}`
         + ` · helper ${surfaces.desktopCowork?.systemHelperRunning ? "running" : "not running"}`
         + ` · runtime ${surfaces.desktopCowork?.runtimeConformanceSeen ? "seen" : "not yet seen"}`);
+      console.log(`Codex: ${surfaces.codex?.pluginConfigured ? "plugin configured" : "plugin not configured"}`
+        + ` · hooks ${surfaces.codex?.hooksConfigured ? "configured" : "incomplete"}`
+        + ` · trust ${surfaces.codex?.hookTrustStatus ?? "unknown"}`
+        + ` · runtime ${surfaces.codex?.runtimeConformanceSeen ? "seen" : "not yet seen"}`);
+      console.log(`ChatGPT: ${surfaces.chatgpt?.universalPluginPackagePresent ? "plugin package present" : "plugin package missing"}`
+        + ` · live install ${surfaces.chatgpt?.livePluginInstallSeen ? "seen" : "not established"}`
+        + " · global lifecycle control not established");
     }
     return report.ok ? 0 : 1;
   }
@@ -267,15 +312,142 @@ export async function main(argv = process.argv.slice(2)) {
     const target = positional[0] && path.resolve(positional[0]);
     if (!target || !existsSync(target)) { usage(); return 2; }
     let result;
+    let record = null;
     if (target.endsWith(".json")) {
-      const record = JSON.parse(readFileSync(target, "utf8"));
-      result = record?.schema === "outsider/deepseek-harness-observation/v1"
-        ? verifyDeepSeekHarnessObservation(record) : verifyAttestationV2(record);
+      record = JSON.parse(readFileSync(target, "utf8"));
+      if (record?.schema === "outsider/deepseek-harness-observation/v1") {
+        result = verifyDeepSeekHarnessObservation(record);
+      } else if (record?.artifactType === "outsider_attestation_v2") {
+        result = verifyAttestationV2(record);
+      } else {
+        result = { ok: false, error: "UNSUPPORTED_SCHEMA",
+          schema: record?.schema ?? null, artifactType: record?.artifactType ?? null,
+          verificationMode: "NO_VERIFIER_DISPATCHED",
+          sourceArtifactsReverified: false,
+          guidance: "Use the schema-specific local script and its source-aware verifier." };
+      }
     } else result = verifyStage05RunDirectory(target);
-    console.log(JSON.stringify(result.ok ? { ok: true, signed: result.signed ?? null,
+    const selfCheckOnly = result.ok && (result.derivationsVerified === false
+      || result.recordsVerified === false || result.sourceArtifactsReverified === false
+      );
+    console.log(JSON.stringify(result.ok ? { ok: true,
+      verificationMode: selfCheckOnly ? "SELF_CHECK_ONLY" : "SCHEMA_SPECIFIC",
+      signed: result.signed ?? null,
       attestationHash: result.attestationHash ?? null,
+      registryHash: result.registryHash ?? null,
+      bookHash: result.bookHash ?? null,
+      checkpointHash: result.checkpointHash ?? null,
+      clearanceHash: result.clearanceHash ?? null,
+      episodeHash: result.episodeHash ?? null,
+      derivationsVerified: result.derivationsVerified ?? null,
+      recordsVerified: result.recordsVerified ?? null,
+      sourceArtifactsReverified: result.sourceArtifactsReverified ?? null,
+      counts: result.counts ?? null,
       manifestHash: result.manifest?.manifestHash ?? null } : result, null, 2));
     return result.ok ? 0 : 1;
+  }
+  if (command === "worker") {
+    const action = positional[0];
+    const provider = action === "inspect" ? positional[1] : null;
+    const supportedProviders = ["codex", "deepseek-harness"];
+    const failVisible = (reasonCode, detail = null) => {
+      console.log(JSON.stringify({ ok: false, reasonCode,
+        detail, supportedProviders, hostDisposition: "CONTINUE_UNSUPERVISED",
+        blocksHost: false, operatorVisible: true }, null, 2));
+      return 2;
+    };
+    const readJsonOption = (name) => options[name]
+      ? JSON.parse(readFileSync(path.resolve(options[name]), "utf8")) : null;
+    const parseJsonOrJsonl = (file) => {
+      const raw = readFileSync(path.resolve(file), "utf8");
+      try { return JSON.parse(raw); }
+      catch { return raw.split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line)); }
+    };
+    try {
+      if (!["inspect", "verify"].includes(action)) return failVisible("WORKER_ACTION_UNSUPPORTED");
+      if (action === "inspect") {
+        if (!supportedProviders.includes(provider)) {
+          return failVisible("WORKER_PROVIDER_UNSUPPORTED", provider ?? null);
+        }
+        if (!positional[2] || !options.out) return failVisible("WORKER_INPUT_OR_OUTPUT_MISSING");
+        let record;
+        if (provider === "codex") {
+          const probe = readJsonOption("hook-probe");
+          const replayFlags = ["codex-binary", "codex-schema", "hooks-list"];
+          const suppliedReplayFlags = replayFlags.filter((name) => options[name]);
+          if (suppliedReplayFlags.length > 0 && suppliedReplayFlags.length !== replayFlags.length) {
+            return failVisible("CODEX_HOOK_REPLAY_SOURCES_INCOMPLETE", suppliedReplayFlags);
+          }
+          if (suppliedReplayFlags.length > 0 && probe === null) {
+            return failVisible("CODEX_HOOK_PROBE_MISSING");
+          }
+          const hookProbeSources = suppliedReplayFlags.length === replayFlags.length ? {
+            binaryBytes: readFileSync(path.resolve(options["codex-binary"])),
+            schemaBytes: readFileSync(path.resolve(options["codex-schema"])),
+            hooksList: readJsonOption("hooks-list"),
+          } : null;
+          const liveRecord = readJsonOption("live-conformance");
+          const liveEvents = readJsonOption("live-events");
+          if (Boolean(liveRecord) !== Boolean(liveEvents)) {
+            return failVisible("CODEX_LIVE_CONFORMANCE_SOURCES_INCOMPLETE");
+          }
+          record = createCodexWorkerObservation(readCodexRolloutSnapshot(
+            path.resolve(positional[2])), { hookProbe: probe, hookProbeSources,
+            liveConformance: liveRecord ? { record: liveRecord, events: liveEvents } : null });
+        } else {
+          const parsed = parseJsonOrJsonl(positional[2]);
+          const harnessObservation = parsed?.schema === "outsider/deepseek-harness-observation/v1"
+            ? parsed : createDeepSeekHarnessObservation(parsed,
+              { sessionId: options["session-id"] ?? null });
+          record = createDeepSeekWorkerObservation({ harnessObservation,
+            runtimeHandshake: readJsonOption("runtime-handshake"),
+            correction: readJsonOption("correction"),
+            correctionAck: readJsonOption("correction-ack"),
+            effectEvidence: readJsonOption("effect-evidence") });
+        }
+        const output = path.resolve(options.out);
+        mkdirSync(path.dirname(output), { recursive: true, mode: 0o700 });
+        writeFileSync(output, `${JSON.stringify(record, null, 2)}\n`, { mode: 0o600 });
+        console.log(JSON.stringify({ ok: true, output, recordHash: record.recordHash,
+          provider: record.capabilityHandshake.provider,
+          controlLevel: record.capabilityHandshake.controlLevel,
+          declaredControlLevel: record.capabilityHandshake.declaredControlLevel,
+          claimableControlLevel: record.capabilityHandshake.claimableControlLevel,
+          capabilities: record.capabilityHandshake.capabilities,
+          complete: record.integrity.complete,
+          hostDisposition: record.capabilityHandshake.capabilities.INTERVENE.status === "SUPPORTED"
+            ? "SUPERVISED" : "CONTINUE_UNSUPERVISED" }, null, 2));
+        return record.integrity.complete ? 0 : 1;
+      }
+      if (!positional[1]) return failVisible("WORKER_OBSERVATION_MISSING");
+      const record = JSON.parse(readFileSync(path.resolve(positional[1]), "utf8"));
+      const providerName = record?.capabilityHandshake?.provider;
+      let result;
+      if (providerName === "codex") {
+        result = verifyCodexWorkerObservation(record, { sourceBytes: options.source
+          ? readCodexRolloutSnapshot(path.resolve(options.source)) : null });
+      } else if (providerName === "deepseek-harness") {
+        const source = options.source ? parseJsonOrJsonl(options.source) : null;
+        const harnessObservation = source?.schema === "outsider/deepseek-harness-observation/v1"
+          ? source : source == null ? null : createDeepSeekHarnessObservation(source,
+            { sessionId: options["session-id"] ?? null });
+        result = verifyDeepSeekWorkerObservation(record, { harnessObservation,
+          runtimeHandshake: readJsonOption("runtime-handshake"),
+          correction: readJsonOption("correction"),
+          correctionAck: readJsonOption("correction-ack"),
+          effectEvidence: readJsonOption("effect-evidence") });
+      } else if (record?.schema === "outsider/worker-observation/v1") {
+        result = verifyWorkerObservation(record, { sourceBytes: options.source
+          ? readFileSync(path.resolve(options.source)) : null });
+      } else return failVisible("WORKER_OBSERVATION_SCHEMA_UNSUPPORTED");
+      console.log(JSON.stringify({ ...result, provider: providerName ?? "unknown",
+        hostDisposition: result.ok && result.sourceArtifactsReverified
+          ? "SOURCE_EVIDENCE_VERIFIED" : "CONTINUE_UNSUPERVISED",
+        blocksHost: false }, null, 2));
+      return result.ok ? 0 : 1;
+    } catch (error) {
+      return failVisible("WORKER_COMMAND_FAILED", String(error?.message ?? error).slice(0, 240));
+    }
   }
   if (command === "observe-dsh") {
     if (!positional[0] || !options.out) { usage(); return 2; }
@@ -514,7 +686,10 @@ export async function main(argv = process.argv.slice(2)) {
 }
 
 let directEntry = false;
-try { directEntry = realpathSync(process.argv[1]) === fileURLToPath(import.meta.url); } catch { /* imported */ }
+try {
+  directEntry = realpathSync(process.argv[1])
+    === realpathSync(fileURLToPath(import.meta.url));
+} catch { /* imported */ }
 if (directEntry) {
   process.exitCode = await main();
 }

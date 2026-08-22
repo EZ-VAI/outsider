@@ -14,12 +14,15 @@
  *
  * A supervisor asks for trust up front. The cheapest way to earn some is to show
  * the operator what it would have done to THEIR last week, on THEIR machine,
- * before it is installed and while it still cannot touch anything.
+ * before it is installed and while it still cannot touch anything. Raw paths
+ * and commands remain hidden unless the operator explicitly requests a
+ * local-only raw view; this tool never asks anyone to send raw logs back.
  *
- * Finds the logs itself. Reads only. Prints the interrupt rate they would have
- * lived with, every single interruption in full with the rule that caused it,
- * and what it would have said and when.
+ * Finds the logs itself. Reads only. Prints the interrupt rate, a hash-only
+ * fingerprint for each interruption, the rule that caused it, and what it would
+ * have said and when. Raw local display requires `--show-raw-local`.
  */
+import { createHash } from "node:crypto";
 import { existsSync, readdirSync, statSync } from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
@@ -31,6 +34,11 @@ const SRC = existsSync(path.join(HERE, "..", "src", "outsider-hook.js"))
 const { decideToolCall } = await import(path.join(SRC, "outsider-hook.js"));
 const { trajectoryFromSession, classifyToolCall, explainRisk } =
   await import(path.join(SRC, "outsider-session-adapters.js"));
+
+const showRawLocal = process.argv.includes("--show-raw-local");
+const fingerprint = (domain, value) => createHash("sha256")
+  .update(`outsider:try-feedback:${domain}:v1\0`).update(String(value ?? ""))
+  .digest("hex").slice(0, 20);
 
 /* ── 自己找日志。找不到就说清楚去哪儿看，不让人猜 ────────────────────── */
 /*
@@ -92,7 +100,7 @@ if (!logs.length) {
 
 const target = logs[0];
 const mb = target.size / 1048576;
-console.log(`读取：${target.p}`);
+console.log(`读取：session:${fingerprint("path", target.p)}${showRawLocal ? ` (${target.p})` : ""}`);
 console.log(`      ${mb.toFixed(2)}MB`);
 if (logs.length > 1) {
   console.log(`      另有 ${logs.length - 1} 份更小的日志没读（默认只读最大的一份，`);
@@ -116,7 +124,9 @@ const steps = trajectoryFromSession(target.p, AGENT,
   { tailBytes: 2 ** 30, subTailBytes: 2 ** 30, maxFiles: 512 });
 if (!steps.length) {
   console.log(`这份日志里重建出 0 步 —— 解析器读不懂它的格式。`);
-  console.log(`这本身就是我要的数据，请把这行连同日志的头几行发回来。\n`);
+  console.log(`可反馈这个脱敏指纹：agent=${AGENT}, bytes=${target.size}, parser=${
+    fingerprint("parser", `${AGENT}:${path.extname(target.p)}:${target.size}`)}。`);
+  console.log(`不要发送日志头、原始路径、命令、prompt、输出或凭证。\n`);
   process.exit(0);
 }
 
@@ -149,7 +159,12 @@ for (let j = 0; j < steps.length; j++) {
   if (!d) continue;
   if (d.verdict === "deny" || d.verdict === "ask") {
     deny += 1;
-    blocks.push({ cmd: full.replace(/\s+/g, " "), why: explainRisk(full) });
+    const why = explainRisk(full);
+    blocks.push({ raw: full.replace(/\s+/g, " "),
+      commandHash: fingerprint("command", full),
+      risk: d.proposed?.risk ?? classifyToolCall("Bash", { command: full }).risk,
+      rule: String(why?.rule ?? "unclassified-risk").slice(0, 120),
+      segment: why?.segment ?? null });
   } else if (d.verdict === "warn") {
     warn += 1;
     const k = String(d.reason ?? "?").split(":")[0].slice(0, 44);
@@ -172,11 +187,15 @@ console.log(`  会给 agent 一句提醒   ${String(warn).padStart(4)} 次  = ${
 console.log(`  其余全部一声不吭     ${String(steps.length - deny - warn).padStart(4)} 次\n`);
 
 if (blocks.length) {
-  console.log(`── 被拦的每一条，完整命令 + 为什么 ──`);
-  console.log(`   （这就是你会亲身经历的全部打扰。看着不对的，请照贴发回来。）\n`);
+  console.log(showRawLocal
+    ? `── 被拦的每一条，本机原文视图 + 为什么 ──`
+    : `── 被拦的每一类，脱敏指纹 + 为什么 ──`);
+  console.log(showRawLocal
+    ? `   （仅在本机查看；不要复制、发送或贴出原文。）\n`
+    : `   （反馈时只提供 risk/rule/command hash；不要发送日志或命令原文。）\n`);
   for (const b of blocks) {
-    console.log(`  ${b.cmd}`);
-    if (b.why.rule) console.log(`     ↳ ${b.why.rule}${b.why.segment && b.why.segment !== b.cmd ? `：${b.why.segment}` : ""}`);
+    console.log(showRawLocal ? `  ${b.raw}` : `  [${b.risk}] command:${b.commandHash}`);
+    console.log(`     ↳ ${b.rule}${showRawLocal && b.segment && b.segment !== b.raw ? `：${b.segment}` : ""}`);
     console.log("");
   }
 } else {
@@ -190,5 +209,6 @@ if (notes.size) {
 
 console.log(`── 接下来 ──`);
 console.log(`  这个数字你能接受   → node install.mjs        （随时 node install.mjs --check 体检）`);
-console.log(`  想先一句话都不说   → 装好后设 OUTSIDER_SHADOW=1，它连拦都拦不了，只记账`);
-console.log(`  数字难看           → 把上面「被拦的每一条」原样发回来，那正是最有用的东西\n`);
+console.log(`  想先一句话都不说   → 装好后设 OUTSIDER_SHADOW=1；默认仍不写本地账本`);
+console.log(`  明确同意本地实验   → 另设 OUTSIDER_COMPLIANCE_LEDGER=1（仅哈希字段，默认保留7天）`);
+console.log(`  数字难看           → 只反馈 risk/rule/command hash；不要发送原始日志、路径或命令\n`);

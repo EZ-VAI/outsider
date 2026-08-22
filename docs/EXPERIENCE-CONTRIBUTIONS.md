@@ -23,7 +23,7 @@ classes, aggregate host-capacity observations and bounded trajectory features.
 
 ## Client workflow
 
-For the public 1.3.97 beta, use
+For the public 1.3.98 beta, use
 `https://outsider-experience-gateway.outsider-guard.workers.dev` and the pinned
 Ed25519 key in
 `deploy/cloudflare-experience-gateway/server-public-key.pem`. Then:

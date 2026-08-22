@@ -1,8 +1,8 @@
 {
   "name": "outsider-guard",
-  "version": "1.3.97",
-  "private": false,
-  "description": "Transparent attached lifecycle controller and causal-proof supervisor for Claude Code and Cowork",
+  "version": "1.3.98",
+  "private": true,
+  "description": "Local-first lifecycle controller and evidence verifier for Claude and Codex, with a ChatGPT skill plugin",
   "license": "Apache-2.0",
   "author": "Eric",
   "repository": {
@@ -16,6 +16,8 @@
   "keywords": [
     "ai-agents",
     "claude-code",
+    "codex",
+    "chatgpt",
     "agent-supervision",
     "tamper-evident-evidence",
     "ai-safety"
@@ -31,29 +33,18 @@
   "bin": {
     "outsider": "bin/outsider.mjs",
     "outsider-run": "bin/outsider-run.mjs",
-    "outsider-hook": "bin/outsider-hook.mjs"
+    "outsider-hook": "bin/outsider-hook.mjs",
+    "outsider-codex-app-server": "bin/outsider-codex-app-server.mjs"
   },
   "files": [
-    "bin",
-    "src",
-    "scripts",
-    "test",
     "README.md",
     "LICENSE",
     "PRIVACY.md",
     "SECURITY.md",
-    "docs",
-    "install.mjs",
-    "try.mjs",
-    "hooks",
-    "integrations/deepseek-harness-outsider-plugin",
-    "deploy/cloudflare-experience-gateway",
-    "deploy/cloudflare-product-demo",
-    "references/deepseek-harness-source-pin.json",
-    "references/deepseek-harness-compile-profile.json",
-    ".claude-plugin"
+    "release-public-files.json"
   ],
   "scripts": {
+    "prepack": "node scripts/refuse-root-pack.mjs",
     "test": "node --test test/*.test.js",
     "test:corpus": "node scripts/outsider-gate-corpus.mjs",
     "canary:live": "node scripts/stage05-live-canary.mjs",
@@ -72,11 +63,14 @@
     "canary:agent-team:probe": "node scripts/stage05-agent-team-probe.mjs --interactive-pty",
     "canary:endurance": "node scripts/stage05-endurance-canary.mjs",
     "canary:cowork": "node scripts/stage05-cowork-conformance.mjs",
+    "canary:codex:probe": "node scripts/stage05-codex-worker-probe.mjs",
     "canary:deepseek": "node scripts/stage05-deepseek-harness-canary.mjs",
     "canary:tally": "node scripts/stage05-reliability-tally.mjs",
     "release:build": "node scripts/build-release.mjs",
+    "release:stage-public": "node scripts/stage05-public-package.mjs",
     "release:certify": "node scripts/stage05-release-certify.mjs",
     "release:metadata": "node scripts/stage05-public-release-metadata.mjs",
+    "plugin:validate": "node scripts/openai-universal-plugin-validate.mjs",
     "risk:shadow": "node scripts/stage05-risk-factor-shadow.mjs",
     "experience:report": "node scripts/stage05-supervised-corpus-report.mjs",
     "experience:serve": "node scripts/stage05-experience-contribution-server.mjs",

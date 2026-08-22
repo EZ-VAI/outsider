@@ -6,36 +6,93 @@
  *   node install.mjs --strict   所有提醒都升级成硬拦(默认只硬拦不可逆动作)
  *   node install.mjs --scope project  只写当前项目 .claude/settings.json
  *   node install.mjs --stage-only     写入隔离目录但不注册 LaunchAgent（发布认证用）
+ *   node install.mjs --supervisor "claude -p" --allow-external-supervisor
  *
  * 这个目录本身就是插件。Claude 桌面版直接指向它;Codex / Claude Code 跑这个脚本。
  */
-import { existsSync, readFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, mkdtempSync, rmSync } from "node:fs";
 import { homedir, platform, tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { stageClaudeHostedPlugin } from "./scripts/claude-plugin-package.mjs";
 import { decideToolCall } from "./src/outsider-hook.js";
-import { hookConfigFor, mergeHookConfig } from "./src/outsider-agents.js";
-import { installSystemHelper } from "./src/outsider-system-helper.js";
+import { hookConfigFor, securelyMergeHookConfigFile } from "./src/outsider-agents.js";
+import {
+  externalSupervisorConfigurationEnvironment, hookCommandWithExternalSupervisor,
+  installSystemHelper, shellQuoteHookValue,
+} from "./src/outsider-system-helper.js";
 
 const HOME = homedir();
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const HOOK = `"${String(process.execPath).replaceAll('"', '\\"')}" "${path.join(HERE, "bin", "outsider-hook.mjs")}"`;
+const BASE_HOOK = `${shellQuoteHookValue(process.execPath)} ${shellQuoteHookValue(path.join(HERE,
+  "bin", "outsider-hook.mjs"))}`;
 const A = process.argv.slice(2);
 const CHECK = A.includes("--check"), STRICT = A.includes("--strict");
 const STAGE_ONLY = A.includes("--stage-only");
 const scopeIndex = A.indexOf("--scope");
 const SCOPE = scopeIndex >= 0 ? A[scopeIndex + 1] : "user";
+const optionValue = (name) => {
+  const index = A.indexOf(name);
+  const value = index >= 0 ? A[index + 1] : null;
+  return value && !value.startsWith("--") ? value : null;
+};
+const SUPERVISOR_TEXT = optionValue("--supervisor");
+const SUPERVISOR_ARGV_TEXT = optionValue("--supervisor-argv");
+const ALLOW_EXTERNAL_SUPERVISOR = A.includes("--allow-external-supervisor");
+let SUPERVISOR_COMMAND = SUPERVISOR_TEXT;
+if ((A.includes("--supervisor") && !SUPERVISOR_TEXT)
+  || (A.includes("--supervisor-argv") && !SUPERVISOR_ARGV_TEXT)) {
+  console.error("--supervisor/--supervisor-argv 缺少命令值");
+  process.exit(2);
+}
+if (SUPERVISOR_TEXT && SUPERVISOR_ARGV_TEXT) {
+  console.error("--supervisor 与 --supervisor-argv 只能选择一个");
+  process.exit(2);
+}
+if (SUPERVISOR_ARGV_TEXT) {
+  try { SUPERVISOR_COMMAND = JSON.parse(SUPERVISOR_ARGV_TEXT); } catch {
+    console.error("--supervisor-argv 必须是 JSON 字符串数组");
+    process.exit(2);
+  }
+  if (!Array.isArray(SUPERVISOR_COMMAND) || SUPERVISOR_COMMAND.length === 0
+    || SUPERVISOR_COMMAND.some((item) => typeof item !== "string" || item.length === 0)) {
+    console.error("--supervisor-argv 必须是非空 JSON 字符串数组");
+    process.exit(2);
+  }
+}
+if (Boolean(SUPERVISOR_COMMAND) !== ALLOW_EXTERNAL_SUPERVISOR) {
+  console.error("外部 supervisor 必须同时提供 --supervisor/--supervisor-argv 与独立 --allow-external-supervisor 同意；缺一不会安装外部披露配置");
+  process.exit(2);
+}
 const PROJECT_ROOT = path.resolve(process.env.OUTSIDER_INSTALL_PROJECT_ROOT || process.cwd());
 const say = (s = "") => console.log(s);
 const rule = (c = "─") => say(c.repeat(74));
 
 if (!["user", "project"].includes(SCOPE)) {
-  console.error("用法: outsider install [--scope user|project] [--check] [--strict] [--stage-only]");
+  console.error("用法: outsider install [--scope user|project] [--check] [--strict] [--stage-only] [--supervisor <cmd>|--supervisor-argv <json>] [--allow-external-supervisor]");
+  process.exit(2);
+}
+if (SCOPE !== "user" && SUPERVISOR_COMMAND) {
+  console.error("外部 supervisor 的 system-helper 配置只适用于 --scope user");
   process.exit(2);
 }
 if (STAGE_ONLY && (SCOPE !== "user" || CHECK)) {
   console.error("--stage-only 仅用于 user-scope 发布认证，且不能与 --check 同用");
+  process.exit(2);
+}
+let HOOK = BASE_HOOK;
+let SUPERVISOR_HOOK_ENVIRONMENT = {};
+try {
+  HOOK = hookCommandWithExternalSupervisor({ hookCommand: BASE_HOOK,
+    supervisorCommand: SUPERVISOR_COMMAND,
+    allowExternalSupervisor: ALLOW_EXTERNAL_SUPERVISOR });
+  SUPERVISOR_HOOK_ENVIRONMENT = externalSupervisorConfigurationEnvironment({
+    supervisorCommand: SUPERVISOR_COMMAND,
+    allowExternalSupervisor: ALLOW_EXTERNAL_SUPERVISOR,
+  });
+} catch (error) {
+  console.error(`external supervisor 配置拒绝写入 settings：${error?.message ?? error}`);
+  console.error("命令只能包含 supervisor 的程序/argv 身份；API key、token、密码、私钥与带 query 的 URL 必须留在工具自己的受保护登录存储中。");
   process.exit(2);
 }
 
@@ -56,6 +113,9 @@ say(`  安装 scope: ${SCOPE === "user" ? "user（本机所有 Claude 项目）"
 if (SCOPE === "user") {
   say(`  ⚠ 将写入 ${path.join(HOME, ".claude", "settings.json").replace(HOME, "~")}；下一次 hook 起全机生效。`);
   say("    不要在你正依赖的 Claude/Cowork 会话里执行安装；请从独立终端安装并新开会话。");
+  say(SUPERVISOR_COMMAND
+    ? "  ✓ 已显式配置并同意 external supervisor；Claude/Codex hook 与 Cowork helper 都已持久化双门，只传递最小化/脱敏投影。"
+    : "  ✓ 默认 local-only/no-external；未配置或同意 external supervisor，不会发送 workspace/prompt/tool/output。");
 } else {
   say(`  ✓ 不写用户级 Claude settings；只写 ${path.join(PROJECT_ROOT,
     ".claude", "settings.json")}`);
@@ -78,7 +138,8 @@ if (SCOPE === "user" && platform() === "darwin") {
   } else {
     try {
       const helper = installSystemHelper({ sourceRoot: HERE, home: HOME,
-        register: !STAGE_ONLY });
+        register: !STAGE_ONLY, supervisorCommand: SUPERVISOR_COMMAND,
+        allowExternalSupervisor: ALLOW_EXTERNAL_SUPERVISOR });
       say(STAGE_ONLY
         ? `  ✓ Cowork system helper ${helper.version} 已写入隔离目录（未注册 ${helper.label}）`
         : `  ✓ Cowork system helper ${helper.version} 已注册（${helper.label}）`);
@@ -147,12 +208,24 @@ for (const s of SURFACES) {
   }
   say(""); rule(); say(`  ${s.label}`); rule();
   if (CHECK) { say(`    体检模式:不写。目标文件 ${cfg.path.replace(HOME, "~")}`); continue; }
-  let cur = {};
-  if (existsSync(cfg.path)) { try { cur = JSON.parse(readFileSync(cfg.path, "utf8")); } catch { cur = {}; } }
-  const merged = mergeHookConfig(cur, cfg.value);
-  mkdirSync(path.dirname(cfg.path), { recursive: true });
-  writeFileSync(cfg.path, JSON.stringify(merged, null, 2));
-  const back = JSON.parse(readFileSync(cfg.path, "utf8"));
+  let merged, back;
+  try {
+    const stored = securelyMergeHookConfigFile({
+      file: cfg.path,
+      value: cfg.value,
+      trustedRoot: SCOPE === "project" ? PROJECT_ROOT : HOME,
+    });
+    merged = stored.merged;
+    back = stored.committed;
+    if (stored.backupPath) {
+      say(`    ↳ 原配置已保存为私有可恢复备份 ${stored.backupPath.replace(HOME, "~")}`);
+    }
+  } catch (error) {
+    say(`    ✗ 拒绝写入 ${cfg.path.replace(HOME, "~")}：${error?.message ?? error}`);
+    say("      现有 settings 保持原样；修复 JSON/移除 symlink 或结束并发编辑后再重试。");
+    failed.push(s.label);
+    continue;
+  }
   /*
    * ── 每一个声明的事件都要落地，而且命令要真的能跑 ──────────────────────
    * This checked PreToolUse only, and separately the config declared three
@@ -178,12 +251,16 @@ for (const s of SURFACES) {
   try {
     const { execFileSync } = await import("node:child_process");
     const entry = path.join(HERE, "bin", "outsider-hook.mjs");
-    const argv = [entry, "hook", s.key].concat(STRICT ? ["--strict"] : []);
-    if (s.key === "claude-code") smokeRoot = mkdtempSync(path.join(tmpdir(), "outsider-install-smoke-"));
-    const env = smokeRoot ? { ...process.env, OUTSIDER_ATTACHED_ROOT: smokeRoot,
-      OUTSIDER_BUDGET_MS: "12000" } : process.env;
+    const attachedCandidate = s.key === "claude-code" || s.key === "codex";
+    const argv = [entry, "hook", s.key]
+      .concat(s.key === "codex" ? ["--attached-control"] : [])
+      .concat(STRICT ? ["--strict"] : []);
+    if (attachedCandidate) smokeRoot = mkdtempSync(path.join(tmpdir(), "outsider-install-smoke-"));
+    const env = smokeRoot ? { ...process.env, ...SUPERVISOR_HOOK_ENVIRONMENT,
+      OUTSIDER_ATTACHED_ROOT: smokeRoot, OUTSIDER_BUDGET_MS: "12000" }
+      : { ...process.env, ...SUPERVISOR_HOOK_ENVIRONMENT };
     const out = execFileSync(process.execPath, argv, { encoding: "utf8", timeout: 15000, env,
-      input: JSON.stringify(s.key === "claude-code"
+      input: JSON.stringify(attachedCandidate
         ? { _outsiderAttachedPing: true, hook_event_name: "SessionStart",
           session_id: "install-smoke", cwd: HERE }
         : { tool_name: "Bash", tool_input: { command: "ls" }, cwd: HERE }) });
@@ -196,8 +273,8 @@ for (const s of SURFACES) {
       try { process.kill(descriptor.pid, "SIGTERM"); } catch { /* already stopped */ }
     }
     ran = true;
-    say(s.key === "claude-code"
-      ? "    ✓ 正常 hook 已自动启动 sidecar，并完成健康握手"
+    say(attachedCandidate
+      ? `    ✓ ${s.key === "codex" ? "候选 attached" : "正常"} hook 已自动启动 sidecar，并完成健康握手`
       : "    ✓ observer hook 命令实际跑通，返回合法 JSON");
   } catch (e) {
     say(`    ✗ 钩子写进去了,但跑不起来:${String(e.message).slice(0, 200)}`);
@@ -206,8 +283,9 @@ for (const s of SURFACES) {
   if (!ran) failed.push(s.label);
   for (const r of merged.__removedLegacy ?? []) say(`      ⟲ 移除一条旧的 outsider 钩子(${r.why})`);
   if (landed && ran) done.push(s.label); else if (!landed) failed.push(s.label);
-  if (s.key === "codex") yours.push(["打开 Codex → 输入 /hooks → 信任 outsider 这一条。",
-    "没被信任的钩子会被静默跳过 —— 不报错、不提示、就是不跑。"]);
+  if (s.key === "codex") yours.push(["打开 Codex → 输入 /hooks → 逐项核对并信任 Outsider 当前必需的 6 个候选 hooks。",
+    "需要 SessionStart / UserPromptSubmit / PreToolUse / PostToolUse / PreCompact / Stop；"
+      + "缺一项或哈希变化都仍是未受控。"]);
 }
 
 if (SCOPE === "user" && !STAGE_ONLY) {
@@ -255,6 +333,7 @@ say(""); rule("═"); say("  ⚠ 我担保不了的"); rule("═");
 say("    · Claude 普通 Chat 不运行 hooks；Desktop 中受控面是 Claude Code 与 Cowork。Cowork 必须通过插件安装。\n"
   + "      若该版本/远程会话不触发 hooks，Outsider 会把 surface 标为未受控，不能提供 Stage 0.5 证明。");
 say("    · Codex 桌面版钩子近期有过回归(openai/codex#21639)。");
-say("    · Claude 控制面失联时 PreToolUse/Stop 会 fail-closed；Codex 当前仍是 observer，保持 fail-visible。 ");
+say("    · Claude 控制面失联时 PreToolUse/Stop 会 fail-closed；Codex 已有 attached 候选运输，"
+  + "但 0.144.5 不暴露 hook→item 精确身份且生产 receipt 尚未闭合，所以发布口径仍是未受控/observer。 ");
 say("    · 别挪这个文件夹,钩子里是绝对路径。挪了就重跑一次 node install.mjs。");
 say("");
