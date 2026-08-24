@@ -18,7 +18,7 @@ import {
 
 const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 
-function exactCertificate({ artifactBytes, version = pkg.version,
+function exactCertificate({ artifactBytes, pluginBytes, version = pkg.version,
   artifactHash = sha256Bytes(artifactBytes), claimBoundary } = {}) {
   const checks = Object.fromEntries(PUBLIC_DETERMINISTIC_CHECKS.map((name) => [name, {
     ok: true,
@@ -34,6 +34,13 @@ function exactCertificate({ artifactBytes, version = pkg.version,
     schema: "outsider/stage05-release-certificate/v1",
     product: { name: pkg.name, version },
     artifact: { file: `${pkg.name}-${version}.tgz`, sha256: artifactHash },
+    coworkPluginArtifact: {
+      file: `${pkg.name}-${version}-claude.plugin.zip`,
+      sha256: sha256Bytes(pluginBytes),
+      byteLength: pluginBytes.length,
+      layoutValidation: "PASS",
+      memberCount: 7,
+    },
     environment: {
       hostname: "alice-mbp",
       home: "/Users/alice",
@@ -52,7 +59,7 @@ function fixture(t, options = {}) {
   t.after(() => rmSync(root, { recursive: true, force: true }));
   const artifactBytes = Buffer.from("exact npm archive bytes");
   const pluginBytes = Buffer.from("exact plugin archive bytes");
-  const certificate = exactCertificate({ artifactBytes, ...options });
+  const certificate = exactCertificate({ artifactBytes, pluginBytes, ...options });
   const certificatePath = path.join(root, `release-certificate-${certificate.product.version}.json`);
   const npmArtifactPath = path.join(root,
     `${pkg.name}-${certificate.product.version}.tgz`);
@@ -135,6 +142,17 @@ test("public release metadata rejects an npm archive that does not match the exa
   }), /PUBLIC_RELEASE_NPM_ARTIFACT_HASH_MISMATCH/);
 });
 
+test("public release metadata rejects a same-name Cowork ZIP swapped after certification", (t) => {
+  const value = fixture(t);
+  writeFileSync(value.pluginArtifactPath, "different same-name plugin bytes");
+  assert.throws(() => writePublicReleaseMetadata({
+    certificatePath: value.certificatePath,
+    npmArtifactPath: value.npmArtifactPath,
+    pluginArtifactPath: value.pluginArtifactPath,
+    outputDirectory: value.root,
+  }), /PUBLIC_RELEASE_PLUGIN_ARTIFACT_HASH_MISMATCH/);
+});
+
 test("public release metadata rejects unreviewed claim-boundary text instead of copying it", (t) => {
   const value = fixture(t, { claimBoundary: ["contact alice@example.com for the private path"] });
   assert.throws(() => writePublicReleaseMetadata({
@@ -147,19 +165,61 @@ test("public release metadata rejects unreviewed claim-boundary text instead of 
 
 test("the release metadata CLI writes the same constrained public artifacts", (t) => {
   const value = fixture(t);
+  const uploadDirectory = path.join(value.root, "public-upload");
   const result = spawnSync(process.execPath, [
     "scripts/stage05-public-release-metadata.mjs",
     "--certificate", value.certificatePath,
     "--artifact", value.npmArtifactPath,
     "--plugin", value.pluginArtifactPath,
-    "--out-dir", value.root,
+    "--out-dir", uploadDirectory,
   ], { cwd: path.resolve("."), encoding: "utf8" });
   assert.equal(result.status, 0, result.stderr);
   const output = JSON.parse(result.stdout);
   assert.equal(output.releaseDecision, "PRIVATE_BETA_READY");
   assert.equal(output.stablePublicReleaseReady, false);
-  assert.equal(path.dirname(output.publicCertificate), value.root);
-  assert.equal(path.dirname(output.sha256Sums), value.root);
+  assert.equal(path.dirname(output.publicCertificate), uploadDirectory);
+  assert.equal(path.dirname(output.sha256Sums), uploadDirectory);
+  assert.equal(output.publicUploadDirectory, uploadDirectory);
+  assert.equal(output.publicUploadManifest.memberCount, 4);
+  assert.equal(output.publicUploadManifest.privateCertificateExcluded, true);
+  const expected = [
+    "SHA256SUMS",
+    `${pkg.name}-${pkg.version}-claude.plugin.zip`,
+    `${pkg.name}-${pkg.version}.tgz`,
+    `release-certificate-public-${pkg.version}.json`,
+  ].sort();
+  assert.deepEqual(readdirSync(uploadDirectory).sort(), expected);
+  assert.deepEqual(output.publicUploadManifest.members.map((member) => member.file).sort(),
+    expected);
+  assert.deepEqual(readFileSync(path.join(uploadDirectory,
+    `${pkg.name}-${pkg.version}.tgz`)), value.artifactBytes);
+  assert.deepEqual(readFileSync(path.join(uploadDirectory,
+    `${pkg.name}-${pkg.version}-claude.plugin.zip`)), value.pluginBytes);
+  for (const member of output.publicUploadManifest.members) {
+    const bytes = readFileSync(path.join(uploadDirectory, member.file));
+    assert.equal(member.sha256, sha256Bytes(bytes), member.file);
+    assert.equal(member.byteLength, bytes.length, member.file);
+  }
+  assert.equal(readdirSync(uploadDirectory).includes(`release-certificate-${pkg.version}.json`),
+    false);
+  assert.equal(readFileSync(path.join(uploadDirectory, "SHA256SUMS"), "utf8")
+    .includes(`release-certificate-${pkg.version}.json`), false);
+});
+
+test("exact public upload staging refuses a directory containing any extra member", (t) => {
+  const value = fixture(t);
+  const uploadDirectory = path.join(value.root, "public-upload-with-extra");
+  mkdirSync(uploadDirectory);
+  writeFileSync(path.join(uploadDirectory, "release-certificate-PRIVATE.json"), "never upload\n");
+  assert.throws(() => writePublicReleaseMetadata({
+    certificatePath: value.certificatePath,
+    npmArtifactPath: value.npmArtifactPath,
+    pluginArtifactPath: value.pluginArtifactPath,
+    outputDirectory: uploadDirectory,
+    trustedOutputRoot: value.root,
+    stagePublicUploadSet: true,
+  }), /PUBLIC_RELEASE_UPLOAD_DIRECTORY_NOT_EMPTY/);
+  assert.deepEqual(readdirSync(uploadDirectory), ["release-certificate-PRIVATE.json"]);
 });
 
 test("random exclusive output temps ignore the old predictable temp symlink", (t) => {

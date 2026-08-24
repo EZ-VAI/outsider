@@ -45,7 +45,7 @@ Outsider 不替 Claude 执行模型生成的命令，也不会把“最终结果
 | Claude Desktop Cowork（macOS） | 需要同一 Release 的 plugin ZIP、本机 helper 与真实握手 |
 | 远程 Cowork | 仅在该会话实际可达 helper 并留下 conformance 记录后支持 |
 | 普通 Claude Chat | 不支持；该 surface 不运行所需 hooks |
-| Codex CLI / Desktop / IDE | ChatGPT/Codex 通用插件与 companion runtime 均可安装；必须在 `/hooks` 核对并信任精确 hook hash，且用真实 receipt 证明；hosted tools 与部分特殊路径不经过 hooks |
+| Codex CLI / Desktop / IDE | ChatGPT/Codex 通用插件与 companion runtime 均可安装；精确 1.3.99 源码 runtime 的一条 project-local 实机链路已经做到：绑定并独立核验一个只读子 Agent、拦截红色 Stop、送达并确认有限纠正、修复后独立复验转绿、第二次 Stop 放行、`SAFE_DELIVERY` 封存及 63-event 哈希链验证；用户仍必须在 `/hooks` 核对并信任精确 hook hash，hosted tools 与部分特殊路径不经过 hooks |
 | ChatGPT Chat / Work | 插件包在开放本地插件源的账户/工作区中具备结构安装资格，但尚未完成 ChatGPT Desktop 实机安装；普通 ChatGPT 对话没有通用 pre/post/stop 生命周期，因此不是完整 Stage 0.5 全局受控 |
 | DeepSeek Harness | 研究型 cooperative delivery adapter；不声明 production semantic effect 或恶意 worker/OS attestation |
 | Trae、CodeBuddy | observer / wrapper only；不在受控闭环承诺内 |
@@ -56,21 +56,28 @@ Outsider 不替 Claude 执行模型生成的命令，也不会把“最终结果
 Codex 的 hosted tools 与部分 specialized path 可能绕过该 hook；对已有 unified exec session
 调用 `write_stdin` 也不会再次触发 `PreToolUse`。因此 Codex hooks 是 guardrail，不是完整工具或 OS sandbox。
 
+本次测试中的 Codex 宿主只暴露并信任了 10 个 project hook 定义，没有暴露当前 Codex
+hook 文档中列出的 `SessionEnd`。`SessionEnd` 是 advisory 事件，它的输出不能纠正 Codex，
+也不能让任务继续保持打开。因此 Outsider 会把缺失项明确报告为宿主能力缺口，不会声称
+11-event 生命周期覆盖已经建立。上面的实机结果证明的是有实际后果的合同、工具、纠正、
+Stop、复验与终态封存链路，不代表每一条文档事件或 hosted path 都已触发过。
+
 ## 安装
 
-需要 Node.js 20 或更高版本。**只有在经过审查的 v1.3.98 release 已实际发布后**，才从
+需要 Node.js 20 或更高版本。**只有在经过审查的 v1.3.99 release 已实际发布后**，才从
 [GitHub Release](https://github.com/EZ-VAI/outsider/releases) 下载下列同一 release 的文件。
-在此之前请使用下方本地源码 staging 流程，不要把 `latest` 页面误当成 v1.3.98 安装包：
+在此之前请使用下方本地源码 staging 流程，不要把 `latest` 页面误当成 v1.3.99 安装包：
 
-- `outsider-guard-1.3.98.tgz`；
-- `SHA256SUMS`；
-- 若使用 Cowork，再下载 `outsider-guard-1.3.98-claude.plugin.zip`。
+- `outsider-guard-1.3.99.tgz`；
+- 若使用 Cowork，再下载 `outsider-guard-1.3.99-claude.plugin.zip`；
+- `release-certificate-public-1.3.99.json`；
+- `SHA256SUMS`。
 
 先核对下载文件的 SHA-256，再从一个**不依赖当前 Claude/Cowork 会话**的独立终端安装：
 
 ```bash
-shasum -a 256 outsider-guard-1.3.98.tgz
-npm install -g ./outsider-guard-1.3.98.tgz
+shasum -a 256 outsider-guard-1.3.99.tgz
+npm install -g ./outsider-guard-1.3.99.tgz
 outsider install --scope user
 # 重启宿主并开始一个真实会话，然后运行：
 outsider doctor --json
@@ -81,7 +88,7 @@ outsider doctor --json
 如果 npm 全局目录报 `EACCES`，请使用用户可写的 npm prefix，不要用 `sudo` 安装：
 
 ```bash
-npm install -g --prefix "$HOME/.local" ./outsider-guard-1.3.98.tgz
+npm install -g --prefix "$HOME/.local" ./outsider-guard-1.3.99.tgz
 export PATH="$HOME/.local/bin:$PATH"
 outsider install --scope user
 # 重启宿主并开始一个真实会话，然后运行：
@@ -137,16 +144,16 @@ CodeBuddy、Trae 等 standalone/legacy adapter 不读取仓库可写的 `.outsid
 controller/RunStore 路径能执行命令。它们仍是 observer/unsupported surface。
 
 也可以从源码验证并安装。经过审查的 tag 发布后，必须把 checkout 精确绑定到该 tag；
-tag 尚不存在时只能使用现有的已审查本地 checkout，不能把持续变化的远端 `main` 当成 v1.3.98：
+tag 尚不存在时只能使用现有的已审查本地 checkout，不能把持续变化的远端 `main` 当成 v1.3.99：
 
 ```bash
-git clone --branch v1.3.98 --depth 1 https://github.com/EZ-VAI/outsider.git
+git clone --branch v1.3.99 --depth 1 https://github.com/EZ-VAI/outsider.git
 cd outsider
 npm ci
 npm test
 npm run test:corpus
-node scripts/stage05-public-package.mjs --out /tmp/outsider-stage05-public-1.3.98
-npm install -g /tmp/outsider-stage05-public-1.3.98
+node scripts/stage05-public-package.mjs --out /tmp/outsider-stage05-public-1.3.99
+npm install -g /tmp/outsider-stage05-public-1.3.99
 outsider install --scope user
 ```
 
@@ -167,10 +174,10 @@ codex plugin marketplace add /path/to/outsider
 codex plugin add outsider-stage05@outsider
 ```
 
-在审过的 `v1.3.98` Git tag **确实发布以后**：
+在审过的 `v1.3.99` Git tag **确实发布以后**：
 
 ```bash
-codex plugin marketplace add EZ-VAI/outsider --ref v1.3.98
+codex plugin marketplace add EZ-VAI/outsider --ref v1.3.99
 codex plugin add outsider-stage05@outsider
 ```
 
@@ -183,8 +190,8 @@ hook 已配置、hook 已信任、runtime seen 与 controlled 是六种不同状
 上面的 Codex CLI 命令可以注册审过的 repo marketplace，但 ChatGPT 插件必须在 ChatGPT
 Desktop 界面中安装和测试：
 
-1. 将审过的 `v1.3.98` checkout 作为当前仓库，或先运行
-   `codex plugin marketplace add EZ-VAI/outsider --ref v1.3.98` 注册 marketplace；
+1. 将审过的 `v1.3.99` checkout 作为当前仓库，或先运行
+   `codex plugin marketplace add EZ-VAI/outsider --ref v1.3.99` 注册 marketplace；
 2. 重启 ChatGPT Desktop；
 3. 打开 Plugins Directory，选择 **Outsider** marketplace source，安装
    **Outsider Stage 0.5**；
@@ -208,7 +215,7 @@ Cowork 还需要两部分：
 
 1. `outsider install --scope user` 注册本机 macOS helper；
 2. 在 Claude Desktop 的 plugin 管理界面上传同一 Release 的
-   `outsider-guard-1.3.98-claude.plugin.zip`，然后新建 Cowork 会话。
+   `outsider-guard-1.3.99-claude.plugin.zip`，然后新建 Cowork 会话。
 
 plugin 是经过认证的薄客户端，controller 状态由 sandbox 外的 helper 持有。如果远程 Cowork 无法访问本机 helper，Outsider 会把
 该会话标为 unsupported，而不是 fail-closed 拦死所有工具调用。

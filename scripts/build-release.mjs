@@ -42,9 +42,12 @@ try {
   const npmStage = path.join(verifyRoot, "public-npm-stage");
   const staged = stagePublicNpmPackage({ sourceRoot: root, targetRoot: npmStage });
   if (staged.package.private !== false
-    || staged.manifest.excluded.localStages1Through4 !== true
-    || staged.manifest.excluded.realityStewardshipResearch !== true
-    || staged.manifest.excluded.rawAndCanonicalArtifacts !== true) {
+    || staged.manifest.excluded.nonStage05Assets !== true
+    || staged.manifest.excluded.privateDataAndRuns !== true
+    || staged.manifest.excluded.internalPlanning !== true
+    || staged.manifest.included.stage05Runtime !== true
+    || staged.manifest.dependencyPathSetSha256
+      !== staged.profile.dependencyPathSetSha256) {
     throw new Error("RELEASE_PUBLIC_PACKAGE_BOUNDARY_INVALID");
   }
   const packed = JSON.parse(run("npm", ["pack", "--json", "--pack-destination", output],
@@ -91,7 +94,7 @@ try {
     chatgptGlobalLifecycleInterceptionEstablished: false,
     codexControlledByInstallationAlone: false,
     publicPackageMembers: staged.manifest.memberCount,
-    localResearchExcluded: true }, null, 2)}\n`);
+    nonStage05AssetsExcluded: true }, null, 2)}\n`);
 } finally {
   rmSync(verifyRoot, { recursive: true, force: true });
 }

@@ -12,7 +12,8 @@ DeepSeek, Codex and Trae retain their own local permissions. The global plane
 can observe signed checkpoints, report stale or blocked work, verify bilateral
 handoffs and accumulate research evidence. It cannot execute supervisor prose,
 grant a tool, declare a semantic outcome on an observer-only host, establish
-institutional independence, price risk, issue coverage or move money.
+institutional independence, or make downstream operational or financial
+decisions.
 
 ## Current capability ceilings
 
@@ -135,26 +136,18 @@ ceiling. `createProviderWayDescriptor` binds the adapter, runtime, provider,
 topology, model, data and toolchain roots before signing. These convenience
 producers never relax the underlying federation verifier or grant authority.
 
-## What reaches the learning and clearing pipeline
+## Research-export boundary
 
 Every verified packet creates one `outsider/federated-supervision/v1` record.
 Every plan-aware monitor snapshot also creates one
 `outsider/federated-task-supervision/v1` record with task status, dependency
-waiting, blockers, staleness and operator count. The packet record is admitted
-to the existing Stage 1 routing-research path; the new task record is an
-explicit, content-addressed input for the next routing/liveness corpus adapter.
-Neither is silently fed into the local causal-effect behavior model. Both are
-excluded from:
+waiting, blockers, staleness and operator count. These records remain local
+unless an operator uses an explicit, consented export path. They are not
+silently fed into a model and do not establish causal effect, independent
+reliability, incident severity, or authority for a downstream decision.
 
-- causal-effect learning;
-- independent reliability denominators;
-- incident frequency or loss severity;
-- PRICE, GUARANTEE and SETTLE.
-
-This keeps useful operational data without laundering correlated development
-runs into insurance evidence. Production promotion still requires unrelated
-external operators, adjudicated loss-bearing windows, complete exposure
-denominators, fraud review and independent frozen holdouts.
+This preserves useful operational evidence without treating correlated
+development runs as independent field evidence.
 
 ## Evidence boundary
 
@@ -165,4 +158,4 @@ but it is not a four-company field run.
 They do not establish that Codex, DeepSeek, Claude and Trae from four independent
 companies have completed a real field chain. That needs four separately governed
 operators, a frozen case, real provider runs, independently exchanged signatures
-and the immutable R1–R5 field gates for the packaged Outsider version.
+and independent field validation of the packaged Outsider version.

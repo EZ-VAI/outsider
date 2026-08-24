@@ -9,10 +9,11 @@ import { validateOpenAIUniversalPlugin } from "../scripts/openai-universal-plugi
 
 const ROOT = path.resolve(".");
 const PLUGIN = path.join(ROOT, "plugins", "outsider-stage05");
+const PACKAGE = JSON.parse(readFileSync(path.join(ROOT, "package.json"), "utf8"));
 
 test("OpenAI universal plugin is marketplace-wired and surface-honest", () => {
   assert.deepEqual(validateOpenAIUniversalPlugin({ root: ROOT }), {
-    ok: true, errors: [], plugin: "outsider-stage05", version: "1.3.98", memberCount: 6,
+    ok: true, errors: [], plugin: "outsider-stage05", version: PACKAGE.version, memberCount: 6,
     chatgptGlobalLifecycleInterceptionEstablished: false,
     codexControlledByInstallationAlone: false,
   });
@@ -22,7 +23,7 @@ test("OpenAI universal plugin is marketplace-wired and surface-honest", () => {
     ".agents", "plugins", "marketplace.json"), "utf8"));
   assert.equal(manifest.name, "outsider-stage05");
   assert.equal(manifest.skills, "./skills/");
-  assert.equal(manifest.version, "1.3.98");
+  assert.equal(manifest.version, PACKAGE.version);
   assert.match(manifest.interface.longDescription, /companion runtime/i);
   assert.match(manifest.interface.longDescription, /full control/i);
   assert.deepEqual(manifest.interface.defaultPrompt, [

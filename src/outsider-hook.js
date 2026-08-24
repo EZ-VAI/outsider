@@ -163,8 +163,8 @@ export { classifyToolCall, trajectoryFromTranscript, eventsFromTranscriptLine };
  * A ProcessCard on every tool call would put v49 in the hot path for the ~98.5%
  * of calls that are waved through, to describe a run nobody questioned. The rule
  * that costs nothing and loses nothing is: EVERY TIME THE FOREMAN SPEAKS, THE
- * LADDER GETS A RECORD. A Stage 0.5 card is exactly the atom `attestStage1`
- * consumes, so an intervention is now attestable instead of evaporating into a
+ * LADDER GETS A RECORD. A Stage 0.5 card is the atom consumed by downstream
+ * attestation, so an intervention is attestable instead of evaporating into a
  * stderr line — which is what "this is one product, not two" has to mean
  * concretely.
  *
@@ -1524,6 +1524,11 @@ const OUTPUT_BY_AGENT = {
   codebuddy: toCodeBuddyHookOutput,
 };
 
+const CODEX_HOOK_EVENTS = new Set([
+  "SessionStart", "SessionEnd", "UserPromptSubmit", "PreToolUse", "PermissionRequest",
+  "PostToolUse", "PreCompact", "PostCompact", "SubagentStart", "SubagentStop", "Stop",
+]);
+
 /* the operator's strict switch, honoured wherever the hook output is built */
 export function hookOutputFor(agent, decision, opts = {}) {
   const fn = OUTPUT_BY_AGENT[agent] ?? toClaudeCodeHookOutput;
@@ -1732,6 +1737,9 @@ export function handleHookInvocation({ agent = "claude-code", input = {}, contra
   world, strict = false, env = process.env, spawnFn = spawn } = {}) {
   /* Stop / SubagentStop arrive on the same entry point and carry no tool */
   const ev = String(input.hook_event_name ?? input.hookEventName ?? "");
+  if (agent === "codex" && !CODEX_HOOK_EVENTS.has(ev)) {
+    throw new Error(`UNSUPPORTED_HOOK_EVENT:${ev || "missing"}`);
+  }
   if (ev === "Stop" || ev === "SubagentStop") {
     const out = handleStopHook({ input, agent });
     return { decision: { verdict: out.decision === "block" ? "warn" : "allow",
@@ -1742,8 +1750,12 @@ export function handleHookInvocation({ agent = "claude-code", input = {}, contra
      could manufacture a second "decision" over an already completed action.
      Installed Codex control routes them through the attached controller; this
      standalone fallback is deliberately transparent and non-authoritative. */
-  if (["SessionStart", "UserPromptSubmit", "PostToolUse", "PreCompact"].includes(ev)) {
-    return { decision: { verdict: "allow", reason: "standalone lifecycle observation only" },
+  if (["SessionStart", "SessionEnd", "UserPromptSubmit", "PermissionRequest",
+    "PostToolUse", "PreCompact", "PostCompact", "SubagentStart"].includes(ev)) {
+    return { decision: { verdict: ev === "PermissionRequest" ? "defer" : "allow",
+      reason: ev === "PermissionRequest"
+        ? "native permission decision remains with the host and operator"
+        : "standalone lifecycle observation only" },
       output: {} };
   }
   const toolName = input.tool_name ?? input.toolName ?? "";

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createHash } from "node:crypto";
 import {
-  existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync,
+  existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import os from "node:os";
@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import {
   assessReleaseReadiness,
   certifyEnduranceRun,
+  writePrivateReleaseCertificate,
 } from "../src/outsider-release-certification.js";
 import {
   certifyAgentTeamEvidence,
@@ -23,6 +24,7 @@ import {
   verifySecondMachineConformance,
 } from "../src/outsider-second-machine-conformance.js";
 import { validateOpenAIUniversalPlugin } from "./openai-universal-plugin-validate.mjs";
+import { validateClaudeHostedPluginLayout } from "./claude-plugin-package.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const pkg = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
@@ -61,6 +63,51 @@ function sha256(file) {
   return `sha256:${createHash("sha256").update(readFileSync(file)).digest("hex")}`;
 }
 
+function sameFileIdentity(left, right) {
+  return left.isFile() && right.isFile() && !left.isSymbolicLink() && !right.isSymbolicLink()
+    && left.dev === right.dev && left.ino === right.ino && left.size === right.size
+    && left.mtimeMs === right.mtimeMs && left.ctimeMs === right.ctimeMs;
+}
+
+function validateCoworkPluginArtifact(pluginArtifact, installation) {
+  const before = lstatSync(pluginArtifact);
+  if (!before.isFile() || before.isSymbolicLink()) {
+    throw new Error(`RELEASE_CLAUDE_PLUGIN_FILE_INVALID:${pluginArtifact}`);
+  }
+  const bytes = readFileSync(pluginArtifact);
+  const after = lstatSync(pluginArtifact);
+  if (!sameFileIdentity(before, after) || bytes.length !== after.size) {
+    throw new Error(`RELEASE_CLAUDE_PLUGIN_IDENTITY_CHANGED:${pluginArtifact}`);
+  }
+  const validationArchive = path.join(installation, "cowork-plugin-validation.zip");
+  const extracted = path.join(installation, "cowork-plugin-validation");
+  writeFileSync(validationArchive, bytes, { flag: "wx", mode: 0o600 });
+  const listed = execute("unzip", ["-Z1", validationArchive], { captureFullStdout: true });
+  if (!listed.ok) {
+    throw new Error(`RELEASE_CLAUDE_PLUGIN_ARCHIVE_INVALID:${listed.stderrTail || listed.stdoutTail}`);
+  }
+  const archiveMembers = listed.stdout.trim().split("\n").filter(Boolean).sort();
+  mkdirSync(extracted, { mode: 0o700 });
+  const unzip = execute("unzip", ["-q", validationArchive, "-d", extracted]);
+  if (!unzip.ok) {
+    throw new Error(`RELEASE_CLAUDE_PLUGIN_ARCHIVE_INVALID:${unzip.stderrTail || unzip.stdoutTail}`);
+  }
+  const validation = validateClaudeHostedPluginLayout(extracted);
+  if (!validation.ok) {
+    throw new Error(`RELEASE_CLAUDE_PLUGIN_LAYOUT_INVALID:${validation.errors.join(",")}`);
+  }
+  if (JSON.stringify(archiveMembers) !== JSON.stringify(validation.archiveMembers)) {
+    throw new Error("RELEASE_CLAUDE_PLUGIN_MEMBER_SET_INVALID");
+  }
+  return {
+    file: path.basename(pluginArtifact),
+    sha256: `sha256:${createHash("sha256").update(bytes).digest("hex")}`,
+    byteLength: bytes.length,
+    layoutValidation: "PASS",
+    memberCount: validation.archiveMembers.length,
+  };
+}
+
 const options = parse(process.argv.slice(2));
 if (Boolean(options["cowork-state-root"]) !== Boolean(options["cowork-workspace"])) {
   throw new Error("COWORK_EVIDENCE_REQUIRES_STATE_ROOT_AND_WORKSPACE");
@@ -72,9 +119,22 @@ if (Boolean(options["second-machine-record"])
 const artifact = path.resolve(options.artifact
   || path.join(root, "dist", `${pkg.name}-${pkg.version}.tgz`));
 if (!existsSync(artifact)) throw new Error(`RELEASE_ARTIFACT_MISSING:${artifact}`);
+const pluginArtifact = path.resolve(options.plugin
+  || path.join(path.dirname(artifact), `${pkg.name}-${pkg.version}-claude.plugin.zip`));
+if (!existsSync(pluginArtifact)) throw new Error(`RELEASE_CLAUDE_PLUGIN_MISSING:${pluginArtifact}`);
+if (path.basename(pluginArtifact) !== `${pkg.name}-${pkg.version}-claude.plugin.zip`) {
+  throw new Error(`RELEASE_CLAUDE_PLUGIN_FILENAME_INVALID:${pluginArtifact}`);
+}
 const certificateFile = path.resolve(options.out
   || path.join(root, "dist", `release-certificate-${pkg.version}.json`));
 const installation = mkdtempSync(path.join(tmpdir(), "outsider-clean-install-"));
+let certifiedPluginArtifact;
+try {
+  certifiedPluginArtifact = validateCoworkPluginArtifact(pluginArtifact, installation);
+} catch (error) {
+  rmSync(installation, { recursive: true, force: true });
+  throw error;
+}
 const stateRoot = path.join(installation, "state");
 mkdirSync(stateRoot, { recursive: true });
 const primaryIdentity = machineIdentity({ platform: process.platform, arch: process.arch,
@@ -84,6 +144,7 @@ const certificate = {
   schema: "outsider/stage05-release-certificate/v1",
   product: { name: pkg.name, version: pkg.version },
   artifact: { file: path.basename(artifact), sha256: sha256(artifact) },
+  coworkPluginArtifact: certifiedPluginArtifact,
   environment: {
     node: process.version, platform: process.platform, arch: process.arch,
     sameMachineCleanPrefix: true,
@@ -395,12 +456,14 @@ try {
     && projectEvents.length === requiredAttachedEvents.length;
   certificate.checks.projectScopedInstall.ok = certificate.checks.projectScopedInstall.semanticOk;
   certificate.checks.projectScopedInstall.installedEvents = projectEvents;
-  const pluginArtifact = path.join(path.dirname(artifact),
-    `${pkg.name}-${pkg.version}-claude.plugin.zip`);
   certificate.checks.desktopPluginPackage = {
-    ok: existsSync(pluginArtifact),
-    status: existsSync(pluginArtifact) ? 0 : 1,
-    artifact: existsSync(pluginArtifact) ? path.basename(pluginArtifact) : null,
+    ok: true,
+    status: 0,
+    artifact: certifiedPluginArtifact.file,
+    sha256: certifiedPluginArtifact.sha256,
+    byteLength: certifiedPluginArtifact.byteLength,
+    layoutValidation: certifiedPluginArtifact.layoutValidation,
+    memberCount: certifiedPluginArtifact.memberCount,
   };
   const universalPlugin = validateOpenAIUniversalPlugin({ root: installedRoot });
   certificate.checks.openAIUniversalPluginPackage = {
@@ -411,11 +474,12 @@ try {
     codexControlledByPackageValidationAlone: false,
   };
   certificate.fieldEvidence.desktopCoworkPlugin = {
-    status: existsSync(pluginArtifact) ? "PACKAGED_NOT_CONFORMED" : "MISSING",
-    artifact: existsSync(pluginArtifact) ? path.basename(pluginArtifact) : null,
+    status: "PACKAGED_NOT_CONFORMED",
+    artifact: certifiedPluginArtifact.file,
+    pluginSha256: certifiedPluginArtifact.sha256,
     reason: "Cowork host execution must be observed in a real Desktop session before claiming control",
   };
-  if (existsSync(pluginArtifact) && options["cowork-state-root"] && options["cowork-workspace"]) {
+  if (options["cowork-state-root"] && options["cowork-workspace"]) {
     const expectedPrompt = options["cowork-expected-prompt-file"]
       ? readFileSync(path.resolve(options["cowork-expected-prompt-file"]), "utf8").trim() : null;
     certificate.fieldEvidence.desktopCoworkPlugin = {
@@ -423,7 +487,8 @@ try {
         stateRoot: path.resolve(options["cowork-state-root"]),
         workspace: path.resolve(options["cowork-workspace"]), expectedPrompt,
       }, { expectedVersion: pkg.version, expectedRuntimeHashes: runtimeHashes }),
-      artifact: path.basename(pluginArtifact), pluginSha256: sha256(pluginArtifact),
+      artifact: certifiedPluginArtifact.file,
+      pluginSha256: certifiedPluginArtifact.sha256,
     };
   }
   if (options.live && claudeHostReady
@@ -484,8 +549,7 @@ try {
   certificate.releaseDecision = readiness.releaseDecision;
   certificate.stablePublicReleaseReady = readiness.stablePublicReleaseReady;
   certificate.certifiedAt = new Date().toISOString();
-  mkdirSync(path.dirname(certificateFile), { recursive: true });
-  writeFileSync(certificateFile, JSON.stringify(certificate, null, 2));
+  writePrivateReleaseCertificate(certificateFile, certificate);
   process.stdout.write(`${JSON.stringify({ certificate: certificateFile,
     releaseDecision: certificate.releaseDecision,
     stablePublicReleaseReady: certificate.stablePublicReleaseReady }, null, 2)}\n`);

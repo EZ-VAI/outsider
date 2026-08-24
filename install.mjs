@@ -105,14 +105,15 @@ const SURFACES = SCOPE === "project"
   : USER_SURFACES;
 
 say(""); rule("═");
-say("  Outsider Stage 0.5 —— 安装后透明监督 Claude 的长任务");
-say("  模式:transparent attached（照常使用 claude / Claude Desktop）");
+say("  Outsider Stage 0.5 —— 安装后透明监督 Claude / Codex 的长任务");
+say("  模式:transparent attached（照常使用 Claude Code / Claude Desktop / Codex）");
 rule("═"); say("");
 say(`  Node ${process.version} · ${platform()} · ${CHECK ? "体检模式" : STRICT ? "严格模式" : "标准模式"}`);
-say(`  安装 scope: ${SCOPE === "user" ? "user（本机所有 Claude 项目）" : `project（${PROJECT_ROOT}）`}`);
+say(`  安装 scope: ${SCOPE === "user" ? "user（本机 Claude / Codex 项目）" : `project（${PROJECT_ROOT}）`}`);
 if (SCOPE === "user") {
-  say(`  ⚠ 将写入 ${path.join(HOME, ".claude", "settings.json").replace(HOME, "~")}；下一次 hook 起全机生效。`);
-  say("    不要在你正依赖的 Claude/Cowork 会话里执行安装；请从独立终端安装并新开会话。");
+  say(`  ⚠ 存在对应宿主时，将写入 ${path.join(HOME, ".claude", "settings.json").replace(HOME, "~")}`
+    + ` 和 ${path.join(HOME, ".codex", "hooks.json").replace(HOME, "~")}；下一次新会话起生效。`);
+  say("    不要在你正依赖的 Claude/Cowork/Codex 会话里执行安装；请从独立终端安装并新开会话。");
   say(SUPERVISOR_COMMAND
     ? "  ✓ 已显式配置并同意 external supervisor；Claude/Codex hook 与 Cowork helper 都已持久化双门，只传递最小化/脱敏投影。"
     : "  ✓ 默认 local-only/no-external；未配置或同意 external supervisor，不会发送 workspace/prompt/tool/output。");
@@ -274,7 +275,7 @@ for (const s of SURFACES) {
     }
     ran = true;
     say(attachedCandidate
-      ? `    ✓ ${s.key === "codex" ? "候选 attached" : "正常"} hook 已自动启动 sidecar，并完成健康握手`
+      ? `    ✓ ${s.key === "codex" ? "Codex attached" : "正常"} hook 已自动启动 sidecar，并完成健康握手`
       : "    ✓ observer hook 命令实际跑通，返回合法 JSON");
   } catch (e) {
     say(`    ✗ 钩子写进去了,但跑不起来:${String(e.message).slice(0, 200)}`);
@@ -283,14 +284,20 @@ for (const s of SURFACES) {
   if (!ran) failed.push(s.label);
   for (const r of merged.__removedLegacy ?? []) say(`      ⟲ 移除一条旧的 outsider 钩子(${r.why})`);
   if (landed && ran) done.push(s.label); else if (!landed) failed.push(s.label);
-  if (s.key === "codex") yours.push(["打开 Codex → 输入 /hooks → 逐项核对并信任 Outsider 当前必需的 6 个候选 hooks。",
-    "需要 SessionStart / UserPromptSubmit / PreToolUse / PostToolUse / PreCompact / Stop；"
-      + "缺一项或哈希变化都仍是未受控。"]);
+  if (s.key === "codex") yours.push(["打开 Codex → 输入 /hooks → 核对并信任 Outsider 的 10 个 Stage 0.5 核心 hooks。",
+    "核心面是 SessionStart / UserPromptSubmit / PreToolUse / PermissionRequest / PostToolUse /"
+      + " PreCompact / PostCompact / SubagentStart / SubagentStop / Stop；"
+      + "任一项缺失或哈希变化都不能宣称核心控制面完整。",
+    "SessionEnd 也会注册，但它是 best-effort advisory；宿主不暴露它时会报告能力缺口，"
+      + "不否定上面 10 个 consequential 控制事件。"]);
 }
 
-if (SCOPE === "user" && !STAGE_ONLY) {
+if (SCOPE === "user" && !STAGE_ONLY && !CHECK) {
   yours.push([`Claude 桌面版 Cowork 标签页:设置 → 插件 → 从目录安装 → 选 ${PLUGIN_TARGET}`,
     "装完在会话里运行 /reload-plugins。插件是薄客户端；系统 helper 已由本次安装显式注册。"]);
+} else if (SCOPE === "user" && CHECK) {
+  yours.push([`Claude 桌面版 Cowork 真实安装时：设置 → 插件 → 从目录安装 → 选 ${PLUGIN_TARGET}`,
+    "--check 未写入插件也未注册 helper；去掉 --check 的真实安装完成后再运行 /reload-plugins。"]);
 } else if (SCOPE === "user") {
   yours.push(["这是隔离发布认证安装；LaunchAgent 没有注册，不能当作真实 Cowork 安装。",
     "真实用户安装必须省略 --stage-only，并在新会话中完成宿主 conformance。"]);
@@ -298,8 +305,9 @@ if (SCOPE === "user" && !STAGE_ONLY) {
   yours.push(["project scope 只覆盖当前仓库的 Claude Code / Desktop Code。",
     "Cowork 必须另行上传发布包里的 .plugin.zip；普通 Chat 仍不运行 hooks。"]);
 }
-yours.push(["可选验证 —— 照常启动一次 claude 并提交一个项目任务，然后运行 outsider doctor。",
-  "native Claude 的 runtime 应显示 seen；这证明宿主真的触发过 hook，而不只是配置文件写在磁盘上。",
+yours.push(["可选验证 —— 在要验证的 Claude 或 Codex 宿主中新开一个项目任务，然后运行 outsider doctor。",
+  "runtime seen 证明宿主真的触发过 hook，而不只是配置文件写在磁盘上。"
+    + "Codex 的 consequential closed-loop 运行与严格 source-bound app-server 控制评估是两个独立字段，不要混用。",
   "普通 Chat 不触发 hook；Cowork 的 runtime 证明必须来自 Cowork 自己的会话环境。"]);
 
 if (failed.length) {
@@ -322,7 +330,7 @@ if (CHECK) {
   rule("═");
   say(STAGE_ONLY
     ? "    这只证明可安装字节和 hook 配置；不声称系统 helper 或真实宿主已运行。"
-    : "    Claude Code transparent attached 控制链已安装；无需改用 outsider run。");
+    : "    Claude Code / Codex transparent attached 控制链已安装；无需改用 outsider run。");
   say("    sidecar 运输已实测，完整 Stage 0.5 readiness 仍以 outsider doctor 和首次真实会话 conformance 为准。");
 }
 for (const d of done) say(`    ✓ ${d}`);
@@ -332,8 +340,10 @@ yours.forEach((b, i) => { say(""); say(`  ${i + 1}. ${b[0]}`); b.slice(1).forEac
 say(""); rule("═"); say("  ⚠ 我担保不了的"); rule("═");
 say("    · Claude 普通 Chat 不运行 hooks；Desktop 中受控面是 Claude Code 与 Cowork。Cowork 必须通过插件安装。\n"
   + "      若该版本/远程会话不触发 hooks，Outsider 会把 surface 标为未受控，不能提供 Stage 0.5 证明。");
-say("    · Codex 桌面版钩子近期有过回归(openai/codex#21639)。");
-say("    · Claude 控制面失联时 PreToolUse/Stop 会 fail-closed；Codex 已有 attached 候选运输，"
-  + "但 0.144.5 不暴露 hook→item 精确身份且生产 receipt 尚未闭合，所以发布口径仍是未受控/observer。 ");
+say("    · Codex 宿主只对经用户在 /hooks 审阅且信任的精确 hook hash 执行控制；改版后需重新审阅。");
+say("    · Codex 的 hosted tools 和部分 specialized path 不经过本地 tool hooks；已存在 unified-exec session 上的"
+  + " write_stdin 不会再触发一次 PreToolUse。这是 guardrail，不是全工具或 OS sandbox 保证。");
+say("    · 已通过的 Codex bounded live run 闭合了具体 Stop/纠正/复验路径；doctor 的运行证据"
+  + " 不等于严格 source-bound app-server 评估，也不是对所有 Codex 行为的 100% 保证。");
 say("    · 别挪这个文件夹,钩子里是绝对路径。挪了就重跑一次 node install.mjs。");
 say("");

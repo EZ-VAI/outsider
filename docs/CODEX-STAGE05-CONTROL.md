@@ -2,98 +2,137 @@
 
 ## Current, claimable state
 
-Codex CLI 0.144.5 exposes the protocol pieces needed for a controlled candidate.
-The machine audited on 2026-08-21 has six enabled Outsider entries
-(`sessionStart`, `userPromptSubmit`, `preToolUse`, `postToolUse`, `preCompact`,
-and `stop`), but Codex reports every entry as `untrusted`. Therefore none fires
-and the current machine is **UNCONTROLLED / observation-only**. A schema, an
-installed file, or a caller-written Pre/Post/Stop array does not change that.
+Outsider's direct Codex runtime is no longer only an installable hook candidate.
+An isolated, project-local live task using the exact 1.3.99 source runtime
+closed one consequential Stage 0.5 loop:
 
-The repository now installs an opt-in authenticated path for future Codex
-sessions. It registers `SessionStart`, `UserPromptSubmit`, `PreToolUse`,
-`PostToolUse`, `PreCompact`, and `Stop` with the same command ending in
-`--attached-control`. The flag routes the hook through Outsider's authenticated
-local sidecar. The kernel uses the measured Codex rollout parser, rather than
-silently parsing Codex JSONL as Claude JSONL. This is implementation readiness,
-not a claim that a live host has already delivered every boundary.
+1. the first `Stop` found red acceptance and kept the task open;
+2. a fact-audited, bounded correction was emitted and observed;
+3. the worker changed only the fixture's permitted source file;
+4. the preregistered test turned green;
+5. the outcome-approval audit passed and the intervention resolved;
+6. the repaired `Stop` continued, the run finalized as `SAFE_DELIVERY` with
+   `proofComplete=true`, `deliveryComplete=true`, and
+   `interventionComplete=true`, and the 63-event hash chain verified.
 
-## Verifiable definition of done
+Run `6c28e828-0f23-4340-a87a-424c88dfbdd4` also bound one read-only child
+Agent to its delegated task, exact observed read, and transcript-bound report
+before recording `task_completed`. The sealed event-chain commitment is
+`sha256:77eb3315c5072db8ab32d61e602601c21a8472f70ceea2adbaa730c75e737740`;
+the manifest hash is
+`sha256:3f77f1cafb71be6e488839b355d86980045aaab0b484e1eec5153e730dba58e0`.
 
-| Requirement | Evidence accepted | Evidence not accepted |
-|---|---|---|
-| Session/context identity | app-server `thread/started` with thread, session, parent, and cwd identities, cross-bound to controller receipts | cwd or session supplied only by the caller |
-| Pre-action capture | trusted `preToolUse` hook completion carrying the same host item ID before that item starts, plus a signed controller receipt for the exact thread/turn/item | temporal adjacency inside a multi-item turn, a normalized `PreToolUse` object, or hook configuration alone |
-| Controller decision and intervention | host-recorded approval decline/cancel for the exact item, cross-bound to a trusted controller DENY/BLOCK receipt | an Outsider decision object with no host receipt |
-| Post/outcome | app-server item start/completion and `postToolUse` completion, cross-bound to an exact-item controller receipt | assistant prose saying the command ran |
-| Stop/finalization | host `stop` hook completion and turn completion, cross-bound to a controller Stop receipt | a process exit or final answer by itself |
-| Availability | each controller boundary records either an authenticated response or an explicit fail-visible outage; Pre/Stop in installed attached mode fail closed | timeout/nonzero/malformed hook output interpreted as success |
+Worker prose was not accepted as outcome evidence. The final allow was first
+persisted as a signed canonical controller receipt and was then projected to the
+native Codex empty-success envelope. The controller stopped and its socket was
+gone after the run.
 
-`LIFECYCLE_CONTROLLED` requires every row. `ACTION_CONTROLLED_PARTIAL` requires
-an exact native decline/cancel cross-bound to a trusted Outsider controller
-DENY/BLOCK receipt; a user decline or an unrelated hook block is not credited
-to Outsider. Everything else is `UNCONTROLLED`.
+This is a bounded live result for that consequential hook path. It is not a
+claim that every lifecycle event fired, every Codex tool is hookable, every
+long-running or multi-agent task is correct, or the worker is contained by an
+operating-system sandbox. The run binds the exact 1.3.99 runtime source; the
+tagged archive remains a separately rebuilt and certified distribution
+artifact rather than something inferred from the live task.
 
-## Source-bound evidence
+## Ten core events, plus one advisory event
 
-`src/outsider-codex-control-evidence.js` separates three authorities:
+Outsider installs all eleven lifecycle names in the current
+[official Codex Hooks documentation](https://learn.chatgpt.com/docs/hooks):
 
-1. the exact binary, generated schema, and `hooks/list` response are replayed;
-2. canonical app-server JSONL is projected hash-only and signed by an allow-listed
-   recorder, then replayed byte-for-byte during verification;
-3. controller receipts are independently Ed25519-signed and bind hashed
-   session/thread/turn/item identities, hook hash, input, decision, output, and
-   outcome.
+| Stage 0.5 role | Event |
+|---|---|
+| establish or resume session identity | `SessionStart` |
+| freeze the operator contract | `UserPromptSubmit` |
+| evaluate a local tool action before execution | `PreToolUse` |
+| observe or decide a native approval boundary | `PermissionRequest` |
+| bind the result of an observed local tool action | `PostToolUse` |
+| persist contract and state before compaction | `PreCompact` |
+| check continuity after compaction | `PostCompact` |
+| bind a delegated worker to the task graph | `SubagentStart` |
+| audit a delegated worker's terminal handoff | `SubagentStop` |
+| independently verify and allow or block completion | `Stop` |
 
-The signed trace intentionally contains no command, prompt, cwd, or output text.
-Those bytes remain in the local mode-0600 source trace and are required only for
-source replay. A random caller can sign its own trace, but verification rejects
-the signer unless its key ID is in the recorder trust store. Mutating the trace,
-reordering frames, crossing turns, substituting a controller key, omitting
-Post/Stop, or changing hook trust all fail closed or downgrade the status.
+Those ten events are the required Codex Stage 0.5 core inventory. Their exact
+Outsider command hashes must be reviewed in `/hooks`; a missing, disabled,
+untrusted, ambiguous, or detached core entry keeps the core inventory red.
 
-The 0.144.5 app-server `HookRunSummary` does not expose an exact tool item ID.
-Consequently ordering a hook before/after an item inside the same turn cannot
-close Pre/Post identity, and the current host cannot reach
-`LIFECYCLE_CONTROLLED` through this interface. Approval RPC is an exact
-pre-execution gate, but Codex emits an approval request for only some actions.
-Neither limitation is papered over with a caller claim.
+`SessionEnd` is installed as an eleventh, best-effort event with Codex's
+three-second maximum timeout. It can seal notes after a main thread ends, but
+the official contract defines it as advisory: its output cannot steer Codex or
+keep the thread open. The tested Desktop host exposed and trusted the ten core
+project hooks but did not expose `SessionEnd`. Outsider reports that as an
+advisory capability gap; the absence does not invalidate a consequential loop
+that was already controlled at `Stop`.
 
-The packaged attached hook now persists a controller receipt for each real
-Codex invocation. The private canonical source contains the exact hook payload
-and controller result; it is mode 0600, content-addressed, chained to the prior
-receipt, and replayed before the Ed25519 receipt is accepted. The public receipt
-is hash-only. A PreToolUse or Stop action fails closed if this evidence cannot
-be persisted. Other lifecycle hooks fail visibly so their app-server trace is
-red rather than silently complete.
+## Two evidence levels that must not be conflated
 
-That closes `LIVE_CONTROLLER_RECEIPTS_MISSING` when hooks actually fire; it does
-not close the 0.144.5 host-delivery gap. Hook stdin includes the exact
-`session_id` (the Rust `ThreadId`), `turn_id`, and `tool_use_id`, so the receipt
-can prove which payload Outsider evaluated. However, 0.144.5's app-server
-`HookRunSummary` omits `tool_use_id`, so the host trace cannot cross-bind that
-receipt to the same item. The receipt therefore permanently says
-`hostDeliveryObserved:false`. It also says
-`semanticRecoveryEstablished:false`: completion correctness and recovery remain
-separate Stage 0.5 evidence, not something a hook response can self-assert.
+### Product doctor and a verified attached run
 
-The machine-readable assessment keeps four claims separate:
+`outsider doctor --json` reports what the installed product can establish from
+its local configuration and Stage 0.5 run directories. For Codex it keeps these
+facts separate:
 
-1. `payload.canonicalHookSourceReplayed`: Outsider replayed the private hook
-   payload and response;
-2. `hostDelivery.exactActionCrossBinding`: Codex exposed enough native identity
-   to prove delivery to that action;
-3. `outsiderAttribution.trustedSignedReceipt`: the allow/block/observe decision
-   came from the trusted Outsider key;
-4. `semanticRecovery.established`: a separate causal/outcome proof exists.
+- the ten core hooks are configured;
+- the advisory `SessionEnd` hook is configured or absent;
+- a Codex runtime has been observed;
+- a source-verifiable Stage 0.5 run directory closed a consequential loop;
+- complete hosted/specialized tool coverage has not been established.
 
-On 0.144.5, (1) and (3) can be true while (2) and (4) remain false. That is a
-real improvement in evidence capture, not Claude parity.
+A verified run can therefore set `consequentialClosedLoopRunSeen=true` and
+`consequentialControlEvidenceVerification=FULL_STAGE05_RUN_DIRECTORY_VERIFIED`
+without setting `controlledRunSeen=true`. The doctor deliberately does not
+launder a run-ledger completion into strict host-control proof.
 
-For clients that already speak app-server JSON-RPC, the packaged
-`outsider-codex-app-server` executable is a transparent stdio bridge. It injects
-one `hooks/list` request after the client's `initialized` notification, on the
-same connection, proxies every other message unchanged, and seals the duplex
-source at exit:
+### Strict source-bound Codex control assessment
+
+`src/outsider-codex-control-evidence.js` answers a narrower and stricter
+question: can the exact native Codex host action be cross-bound to Outsider's
+decision using independently replayable sources? It requires all of the
+following:
+
+1. replay of the exact Codex binary, generated schemas, and same-connection
+   `hooks/list` response;
+2. a canonical app-server duplex source signed by an allow-listed recorder;
+3. mode-0600 canonical hook payload/result sources and independently signed,
+   hash-only controller receipts;
+4. matching session, thread, turn, hook hash, and exact action identity across
+   the host trace and controller receipts;
+5. the required pre-action, intervention, post-result, Stop, and fail-visible
+   availability chain.
+
+Only that source set can yield the strict `ACTION_CONTROLLED_PARTIAL` or
+`LIFECYCLE_CONTROLLED` assessment. The app-server schema used by the existing
+strict verifier did not expose an exact tool item identity in
+`HookRunSummary`, so temporal adjacency alone is rejected. The bounded direct
+live result remains real consequential evidence; it simply answers a different
+question from exact app-server item cross-binding.
+
+## Source-bound evidence design
+
+The strict verifier separates three authorities:
+
+1. provider capability metadata: binary, generated schema, and `hooks/list`;
+2. host behavior: a hash-only projection of the canonical app-server stream,
+   signed by an allow-listed recorder and replayed byte-for-byte;
+3. controller behavior: Ed25519-signed receipts binding hashed session, thread,
+   turn, item, hook hash, input, decision, output, and outcome fields.
+
+The public trace contains no prompt, command, cwd, or tool-output text. Those
+bytes remain in local mode-0600 canonical sources and are needed only for local
+replay. A caller-created trace, an assistant statement, hook configuration on
+disk, or a discovered hook is not accepted as provider delivery proof.
+
+The packaged attached hook persists its canonical controller decision before
+returning the native Codex output. `PreToolUse` and `Stop` fail closed when the
+consequential decision or receipt cannot be persisted. Passive lifecycle
+failures remain visible instead of silently becoming green. A missing
+`SessionEnd`, however, cannot retroactively steer or reopen a completed thread
+and is therefore reported separately from the ten-event core inventory.
+
+For app-server clients, the packaged `outsider-codex-app-server` executable is
+a transparent stdio bridge. It injects one `hooks/list` request after the
+client's `initialized` notification, proxies every other message unchanged,
+and seals the duplex source at exit:
 
 ```sh
 outsider-codex-app-server \
@@ -106,21 +145,32 @@ outsider-codex-app-server \
   --app-server-schema ./codex-worker-capability-probe.json.app-server-schema.json
 ```
 
-The bridge refuses to seal if the binary/schema/hook-list replay differs from
-the probe, if the same-connection hook list is missing, or if any output path
-already exists. Alongside the requested trace it writes
-`<trace>.readiness.json` (or `--assessment <path>`). On the same initialized
-connection it writes a private hook-metadata snapshot for the attached hook
-process, pins the separate local controller public key before starting Codex,
-and loads only source-replayed receipts for thread IDs
-observed in that trace. The recorder private key is never inherited by Codex or
-model-launched tools. Missing runtime receipts and host identity fields remain
-machine-visible. It never adds
-`--dangerously-bypass-hook-trust`. It also never
-starts a thread or model itself; the connected client owns any such request.
-Desktop/CLI sessions not launched through this bridge may not expose equivalent
-raw app-server frames, so they remain below full parity unless another official
-source provides the same evidence.
+The bridge refuses to seal when the binary/schema/hook-list replay differs from
+the probe, the same-connection hook list is missing, or an output path already
+exists. It never passes `--dangerously-bypass-hook-trust`, never starts a thread
+or model itself, and never gives the model or Codex process the recorder private
+key.
+
+## Tool-path boundary
+
+The official hook path currently covers shell calls, unified `exec_command`,
+`apply_patch`, MCP tools, and most other local function tools. It does not imply
+complete tool control:
+
+- hosted tools such as `WebSearch` do not traverse the local function-tool hook
+  path;
+- specialized tools can opt out of the default path;
+- `write_stdin` is transport for an existing unified-exec session and does not
+  trigger a second `PreToolUse`; its eventual completion may deliver the
+  original command's `PostToolUse`;
+- hook trust is a user decision bound to the exact command hash, and installing
+  or enabling a plugin does not automate that consent;
+- a same-UID process that can read arbitrary user-private files is outside the
+  local receipt trust boundary.
+
+Accordingly, Codex hooks are a consequential workflow guardrail, not a complete
+tool-enforcement boundary, a universal correctness guarantee, or OS
+containment.
 
 ## Zero-model audit
 
@@ -131,29 +181,8 @@ npm run canary:codex:probe
 ```
 
 The probe hashes the installed native binary, generates the experimental
-app-server schema, calls `hooks/list`, replays all three sources, and writes a
-machine-readable `.control-readiness.json`. It does not start a thread, submit a
-prompt, invoke a model, or pass `--dangerously-bypass-hook-trust`.
-
-A live conformance run is still required after reinstalling and trusting every
-Outsider lifecycle entry in `/hooks`. Until a signed, source-replayed trace meets
-the definition above, README/release claims must continue to exclude Codex from
-the Stage 0.5 controlled-product promise.
-
-## Known host limitations
-
-- Hook trust is a user decision and changes when the command hash changes.
-- A trusted/discovered hook is not proof that it fired.
-- Codex does not currently provide a real `ask` permission decision through the
-  hook output; it must not be described as human escalation.
-- Context or input-rewrite delivery is not credited without a host-recorded
-  canary.
-- The local controller key is mode 0600 and pinned before a bridged run, but it
-  is not hardware/OS attestation against a malicious same-UID process. A worker
-  that can read arbitrary user-private files is outside this receipt's trust
-  boundary and must not be described as contained by it.
-- An app-server approval decline is real intervention, but it does not cover
-  actions for which Codex never asks approval.
-- This verifier proves control delivery and lifecycle closure. It does not prove
-  semantic correctness, causal improvement, economic loss, PRICE, GUARANTEE, or
-  SETTLE.
+app-server schema, calls `hooks/list`, replays its metadata sources, and writes
+a machine-readable control-readiness record. It does not start a thread, send a
+prompt, invoke a model, or bypass hook trust. Metadata success establishes the
+installed capability inventory; it does not replace either a bounded live run
+or the separate strict source-bound assessment.

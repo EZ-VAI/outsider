@@ -4,10 +4,10 @@
  * This module deliberately separates three things that are easy to conflate:
  *   1. a locally verified delivery;
  *   2. a user-authorized research contribution; and
- *   3. admissible pricing / liability evidence.
+ *   3. downstream decision authority.
  *
  * A contribution can establish (1) and (2). It is always quarantined on
- * ingress and never establishes (3) without later CURATE/adjudication.
+ * ingress and never establishes (3).
  */
 
 import {
@@ -985,7 +985,7 @@ export function verifyContributionReceipt(receipt, { serverPublicKeyPem = null }
 }
 
 /** Durable ingress registry. It validates transport identity and deterministic
- * evidence shape, then quarantines. It is intentionally not CURATE or PRICE. */
+ * evidence shape, then quarantines without granting decision authority. */
 export class ExperienceContributionRegistry {
   constructor({ directory, privateKeyPem, registryId = "outsider-contributions",
     audience, acceptedInstrumentHashes = [] } = {}) {

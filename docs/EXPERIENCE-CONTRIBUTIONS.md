@@ -4,7 +4,7 @@
 
 The gateway turns a sealed local Stage 0.5 run into an explicitly authorized,
 privacy-minimized research contribution. It does not turn downloads into
-surveillance and it does not turn self-attested runs into insurance evidence.
+surveillance or make a self-attested run authoritative evidence.
 
 Default behavior:
 
@@ -23,7 +23,7 @@ classes, aggregate host-capacity observations and bounded trajectory features.
 
 ## Client workflow
 
-For the public 1.3.98 beta, use
+After the reviewed public 1.3.99 beta and its matching assets are published, use
 `https://outsider-experience-gateway.outsider-guard.workers.dev` and the pinned
 Ed25519 key in
 `deploy/cloudflare-experience-gateway/server-public-key.pem`. Then:
@@ -94,19 +94,19 @@ class `L2_RECOGNIZED_INSTRUMENT_SELF_ATTESTED`; an unknown instrument remains
 - `CORRELATION_NOT_YET_DISCOUNTED`
 - `PENDING_CURATE_REVIEW`
 
-and cannot enter pricing, guarantees or settlement.
+and remain quarantined from downstream decision systems.
 
 This reference server intentionally omits production rate limiting, operator
-authentication, KMS integration, regional data residency, erasure jobs, abuse
-response and the CURATE promotion workflow. It must not be exposed to the
-public internet unchanged. The production Cloudflare Worker in
+authentication, KMS integration, regional data residency, erasure jobs and
+abuse response. It must not be exposed to the public internet unchanged. The
+production Cloudflare Worker in
 `deploy/cloudflare-experience-gateway` adds a rate-limited public edge, a
 strongly consistent SQLite Durable Object registry, replay protection,
 deduplication, signed erasure acknowledgments, future-use blocking, retention
 purges, and sealed quarantine receipts. Its signing key is a Worker secret,
 never repository configuration.
 
-## The path into the clearing stack
+## Contribution lifecycle
 
 ```text
 sealed Stage 0.5 run
@@ -114,15 +114,13 @@ sealed Stage 0.5 run
   -> challenge-bound ATTEST
   -> quarantine ingress + D1 dedup
   -> D2 instrument/version separation
-  -> correlation discount + poisoning/anomaly checks
-  -> Stage 1.5 CURATE eligibility decision
-  -> Experience Registry
-  -> shadow behavior models
-  -> only externally adjudicated loss evidence may approach PRICE
+  -> integrity and abuse checks
+  -> restricted research review
 ```
 
 Downloads are not samples. Active installations are not samples. Runs are not
 independent samples. Only verified, consented, deduplicated and correctly
-grouped contribution records enter the research denominator. A delivery label
-is not a treatment-effect label; `VERIFIED_DELIVERY_UNATTRIBUTED` stays excluded
-from correction-effect learning.
+grouped contribution records may enter a research denominator. A delivery
+label is not a treatment-effect label; `VERIFIED_DELIVERY_UNATTRIBUTED` remains
+excluded from causal claims. Nothing in this workflow automatically promotes a
+contribution into a model, policy, or operational decision.

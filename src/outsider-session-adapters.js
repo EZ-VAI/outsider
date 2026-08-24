@@ -1019,14 +1019,24 @@ function sigOf(toolName, toolInput, cmd) {
  * shell command only when the tool is a shell. Everything else is content, and
  * content is judged by what the tool DOES, not by what its text says.
  *
- * Unknown/empty tool names still fall through to the generic extraction, because
- * the third-party adapters rely on it and an unrecognised runner really might be
- * a shell.
+ * Empty tool names still fall through to generic command extraction for legacy
+ * adapters. A named tool with neither a command nor a known local/read-only
+ * semantic is UNKNOWN: an opaque MCP or future host tool is not proof of safety.
  */
 const SHELL_TOOLS = new Set(["bash", "shell", "sh", "run", "runcommand", "run_command",
   "terminal", "exec", "exec_command", "execute", "local_shell", "container.exec",
   "bashoutput", "killshell"]);
 const NON_SHELL_PAYLOAD = new Set(["script", "code"]);
+const READ_ONLY_TOOLS = new Set([
+  "read", "grep", "glob", "notebookread", "toolsearch", "todo_read", "todoread",
+  "view_image", "list_mcp_resources", "list_mcp_resource_templates", "read_mcp_resource",
+  "functions.list_mcp_resources", "functions.list_mcp_resource_templates",
+  "functions.read_mcp_resource",
+]);
+const REVERSIBLE_CONTROL_TOOLS = new Set([
+  "agent", "task", "subagent", "spawn_agent", "sendmessage", "send_message",
+  "taskupdate", "todo_write", "todowrite", "askuserquestion", "request_user_input",
+]);
 
 export function classifyToolCall(toolName = "", toolInput = {}) {
   const tn = String(toolName ?? "").toLowerCase();
@@ -1041,7 +1051,12 @@ export function classifyToolCall(toolName = "", toolInput = {}) {
   const isTest = TEST_CMD.test(cmd);
   const isEdit = EDIT_TOOLS.has(toolName) || /\b(sed\s+-i|tee\s|>>\s|\bcat\s*>)/.test(cmd);
   const isSubmit = SUBMIT_CMD.test(cmd);
-  const risk = riskOf(cmd, isEdit, path);
+  const baseRisk = riskOf(cmd, isEdit, path);
+  const risk = !cmd && tn && !isEdit
+    ? READ_ONLY_TOOLS.has(tn) ? "safe"
+      : REVERSIBLE_CONTROL_TOOLS.has(tn) ? "build"
+        : "unknown"
+    : baseRisk;
   const irreversible = risk === "destructive" || risk === "deploy";
   /*
    * `action` IS A DISPLAY STRING. It has been truncated to 200 characters since
@@ -1316,10 +1331,17 @@ export function makeCodexParser() {
         pending.set(p.call_id, { ...classifyToolCall("Bash", { command: String(cmd) }),
           uid: p.call_id });
       } else if (p.type === "custom_tool_call") {
-        /* apply_patch: the edited paths arrive later on patch_apply_end, so the
-           call is held open until then */
-        pending.set(p.call_id, { ...classifyToolCall(String(p.name ?? "apply_patch"), {}),
-          isEdit: true, uid: p.call_id });
+        const name = String(p.name ?? "");
+        /* Older Codex rollouts used custom_tool_call only for apply_patch. Codex
+           Desktop now also records its host-side JavaScript orchestrator as a
+           custom `exec` wrapper; the real nested action crosses the native hook
+           boundary separately. Never promote an arbitrary custom wrapper to an
+           edit merely because it shares this envelope. apply_patch remains an
+           edit and receives its exact paths from patch_apply_end below. */
+        const classified = classifyToolCall(name || "custom_tool_call", {});
+        pending.set(p.call_id, { ...classified,
+          isEdit: name === "apply_patch" ? true : classified.isEdit,
+          uid: p.call_id });
       } else if (p.type === "patch_apply_end") {
         const files = Object.keys(p.changes ?? {});
         const call = pending.get(p.call_id) ?? classifyToolCall("apply_patch", {});

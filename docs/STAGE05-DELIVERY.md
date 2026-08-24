@@ -2,16 +2,19 @@
 
 This repository is the authoritative Stage 0.5 product root. Normal user-facing operation is transparent attached mode: UserPromptSubmit
 persists the verbatim operator ledger and the first synchronous tool boundary freezes the audited contract before any tool action executes.
-`outsider run` remains the owned-process CI/headless path. The historical
-`Outsiderf` tree remains a protocol and actuarial reference; it is not silently
-linked into the runtime and its old hook CLI is not shipped as the controller.
+`outsider run` remains the owned-process CI/headless path. Historical internal
+research trees are not silently linked into the runtime, and retired hook CLIs
+are not shipped as the controller.
 
 ## Frozen baseline
 
 - Baseline date: 2026-08-10 (Asia/Shanghai).
 - Deterministic protocol suite before this change: 113/113.
 - Gate corpus before this change: 125/125, zero false interruptions, zero slips.
-- Current controlled protocol: Claude Code native hooks; Desktop Cowork is conditional on a recorded plugin-hook conformance run.
+- Current surface evidence: Claude Code uses native attached hooks; Desktop Cowork
+  requires a recorded plugin/helper handshake; Codex has one bounded verified
+  consequential loop, while strict source-bound full-host and complete tool-path
+  coverage remain unestablished.
 - Existing persistent controller semantics, lease recovery, task graph, patrol,
   acceptance and causal-proof rules are regression boundaries.
 
@@ -23,8 +26,8 @@ the model for a tool call when the synchronous PreToolUse boundary arrives.
 It binds the product implementation, composed Way, frozen contract and evidence
 policy. The default admission is observation-only/research. Claim, World,
 standing and authority are never inferred from filesystem or process identity.
-Explicit Claim/Way/World hashes are reference bindings, not a locally reverified
-V35.4/V36 ClaimWayCase or constitutional clearance.
+Explicit Claim/Way/World hashes are reference bindings, not independently
+verified standing or external authority.
 
 Each v2 event commits to the previous event hash. Completion emits a private
 evidence manifest, a hash-only public derivative and a canonical projection.
@@ -56,7 +59,7 @@ Private run evidence persists in the user's state directory rather than `/tmp`.
 
 ## Claims deliberately not made
 
-This delivery does not claim Codex/Trae lifecycle control, owner standing,
-WorldConstitution enforcement, pricing, guarantee, insurance payout, real
-multi-hour reliability, or universal semantic correctness. Those need later
-steps and independent evidence; adding fields here would not create them.
+This delivery does not claim control on unverified host surfaces,
+institutional or financial authority, real multi-hour reliability, or
+universal semantic correctness. Those claims require independent evidence;
+adding fields here would not create them.

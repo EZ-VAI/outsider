@@ -51,7 +51,7 @@ function harness({ decide = null, verdict = null, outcomeVerdict = null, accepta
   semanticPatrolEvery = 96, semanticPatrolMinEvidenceSteps = 0,
   agentTeamPolicy = null,
   controllerOwnedWorkspace = false, allowedEvaluatorFaultSourceHash = null,
-  acceptanceCommand = "npm test" } = {}) {
+  acceptanceCommand = "npm test", operatorAsk = "把 value 改成 2，并保持设计直接" } = {}) {
   const { cwd, transcript } = workspace();
   const baseline = snapshotWorkspace(cwd);
   const semantic = {
@@ -62,7 +62,7 @@ function harness({ decide = null, verdict = null, outcomeVerdict = null, accepta
     scope: { in: ["src/value.js"], out: ["依赖升级"] },
     uncertainties: [],
   };
-  const contract = freezeContract({ cwd, ask: "把 value 改成 2，并保持设计直接",
+  const contract = freezeContract({ cwd, ask: operatorAsk,
     acceptance: acceptanceCommand, semantic, semanticAudit: { passed: true,
       evidenceHash: "sha256:test-contract-audit" }, baselineEvidence: baseline });
   const stateRoot = mkdtempSync(path.join(tmpdir(), "outsider-kernel-state-"));
@@ -1448,6 +1448,32 @@ test("a mandatory audited-repair run never converts a rejected correction into m
     && event.supervisorStatus === "invalid-correction" && event.modelCallUsed === false));
 });
 
+test("a formal-correction-only Codex contract also holds after factual rejection", () => {
+  const red = { ran: true, passed: false, exit: 1, command: "npm test",
+    output: "Expected 2, received 1" };
+  const h = harness({
+    operatorAsk: "只有在 Outsider 明确阻止第一次 Stop，并向主 Agent 送达正式纠正后，才执行一次最小修复。",
+    acceptanceResults: [red],
+    supervisorHandler: () => ({ ok: true, verdict: {
+      onTrack: false, drift: "value remains 1", plan: ["change value"],
+      expectedNextActions: ["edit:src/value.js", "run:acceptance"], acceptanceRisk: "red",
+    } }),
+    correctionAuditorHandler: () => ({ ok: true, verdict: {
+      passed: false, errors: ["candidate correction was not factually approved"],
+      verifiedFacts: ["acceptance is red"],
+    } }),
+  });
+  const stopped = h.controller.stop({ agent: "codex", input: {
+    hook_event_name: "Stop", transcript_path: h.transcript,
+  } });
+  assert.equal(stopped.output.decision, "block");
+  assert.match(stopped.output.reason, /没有任何 artifact 修复权限/u);
+  assert.doesNotMatch(stopped.output.reason, /Expected 2|继续修复/u);
+  assert.equal(h.store.events().some((event) => event.type === "correction_emitted"), false);
+  assert.equal(h.store.events().some((event) => event.type === "acceptance_rework_emitted"), false);
+  assert.ok(h.store.events().some((event) => event.type === "audited_correction_hold_emitted"));
+});
+
 test("independent semantic gaps carry authority while wrong narrative counts stay out of control", () => {
   const green = { ran: true, passed: true, exit: 0, command: "npm test", output: "public green" };
   const gap = "String(delta) can throw before the required finite error for Object.create(null)";
@@ -1934,6 +1960,129 @@ test("a PASS that contradicts the frozen contract is rejected by a fresh approva
   assert.ok(events.some((event) => event.type === "outcome_verdict"
     && event.passed === false && event.verifierProposedPassed === true
     && event.approvalAuditPassed === false));
+});
+
+test("PASS approval binds the exact formal correction and transcript final report", () => {
+  const red = { ran: true, passed: false, exit: 1,
+    command: "npm test", output: "expected 2, received 1" };
+  const green = { ran: true, passed: true, exit: 0,
+    command: "npm test", output: "ok" };
+  const report = [
+    "- first Stop: blocked by Outsider",
+    "- formal correction: change only src/value.js and run npm test",
+    "- changed file: src/value.js",
+    "- npm test: passed",
+  ].join("\n");
+  let captured = null;
+  let auditPrompt = "";
+  const h = harness({
+    acceptanceResults: [red, green],
+    outcomeAuditorHandler: (options) => auditOutcomeApproval({
+      ...options,
+      execute: ({ input }) => {
+        auditPrompt = input;
+        return { ok: true, value: {
+          decision: "pass", blockingErrors: [], notes: [],
+          verifiedFacts: ["controller evidence and report shape were independently checked"],
+          insufficientReason: null,
+        } };
+      },
+    }),
+  });
+
+  const first = h.controller.stop({ input: {
+    hook_event_name: "Stop", transcript_path: h.transcript,
+    last_assistant_message: "first completion attempt",
+  }, agent: "codex" });
+  assert.equal(first.output.decision, "block");
+  const emitted = h.store.events().find((event) => event.type === "correction_emitted");
+  assert.ok(emitted?.interventionId);
+  applyObservedCorrection(h);
+  appendFileSync(h.transcript, `${JSON.stringify({
+    timestamp: "2026-08-23T17:02:20.769Z",
+    type: "response_item",
+    payload: { type: "message", role: "assistant", phase: "final_answer",
+      content: [{ type: "output_text", text: report }] },
+  })}\n`);
+
+  const approved = h.controller.stop({ input: {
+    hook_event_name: "Stop", transcript_path: h.transcript,
+    last_assistant_message: report,
+  }, agent: "codex" });
+  assert.equal(approved.output.decision, "approve");
+  const auditEvent = h.store.events().find((event) => event.type === "outcome_approval_audit");
+  captured = h.store.readJson(auditEvent.evidenceFile)?.approvalEvidence;
+  assert.equal(captured.formalCorrection.valid, true);
+  assert.equal(captured.formalCorrection.correctionHash, emitted.correctionHash);
+  assert.equal(captured.formalCorrection.correctionAuthorityHash,
+    emitted.correctionAuthorityHash);
+  assert.match(captured.formalCorrection.exactCorrectionText,
+    new RegExp(emitted.interventionId));
+  assert.equal(captured.formalCorrection.emittedEvent.seq, emitted.seq);
+  assert.equal(captured.formalCorrection.observedEvent.seq > emitted.seq, true);
+  assert.equal(captured.workerFinalReport.text, report);
+  assert.equal(captured.workerFinalReport.transcriptBound, true);
+  assert.equal(captured.workerFinalReport.transcript.latestAssistantPhase, "final_answer");
+  assert.equal(captured.workerFinalReport.workerAssertionsAcceptedAsOutcomeEvidence, false);
+  assert.match(auditPrompt, /worker 自述都不能证明结果/);
+});
+
+test("outcome verifier receives the transcript report without trusting its outcome claims", () => {
+  const report = "changed src/value.js; npm test passed";
+  let verifierCalls = 0;
+  let verifierPrompt = "";
+  const seen = [];
+  const h = harness({
+    verifierHandler: (options) => {
+      verifierCalls += 1;
+      seen.push(options);
+      if (verifierCalls === 1) return {
+        ok: false,
+        error: "INVALID_OUTCOME_VERDICT",
+        failure: { retryable: true, retryInstruction: "return the exact verdict JSON" },
+      };
+      return verifyOutcome({
+        ...options,
+        execute: ({ input }) => {
+          verifierPrompt = input;
+          return { ok: true, value: {
+            passed: false,
+            gaps: ["worker report cannot replace the red controller acceptance"],
+            evidence: ["acceptance exit is 1 and controller diff has no changes"],
+          } };
+        },
+      });
+    },
+  });
+  const transcript = path.join(h.store.directory, "verifier-transcript.jsonl");
+  writeFileSync(transcript, `${JSON.stringify({
+    timestamp: "2026-08-23T17:34:23.135Z",
+    type: "response_item",
+    payload: { type: "message", role: "assistant", phase: "final_answer",
+      content: [{ type: "output_text", text: report }] },
+  })}\n`);
+  const result = h.controller.verifySemanticOutcome({
+    acceptanceResult: { ran: true, passed: false, exit: 1,
+      command: "npm test", output: "expected 2, received 1" },
+    phase: "stop",
+    input: { transcript_path: transcript, last_assistant_message: report },
+    agent: "codex",
+  });
+
+  assert.equal(result.status, "rejected");
+  assert.equal(verifierCalls, 2);
+  assert.equal(seen[0].terminationEvidence.workerFinalReport.text, report);
+  assert.equal(seen[0].terminationEvidence.workerFinalReport.transcriptBound, true);
+  assert.deepEqual(seen[1].terminationEvidence, seen[0].terminationEvidence,
+    "schema retry must receive the same frozen transcript evidence");
+  assert.equal(seen[1].acceptance.passed, false);
+  assert.deepEqual(seen[1].diff.changes, []);
+  const proposal = h.store.events().find((event) => event.type === "outcome_verifier_proposal");
+  const packet = h.store.readJson(proposal.evidenceFile);
+  assert.equal(packet.terminationEvidence.workerFinalReport.text, report);
+  assert.equal(packet.acceptance.passed, false);
+  assert.deepEqual(packet.diff.changes, []);
+  assert.match(verifierPrompt, /worker 自述绝不能证明实现、测试或 outcome/);
 });
 
 test("a false onTrack clearance over red acceptance is deterministically rejected and re-diagnosed", () => {
@@ -4115,12 +4264,20 @@ test("diagnosis receives controller-owned endurance injection provenance", () =>
     taskId: null,
     generation: null,
     agentId: null,
+    parentAgentId: null,
+    description: null,
+    promptVisibility: null,
+    promptHash: null,
     owner: null,
     status: null,
     blockedBy: null,
     file: null,
     changed: null,
     executed: null,
+    reportHash: null,
+    reportBytes: null,
+    transcriptBound: null,
+    independentlyVerified: null,
     taskIds: null,
     toolUseId: null,
     identityBindingHash: null,
@@ -4487,6 +4644,196 @@ test("agent task tree isolates subagent intervention and verifies delegated work
     && event.taskId === "task-1"));
 });
 
+test("real Codex spawn/read/SubagentStop/wait shapes bind an opaque task and exact child report", () => {
+  const encryptedMessage = `gAAAAA${"a".repeat(120)}=`;
+  const childReport = "只读检查已完成：`answer()` 当前返回值为 `1`。";
+  const finalReport = "子 Agent 已完成只读检查并报告 value=1；主 Agent 已等待其完成。";
+  let subagentPacket = null;
+  let finalVerification = null;
+  const h = harness({
+    decide: () => ({ verdict: "allow", proposed: { action: "delegate", irreversible: false } }),
+    acceptanceResults: [
+      { ran: true, passed: true, exit: 0, command: "npm test", output: "ok" },
+    ],
+    supervisorHandler: ({ packet }) => {
+      subagentPacket = packet;
+      assert.equal(packet.actor.agentId, "codex-child-1");
+      assert.equal(packet.actor.parentAgentId, "main");
+      assert.equal(packet.actor.delegatedTask.taskId, "spawn-codex-1");
+      assert.equal(packet.actor.delegatedTask.description, "readonly_answer_check");
+      assert.equal(packet.actor.delegatedTask.prompt, null,
+        "host ciphertext is never presented as readable task prose");
+      assert.equal(packet.actor.delegatedTask.promptBinding.visibility, "host-encrypted");
+      assert.equal(packet.actor.delegatedTask.promptBinding.hostConfidential, true);
+      assert.match(packet.actor.delegatedTask.promptBinding.payloadHash, /^sha256:[a-f0-9]{64}$/u);
+      assert.equal(packet.actor.delegatedTask.completionReport.transcriptBound, true);
+      assert.equal(packet.actor.delegatedTask.completionReport.text, childReport);
+      assert.equal(packet.actor.delegatedTask.completionReport.source,
+        "SubagentStop.last_assistant_message");
+      assert.ok(packet.readEvidence.some((entry) => entry.source === "shell-command"
+        && entry.files.includes("src/value.js")),
+      "controller-sealed child Pre/Post is used even when rollout wraps it as opaque exec");
+      assert.ok(packet.trajectory.some((step) => step.agentId === "codex-child-1"
+        && step.tool === "Bash" && step.action.includes("src/value.js")
+        && step.exit === 0 && step.executed === true));
+      assert.equal(packet.trajectory.some((step) => step.agentId === "codex-child-1"
+        && (step.isEdit || step.isTest || /spawn_agent/iu.test(step.tool))), false);
+      assert.equal(packet.decisionScope.kind, "intermediate-subagent-task-delivery");
+      assert.equal(packet.decisionScope.taskId, "spawn-codex-1");
+      assert.equal(packet.decisionScope.agentId, "codex-child-1");
+      assert.equal(packet.decisionScope.clearanceEvidenceReady, true);
+      assert.equal(packet.decisionScope.actorEvidence.durableActions.length, 1);
+      return { ok: true, verdict: { onTrack: true, drift: "", plan: [],
+        expectedNextActions: [], acceptanceRisk: "low" } };
+    },
+    clearanceAuditorHandler: ({ evidence, proposal }) => {
+      assert.equal(evidence.decisionScope.kind, "intermediate-subagent-task-delivery");
+      assert.equal(evidence.decisionScope.clearanceEvidenceReady, true);
+      assert.deepEqual(proposal.plan, [], "onTrack child clearance cannot carry parent work");
+      assert.deepEqual(proposal.expectedNextActions, []);
+      return { ok: true, packet: { evidence, proposedClearance: proposal }, verdict: {
+        passed: true, errors: [],
+        verifiedFacts: ["the exact child slice is complete and the parent workflow is out of scope"],
+      } };
+    },
+    verifierHandler: (options) => {
+      finalVerification = options;
+      assert.ok(options.executionSteps.some((step) => step.agentId === "codex-child-1"
+        && String(step.action).includes("src/value.js") && step.exit === 0));
+      assert.ok(options.executionSteps.some((step) => step.agentId === "main"
+        && step.toolName === "collaborationwait_agent" && step.exit === 0));
+      assert.ok(options.controllerProcessEvidence.some((event) =>
+        event.type === "subagent_report_bound" && event.taskId === "spawn-codex-1"
+        && event.transcriptBound === true));
+      assert.ok(options.controllerProcessEvidence.some((event) =>
+        event.type === "task_completed" && event.taskId === "spawn-codex-1"
+        && event.independentlyVerified === true));
+      const delegated = options.terminationEvidence.delegatedTaskEvidence.tasks
+        .find((task) => task.id === "spawn-codex-1");
+      assert.equal(delegated.promptBinding.visibility, "host-encrypted");
+      assert.equal(delegated.completionReport.transcriptBound, true);
+      assert.equal(delegated.completionReport.text, childReport);
+      assert.equal(options.terminationEvidence.workerFinalReport.transcriptBound, true);
+      return { ok: true, verdict: { passed: true, gaps: [],
+        evidence: ["controller-bound child handoff and main wait are complete"] } };
+    },
+  });
+  const delegated = h.controller.preTool({ agent: "codex", input: {
+    hook_event_name: "PreToolUse",
+    tool_name: "collaborationspawn_agent",
+    tool_use_id: "spawn-codex-1",
+    tool_input: { task_name: "readonly_answer_check", fork_turns: "all",
+      message: encryptedMessage },
+    session_id: "codex-main-session",
+    turn_id: "codex-main-turn",
+    transcript_path: h.transcript,
+  } });
+  assert.equal(delegated.output.hookSpecificOutput.permissionDecision, "allow");
+  assert.equal(h.store.readState().tasks["spawn-codex-1"].prompt, encryptedMessage);
+  assert.equal(h.store.readState().tasks["spawn-codex-1"].promptVisibility, "host-encrypted");
+  assert.equal(h.store.readState().tasks["spawn-codex-1"].description,
+    "readonly_answer_check");
+  h.controller.postTool({ input: {
+    hook_event_name: "PostToolUse", tool_name: "collaborationspawn_agent",
+    tool_use_id: "spawn-codex-1",
+    tool_input: { task_name: "readonly_answer_check", fork_turns: "all",
+      message: encryptedMessage },
+    tool_response: '{"task_name":"/root/readonly_answer_check"}',
+    session_id: "codex-main-session", turn_id: "codex-main-turn",
+    transcript_path: h.transcript,
+  } });
+
+  const childTranscript = path.join(h.cwd, "agent-codex-child-1.jsonl");
+  writeFileSync(childTranscript, "");
+  const started = h.controller.handleHook({ agent: "codex", input: {
+    hook_event_name: "SubagentStart",
+    agent_id: "codex-child-1", agent_type: "default",
+    session_id: "codex-main-session", turn_id: "codex-child-turn",
+    transcript_path: childTranscript,
+  } });
+  assert.match(started.output.hookSpecificOutput.additionalContext, /readonly_answer_check/u);
+  assert.match(started.output.hookSpecificOutput.additionalContext, /宿主加密/u);
+  assert.doesNotMatch(started.output.hookSpecificOutput.additionalContext, /gAAAAA/u);
+  assert.equal(h.store.readState().agents["codex-child-1"].taskId, "spawn-codex-1");
+  assert.equal(h.store.readState().tasks["spawn-codex-1"].taskLinkConfidence,
+    "single-pending-task");
+  assert.equal(h.store.events().some((event) => event.type === "task_tree_gap"), false);
+
+  const childRead = {
+    agent_id: "codex-child-1", agent_type: "default",
+    session_id: "codex-main-session", turn_id: "codex-child-turn",
+    transcript_path: childTranscript,
+    tool_name: "Bash", tool_use_id: "exec-child-read",
+    tool_input: { command: "sed -n '1,120p' src/value.js" },
+  };
+  h.controller.preTool({ agent: "codex", input: {
+    ...childRead, hook_event_name: "PreToolUse",
+  } });
+  h.controller.postTool({ input: {
+    ...childRead, hook_event_name: "PostToolUse",
+    tool_response: "export const value = 1;\n",
+  } });
+  appendFileSync(childTranscript, `${JSON.stringify({
+    timestamp: "2026-08-24T00:00:01.000Z", type: "response_item",
+    payload: { type: "message", role: "assistant",
+      content: [{ type: "output_text", text: childReport }], phase: "final_answer" },
+  })}\n`);
+
+  const subagentStopInput = {
+    hook_event_name: "SubagentStop",
+    agent_id: "codex-child-1", agent_type: "default",
+    session_id: "codex-main-session", turn_id: "codex-child-turn",
+    transcript_path: h.transcript,
+    agent_transcript_path: childTranscript,
+  };
+  const mismatched = h.controller.handleHook({ agent: "codex", input: {
+    ...subagentStopInput, last_assistant_message: "tampered completion report",
+  } });
+  assert.equal(mismatched.output.decision, "block");
+  assert.match(mismatched.output.reason, /未能.*逐字绑定/u);
+  assert.equal(h.store.readState().tasks["spawn-codex-1"].status, "running");
+
+  const stopped = h.controller.handleHook({ agent: "codex", input: {
+    ...subagentStopInput, last_assistant_message: childReport,
+  } });
+  assert.equal(stopped.output.decision, "approve");
+  assert.equal(h.store.readState().tasks["spawn-codex-1"].status, "completed");
+  assert.equal(h.store.readState().tasks["spawn-codex-1"].independentlyVerified, true);
+  assert.equal(h.store.readState().tasks["spawn-codex-1"].completionReport.text,
+    childReport);
+  assert.ok(subagentPacket);
+  assert.ok(h.store.events().some((event) => event.type === "supervisor_clearance_audit"
+    && event.passed === true && event.internallyConsistent === true));
+
+  const wait = {
+    hook_event_name: "PreToolUse", tool_name: "collaborationwait_agent",
+    tool_use_id: "wait-child", tool_input: { timeout_ms: 3600000 },
+    session_id: "codex-main-session", turn_id: "codex-main-turn",
+    transcript_path: h.transcript,
+  };
+  h.controller.preTool({ agent: "codex", input: wait });
+  h.controller.postTool({ input: {
+    ...wait, hook_event_name: "PostToolUse",
+    tool_response: '{"message":"Wait completed.","timed_out":false}',
+  } });
+  appendFileSync(h.transcript, `${JSON.stringify({
+    timestamp: "2026-08-24T00:00:02.000Z", type: "response_item",
+    payload: { type: "agent_message", author: "/root/readonly_answer_check",
+      recipient: "/root", content: [{ type: "input_text", text: childReport }] },
+  })}\n${JSON.stringify({
+    timestamp: "2026-08-24T00:00:03.000Z", type: "response_item",
+    payload: { type: "message", role: "assistant",
+      content: [{ type: "output_text", text: finalReport }], phase: "final_answer" },
+  })}\n`);
+  const finished = h.controller.stop({ agent: "codex", input: {
+    hook_event_name: "Stop", last_assistant_message: finalReport,
+    session_id: "codex-main-session", turn_id: "codex-main-turn",
+    transcript_path: h.transcript,
+  } });
+  assert.equal(finished.output.decision, "approve");
+  assert.ok(finalVerification);
+});
+
 test("concurrent unassigned subagent tasks stay explicitly ambiguous instead of being guessed", () => {
   const h = harness({
     decide: () => ({ verdict: "allow", proposed: { action: "delegate", irreversible: false } }),
@@ -4515,6 +4862,30 @@ test("concurrent unassigned subagent tasks stay explicitly ambiguous instead of 
   assert.equal(state.tasks["task-b"].assigneeAgentId, null);
   assert.ok(h.store.events().some((event) => event.type === "task_link_ambiguous"));
   assert.ok(h.store.events().some((event) => event.type === "task_tree_gap"));
+
+  const report = "ambiguous child claims completion";
+  appendFileSync(childTranscript, `${JSON.stringify({
+    timestamp: "2026-08-24T00:00:00.000Z", type: "response_item",
+    payload: { type: "message", role: "assistant",
+      content: [{ type: "output_text", text: report }], phase: "final_answer" },
+  })}\n`);
+  const ambiguousStop = h.controller.handleHook({ agent: "codex", input: {
+    hook_event_name: "SubagentStop", agent_id: "ambiguous",
+    last_assistant_message: report, transcript_path: h.transcript,
+    agent_transcript_path: childTranscript,
+  } });
+  assert.equal(ambiguousStop.output.decision, "block",
+    "a report cannot complete one of several unbound tasks by guess");
+  assert.match(ambiguousStop.output.reason, /无法唯一绑定/u);
+  assert.equal(h.store.readState().tasks["task-a"].status, "delegated");
+  assert.equal(h.store.readState().tasks["task-b"].status, "delegated");
+
+  const anonymousStop = h.controller.handleHook({ agent: "codex", input: {
+    hook_event_name: "SubagentStop", last_assistant_message: report,
+    transcript_path: childTranscript,
+  } });
+  assert.equal(anonymousStop.output.decision, "block");
+  assert.match(anonymousStop.output.reason, /缺少可绑定的子 Agent 身份/u);
 });
 
 test("failed corrections are re-diagnosed with history, then terminate red instead of blocking forever", () => {

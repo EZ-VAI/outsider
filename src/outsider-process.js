@@ -7,8 +7,8 @@
  *   - UNIVERSAL flags apply to every machine — a robot, a CI run, a coding
  *     agent all consume resources and can error, and some steps are
  *     irreversible. The irreversible-errored step is the highest-consequence
- *     universal signal and the reason a physical World is priced differently
- *     from a sandbox.
+ *     universal signal and is therefore reported separately from ordinary
+ *     sandbox failures.
  *
  *   - CODE flags (empty submission, never-ran-a-test) are code-specific process
  *     facts. The historical v49 corpus constants are not source-replayable in
@@ -109,17 +109,17 @@ export function measureExecutionTrace(trace, peers = {}) {
  * CI run, carries no authority.
  */
 /*
- * WHICH INSTRUMENT READ THE TRACE — the field that makes a Stage 0.5 card
- * actually climb the ladder rather than merely resemble something that could.
+ * WHICH INSTRUMENT READ THE TRACE — the field that binds a Stage 0.5 card to
+ * the implementation that produced it.
  *
  * Found by feeding real hook-minted cards to `attestTrackRecord` instead of
- * assuming the join worked: Stage 1 threw NO_INSTRUMENT and refused all three.
+ * assuming the join worked: downstream verification returned NO_INSTRUMENT.
  * Every adapter in outsider-framework-adapters.js has stamped an extractorId
  * since the beginning; the hook — the one path a user actually runs — never did.
- * So "Stage 0.5 feeds Stage 1" was true of the card SHAPE and false of the card.
+ * The card shape alone was therefore insufficient for verification.
  *
- * The D2 rule is why this matters and why the id must be versioned: a track
- * record may not mix instruments, because a distribution assembled from two
+ * The id must be versioned because an evidence set may not mix instruments:
+ * a distribution assembled from two
  * different readings of "the same" thing is not a distribution. A hook that
  * changes how it reads a trajectory must change this string, or it will silently
  * pool old and new measurements.

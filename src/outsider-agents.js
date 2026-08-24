@@ -17,10 +17,13 @@
  *                        `claude-desktop` spec below, which builds one rather than
  *                        writing a settings file that would be silently ignored.
  *   Codex (CLI, desktop app, IDE extension) : ONE shared config — ~/.codex/config.toml
- *                      and ~/.codex/hooks.json — across all three surfaces. The
- *                      installed 0.144.5 schema exposes lifecycle hooks, but the
- *                      local Outsider hook is currently untrusted and no authenticated
- *                      execution canary exists. Treat it as an engine candidate only.
+ *                      and ~/.codex/hooks.json — across all three surfaces. Outsider
+ *                      installs the eleven lifecycle names in the current Codex hook
+ *                      contract. Ten are the consequential Stage 0.5 control plane;
+ *                      SessionEnd is best-effort advisory cleanup and is not required
+ *                      to keep a red task open. A bounded project-local live run has
+ *                      closed the consequential Stop/correction/reverification loop.
+ *                      Hosted and specialized tool paths remain outside that proof.
  *   CodeBuddy   : logs under ~/.codebuddy/logs ; Claude-Code-style hooks.
  *   trae-agent  : trajectory JSON under ./trajectories ; no pre-exec hook → wrap.
  *
@@ -89,8 +92,8 @@ export const AGENT_SPECS = {
          the real one. The flat {PreToolUse:[{command}]} written before was valid
          JSON that registered NOTHING — the hook never ran, on any Codex surface. */
       /*
-       * Codex 0.144.5 exposes all of these lifecycle boundaries.  They share
-       * one command intentionally: /hooks trusts the exact command hash, so a
+       * The current Codex hook contract names all of these lifecycle boundaries.
+       * They share one command intentionally: /hooks trusts the exact command hash, so a
        * Pre-only command and a later, different Stop command would create two
        * independently drifting authorities.  --attached-control is not a
        * cosmetic flag.  It selects the authenticated local controller path;
@@ -99,29 +102,40 @@ export const AGENT_SPECS = {
        */
       value: { hooks: Object.fromEntries([
         ["SessionStart", "outsider 正在建立 Codex 会话身份"],
+        ["SessionEnd", "outsider 正在封存 Codex 会话终态"],
         ["UserPromptSubmit", "outsider 正在冻结本轮任务"],
         ["PreToolUse", "outsider 正在核对这个动作"],
+        ["PermissionRequest", "outsider 正在记录原生权限边界"],
         ["PostToolUse", "outsider 正在记录动作结果"],
         ["PreCompact", "outsider 正在持久化压缩前状态"],
+        ["PostCompact", "outsider 正在核对压缩后连续性"],
+        ["SubagentStart", "outsider 正在记录子 Agent 启动"],
+        ["SubagentStop", "outsider 正在核对子 Agent 终态"],
         ["Stop", "outsider 正在做最终验收"],
       ].map(([event, statusMessage]) => [event, [{
-        ...(event === "PreToolUse" || event === "PostToolUse" ? { matcher: "" } : {}),
+        ...(!["UserPromptSubmit", "Stop"].includes(event) ? { matcher: "" } : {}),
         hooks: [{ type: "command",
-          command: `${cli} hook codex --attached-control`, timeout: 900, statusMessage }],
+          command: `${cli} hook codex --attached-control`,
+          timeout: event === "SessionEnd" ? 3 : 900, statusMessage }],
       }]])) },
       note: "这一份配置同时管住 Codex 的终端版、桌面版和 IDE 插件——它们共用 ~/.codex/。\n"
         + "  ① 钩子默认已开;要确认,可在 ~/.codex/config.toml 写 [features] 下 hooks = true\n"
         + "     (旧名 codex_hooks 已废弃,别再用)。\n"
-        + "  ② Codex 要求你在 /hooks 逐项审阅并信任 SessionStart / UserPromptSubmit / PreToolUse /\n"
-        + "     PostToolUse / PreCompact / Stop；缺一项都只能机器标成未受控。\n"
+        + "  ② 在 /hooks 逐项审阅并信任 10 个 Stage 0.5 核心事件：\n"
+        + "     SessionStart / UserPromptSubmit / PreToolUse / PermissionRequest / PostToolUse /\n"
+        + "     PreCompact / PostCompact / SubagentStart / SubagentStop / Stop。\n"
+        + "     这 10 项缺一项，核心控制面就不完整。SessionEnd 也会安装，但它是\n"
+        + "     best-effort advisory：宿主不暴露它时会明示报告，但不否定前述 10 项控制面。\n"
         + "     钩子内容改了哈希就变,需要重新信任——\n"
         + "     在你点头之前它会被跳过。这是它的设计,不是故障。\n"
-        + "  ③ 默认不带 --strict:软告警按 schema 写入 additionalContext；在本机 live canary 证明送达前,\n"
-        + "     它只算候选通道,不计为已送达模型。真正不可逆的动作仍硬拦；--strict 会把软告警也硬拦。\n"
+        + "  ③ 默认不带 --strict：软告警按 Codex schema 写入 additionalContext，高风险决策和\n"
+        + "     红色 Stop 仍硬拦；--strict 会把软告警也升级为硬拦。已通过的 bounded live run\n"
+        + "     证明了 Stop → 纠正送达/观测 → 修复后复验 → 放行的具体闭环，不是对所有工具路径的保证。\n"
         + "  ④ hooks.json 不能带 UTF-8 BOM,否则 Codex 解析失败且不会告诉你。\n"
-        + "  ⑤ 安装器注册当前 Stage 0.5 必需的 6 个候选事件，但不是 Codex 全部生命周期；\n"
-        + "     `hooks/list` 显示 discovered/enabled 仍不等于执行过；\n"
-        + "     只有 source-bound app-server conformance 才能把它从候选提升为真实控制。\n"
+        + "  ⑤ 安装器仍注册当前 Codex 文档列出的全部 11 个事件，SessionEnd 使用\n"
+        + "     宿主允许的 3 秒上限做尽力封存。`hooks/list` 或 doctor 只能证明配置/运行证据；\n"
+        + "     要宣称严格的 source-bound 宿主控制，还必须单独通过 app-server 源回放、\n"
+        + "     hook/action 身份绑定和签名 controller receipt 验证。\n"
         + "     不得用 --dangerously-bypass-hook-trust 把候选能力冒充成用户已授权。",
     }),
   },

@@ -29,6 +29,14 @@ architecturalConstraints；只有操作方原话或 scope.out 明确排除的场
 如果合同包含顺序或过程要求（例如“先运行三次测试再修改”），必须只依据 executionEvidence 中有时间顺序的工具动作判定；不得因为最终代码正确就忽略过程要求，也不得在 executionEvidence 已经给出动作时声称没有证据。
 contentRef="currentSourceEvidence" 表示该冻结文件的正文与同 path、同 sha256 的当前源码逐字相同；afterRef 使用同一规则表示 diff.after。它们是内容寻址去重，不是缺失证据。只有 path/hash 对不上时才可判正文不足。
 如果 packet 含 controllerProcessEvidence，它是 controller/evaluator 自己落盘的有序过程事实，可用于判断某段空闲是否由外部调度、某个班次是否已派发；不得仅凭两个工具调用的时间间隔反推 worker 在轮询。不得要求当前中间 Stop 提供合同明确交给 post-run certifier 的未来时长或未来 checkpoint 证据。
+如果 terminationEvidence.workerFinalReport.transcriptBound=true，它是当前 Stop payload 与同一 transcript 最新 assistant
+record 的逐字绑定，只能用于核验冻结合同明确要求的最终报告是否存在以及其文字/条目/形状；其中“已修改”“测试通过”
+等 worker 自述绝不能证明实现、测试或 outcome。所有结果事实仍必须从 acceptance、diff、currentSourceEvidence、
+executionEvidence 和 controllerProcessEvidence 独立推出。若合同没有要求最终报告，不得因该字段缺失而制造 gap。
+terminationEvidence.delegatedTaskEvidence 中，promptBinding.visibility="host-encrypted" 表示 Codex 只向 hook 暴露了
+spawn message 的密文；payloadHash 绑定该宿主 payload，但不声称获得 plaintext。completionReport.transcriptBound=true
+只证明子 Agent 实际发出了这段交付文字。任务是否真的执行仍须由同 taskId/agentId 的 controller 事件与 executionEvidence
+独立证明；若这些客观动作、报告绑定和 task_completed 已齐全，不得仅因宿主保密 plaintext 而声称整个子任务没有证据。
 其中 team_identity_bound、team_task_created、task_graph_updated、confirmed_file_touch、teammate_verification_confirmed、team_task_completed 和 multi_agent_integration_verified 是控制器从宿主事件绑定得到的团队过程事实。若这些字段已明确 actor、task、文件和顺序，不得把 teammate 的动作改判成 main 的动作，也不得声称共享任务图没有证据。
 其中 type=active_evaluator_shift_state 是 controller 从事件顺序与预注册动作表推导的当前时态：
 phase=in-progress 时未来步骤不是当前遗漏；phase=awaiting-stop-verification 时才要求 expectedSteps 与
@@ -111,7 +119,8 @@ export function compactOutcomePacket(packet) {
 }
 
 export function outcomePacket({ contract, baseline, current, diff, acceptance,
-  baselineAcceptance = null, phase = "stop", executionSteps = [], controllerProcessEvidence = [] }) {
+  baselineAcceptance = null, phase = "stop", executionSteps = [], controllerProcessEvidence = [],
+  terminationEvidence = null }) {
   const frozenDefinition = frozenAcceptanceEvidence(baseline, contract,
     { currentSnapshot: current });
   const acceptanceDefinitionChanges = frozenDefinition.files.map((file) => ({
@@ -142,6 +151,7 @@ export function outcomePacket({ contract, baseline, current, diff, acceptance,
     executionEvidence: compactTrajectory(executionSteps, { maxSteps: 220 }),
     controllerProcessEvidence: Array.isArray(controllerProcessEvidence)
       ? controllerProcessEvidence.slice(-120) : [],
+    terminationEvidence,
     frozenAcceptanceDefinition: frozenDefinition,
     acceptanceDefinitionChanges,
     baselineFingerprint: baseline?.fingerprint ?? null,
@@ -154,10 +164,12 @@ export function outcomePacket({ contract, baseline, current, diff, acceptance,
 export function verifyOutcome({ cmd, contract, baseline, current, diff, acceptance,
   baselineAcceptance = null, phase = "stop", executionSteps = [],
   controllerProcessEvidence = [],
+  terminationEvidence = null,
   validationFeedback = null,
   execute = runFreshJsonCommand } = {}) {
   const packet = outcomePacket({ contract, baseline, current, diff, acceptance,
-    baselineAcceptance, phase, executionSteps, controllerProcessEvidence });
+    baselineAcceptance, phase, executionSteps, controllerProcessEvidence,
+    terminationEvidence });
   const feedback = validationFeedback
     ? `\n────── 上一次响应的 schema 错误（必须逐条修正） ──────\n${String(validationFeedback).slice(0, 4000)}\n`
     : "";

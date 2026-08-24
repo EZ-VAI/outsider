@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import {
   closeSync, constants, fchmodSync, fstatSync, fsyncSync, lstatSync, mkdirSync, openSync,
-  readFileSync, renameSync, unlinkSync, writeFileSync,
+  readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync,
 } from "node:fs";
 import path from "node:path";
 
@@ -240,6 +240,18 @@ export function buildPublicReleaseCertificate({
     || exactArtifact.sha256 !== npmHash) {
     fail("PUBLIC_RELEASE_NPM_ARTIFACT_HASH_MISMATCH");
   }
+  const exactPluginArtifact = object(certificate.coworkPluginArtifact,
+    "PUBLIC_RELEASE_PLUGIN_ARTIFACT_INVALID");
+  const pluginHash = sha256Bytes(pluginArtifactBytes);
+  if (exactPluginArtifact.file !== pluginFile
+    || !SHA256.test(exactPluginArtifact.sha256 ?? "")
+    || exactPluginArtifact.sha256 !== pluginHash
+    || exactPluginArtifact.byteLength !== pluginArtifactBytes.length
+    || exactPluginArtifact.layoutValidation !== "PASS"
+    || !Number.isSafeInteger(exactPluginArtifact.memberCount)
+    || exactPluginArtifact.memberCount < 1) {
+    fail("PUBLIC_RELEASE_PLUGIN_ARTIFACT_HASH_MISMATCH");
+  }
   const releaseDecision = status(certificate.releaseDecision,
     "PUBLIC_RELEASE_DECISION_INVALID");
   if (typeof certificate.stablePublicReleaseReady !== "boolean") {
@@ -258,8 +270,10 @@ export function buildPublicReleaseCertificate({
       npm: { file: npmFile, sha256: npmHash, byteLength: npmArtifactBytes.length },
       coworkPlugin: {
         file: pluginFile,
-        sha256: sha256Bytes(pluginArtifactBytes),
+        sha256: pluginHash,
         byteLength: pluginArtifactBytes.length,
+        layoutValidation: "PASS",
+        memberCount: exactPluginArtifact.memberCount,
       },
     },
     deterministicChecks: projectDeterministicChecks(certificate.checks),
@@ -445,6 +459,7 @@ export function writePublicReleaseMetadata({
   outputDirectory,
   trustedOutputRoot = path.dirname(path.resolve(outputDirectory)),
   expectedProduct,
+  stagePublicUploadSet = false,
   testOnlyReadObserver = null,
   testOnlyWriteObserver = null,
 } = {}) {
@@ -475,6 +490,60 @@ export function writePublicReleaseMetadata({
   const publicPath = path.join(directory, publicFile);
   const sumsPath = path.join(directory, "SHA256SUMS");
   revalidateRequiredInputs([exact, npm, plugin]);
+  const uploadMembers = [
+    { file: projection.assets.npm.file, bytes: npm.bytes,
+      sha256: projection.assets.npm.sha256 },
+    { file: projection.assets.coworkPlugin.file, bytes: plugin.bytes,
+      sha256: projection.assets.coworkPlugin.sha256 },
+    { file: publicFile, bytes: publicBytes, sha256: sha256Bytes(publicBytes) },
+    { file: "SHA256SUMS", bytes: Buffer.from(sums), sha256: sha256Bytes(sums) },
+  ];
+  const uploadManifest = {
+    schema: "outsider/stage05-public-release-upload-set/v1",
+    product: { ...projection.product },
+    memberCount: uploadMembers.length,
+    members: uploadMembers.map(({ file, bytes, sha256 }) => ({
+      file, sha256, byteLength: bytes.length,
+    })),
+    privateCertificateExcluded: true,
+  };
+  if (stagePublicUploadSet) {
+    if (readdirSync(directory).length !== 0) fail("PUBLIC_RELEASE_UPLOAD_DIRECTORY_NOT_EMPTY");
+    const published = [];
+    try {
+      for (const member of uploadMembers) {
+        const file = path.join(directory, member.file);
+        const installed = atomicWrite(file, member.bytes, secured, testOnlyWriteObserver);
+        published.push({ ...member, path: file, installed });
+      }
+      for (const member of published) {
+        revalidatePublishedOutput(member.path, member.bytes, member.installed);
+      }
+      const expectedFiles = uploadMembers.map((member) => member.file).sort();
+      if (JSON.stringify(readdirSync(directory).sort()) !== JSON.stringify(expectedFiles)) {
+        fail("PUBLIC_RELEASE_UPLOAD_MEMBER_SET_INVALID");
+      }
+      revalidateRequiredInputs([exact, npm, plugin]);
+    } catch (error) {
+      try {
+        for (const member of [...published].reverse()) {
+          rollbackOutput(member.path, null, member.bytes, secured, member.installed);
+        }
+      } catch (rollbackError) {
+        rollbackError.cause = error;
+        throw rollbackError;
+      }
+      throw error;
+    }
+    return {
+      publicCertificate: publicPath,
+      publicCertificateSha256: sha256Bytes(publicBytes),
+      sha256Sums: sumsPath,
+      projection,
+      publicUploadDirectory: directory,
+      publicUploadManifest: uploadManifest,
+    };
+  }
   const originals = {
     publicCertificate: optionalOutputSnapshot(publicPath),
     sha256Sums: optionalOutputSnapshot(sumsPath),
@@ -503,5 +572,7 @@ export function writePublicReleaseMetadata({
     publicCertificateSha256: sha256Bytes(publicBytes),
     sha256Sums: sumsPath,
     projection,
+    publicUploadDirectory: null,
+    publicUploadManifest: uploadManifest,
   };
 }

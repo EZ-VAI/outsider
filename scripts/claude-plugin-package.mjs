@@ -2,8 +2,10 @@ import { createHash } from "node:crypto";
 import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync,
   rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { assertPublicPackagePaths, publicDependencyFiles,
-  readPublicPackageProfile } from "./stage05-public-package.mjs";
+import { assertPublicPackageContents, assertPublicPackagePaths, dependencyPathSetSha256,
+  publicDependencyFiles, publicReleaseForbiddenContentPatterns,
+  publicReleaseForbiddenPathPatterns, readPublicPackageProfile,
+} from "./stage05-public-package.mjs";
 
 const HOSTED_ENTRIES = [
   "outsider-hook.mjs",
@@ -11,28 +13,25 @@ const HOSTED_ENTRIES = [
   "outsider-controller-host.mjs",
 ];
 
-const HOSTED_RUNTIME_FORBIDDEN_PATH_PATTERNS = [
-  "^artifacts/", "^test/", "^dist/", "^\\.outsider/",
-  "(^|/)(acquire-|outsider-(actuarial|bridgedata|ca-dmv|cas-|cdi-ncigf|clinical|fda-|fema-|fra-phmsa|institutional-capital|judgment-fund|ncua-pbgc|nhtsa-recall|outreach|real-case|real-evidence|real-loss|real-responsibility|reality-|remedy-|rma-|stage1-|stage15-|stage2-|stage234-|stage3-|stage34-|stage4-|waymo))",
-  "\\.(csv|pdf|tfrecord|zip|xlsx|xls|jsonl)$",
-];
-
 const PLUGIN_MANIFEST_FILE = "public-plugin-manifest.json";
 const PLUGIN_MANIFEST_SCHEMA = "outsider/claude-hosted-public-plugin-manifest/v1";
 const RUNTIME_MANIFEST_FILE = "public-runtime-manifest.json";
 const RUNTIME_MANIFEST_SCHEMA = "outsider/claude-hosted-public-runtime-manifest/v1";
-const MANIFEST_SCHEMA_VERSION = "1.0.0";
+const MANIFEST_SCHEMA_VERSION = "1.1.0";
 const PUBLIC_BOUNDARY = "PUBLIC_STAGE05_RUNTIME_ONLY_LOCAL_RESEARCH_EXCLUDED";
 const EXPECTED_TOP_LEVEL = [
   ".claude-plugin", "LICENSE", "hooks", PLUGIN_MANIFEST_FILE, "runtime",
 ];
 const EXPECTED_EXCLUSIONS = Object.freeze({
-  localStages1Through4: true,
-  realityStewardshipResearch: true,
-  governedResponsibilityAndActuarialResearch: true,
-  outreachCatalog: true,
-  rawAndCanonicalArtifacts: true,
+  nonStage05Assets: true,
+  privateDataAndRuns: true,
+  internalPlanning: true,
   tests: true,
+});
+const EXPECTED_INCLUSIONS = Object.freeze({ stage05Runtime: true });
+const PUBLIC_AUDIT_PROFILE = Object.freeze({
+  forbiddenPathPatterns: publicReleaseForbiddenPathPatterns,
+  forbiddenContentPatterns: publicReleaseForbiddenContentPatterns,
 });
 
 function memberFiles(root, relative = "") {
@@ -196,32 +195,40 @@ export function validateClaudeHostedPluginLayout(pluginRoot) {
   const runtimeManifest = readJson(path.join(runtimeRoot, RUNTIME_MANIFEST_FILE),
     "RUNTIME_MANIFEST", errors);
   const declaredRuntime = runtimeManifest?.files;
-  if (!hasExactKeys(runtimeManifest, ["schema", "schemaVersion", "boundary", "files",
-    "localStages1Through4Excluded", "realityStewardshipResearchExcluded",
-    "governedResponsibilityAndActuarialResearchExcluded", "outreachCatalogExcluded",
-    "stage05RuntimePolicyAndHeuristicsIncluded"])
+  if (!hasExactKeys(runtimeManifest, ["schema", "schemaVersion", "boundary",
+    "dependencyPathSetSha256", "files", "excluded", "included"])
     || runtimeManifest?.schema !== RUNTIME_MANIFEST_SCHEMA
     || runtimeManifest?.schemaVersion !== MANIFEST_SCHEMA_VERSION
     || runtimeManifest?.boundary !== PUBLIC_BOUNDARY
-    || runtimeManifest?.localStages1Through4Excluded !== true
-    || runtimeManifest?.realityStewardshipResearchExcluded !== true
-    || runtimeManifest?.governedResponsibilityAndActuarialResearchExcluded !== true
-    || runtimeManifest?.outreachCatalogExcluded !== true
-    || runtimeManifest?.stage05RuntimePolicyAndHeuristicsIncluded !== true
+    || !/^sha256:[0-9a-f]{64}$/.test(runtimeManifest?.dependencyPathSetSha256 ?? "")
+    || !hasExactKeys(runtimeManifest?.excluded, Object.keys(EXPECTED_EXCLUSIONS))
+    || Object.entries(EXPECTED_EXCLUSIONS).some(([key, value]) =>
+      runtimeManifest?.excluded?.[key] !== value)
+    || !hasExactKeys(runtimeManifest?.included, Object.keys(EXPECTED_INCLUSIONS))
+    || Object.entries(EXPECTED_INCLUSIONS).some(([key, value]) =>
+      runtimeManifest?.included?.[key] !== value)
     || !Array.isArray(declaredRuntime)) errors.push("RUNTIME_MANIFEST_SCHEMA_INVALID");
   if (Array.isArray(declaredRuntime)) {
     const declaredPaths = validateHashedMembers({ root: runtimeRoot, records: declaredRuntime,
       errors, invalidPrefix: "RUNTIME_MEMBER_INVALID", missingPrefix: "RUNTIME_MEMBER_MISSING",
       setError: "RUNTIME_MANIFEST_MEMBER_SET_INVALID" });
+    try {
+      const declaredDependencies = declaredPaths.filter((item) => item !== "package.json");
+      if (dependencyPathSetSha256(declaredDependencies)
+        !== runtimeManifest?.dependencyPathSetSha256) {
+        errors.push("RUNTIME_DEPENDENCY_PATH_SET_MISMATCH");
+      }
+    } catch { errors.push("RUNTIME_DEPENDENCY_PATH_SET_INVALID"); }
     const actualPaths = memberFiles(runtimeRoot)
       .filter((item) => item !== RUNTIME_MANIFEST_FILE).sort();
     if (JSON.stringify(actualPaths) !== JSON.stringify(declaredPaths)) {
       errors.push("RUNTIME_ACTUAL_MEMBER_SET_MISMATCH");
     }
     try {
-      assertPublicPackagePaths(actualPaths, {
-        forbiddenPathPatterns: HOSTED_RUNTIME_FORBIDDEN_PATH_PATTERNS,
-      });
+      assertPublicPackagePaths(actualPaths, PUBLIC_AUDIT_PROFILE);
+    } catch (error) { errors.push(String(error?.message ?? error)); }
+    try {
+      assertPublicPackageContents(runtimeRoot, actualPaths, PUBLIC_AUDIT_PROFILE);
     } catch (error) { errors.push(String(error?.message ?? error)); }
   }
 
@@ -229,7 +236,8 @@ export function validateClaudeHostedPluginLayout(pluginRoot) {
     "PLUGIN_ARCHIVE_MANIFEST", errors);
   const declaredArchive = archiveManifest?.members;
   if (!hasExactKeys(archiveManifest, ["schema", "schemaVersion", "manifestFile",
-    "memberCount", "package", "boundary", "members", "excluded"])
+    "memberCount", "package", "boundary", "dependencyPathSetSha256", "members",
+    "excluded", "included"])
     || archiveManifest?.schema !== PLUGIN_MANIFEST_SCHEMA
     || archiveManifest?.schemaVersion !== MANIFEST_SCHEMA_VERSION
     || archiveManifest?.manifestFile !== PLUGIN_MANIFEST_FILE
@@ -240,9 +248,14 @@ export function validateClaudeHostedPluginLayout(pluginRoot) {
     || archiveManifest?.package?.name !== runtimePackage?.name
     || archiveManifest?.package?.version !== runtimePackage?.version
     || archiveManifest?.boundary !== PUBLIC_BOUNDARY
+    || archiveManifest?.dependencyPathSetSha256
+      !== runtimeManifest?.dependencyPathSetSha256
     || !hasExactKeys(archiveManifest?.excluded, Object.keys(EXPECTED_EXCLUSIONS))
     || Object.entries(EXPECTED_EXCLUSIONS).some(([key, value]) =>
       archiveManifest?.excluded?.[key] !== value)
+    || !hasExactKeys(archiveManifest?.included, Object.keys(EXPECTED_INCLUSIONS))
+    || Object.entries(EXPECTED_INCLUSIONS).some(([key, value]) =>
+      archiveManifest?.included?.[key] !== value)
     || !Array.isArray(declaredArchive)) errors.push("PLUGIN_ARCHIVE_MANIFEST_SCHEMA_INVALID");
   if (Array.isArray(declaredArchive)) {
     const declaredPaths = validateHashedMembers({ root: pluginRoot, records: declaredArchive,
@@ -254,6 +267,12 @@ export function validateClaudeHostedPluginLayout(pluginRoot) {
     if (JSON.stringify(actualPaths) !== JSON.stringify(declaredPaths)) {
       errors.push("PLUGIN_ARCHIVE_ACTUAL_MEMBER_SET_MISMATCH");
     }
+    try {
+      assertPublicPackagePaths(actualPaths, PUBLIC_AUDIT_PROFILE);
+    } catch (error) { errors.push(String(error?.message ?? error)); }
+    try {
+      assertPublicPackageContents(pluginRoot, actualPaths, PUBLIC_AUDIT_PROFILE);
+    } catch (error) { errors.push(String(error?.message ?? error)); }
   }
 
   return { ok: errors.length === 0, errors, commands, topLevel,
@@ -267,10 +286,11 @@ export function stageClaudeHostedPlugin({ sourceRoot, targetRoot }) {
   cpSync(path.join(sourceRoot, ".claude-plugin"), path.join(targetRoot, ".claude-plugin"),
     { recursive: true });
   cpSync(path.join(sourceRoot, "LICENSE"), path.join(targetRoot, "LICENSE"));
+  const profile = readPublicPackageProfile(sourceRoot);
   const runtimeEntrypoints = HOSTED_ENTRIES.map((entry) => `bin/${entry}`);
   const dependencyFiles = publicDependencyFiles({ sourceRoot, entrypoints: runtimeEntrypoints });
-  const profile = readPublicPackageProfile(sourceRoot);
   assertPublicPackagePaths(dependencyFiles, profile);
+  assertPublicPackageContents(sourceRoot, dependencyFiles, profile);
   for (const relative of dependencyFiles) {
     const destination = path.join(targetRoot, "runtime", relative);
     mkdirSync(path.dirname(destination), { recursive: true, mode: 0o755 });
@@ -287,16 +307,15 @@ export function stageClaudeHostedPlugin({ sourceRoot, targetRoot }) {
   writeFileSync(path.join(targetRoot, "runtime", "package.json"),
     `${JSON.stringify(runtimePackage, null, 2)}\n`);
   const manifestPaths = [...dependencyFiles, "package.json"].sort();
+  const runtimeDependencyPathSetSha256 = dependencyPathSetSha256(dependencyFiles);
   const runtimeManifest = {
     schema: RUNTIME_MANIFEST_SCHEMA,
     schemaVersion: MANIFEST_SCHEMA_VERSION,
     boundary: profile.boundary,
+    dependencyPathSetSha256: runtimeDependencyPathSetSha256,
     files: hashedMembers(path.join(targetRoot, "runtime"), manifestPaths),
-    localStages1Through4Excluded: true,
-    realityStewardshipResearchExcluded: true,
-    governedResponsibilityAndActuarialResearchExcluded: true,
-    outreachCatalogExcluded: true,
-    stage05RuntimePolicyAndHeuristicsIncluded: true,
+    excluded: { ...EXPECTED_EXCLUSIONS },
+    included: { ...EXPECTED_INCLUSIONS },
   };
   writeFileSync(path.join(targetRoot, "runtime", RUNTIME_MANIFEST_FILE),
     `${JSON.stringify(runtimeManifest, null, 2)}\n`);
@@ -321,8 +340,10 @@ export function stageClaudeHostedPlugin({ sourceRoot, targetRoot }) {
     memberCount: pluginPaths.length + 1,
     package: { name: runtimePackage.name, version: runtimePackage.version },
     boundary: profile.boundary,
+    dependencyPathSetSha256: runtimeDependencyPathSetSha256,
     members: hashedMembers(targetRoot, pluginPaths),
     excluded: { ...EXPECTED_EXCLUSIONS },
+    included: { ...EXPECTED_INCLUSIONS },
   };
   writeFileSync(path.join(targetRoot, PLUGIN_MANIFEST_FILE),
     `${JSON.stringify(pluginManifest, null, 2)}\n`);

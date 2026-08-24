@@ -1,20 +1,19 @@
 /*
- * The canonical Execution Trace — the clearing object for ANY machine.
+ * The canonical Execution Trace — one normalized record for supported machines.
  *
  * THE THESIS THIS FILE MAKES REAL
  * ===============================
  * "The executor is a field, not a schema." A SAT solver, a CI pipeline, a
- * coding agent, a tool-calling LLM, and — the North Star's generalization — a
- * robot taking an irreversible physical action are the same object: a Claim
+ * coding agent, a tool-calling LLM, and a machine taking an irreversible
+ * physical action can be represented as the same object: a Claim
  * attempted by a Way inside a World, leaving an Experience. This module is the
- * one shape they all normalize to, and the registry that lets a machine kind
- * that does not exist yet plug in without touching the core.
+ * shape supported adapters normalize to.
  *
  * WHAT GENERALIZES, AND WHAT MUST NOT
  * ===================================
  * The MEASUREMENT generalizes: every machine consumes resources, emits
  * error/success signals, and some of its steps touch shared reality
- * irreversibly. Those are universal and priced for all Worlds.
+ * irreversibly. Those facts can be measured consistently across Worlds.
  *
  * The JUDGEMENTS do not. "Never ran a test" and "empty submission" are
  * code-specific process facts. Historical v49 corpus rates are quarantined
@@ -41,7 +40,7 @@ export const EXECUTOR_KINDS = Object.freeze([
 /*
  * World kinds carry the two facts that decide how consequential a step is:
  * whether the World is reversible, and whether a failure lands on someone who
- * did not choose the executor (an externality). These are the clearing-relevant
+ * did not choose the executor (an externality). These are consequence-relevant
  * properties, not the technology.
  */
 export const WORLD_KINDS = Object.freeze({
@@ -132,13 +131,12 @@ export function makeExecutionTrace({
 }
 
 /* ------------------------------------------------------------------ *
- * THE LIVE SESSION, ON THE LADDER
+ * THE LIVE SESSION JOIN
  * ------------------------------------------------------------------ *
  * The shipping Stage 0.5 surface is the PreToolUse hook, and until now it
  * produced no protocol record at all: `grep -c "measureStage05\|ProcessCard"
- * src/outsider-hook.js` returned 0. Every hour of supervision it performed was
- * unattestable, so nothing it saw could ever reach Stage 1 or be priced at
- * Stage 2 — two pipelines wearing one name.
+ * src/outsider-hook.js` returned 0. That left attached supervision without the
+ * evidence record used by the rest of the Stage 0.5 product.
  *
  * These two helpers are the join. The SAME merged trajectory the foreman used
  * to make a decision becomes the trace a ProcessCard is computed from, so the
@@ -271,7 +269,7 @@ export function sessionTraceFromSteps({
 }
 
 /* ------------------------------------------------------------------ *
- * The adapter registry — future machine kinds plug in here
+ * The adapter registry
  * ------------------------------------------------------------------ */
 
 const REGISTRY = [];

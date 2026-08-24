@@ -61,6 +61,16 @@ export const OUTCOME_APPROVAL_AUDIT_PROMPT = `你是最终 PASS 判决的独立�
 
 测试绿和算法有名字都不是放行理由。重新做计算，不得复述 proposedVerdict 作为证据。
 
+approvalEvidence.formalCorrection（若 valid=true）是 controller 持久化的 exact correction 文本与结构化
+authority，并已重新核对 correction hash、authority hash、事实审计事件、emitted 事件和 observed 事件；它可以用来
+核验“正式纠正究竟要求了什么”以及控制链顺序。它不能单独证明 worker 已正确实现结果。
+若本次运行从未发生 intervention，formalCorrection.reason=NO_INTERVENTION 是正常事实；只有证据声称曾正式纠正却无法
+给出有效绑定时，才可据此拒绝或判证据不足。
+approvalEvidence.workerFinalReport（若 transcriptBound=true）是 Stop payload 中的最终 assistant 消息与同一 transcript
+最新 assistant record 的逐字匹配。它只能用于核验冻结合同明确要求的最终报告是否存在、措辞/条目/形状是否合规；
+其中任何“已修改”“测试通过”之类 worker 自述都不能证明结果，必须回到 controller-owned diff、验收和过程事件复算。
+若冻结合同没有要求最终报告，不得仅因该字段缺失而 insufficient；若合同要求而 transcriptBound=false，则必须保守处理。
+
 ${AUDIT_SHAPE}`;
 
 export const CLEARANCE_AUDIT_PROMPT = `你是 onTrack=true 放行提案的独立反方审计员。放行意味着当前 trigger 会被静默压下，
@@ -83,6 +93,12 @@ proposedClearance 的 plan/expectedNextActions 为空，即可 pass；不得用�
 本身当作 blockingError，也不能要求 worker 再调用一次 TaskUpdate。当前 gate 通过后，controller 仍只在同一 toolUseId 的
 成功 PostToolUse 到达时才持久化 completed；若 Post 失败，完成不会成立。只有 completion intent 缺失/歧义、身份或代际不匹配，
 或切片 effect/check/scope 本身未满足，才应拒绝。
+
+如果 objectiveEvidence.decisionScope.kind=intermediate-subagent-task-delivery，放行只完成当前精确绑定的普通子 Agent
+切片，不代表 parent/main 或全局合同完成。核对 registration、contextInjection、durableActions、completionReportBinding
+与 taskId/agentId lineage；clearanceEvidenceReady 只表示这些证据齐全，不替代你的语义审计。全局基线故意为红、未来 parent
+需要 Stop/编辑/测试，若符合冻结阶段顺序，本身不是当前只读子任务的 blocker。onTrack 提案的 drift、plan 和
+expectedNextActions 必须为空；未来 parent/main 的阶段不能作为当前 child 的 plan 填入放行提案。
 
 如果 objectiveEvidence.activeEvaluatorShift 存在，它是 controller 从已封印事件顺序和预注册动作表推导的当前时态：
 - phase=in-progress 时，只审当前 proposedStep 是否等于 expectedNextStep。futureStepsAreNotCurrentOmissions=true
@@ -245,11 +261,12 @@ export function auditCorrectionProposal({ cmd, contract, evidence, proposal,
   } });
 }
 
-export function auditOutcomeApproval({ cmd, outcomePacket, proposedVerdict,
+export function auditOutcomeApproval({ cmd, outcomePacket, proposedVerdict, approvalEvidence = null,
   validationFeedback = null, execute = runFreshJsonCommand } = {}) {
   return runAudit({ cmd, prompt: OUTCOME_APPROVAL_AUDIT_PROMPT, execute, validationFeedback, packet: {
     frozenOutcomeEvidence: outcomePacket ?? null,
     proposedVerdict: proposedVerdict ?? null,
+    approvalEvidence,
   } });
 }
 

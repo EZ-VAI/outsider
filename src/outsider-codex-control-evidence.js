@@ -23,7 +23,9 @@ import {
   sign as cryptoSign, verify as cryptoVerify,
 } from "node:crypto";
 import { canonicalizeStrict } from "./canonical.js";
-import { verifyCodexHookCapabilityProbe } from "./outsider-codex-worker-adapter.js";
+import {
+  CODEX_REQUIRED_LIFECYCLE_EVENTS, verifyCodexHookCapabilityProbe,
+} from "./outsider-codex-worker-adapter.js";
 import { workerDigest } from "./outsider-worker-adapter.js";
 
 export const CODEX_CONTROL_SCHEMAS = Object.freeze({
@@ -39,7 +41,7 @@ const MAX_TRACE_BYTES = 64 * 1024 * 1024;
 const MAX_TRACE_FRAMES = 250_000;
 const DIRECTIONS = new Set(["CLIENT_TO_SERVER", "SERVER_TO_CLIENT"]);
 const HOOK_EVENTS = new Set(["preToolUse", "permissionRequest", "postToolUse",
-  "preCompact", "postCompact", "sessionStart", "userPromptSubmit",
+  "preCompact", "postCompact", "sessionStart", "sessionEnd", "userPromptSubmit",
   "subagentStart", "subagentStop", "stop"]);
 const HOOK_STATUSES = new Set(["running", "completed", "failed", "blocked", "stopped"]);
 const RECEIPT_DECISIONS = new Set(["ALLOW", "DENY", "BLOCK", "OBSERVE"]);
@@ -47,9 +49,7 @@ const CONTROLLER_PATHS = new Set(["KERNEL_CONTROLLER", "ATTACHED_POLICY",
   "ATTACHED_FAIL_CLOSED", "ATTACHED_FAIL_VISIBLE"]);
 const IDENTITY_SOURCES = new Set(["HOST_SESSION_ID", "HOST_THREAD_ID",
   "HOST_SESSION_ID_FALLBACK", "HOST_TURN_ID", "HOST_TOOL_USE_ID", "NOT_APPLICABLE"]);
-const REQUIRED_INSTALLED_HOOKS = Object.freeze([
-  "sessionStart", "userPromptSubmit", "preToolUse", "postToolUse", "stop",
-]);
+const REQUIRED_INSTALLED_HOOKS = CODEX_REQUIRED_LIFECYCLE_EVENTS;
 const REQUIRED_APP_SERVER_METHODS = Object.freeze([
   "hook/started", "hook/completed", "item/started", "item/completed",
   "turn/started", "turn/completed", "item/commandExecution/requestApproval",
@@ -181,7 +181,7 @@ function frameContext(params = {}) {
     itemIdHash: hashNullable(params.itemId ?? item?.id ?? null) };
 }
 
-/* 0.144.5's generated protocol has HookRunSummary but no item/tool-use
+/* The pinned generated app-server protocol has HookRunSummary but no item/tool-use
    identity on that object.  Do not infer one from ordering inside a turn: a
    turn can contain multiple actions.  A future protocol may close the gap, in
    which case every generated HookRunSummary definition must expose the field
@@ -676,7 +676,8 @@ function jsonValue(value) {
 
 function receiptEventName(input) {
   const raw = String(input?.hook_event_name ?? input?.hookEventName ?? "");
-  const names = { SessionStart: "sessionStart", UserPromptSubmit: "userPromptSubmit",
+  const names = { SessionStart: "sessionStart", SessionEnd: "sessionEnd",
+    UserPromptSubmit: "userPromptSubmit",
     PreToolUse: "preToolUse", PostToolUse: "postToolUse", PreCompact: "preCompact",
     PostCompact: "postCompact", Stop: "stop", SubagentStart: "subagentStart",
     SubagentStop: "subagentStop", PermissionRequest: "permissionRequest" };
@@ -855,10 +856,20 @@ function evaluateLifecycle(trace, receipts) {
   if (!preReceipt) missing.push("PRE_ACTION_CONTROLLER_ITEM_BINDING_MISSING");
   if (!postReceipt) missing.push("POST_OUTCOME_CONTROLLER_ITEM_BINDING_MISSING");
   if (!stopReceipt) missing.push("STOP_CONTROLLER_RECEIPT_MISSING");
-  const boundReceipts = [sessionReceipt, promptReceipt, preReceipt, postReceipt, stopReceipt]
-    .filter(Boolean);
-  if (boundReceipts.some((receipt) => receipt.runtimeClaims?.kernelControllerInvoked !== true)) {
-    missing.push("KERNEL_CONTROLLER_NOT_INVOKED_FOR_BOUNDARY");
+  const expectedReceiptRoutes = [
+    [sessionReceipt, "sessionStart", "ATTACHED_POLICY", false],
+    [promptReceipt, "userPromptSubmit", "ATTACHED_POLICY", false],
+    [preReceipt, "preToolUse", "KERNEL_CONTROLLER", true],
+    [postReceipt, "postToolUse", "KERNEL_CONTROLLER", true],
+    [stopReceipt, "stop", "KERNEL_CONTROLLER", true],
+  ];
+  const boundReceipts = expectedReceiptRoutes.map(([receipt]) => receipt).filter(Boolean);
+  for (const [receipt, eventName, controllerPath, kernelControllerInvoked]
+    of expectedReceiptRoutes) {
+    if (receipt && (receipt.runtimeClaims?.controllerPath !== controllerPath
+      || receipt.runtimeClaims?.kernelControllerInvoked !== kernelControllerInvoked)) {
+      missing.push(`CONTROLLER_ROUTE_MISMATCH:${eventName}`);
+    }
   }
   if (boundReceipts.some((receipt) => receipt.identityProvenance.threadId !== "HOST_THREAD_ID"
     || receipt.identityProvenance.sessionId !== "HOST_SESSION_ID"
@@ -927,6 +938,13 @@ export function assessCodexStage05Control({
     { binaryBytes, schemaBytes, hooksList });
   if (!probe.ok || probe.verificationMode !== "FULL_LOCAL_METADATA_REPLAY") {
     missing.push(`HOOK_METADATA_SOURCE_REPLAY_FAILED:${probe.error ?? "MODE"}`);
+  } else {
+    if (probe.engineSupportsControlledCandidate !== true) {
+      missing.push("HOOK_PROBE_CORE_EVENT_ENGINE_SUPPORT_MISSING");
+    }
+    if (probe.installedControlHooksTrusted !== true) {
+      missing.push("HOOK_PROBE_CORE_EVENT_TRUSTED_INSTALL_MISSING");
+    }
   }
   const methods = (() => {
     try { return collectStrings(JSON.parse(sourceBuffer(appServerSchemaBytes).toString("utf8"))); }
@@ -939,12 +957,17 @@ export function assessCodexStage05Control({
   if (!hookItemIdentity.exposed) missing.push("APP_SERVER_HOOK_ITEM_ID_NOT_EXPOSED");
   const hooks = listedOutsiderHooks(hooksList);
   for (const eventName of REQUIRED_INSTALLED_HOOKS) {
-    const candidates = hooks.filter((hook) => hook.eventName === eventName);
-    if (!candidates.length) missing.push(`CONTROL_HOOK_MISSING:${eventName}`);
-    else if (!candidates.some((hook) => hook.enabled
-      && ["trusted", "managed"].includes(hook.trustStatus)
+    /* A universal plugin may legitimately add an Outsider-branded boundary
+       notice beside the controller hook. Only exact attached-control commands
+       occupy the control-authority slot; bypass remains an independent global
+       failure and is never promoted as a candidate. */
+    const candidates = hooks.filter((hook) => hook.eventName === eventName
       && /(?:^|\s)--attached-control(?:\s|$)/.test(hook.command)
-      && !/--dangerously-bypass-hook-trust/.test(hook.command))) {
+      && !/--dangerously-bypass-hook-trust/.test(hook.command));
+    if (!candidates.length) missing.push(`CONTROL_HOOK_MISSING:${eventName}`);
+    else if (candidates.length !== 1) missing.push(`CONTROL_HOOK_AMBIGUOUS:${eventName}`);
+    else if (!candidates[0].enabled
+      || !["trusted", "managed"].includes(candidates[0].trustStatus)) {
       missing.push(`CONTROL_HOOK_NOT_TRUSTED_ATTACHED:${eventName}`);
     }
   }
@@ -1000,7 +1023,8 @@ export function assessCodexStage05Control({
   const configuredHashes = new Map(hooks.map((hook) => [hook.eventName,
     new Set(hooks.filter((candidate) => candidate.eventName === hook.eventName
       && candidate.enabled && ["trusted", "managed"].includes(candidate.trustStatus)
-      && /(?:^|\s)--attached-control(?:\s|$)/.test(candidate.command))
+      && /(?:^|\s)--attached-control(?:\s|$)/.test(candidate.command)
+      && !/--dangerously-bypass-hook-trust/.test(candidate.command))
       .map((candidate) => candidate.currentHash))]));
   if (verifiedReceipts.some((receipt) => receipt.hookCurrentHash === null)) {
     missing.push("CONTROLLER_RECEIPT_HOOK_HASH_UNAVAILABLE");

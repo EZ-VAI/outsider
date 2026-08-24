@@ -8,8 +8,8 @@ than importing internal packages.
 
 ## What DeepSeek Harness is
 
-DeepSeek Harness (`dsh`) is a developer-preview agent runtime, not a semantic supervisor or a
-settlement system. Its central decision is “everything is a plugin”: Cordis plugins contribute
+DeepSeek Harness (`dsh`) is a developer-preview agent runtime, not a semantic supervisor or an
+independent decision system. Its central decision is “everything is a plugin”: Cordis plugins contribute
 services, typed events, and reversible effects to a shared context. Model adapters, tools, the
 session log, the agent loop, filesystem and sandbox providers, subagent implementations, hooks,
 workflows, jobs, Web UI, and headless runners are all replaceable composition layers.
@@ -38,8 +38,7 @@ Its strongest architectural properties for Outsider are:
 
 The shipped `guard` family currently describes loop hygiene such as repeated-tool reminders and
 per-call timeouts. That is useful, but it is not Outsider's independent semantic contract,
-correction-authority audit, causal intervention proof, sealed evidence, ATTEST record, risk
-pricing, guarantee, or settlement layer.
+correction-authority audit, causal intervention proof, sealed evidence, or ATTEST record.
 
 DeepSeek Harness therefore does not replace Outsider. It is a new **Way/runtime** that gives
 Outsider a much cleaner sensor and actuator surface than scraping external host hooks.
@@ -79,17 +78,14 @@ the Way rewrite its own referee.
    implemented. The canary proves exact durable delivery of one audited correction, not effect.
 3. **DSH conformance canary** — construct one mechanical-green/semantic-red fixture and require
    the same Stage 0.5 causal chain and evidence verification used for Claude Code.
-4. **Stage 1 binding** — treat the dumped profile/bundle closure, DSH version, model provider,
-   subagent provider, and sandbox provider as the Way identity and correlation roots.
 
 ## Product implication
 
-DeepSeek's architecture supports the long-term Outsider thesis: agent execution will become a
+DeepSeek's architecture supports the Outsider integration thesis: agent execution is becoming a
 composable runtime containing many interchangeable models, tools, sandboxes, workflows, and
 child-agent providers. The scarce object is no longer “one chatbot answer”; it is a runtime's
 permission to spend tool, model, risk, and recovery capacity. Harness supplies the composable
-execution plane. Outsider can supply the independent authorization, evidence, pricing, and
-settlement plane.
+execution plane. Outsider supplies a separate supervision and evidence boundary.
 
 ## Claim boundary
 

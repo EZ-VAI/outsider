@@ -1,13 +1,9 @@
 /*
  * V49 — Stage 0.5: the agent process fact sheet.
  *
- * WHAT THIS IS, AND WHY IT SHIPS BEFORE STAGE 1
- * =============================================
- * Stage 1 is the clearing house: pricing a guarantee on consequential machine
- * action, which needs outcome labels, repeated trials, counterparties. All of
- * that is data- and relationship-limited right now.
- *
- * Stage 0.5 can still report facts that are visible in the trajectory itself:
+ * WHAT THIS IS
+ * ============
+ * Stage 0.5 reports facts that are visible in the trajectory itself:
  * a run submitted no diff, no matching acceptance command appears in the trace,
  * or measured resource use exceeded a caller-supplied peer denominator. Those
  * are measurements of the current run. They are not outcome probabilities.

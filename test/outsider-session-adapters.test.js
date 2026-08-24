@@ -9,7 +9,7 @@ import { writeFileSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
-  makeClaudeCodeParser, makeGenericStructuredParser, makeSessionParser,
+  makeClaudeCodeParser, makeCodexParser, makeGenericStructuredParser, makeSessionParser,
   trajectoryFromTranscript, classifyToolCall,
 } from "../src/outsider-session-adapters.js";
 import { createSupervisionSession } from "../src/outsider-supervisor.js";
@@ -62,9 +62,51 @@ test("makeSessionParser dispatches per agent", () => {
   assert.equal(typeof makeSessionParser("trae").feed, "function");
 });
 
+test("Codex custom exec wrapper is not invented as an edit while apply_patch remains one", () => {
+  const parser = makeCodexParser();
+  parser.feed(cc({ type: "response_item", payload: { type: "custom_tool_call",
+    call_id: "wrapper-1", name: "exec", input: [
+      "const r = await tools.exec_command({",
+      "  cmd: \"sed -n '1,240p' src/answer.js test/answer.test.js\"",
+      "});",
+    ].join("\n") } }));
+  const wrapper = parser.feed(cc({ type: "response_item", payload: {
+    type: "custom_tool_call_output", call_id: "wrapper-1",
+    output: "Script completed\\nOutput:\\nread-only source bytes",
+  } }));
+  assert.equal(wrapper.length, 1);
+  assert.equal(wrapper[0].toolName, "exec");
+  assert.equal(wrapper[0].isEdit, false,
+    "the transport envelope cannot override the separately observed native hook action");
+
+  parser.feed(cc({ type: "response_item", payload: { type: "custom_tool_call",
+    call_id: "patch-1", name: "apply_patch", input: "*** Begin Patch" } }));
+  const patch = parser.feed(cc({ type: "event_msg", payload: { type: "patch_apply_end",
+    call_id: "patch-1", success: true,
+    changes: { "src/answer.js": { type: "update" } } } }));
+  assert.equal(patch.length, 1);
+  assert.equal(patch[0].isEdit, true);
+  assert.equal(patch[0].file, "src/answer.js");
+});
+
 test("classifyToolCall (canonical home) flags irreversible vs ordinary", () => {
   assert.equal(classifyToolCall("Bash", { command: "kubectl apply -f p.yaml" }).irreversible, true);
   assert.equal(classifyToolCall("Bash", { command: "ls" }).irreversible, false);
+});
+
+test("named no-command tools are conservative unless their semantics are known", () => {
+  assert.equal(classifyToolCall("Read", { file_path: "src/value.js" }).risk, "safe");
+  assert.equal(classifyToolCall("spawn_agent", {
+    task_name: "audit", message: "inspect the frozen contract",
+  }).risk, "build");
+  assert.equal(classifyToolCall("mcp__github__create_issue", {
+    title: "publish externally",
+  }).risk, "unknown",
+  "an opaque MCP name and payload do not prove that the action is safe");
+  assert.equal(classifyToolCall("future_host_tool", {}).risk, "unknown");
+  assert.equal(classifyToolCall("exec", {}).risk, "unknown",
+    "even a shell-shaped wrapper is unknown when its command is absent");
+  assert.equal(classifyToolCall("apply_patch", { path: "src/value.js" }).risk, "build");
 });
 
 test("end to end: a structured red-test-then-fake-claim transcript triggers a correction", () => {

@@ -1,37 +1,11 @@
 /*
- * Experience capture + the behavior-prediction model — engineering module 5.
+ * Experience capture plus optional retrospective estimators.
  *
- * WHY THIS IS THE POINT, NOT A BY-PRODUCT
- * =======================================
- * Supervising a run fixes THIS run. But every supervised run is also a labeled
- * trajectory: this Way, on this kind of Claim, in this World, SAID x and actually
- * DID y, and the supervisor decided z. Nobody else has this data, because nobody
- * else was in the loop watching an autonomous agent for hours. Captured, it is
- * the private Experience corpus the North Star's Experience economy runs on, and
- * the training signal for our OWN model of how a given machine behaves — the
- * thing the operator asked for: "受监督下的机器行为也应该形成我们自己的行为预测模型".
- *
- * TWO HONEST PIECES (no overclaiming)
- * ===================================
- * 1. CREDIBILITY (fitBehaviorModel / makeRunningBehaviorModel): a per-executor
- *    per-behavior rate with Bühlmann-Straub shrinkage. This is a classical (1960s)
- *    actuarial estimator, correctly implemented and appropriate for sparse
- *    per-Way data — NOT a "trained model" and NOT frontier. It keys on executor
- *    identity and counts labels; it is described as exactly that.
- *
- * 2. A LEGACY EXPLORATORY TRAINER (trainBehaviorModel over outsider-model.js):
- *    logistic regression fit by gradient descent over the FEATURES the record
- *    captures (steps, cost, cost-vs-peer, claim flags) AND the World's
- *    reversible/externality. Its historical API uses a random ROW holdout, so
- *    its metrics are exploratory only: executor/task/correlation roots can cross
- *    the split, missing costs are implicitly mapped by the v1 featurizer, and
- *    completed-run fields are not pre-action predictors. The governed v2 path
- *    lives in `outsider-governed-behavior-model.js`; it is intentionally not
- *    re-exported through this public Stage 0.5 legacy barrel.
- *
- * No LLM, no GPU, local-first. The frontier CM-1/CM-2 research models are a
- * SEPARATE track and are NOT called from here — this file no longer pretends they
- * are; the prefix-conditional (mid-run) prediction is their future job.
+ * Stage 0.5 records are local-first and describe completed supervised runs.
+ * The credibility estimator reports shrinkage-weighted historical rates. The
+ * legacy logistic helper is retained for compatibility and exploratory use; its
+ * random-row split and completed-run features do not establish prospective
+ * validity or grant operational authority. No LLM or GPU is used here.
  */
 
 import { featurizeRecord, RECORD_FEATURE_NAMES } from "./outsider-features.js";
@@ -229,15 +203,13 @@ export function predictBehavior(model, { executor, world = null } = {}) {
 }
 
 /*
- * makeRunningBehaviorModel — the fast incremental CREDIBILITY updater (this is
- * counting, not "training"). It keeps running per-executor k/n sufficient
+ * makeRunningBehaviorModel — the fast incremental credibility updater. It
+ * keeps running per-executor k/n sufficient
  * statistics, updates them in O(batch), and recomputes pPop/K on demand
  * (O(#executors)) — so the per-Way rate stays current as telemetry streams in.
- * The legacy exploratory feature fit is trainBehaviorModel (SGD logistic).
- * It may run beside this updater for retrospective analysis, but its row-random
- * split and completed-run features are not governed prospective validation and
- * cannot support pre-action, PRICE, or responsibility claims. keyBy lets the
- * backend key by a PRIVACY-HASHED id.
+ * The legacy feature fit may run beside this updater for retrospective analysis,
+ * but it is not prospective validation or decision authority. keyBy lets the
+ * backend key by a privacy-hashed id.
  */
 export function makeRunningBehaviorModel({ priorRates = {}, defaultK = 8, keyBy } = {}) {
   const key = keyBy ?? ((rec) => rec.executorHash ?? rec.executor?.id ?? "unknown");
@@ -311,7 +283,7 @@ export function trainBehaviorModel(records, {
     retrospectiveExploratoryUseOnly: true,
     responsibilityUseEligible: false,
     operationalAuthorityGranted: false,
-    governedReplacement: "trainGovernedBehaviorModel",
+    governedReplacement: "SEPARATE_NON_STAGE05_PATH",
   };
   const rows = recordsOf(records)
     .filter((r) => r?.labels && r.labels[signal] != null);
@@ -353,10 +325,8 @@ export function modelForecast(serialized, record) {
 }
 
 /*
- * contractPriorFromForecast — close the loop. When the model says an executor
- * fakes success often enough, and there is enough history to believe it, the
- * next run's proposed contract should tighten. This is what "supervised behavior
- * forms our own model" pays out as: the model feeds the next supervision.
+ * contractPriorFromForecast — derive conservative advisory contract defaults
+ * from sufficiently supported historical estimates.
  */
 export function contractPriorFromForecast(forecast) {
   const fake = forecast?.forecasts?.find((f) => f.signal === "fakedSuccess");

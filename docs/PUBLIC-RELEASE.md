@@ -10,12 +10,11 @@ The repository is a mixed local research workspace and is deliberately marked
 runtime is first staged from the machine-reviewed `release-public-files.json`
 dependency closure. Its manifest hashes every member and the extracted package
 must contain exactly that set—no missing files and no unmanifested extras. The
-same boundary is applied to the Claude hosted-plugin runtime. Stage 1–4,
-Reality Stewardship research, governed responsibility/actuarial models,
-outreach, acquisition code, raw sources and canonical research artifacts stay
-local and are not silently swept into the runtime archive. Stage 0.5 runtime
-policy/heuristic modules and explicitly documented legacy behavior utilities do
-remain public because the installed controller depends on them.
+same boundary is applied to the Claude hosted-plugin runtime. Non-runtime
+research, private datasets, internal planning material and raw research sources
+stay local and are not silently swept into the runtime archive. Stage 0.5
+runtime policy/heuristic modules and explicitly documented legacy behavior
+utilities do remain public because the installed controller depends on them.
 
 The repository marketplace at `.agents/plugins/marketplace.json` and its
 `plugins/outsider-stage05/` source are part of the reviewed public closure.
@@ -44,8 +43,8 @@ identity, prompts, transcripts, command output, raw events, private keys or
 unredacted stdout/stderr. Publishing a hand-edited projection without a
 reproducible generator is not sufficient.
 
-`SHA256SUMS` covers every downloadable asset above. The archive checksum must
-equal the artifact hash in both the exact certificate and its public
+`SHA256SUMS` covers the other three downloadable assets above. The archive
+checksum must equal the artifact hash in both the exact certificate and its public
 projection. A release is described as **open-source beta** unless the exact
 certificate says `stablePublicReleaseReady: true`; passing deterministic tests
 alone does not permit the stable claim.
@@ -74,8 +73,10 @@ Plugins Directory publication remains a separate optional distribution event.
    every checksum.
 6. Inspect the Git tree and archives for generated run directories, credentials,
    private evidence, local paths and account identifiers.
-7. Push the source tag, create the GitHub Release, attach the four assets, and
-   state unsupported surfaces and any `NOT_RUN` gates in the release notes.
+7. Push the source tag, create the GitHub Release, and attach only the four files
+   in the generated `dist/public-release-<version>/` upload set. Never use a
+   wildcard over `dist/`. State unsupported surfaces and any `NOT_RUN` gates in
+   the release notes.
 8. Only after deployment verification, publish the demo URL and the contribution
    gateway endpoint plus pinned server public key in the tagged GitHub Release
    metadata.
@@ -90,6 +91,10 @@ npm run release:metadata -- \
 ```
 
 It refuses a package/version mismatch or an npm archive whose SHA-256 differs
-from the exact certificate. Claim-boundary prose is also an explicit allowlist:
+from the exact certificate. It also requires the exact certificate's validated
+Cowork-plugin hash and byte length to match, then creates a new upload directory
+containing exactly the four public files. The private exact certificate remains
+outside that set with mode `0600`; a non-empty upload directory is refused.
+Claim-boundary prose is also an explicit allowlist:
 adding a new public claim requires a reviewed generator change rather than
 silently copying arbitrary certificate strings.

@@ -57,7 +57,7 @@ chat or sent to another person.
 | Claude Desktop Cowork (macOS) | Requires the release plugin archive plus the local helper and a real helper/plugin handshake. |
 | Remote Cowork | Supported only when that remote session can actually reach the helper and emits a conformance record. |
 | Ordinary Claude Chat | Unsupported; it does not run the required hooks. |
-| Codex CLI/Desktop/IDE | The universal plugin and companion runtime are installable. The operator must review the exact hook hash in `/hooks`; full control requires a real source-bound conformance receipt. Codex hooks are a guardrail, not complete tool coverage. |
+| Codex CLI/Desktop/IDE | The universal plugin and companion runtime are installable. A project-local live run of the exact 1.3.99 source runtime bound one read-only child Agent, blocked a red Stop, delivered and observed a bounded correction, independently re-verified green acceptance, allowed the repaired Stop, finalized `SAFE_DELIVERY`, and verified its 63-event hash chain. The operator must still review the exact hook hash in `/hooks`; Codex hooks are a guardrail, not complete tool coverage. |
 | ChatGPT Chat/Work | The package is structurally eligible for accounts/workspaces that expose local plugin sources; a live ChatGPT Desktop install has not yet been exercised. Ordinary ChatGPT conversations do not expose a universal pre-tool/post-tool/stop lifecycle, so this surface is **not** globally controlled Stage 0.5. |
 | DeepSeek Harness | Research-grade cooperative delivery adapter only; no production semantic-effect or adversarial-host claim. |
 | Trae / CodeBuddy | Observer or wrapper only; no repository-authored command authority and no controlled-loop claim. |
@@ -68,22 +68,32 @@ specialized paths may bypass that hook path; `write_stdin`/polling on an
 existing unified exec session does not run `PreToolUse` again. Those exceptions are part of the
 published boundary.
 
+The tested Codex host exposed and trusted ten project hook definitions. It did
+not expose `SessionEnd`, even though that event appears in the current Codex
+hook documentation. `SessionEnd` is advisory: its output cannot steer Codex or
+keep a task open. Outsider therefore reports the missing event as a host
+capability gap and does not count eleven-event lifecycle coverage as
+established. The live result above covers the consequential contract, tool,
+correction, Stop, verification, and finalization path; it is not a claim that
+every documented or hosted Codex path was exercised.
+
 ## Install the Stage 0.5 runtime
 
-Requires Node.js 20 or newer. **After the reviewed v1.3.98 release has actually
+Requires Node.js 20 or newer. **After the reviewed v1.3.99 release has actually
 been published**, download these files from that **same** GitHub release. Until
 then, use the local source-checkout flow below and do not treat the `latest`
-release page as a v1.3.98 installer:
+release page as a v1.3.99 installer:
 
-- `outsider-guard-1.3.98.tgz`
+- `outsider-guard-1.3.99.tgz`
+- `outsider-guard-1.3.99-claude.plugin.zip` for Cowork
+- `release-certificate-public-1.3.99.json`
 - `SHA256SUMS`
-- `outsider-guard-1.3.98-claude.plugin.zip` for Cowork
 
 Verify the archive from an independent terminal, then install:
 
 ```bash
-shasum -a 256 outsider-guard-1.3.98.tgz
-npm install -g ./outsider-guard-1.3.98.tgz
+shasum -a 256 outsider-guard-1.3.99.tgz
+npm install -g ./outsider-guard-1.3.99.tgz
 outsider install --scope user
 # Restart the host and start a real session, then:
 outsider doctor --json
@@ -93,7 +103,7 @@ Do not use `sudo` for a global npm install. If the default prefix is not
 writable, use a user-owned prefix:
 
 ```bash
-npm install -g --prefix "$HOME/.local" ./outsider-guard-1.3.98.tgz
+npm install -g --prefix "$HOME/.local" ./outsider-guard-1.3.99.tgz
 export PATH="$HOME/.local/bin:$PATH"
 outsider install --scope user
 ```
@@ -111,16 +121,16 @@ it intentionally refuses direct `npm pack` or `npm install -g .`. After the
 reviewed tag exists, source users must bind the checkout to that tag before
 staging the reviewed public Stage 0.5 import closure. Before the tag exists, use
 only an existing reviewed local checkout; do not treat mutable remote `main` as
-v1.3.98:
+v1.3.99:
 
 ```bash
-git clone --branch v1.3.98 --depth 1 https://github.com/EZ-VAI/outsider.git
+git clone --branch v1.3.99 --depth 1 https://github.com/EZ-VAI/outsider.git
 cd outsider
 npm ci
 npm test
 npm run test:corpus
-node scripts/stage05-public-package.mjs --out /tmp/outsider-stage05-public-1.3.98
-npm install -g /tmp/outsider-stage05-public-1.3.98
+node scripts/stage05-public-package.mjs --out /tmp/outsider-stage05-public-1.3.99
+npm install -g /tmp/outsider-stage05-public-1.3.99
 outsider install --scope user
 ```
 
@@ -140,10 +150,10 @@ codex plugin marketplace add /path/to/outsider
 codex plugin add outsider-stage05@outsider
 ```
 
-After the reviewed `v1.3.98` Git tag has actually been published:
+After the reviewed `v1.3.99` Git tag has actually been published:
 
 ```bash
-codex plugin marketplace add EZ-VAI/outsider --ref v1.3.98
+codex plugin marketplace add EZ-VAI/outsider --ref v1.3.99
 codex plugin add outsider-stage05@outsider
 ```
 
@@ -162,8 +172,8 @@ codex plugin marketplace list
 The Codex CLI command above can register the reviewed repo marketplace, but
 ChatGPT plugin installation and testing happen in the ChatGPT Desktop UI:
 
-1. Make the reviewed `v1.3.98` checkout the active repository, or register its
-   marketplace with `codex plugin marketplace add EZ-VAI/outsider --ref v1.3.98`.
+1. Make the reviewed `v1.3.99` checkout the active repository, or register its
+   marketplace with `codex plugin marketplace add EZ-VAI/outsider --ref v1.3.99`.
 2. Restart ChatGPT Desktop.
 3. Open the Plugins Directory, choose the **Outsider** marketplace source, and
    install **Outsider Stage 0.5**.
@@ -244,7 +254,7 @@ Claude Desktop's Code tab uses the native Claude Code hooks.
 Cowork additionally requires:
 
 1. `outsider install --scope user` to register the private local helper.
-2. Uploading `outsider-guard-1.3.98-claude.plugin.zip` from the same release.
+2. Uploading `outsider-guard-1.3.99-claude.plugin.zip` from the same release.
 3. A new Cowork session and a real runtime handshake.
 
 The plugin is a thin client; controller state remains outside the hosted

@@ -53,15 +53,12 @@
  * Everything here satisfies the rule by construction: drop the rewrite and you
  * get exactly today's behaviour.
  *
- * WHY THIS IS ALSO THE RUNG THE LADDER NEEDED
- * ===========================================
- * Stage 2 PRICE and Stage 3 GUARANTEE need interventions whose effect is
- * ATTRIBUTABLE. A nudge has no clean counterfactual — an agent that complies may
- * have complied anyway, which is why the compliance arm has been stuck at n=0
- * for six rounds. A rewrite has an exact one: the command that WOULD have run,
- * and the command that DID. Both are recorded, both are structural, and the
- * difference is not a matter of opinion. You cannot price a nudge. You can price
- * a rewrite.
+ * WHY THE REWRITE IS EVIDENCE-BEARING
+ * ===================================
+ * A text reminder has no clean mechanical counterfactual: an agent that follows
+ * it may have done so anyway. A rewrite records both the proposed command and
+ * the command actually executed, making this bounded intervention directly
+ * inspectable without claiming that it establishes the final task outcome.
  */
 
 /* a pipeline whose exit status will come from the filter, not from the work */

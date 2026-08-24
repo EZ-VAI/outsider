@@ -105,8 +105,10 @@ const ATTACHED_EVENTS = ["SessionStart", "UserPromptSubmit", "PreToolUse", "Post
   "SubagentStart", "SubagentStop", "PreCompact", "Stop", "SessionEnd", "TaskCreated",
   "TaskCompleted", "TeammateIdle"];
 
-const CODEX_REQUIRED_EVENTS = ["SessionStart", "UserPromptSubmit", "PreToolUse",
-  "PostToolUse", "PreCompact", "Stop"];
+const CODEX_REQUIRED_EVENTS = ["SessionStart", "UserPromptSubmit",
+  "PreToolUse", "PermissionRequest", "PostToolUse", "PreCompact", "PostCompact",
+  "SubagentStart", "SubagentStop", "Stop"];
+const CODEX_ADVISORY_EVENTS = ["SessionEnd"];
 
 function isOutsiderCodexAttachedCommand(command) {
   return /(?:^|[\s'"])(?:[^'"\s]*\/)?outsider-hook(?:\.mjs)?['"]?\s+hook\s+codex\s+--attached-control(?:\s|$)/u
@@ -261,6 +263,9 @@ function attachedSurfaceStatus(attachedRoot = defaultAttachedRoot(), {
   const codexInstalledEvents = CODEX_REQUIRED_EVENTS.filter((event) =>
     (codexSettings?.hooks?.[event] ?? []).some((entry) => (entry.hooks ?? [])
       .some((hook) => isOutsiderCodexAttachedCommand(hook.command))));
+  const codexInstalledAdvisoryEvents = CODEX_ADVISORY_EVENTS.filter((event) =>
+    (codexSettings?.hooks?.[event] ?? []).some((entry) => (entry.hooks ?? [])
+      .some((hook) => isOutsiderCodexAttachedCommand(hook.command))));
   let codexConfig = "";
   try { codexConfig = readFileSync(path.join(codexHome, "config.toml"), "utf8"); }
   catch { /* not configured */ }
@@ -271,6 +276,7 @@ function attachedSurfaceStatus(attachedRoot = defaultAttachedRoot(), {
   const codex = lastByHost("codex");
   const codexLedgerCompletionCandidate = Boolean(codex?.completedRuns?.some((run) =>
     run.proofComplete === true || run.deliveryComplete === true));
+  const codexConsequentialClosedLoop = verifiedAttachedCompletion(codex, "codex");
   /* A completed attached-kernel run is not a Codex host-control proof.  Codex
      control additionally requires the source-replayed app-server / hook item /
      signed controller assessment in outsider-codex-control-evidence.js.  The
@@ -339,15 +345,24 @@ function attachedSurfaceStatus(attachedRoot = defaultAttachedRoot(), {
       hooksConfigured: codexInstalledEvents.length === CODEX_REQUIRED_EVENTS.length,
       installedEvents: codexInstalledEvents,
       requiredEvents: CODEX_REQUIRED_EVENTS,
+      advisoryHooksConfigured:
+        codexInstalledAdvisoryEvents.length === CODEX_ADVISORY_EVENTS.length,
+      installedAdvisoryEvents: codexInstalledAdvisoryEvents,
+      advisoryEvents: CODEX_ADVISORY_EVENTS,
       hookTrustStatus: "UNKNOWN_REQUIRES_CODEX_HOOKS_REVIEW",
       runtimeConformanceSeen: Boolean(codex),
       ledgerCompletionCandidateSeen: codexLedgerCompletionCandidate,
+      consequentialClosedLoopRunSeen: codexConsequentialClosedLoop,
+      consequentialControlEvidenceVerification: codexConsequentialClosedLoop
+        ? "FULL_STAGE05_RUN_DIRECTORY_VERIFIED" : "NOT_ESTABLISHED",
       controlledRunSeen: codexControlled,
       controlAssessmentVerification: "NOT_EVALUATED_USE_SOURCE_BOUND_CODEX_CONTROL_PROBE",
       lastSeenAt: codex?.updatedAt ?? null,
       hostedAndSpecializedToolCoverageEstablished: false,
       completeLifecycleCoverageEstablished: false,
       status: codexControlled ? "CONTROLLED_RUN_SEEN"
+        : codexConsequentialClosedLoop
+          ? "CONSEQUENTIAL_CLOSED_LOOP_SEEN_SOURCE_BOUND_CONTROL_NOT_ESTABLISHED"
         : codex ? "RUNTIME_SEEN_CONTROL_NOT_ESTABLISHED"
           : "INSTALLABLE_OR_CONFIGURED_RUNTIME_NOT_SEEN",
     },
@@ -473,9 +488,17 @@ export function projectProductDoctorForSharing(report) {
         hooksConfigured: codex.hooksConfigured === true,
         installedEventCount: Array.isArray(codex.installedEvents) ? codex.installedEvents.length : 0,
         requiredEventCount: Array.isArray(codex.requiredEvents) ? codex.requiredEvents.length : 0,
+        advisoryHooksConfigured: codex.advisoryHooksConfigured === true,
+        installedAdvisoryEventCount: Array.isArray(codex.installedAdvisoryEvents)
+          ? codex.installedAdvisoryEvents.length : 0,
+        advisoryEventCount: Array.isArray(codex.advisoryEvents)
+          ? codex.advisoryEvents.length : 0,
         hookTrustStatus: codex.hookTrustStatus ?? "UNKNOWN",
         runtimeConformanceSeen: codex.runtimeConformanceSeen === true,
         ledgerCompletionCandidateSeen: codex.ledgerCompletionCandidateSeen === true,
+        consequentialClosedLoopRunSeen: codex.consequentialClosedLoopRunSeen === true,
+        consequentialControlEvidenceVerification:
+          codex.consequentialControlEvidenceVerification ?? "NOT_ESTABLISHED",
         controlledRunSeen: codex.controlledRunSeen === true,
         controlAssessmentVerification: codex.controlAssessmentVerification ?? "NOT_ESTABLISHED",
         hostedAndSpecializedToolCoverageEstablished:

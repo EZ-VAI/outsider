@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { closeSync, fstatSync, openSync, readFileSync, readSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import {
@@ -23,7 +23,15 @@ import { canonicalizeStrict } from "./canonical.js";
 const hash = (value) => `sha256:${createHash("sha256").update(String(value)).digest("hex")}`;
 const hashBytes = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;
 const MISSING_FILE_HASH = hash("outsider/workspace-file-missing/v1");
-const eventName = (input) => input?.hook_event_name ?? input?.hookEventName ?? "PreToolUse";
+const eventName = (input) => input?.hook_event_name ?? input?.hookEventName ?? "";
+const CODEX_HOOK_EVENTS = new Set([
+  "SessionStart", "SessionEnd", "UserPromptSubmit", "PreToolUse", "PermissionRequest",
+  "PostToolUse", "PreCompact", "PostCompact", "SubagentStart", "SubagentStop", "Stop",
+]);
+const PASSIVE_LIFECYCLE_EVENTS = new Set([
+  "SessionStart", "SessionEnd", "UserPromptSubmit", "PermissionRequest",
+  "PreCompact", "PostCompact",
+]);
 const MAX_INTERVENTIONS_PER_TRIGGER = 3;
 const DEFAULT_FOLLOWUP_BOUNDARIES = 6;
 const DEFAULT_SEMANTIC_PATROL_EVERY = 96;
@@ -545,6 +553,201 @@ function transcriptContains(input, marker) {
   try { return readFileSync(transcript, "utf8").includes(marker); } catch { return false; }
 }
 
+const FINAL_REPORT_TRANSCRIPT_TAIL_BYTES = 2 * 1024 * 1024;
+const FINAL_REPORT_TEXT_BYTES = 24_000;
+
+/* Read one already-open transcript inode.  The Stop payload already carries
+   `last_assistant_message`; this second source is used only to bind those bytes
+   to the host transcript, not to trust the worker's claims about the result. */
+function stableTranscriptTail(transcriptPath) {
+  const descriptor = openSync(transcriptPath, "r");
+  try {
+    const before = fstatSync(descriptor, { bigint: true });
+    if (before.size > BigInt(Number.MAX_SAFE_INTEGER)) throw new Error("TRANSCRIPT_TOO_LARGE");
+    const sourceBytes = Number(before.size);
+    const length = Math.min(sourceBytes, FINAL_REPORT_TRANSCRIPT_TAIL_BYTES);
+    const start = sourceBytes - length;
+    const buffer = Buffer.alloc(length);
+    let offset = 0;
+    while (offset < length) {
+      const count = readSync(descriptor, buffer, offset, length - offset, start + offset);
+      if (count === 0) break;
+      offset += count;
+    }
+    const after = fstatSync(descriptor, { bigint: true });
+    for (const key of ["dev", "ino", "size", "mtimeNs", "ctimeNs"]) {
+      if (before[key] !== after[key]) throw new Error("TRANSCRIPT_CHANGED_DURING_READ");
+    }
+    if (offset !== length) throw new Error("TRANSCRIPT_SHORT_READ");
+    let completeLines = buffer;
+    if (start > 0) {
+      const firstNewline = buffer.indexOf(0x0a);
+      completeLines = firstNewline < 0 ? Buffer.alloc(0) : buffer.subarray(firstNewline + 1);
+    }
+    return {
+      text: completeLines.toString("utf8"),
+      snapshotHash: hashBytes(buffer),
+      sourceBytes,
+      tailStart: start,
+      tailBytes: buffer.length,
+      inode: String(after.ino),
+      device: String(after.dev),
+    };
+  } finally {
+    closeSync(descriptor);
+  }
+}
+
+function assistantTextFromTranscriptEntry(entry) {
+  const payload = entry?.payload;
+  if (entry?.type === "response_item" && payload?.type === "message"
+    && payload?.role === "assistant") {
+    const text = Array.isArray(payload.content)
+      ? payload.content.map((block) => typeof block === "string" ? block : block?.text ?? "")
+        .join("\n")
+      : String(payload.content ?? "");
+    return { text, phase: payload.phase ?? null, timestamp: entry.timestamp ?? null,
+      nativeType: "response_item/message" };
+  }
+  if (entry?.type === "assistant" && entry?.message?.role === "assistant") {
+    const content = entry.message.content;
+    const text = Array.isArray(content)
+      ? content.map((block) => typeof block === "string" ? block : block?.text ?? "")
+        .join("\n")
+      : String(content ?? "");
+    return { text, phase: entry.message.phase ?? null, timestamp: entry.timestamp ?? null,
+      nativeType: "assistant/message" };
+  }
+  return null;
+}
+
+function finalReportApprovalEvidence(input = {}) {
+  const supplied = input.last_assistant_message ?? input.lastAssistantMessage;
+  const boundary = eventName(input) || "Stop";
+  if (typeof supplied !== "string" || !supplied.trim()) {
+    return {
+      schema: "outsider/worker-final-report-evidence/v1",
+      observed: false,
+      transcriptBound: false,
+      reason: "STOP_FINAL_REPORT_FIELD_MISSING",
+      workerAssertionsAcceptedAsOutcomeEvidence: false,
+    };
+  }
+  const suppliedBytes = Buffer.byteLength(supplied);
+  const base = {
+    schema: "outsider/worker-final-report-evidence/v1",
+    observed: true,
+    source: `${boundary}.last_assistant_message`,
+    text: suppliedBytes <= FINAL_REPORT_TEXT_BYTES ? supplied : null,
+    textHash: hash(supplied),
+    textBytes: suppliedBytes,
+    textTruncated: suppliedBytes > FINAL_REPORT_TEXT_BYTES,
+    transcriptBound: false,
+    workerAssertionsAcceptedAsOutcomeEvidence: false,
+    permittedUse: "audit operator-required final-report presence, wording, and shape only",
+  };
+  const transcriptPath = actorTranscriptPath(input);
+  if (!transcriptPath) return { ...base, reason: "TRANSCRIPT_PATH_MISSING" };
+  try {
+    const snapshot = stableTranscriptTail(transcriptPath);
+    let latest = null;
+    let line = 0;
+    for (const raw of snapshot.text.split(/\r?\n/u)) {
+      if (!raw.trim()) continue;
+      line += 1;
+      let entry;
+      try { entry = JSON.parse(raw); } catch { continue; }
+      const candidate = assistantTextFromTranscriptEntry(entry);
+      if (candidate) latest = { ...candidate, line };
+    }
+    const transcriptBound = latest?.text === supplied;
+    return {
+      ...base,
+      transcriptBound,
+      reason: transcriptBound ? null : latest
+        ? "LATEST_ASSISTANT_MESSAGE_MISMATCH" : "ASSISTANT_MESSAGE_NOT_FOUND",
+      transcript: {
+        pathHash: hash(`transcript\0${transcriptPath}`),
+        snapshotHash: snapshot.snapshotHash,
+        sourceBytes: snapshot.sourceBytes,
+        tailStart: snapshot.tailStart,
+        tailBytes: snapshot.tailBytes,
+        inode: snapshot.inode,
+        device: snapshot.device,
+        latestAssistantTextHash: latest ? hash(latest.text) : null,
+        latestAssistantTextBytes: latest ? Buffer.byteLength(latest.text) : null,
+        latestAssistantNativeType: latest?.nativeType ?? null,
+        latestAssistantPhase: latest?.phase ?? null,
+        latestAssistantTimestamp: latest?.timestamp ?? null,
+        latestAssistantLineInTail: latest?.line ?? null,
+      },
+    };
+  } catch (error) {
+    return { ...base, reason: `TRANSCRIPT_BINDING_FAILED:${error?.message ?? error}` };
+  }
+}
+
+function formalCorrectionApprovalEvidence(store, record, interventionId) {
+  if (!interventionId || !record?.delivery?.payloadRef) {
+    return {
+      schema: "outsider/formal-correction-approval-evidence/v1",
+      available: false,
+      valid: false,
+      reason: interventionId ? "CORRECTION_PAYLOAD_REF_MISSING" : "NO_INTERVENTION",
+    };
+  }
+  const payload = store.readJson(record.delivery.payloadRef);
+  const events = store.events();
+  const audit = events.find((event) => event.seq === payload?.auditSeq
+    && event.type === "correction_factual_audit");
+  const emitted = events.find((event) => event.seq === record.delivery.emittedSeq
+    && event.type === "correction_emitted");
+  const observed = events.find((event) => event.seq === record.delivery.observedSeq
+    && event.type === "correction_observed");
+  const checks = {
+    payloadSchema: payload?.schema === "outsider/recoverable-correction-payload/v1",
+    interventionId: payload?.interventionId === interventionId,
+    deliveryObserved: record.delivery.status === "observed",
+    correctionTextPresent: typeof payload?.correction === "string" && Boolean(payload.correction),
+    correctionHash: typeof payload?.correction === "string"
+      && hash(payload.correction) === payload.correctionHash
+      && payload.correctionHash === record.delivery.correctionHash,
+    authorityPresent: Boolean(payload?.correctionAuthority),
+    authorityHash: Boolean(payload?.correctionAuthority)
+      && hash(canonicalizeStrict(payload.correctionAuthority)) === payload.correctionAuthorityHash
+      && payload.correctionAuthorityHash === record.delivery.authorityHash
+      && payload.correctionAuthorityHash === record.authority?.hash,
+    factualAudit: audit?.passed === true
+      && audit.correctionAuthorityHash === payload?.correctionAuthorityHash,
+    emittedEvent: emitted?.interventionId === interventionId
+      && emitted.correctionHash === payload?.correctionHash
+      && emitted.correctionAuthorityHash === payload?.correctionAuthorityHash,
+    observedEvent: observed?.interventionId === interventionId
+      && observed.marker === payload?.marker
+      && observed.correctionAuthorityHash === payload?.correctionAuthorityHash,
+  };
+  const valid = Object.values(checks).every(Boolean);
+  return {
+    schema: "outsider/formal-correction-approval-evidence/v1",
+    available: Boolean(payload),
+    valid,
+    reason: valid ? null : "CORRECTION_EVIDENCE_BINDING_INVALID",
+    checks,
+    exactCorrectionText: valid ? payload.correction : null,
+    correctionTextBytes: valid ? Buffer.byteLength(payload.correction) : null,
+    correctionHash: payload?.correctionHash ?? null,
+    correctionAuthority: valid ? payload.correctionAuthority : null,
+    correctionAuthorityHash: payload?.correctionAuthorityHash ?? null,
+    marker: payload?.marker ?? null,
+    auditEvent: audit ? { seq: audit.seq, eventHash: audit.eventHash,
+      passed: audit.passed, evidenceHash: audit.evidenceHash ?? null } : null,
+    emittedEvent: emitted ? { seq: emitted.seq, eventHash: emitted.eventHash,
+      channel: emitted.channel ?? null } : null,
+    observedEvent: observed ? { seq: observed.seq, eventHash: observed.eventHash } : null,
+    workerAssertionsAcceptedAsOutcomeEvidence: false,
+  };
+}
+
 function actorTranscriptPath(input = {}) {
   return input.agent_transcript_path ?? input.agentTranscriptPath
     ?? input.transcript_path ?? input.transcriptPath ?? null;
@@ -567,7 +770,11 @@ function agentIdFromInput(input = {}) {
    because some host surfaces can share a parent session across teammates. */
 function actorIdentityHints(input = {}) {
   const session = input.session_id ?? input.sessionId ?? null;
-  const transcript = input.transcript_path ?? input.transcriptPath ?? null;
+  /* Codex SubagentStop carries the parent's rollout in `transcript_path` and
+     the completing child's rollout in `agent_transcript_path`.  The child
+     path is the actor identity at this boundary; hashing the parent path here
+     can silently replace the lineage that SubagentStart established. */
+  const transcript = actorTranscriptPath(input);
   const sessionHash = session == null ? null : hash(`agent-session\0${String(session)}`);
   const transcriptHash = transcript == null ? null : hash(`agent-transcript\0${String(transcript)}`);
   const hints = [];
@@ -608,12 +815,54 @@ function delegationFromInput(input = {}) {
   const name = String(input.tool_name ?? input.toolName ?? "");
   if (!/(?:^|_)(?:Task|Agent|Subagent)(?:$|_)/i.test(name)) return null;
   const tool = input.tool_input ?? input.toolInput ?? {};
-  const prompt = tool.prompt ?? tool.task ?? tool.instructions ?? tool.description;
+  /* Codex collaboration.spawn_agent names the delegated contract `message`
+     and its human-readable task label `task_name`.  Preserve the existing
+     Claude Task/Agent fields while binding Codex to the same durable task graph. */
+  const prompt = tool.prompt ?? tool.task ?? tool.instructions ?? tool.description ?? tool.message;
   if (!prompt) return null;
+  const promptText = String(prompt);
+  /* Codex currently projects collaboration.spawn_agent(message=...) to hook
+     stdin as a Fernet-shaped host ciphertext.  It is an authenticated payload
+     we can bind, but not plaintext we can truthfully hand to a semantic judge.
+     Keep the bytes/hash and label the visibility instead of pretending the
+     task body is readable. */
+  const promptVisibility = /^gAAAAA[A-Za-z0-9_-]{80,}={0,2}$/u.test(promptText)
+    ? "host-encrypted" : "plaintext";
   return {
     id: String(input.tool_use_id ?? input.toolUseId ?? `task-${randomUUID()}`),
-    prompt: String(prompt),
-    description: String(tool.description ?? tool.name ?? name),
+    prompt: promptText,
+    promptHash: hash(promptText),
+    promptVisibility,
+    description: String(tool.description ?? tool.task_name ?? tool.taskName ?? tool.name ?? name),
+  };
+}
+
+function delegatedPromptBinding(task = {}) {
+  const prompt = String(task.prompt ?? "");
+  const visibility = task.promptVisibility === "host-encrypted"
+    ? "host-encrypted" : "plaintext";
+  return {
+    visibility,
+    payloadHash: task.promptHash ?? (prompt ? hash(prompt) : null),
+    readableText: visibility === "plaintext" ? prompt.slice(0, 4000) : null,
+    hostConfidential: visibility === "host-encrypted",
+  };
+}
+
+function boundedTaskCompletionReport(report = null) {
+  if (!report || typeof report !== "object") return null;
+  const text = typeof report.text === "string" ? report.text : null;
+  return {
+    schema: report.schema ?? "outsider/worker-final-report-evidence/v1",
+    observed: report.observed === true,
+    transcriptBound: report.transcriptBound === true,
+    source: report.source ?? null,
+    text: text == null ? null : text.slice(0, 6000),
+    textHash: report.textHash ?? null,
+    textBytes: report.textBytes ?? null,
+    textTruncated: Boolean(report.textTruncated || (text && text.length > 6000)),
+    reason: report.reason ?? null,
+    workerAssertionsAcceptedAsOutcomeEvidence: false,
   };
 }
 
@@ -1369,6 +1618,7 @@ export class OutsiderKernelController {
       cmd: this.store.supervisorCommand,
       outcomePacket: packet.outcomePacket,
       proposedVerdict: packet.proposedVerdict,
+      approvalEvidence: packet.approvalEvidence ?? null,
       validationFeedback: "controller generation changed while this exact PASS audit was in flight; re-evaluate the same frozen packet",
     });
     if (!approvalAudit?.ok) {
@@ -2456,7 +2706,8 @@ export class OutsiderKernelController {
       taskId: task.id,
       parentAgentId,
       description: task.description.slice(0, 400),
-      promptHash: hash(task.prompt),
+      promptHash: task.promptHash ?? hash(task.prompt),
+      promptVisibility: task.promptVisibility ?? "plaintext",
     });
     this.recordTeamSpawnIntent(input, parentAgentId, task.id);
     return task;
@@ -2475,6 +2726,8 @@ export class OutsiderKernelController {
       blockedBy: task.blockedBy ?? [],
       independentlyVerified: Boolean(task.independentlyVerified),
       touchedFiles: task.touchedFiles ?? [],
+      promptBinding: delegatedPromptBinding(task),
+      completionReport: boundedTaskCompletionReport(task.completionReport),
     }));
     const conflicts = Object.values(state.fileConflicts ?? {}).map((conflict) => ({
       id: conflict.id,
@@ -2487,7 +2740,91 @@ export class OutsiderKernelController {
   }
 
   decisionScope(trigger, actor = null) {
-    const match = /^team-task-delivery:(.+)$/.exec(String(trigger ?? ""));
+    const triggerText = String(trigger ?? "");
+    const subagentMatch = /^subagent-delivery:(.+)$/.exec(triggerText);
+    if (subagentMatch && actor?.agentId && actor?.task) {
+      const taskId = String(subagentMatch[1]);
+      if (String(actor.task.id ?? "") !== taskId) return null;
+      const state = this.state();
+      const task = state.tasks?.[taskId] ?? actor.task;
+      const persistedAgent = state.agents?.[actor.agentId] ?? null;
+      const events = this.store.events();
+      const registration = [...events].reverse().find((event) =>
+        event.type === "agent_registered" && event.agentId === actor.agentId
+        && event.taskId === taskId) ?? null;
+      const contextInjection = [...events].reverse().find((event) =>
+        event.type === "subagent_context_injected" && event.agentId === actor.agentId
+        && event.taskId === taskId) ?? null;
+      const reportBinding = [...events].reverse().find((event) =>
+        event.type === "subagent_report_bound" && event.agentId === actor.agentId
+        && event.taskId === taskId) ?? null;
+      const firstBoundSeq = Math.max(Number(registration?.seq ?? 0),
+        Number(contextInjection?.seq ?? 0));
+      const durableActions = events.filter((event) => event.type === "boundary_reached"
+        && event.boundary === "PostToolUse" && event.agentId === actor.agentId
+        && Number(event.seq) > firstBoundSeq
+        && (!reportBinding || Number(event.seq) < Number(reportBinding.seq)))
+        .map((event) => ({
+          seq: event.seq,
+          tool: event.tool ?? null,
+          toolUseId: event.toolUseId ?? null,
+          action: event.action ?? null,
+          file: event.file ?? event.confirmedFile ?? null,
+          exit: event.exit ?? null,
+          isEdit: Boolean(event.isEdit),
+          isTest: Boolean(event.isTest),
+          executed: event.executed ?? true,
+        }));
+      const ambiguousLinks = events.filter((event) => event.type === "task_link_ambiguous"
+        && event.agentId === actor.agentId
+        && (!registration || Number(event.seq) >= Number(registration.seq)));
+      const completionReport = task?.completionReport ?? actor.task.completionReport ?? null;
+      const exactTaskBinding = task?.id === taskId && task?.assigneeAgentId === actor.agentId
+        && persistedAgent?.taskId === taskId
+        && ["explicit", "persisted", "single-pending-task"].includes(String(
+          task?.taskLinkConfidence ?? persistedAgent?.taskLinkConfidence ?? ""));
+      const exactReportBinding = completionReport?.observed === true
+        && completionReport?.transcriptBound === true
+        && Boolean(completionReport?.textHash)
+        && reportBinding?.reportHash === completionReport.textHash;
+      /* This does not prove the child task semantically complete. It proves
+         only that a fresh clearance auditor has an exact lineage, a frozen
+         context receipt, durable child actions and a transcript-bound report
+         to grade.  The auditor still owns the pass/reject decision. */
+      const clearanceEvidenceReady = Boolean(registration && contextInjection
+        && reportBinding && exactTaskBinding && exactReportBinding
+        && durableActions.length > 0 && ambiguousLinks.length === 0
+        && actor.identityConflict !== true
+        && state.agentIdentityIntegrityCompromised !== true);
+      return {
+        kind: "intermediate-subagent-task-delivery",
+        gatePhase: "before-subagent-completion-commit",
+        taskId,
+        agentId: actor.agentId,
+        taskStatus: task?.status ?? null,
+        question: "Is this exact child agent's frozen delegated slice independently ready to complete?",
+        globalIncompletenessExpected: true,
+        futureParentWorkflowIsOutsideThisDecision: true,
+        taskStatusMustRemainUncommittedUntilThisGatePasses: true,
+        clearanceEvidenceReady,
+        actorEvidence: {
+          assigneeAgentId: task?.assigneeAgentId ?? null,
+          persistedAgentTaskId: persistedAgent?.taskId ?? null,
+          taskLinkConfidence: task?.taskLinkConfidence
+            ?? persistedAgent?.taskLinkConfidence ?? null,
+          registration: registration ? { seq: registration.seq,
+            identityProvenanceHash: registration.identityProvenanceHash ?? null } : null,
+          contextInjection: contextInjection ? { seq: contextInjection.seq,
+            taskLinkConfidence: contextInjection.taskLinkConfidence ?? null } : null,
+          completionReportBinding: reportBinding ? { seq: reportBinding.seq,
+            reportHash: reportBinding.reportHash ?? null,
+            transcriptBound: reportBinding.transcriptBound === true } : null,
+          durableActions: durableActions.slice(-40),
+          ambiguousTaskLinkCount: ambiguousLinks.length,
+        },
+      };
+    }
+    const match = /^team-task-delivery:(.+)$/.exec(triggerText);
     if (!match || !actor?.agentId) return null;
     const taskId = String(actor.task?.id ?? match[1]);
     const events = this.store.events();
@@ -3542,7 +3879,14 @@ export class OutsiderKernelController {
     proposedTool = null, actor = null, reference = null }) {
     const current = this.snapshot(this.store.cwd);
     const diff = diffSnapshots(reference ?? this.baseline, current);
-    const steps = stepsFromInput(input, agent, this.store.cwd);
+    /* The host transcript can represent a Codex custom `exec` wrapper without
+       its underlying Bash semantics.  The controller has already sealed the
+       exact Pre/Post pair, including actor, command, result and exit.  Use that
+       durable ledger for semantic supervision and only use the transcript to
+       enrich it, otherwise a real child Read disappears at SubagentStop. */
+    const durableSteps = durableExecutionSteps(this.store, input, agent, this.store.cwd);
+    const steps = actor?.agentId ? durableSteps.filter((step) =>
+      step.agentId == null || step.agentId === actor.agentId) : durableSteps;
     const interventionHistory = this.store.events().filter((event) => {
       if (event.agentId && event.agentId !== (actor?.agentId ?? "main")) return false;
       return ["supervisor_verdict", "correction_emitted", "correction_observed",
@@ -3611,6 +3955,8 @@ export class OutsiderKernelController {
       "teammate_context_injected", "team_task_created", "task_graph_updated",
       "confirmed_file_touch", "teammate_verification_confirmed", "team_task_completed",
       "multi_agent_integration_verified", "coordination_ready_at_stop",
+      "task_delegated", "agent_registered", "subagent_context_injected",
+      "subagent_report_bound", "task_completed",
     ]);
     packet.controllerProcessEvidence = this.store.events()
       .filter((event) => controllerProcessTypes.has(event.type))
@@ -3642,6 +3988,15 @@ export class OutsiderKernelController {
         taskIds: Array.isArray(event.taskIds) ? event.taskIds : null,
         toolUseId: event.toolUseId ?? null,
         identityBindingHash: event.identityBindingHash ?? null,
+        parentAgentId: event.parentAgentId ?? null,
+        description: event.description ?? null,
+        promptHash: event.promptHash ?? null,
+        promptVisibility: event.promptVisibility ?? null,
+        reportHash: event.reportHash ?? event.completionReportHash ?? null,
+        reportBytes: event.reportBytes ?? null,
+        transcriptBound: event.transcriptBound
+          ?? event.completionReportTranscriptBound ?? null,
+        independentlyVerified: event.independentlyVerified ?? null,
       })).slice(-120);
     packet.activeEvaluatorShift = activeControllerShiftEvidence(this.store.events(), {
       toolName: proposedTool?.name ?? proposedTool?.toolName ?? null,
@@ -3693,7 +4048,8 @@ export class OutsiderKernelController {
       bytes: JSON.stringify(evidence.packet).length,
       evidenceFile,
       evidenceHash: hash(JSON.stringify(evidence.packet)),
-      containsWorkerNarration: false,
+      containsWorkerNarration: evidence.packet.actor?.delegatedTask
+        ?.completionReport?.observed === true,
       changedFiles: evidence.diff.changes.map((entry) => entry.path),
       acceptanceExit: acceptanceResult?.exit ?? null,
     });
@@ -4378,6 +4734,8 @@ export class OutsiderKernelController {
       "teammate_context_injected", "team_task_created", "task_graph_updated",
       "confirmed_file_touch", "teammate_verification_confirmed", "team_task_completed",
       "multi_agent_integration_verified", "coordination_ready_at_stop",
+      "task_delegated", "agent_registered", "subagent_context_injected",
+      "subagent_report_bound", "task_completed",
     ]);
     const controllerProcessEvidence = this.store.events()
       .filter((event) => controllerProcessTypes.has(event.type))
@@ -4410,6 +4768,15 @@ export class OutsiderKernelController {
         taskIds: Array.isArray(event.taskIds) ? event.taskIds : null,
         toolUseId: event.toolUseId ?? null,
         identityBindingHash: event.identityBindingHash ?? null,
+        parentAgentId: event.parentAgentId ?? null,
+        description: event.description ?? null,
+        promptHash: event.promptHash ?? null,
+        promptVisibility: event.promptVisibility ?? null,
+        reportHash: event.reportHash ?? event.completionReportHash ?? null,
+        reportBytes: event.reportBytes ?? null,
+        transcriptBound: event.transcriptBound
+          ?? event.completionReportTranscriptBound ?? null,
+        independentlyVerified: event.independentlyVerified ?? null,
         phase: event.phase ?? null,
         ran: event.ran ?? null,
         passed: event.passed ?? null,
@@ -4727,6 +5094,20 @@ export class OutsiderKernelController {
       finalFingerprint: current.fingerprint,
       changedFiles: diff.changes.map((entry) => entry.path),
     });
+    const terminationEvidence = {
+      schema: "outsider/outcome-termination-evidence/v1",
+      workerFinalReport: finalReportApprovalEvidence(input ?? {}),
+      delegatedTaskEvidence: {
+        authority: "controller-task-graph-plus-transcript-bound-subagent-report",
+        tasks: this.coordinationSnapshot().tasks.filter((task) =>
+          task.kind === "delegated" || task.completionReport != null),
+        workerAssertionsAcceptedAsOutcomeEvidence: false,
+      },
+      authorityBoundary: {
+        workerReportMayProveOutcomeFacts: false,
+        permittedUse: "contract-required termination/report shape only",
+      },
+    };
     let verified = this.verifier({
       cmd: this.store.supervisorCommand,
       contract: this.store.contract,
@@ -4738,6 +5119,7 @@ export class OutsiderKernelController {
       phase,
       executionSteps,
       controllerProcessEvidence,
+      terminationEvidence,
     });
     if (!verified?.ok && verified?.failure?.retryable === true) {
       this.event("outcome_verifier_retrying", {
@@ -4769,6 +5151,7 @@ export class OutsiderKernelController {
           phase,
           executionSteps,
           controllerProcessEvidence,
+          terminationEvidence,
           validationFeedback: verified?.failure?.retryInstruction ?? verified?.error ?? null,
         });
       }
@@ -4808,6 +5191,17 @@ export class OutsiderKernelController {
     let approvalAudit = null;
     let approvalAuditEvent = null;
     if (verdict.passed === true && !verdict.insufficient) {
+      const approvalEvidence = {
+        schema: "outsider/outcome-approval-evidence/v1",
+        formalCorrection: formalCorrectionApprovalEvidence(this.store,
+          this.recoveryRecord(interventionId), interventionId),
+        workerFinalReport: terminationEvidence.workerFinalReport,
+        authorityBoundary: {
+          workerReportMayProveOutcomeFacts: false,
+          controllerCorrectionMayProveWorkerResult: false,
+          finalReportUse: "contract-required output shape only",
+        },
+      };
       let auditCall = this.consumeSupervisorCall("outcome-approval-audit", interventionId);
       if (!auditCall.ok) {
         return {
@@ -4835,6 +5229,7 @@ export class OutsiderKernelController {
               contract: this.store.contract, current, diff, acceptance: acceptanceResult,
             },
             proposedVerdict: verdict,
+            approvalEvidence,
             outcomeEvidenceFile,
             outcomeEvidenceHash,
           };
@@ -4856,6 +5251,7 @@ export class OutsiderKernelController {
           contract: this.store.contract, current, diff, acceptance: acceptanceResult,
         },
         proposedVerdict: verdict,
+        approvalEvidence,
       });
       if (!approvalAudit?.ok && approvalAudit?.failure?.retryable === true) {
         this.event("outcome_approval_auditor_retrying", {
@@ -4875,6 +5271,7 @@ export class OutsiderKernelController {
               contract: this.store.contract, current, diff, acceptance: acceptanceResult,
             },
             proposedVerdict: verdict,
+            approvalEvidence,
             validationFeedback: approvalAudit?.failure?.retryInstruction
               ?? approvalAudit?.error ?? null,
           });
@@ -4952,11 +5349,18 @@ export class OutsiderKernelController {
   frozenActorContext(actor, { kind = "teammate" } = {}) {
     const semantic = this.store.contract.semantic ?? {};
     const role = kind === "subagent" ? "被委派的子 agent" : "Agent Team teammate";
+    const promptBinding = actor.task ? delegatedPromptBinding(actor.task) : null;
+    const delegatedContext = !actor.task ? [] : promptBinding.visibility === "plaintext"
+      ? [`你的委派任务：${String(promptBinding.readableText ?? actor.task.description
+        ?? actor.task.subject ?? "").slice(0, 3000)}`]
+      : [`你的委派任务标签：${String(actor.task.description ?? actor.task.subject
+        ?? "").slice(0, 500)}`,
+      `委派 message 由 Codex 宿主加密后投影给 hook；Outsider 已绑定 payload hash ${promptBinding.payloadHash}，`
+        + "但不会把密文冒充可读任务正文。原生委派消息与下方冻结操作方合同共同约束你。"];
     return [
       `【Outsider · 冻结工作合同】你是 ${role}。局部任务不能覆盖操作方的全局要求。`,
       `操作方原话：${String(this.store.contract.ask).slice(0, 3000)}`,
-      ...(actor.task ? [`你的委派任务：${String(actor.task.prompt ?? actor.task.description
-        ?? actor.task.subject ?? "").slice(0, 3000)}`] : []),
+      ...delegatedContext,
       ...(semantic.successCriteria?.length ? ["全局成功标准：",
         ...semantic.successCriteria.slice(0, 8).map((item) => `- ${String(item).slice(0, 500)}`)] : []),
       ...(semantic.architecturalConstraints?.length ? ["架构约束：",
@@ -6250,6 +6654,14 @@ export class OutsiderKernelController {
       || /repair\s+must\s+arrive\s+through\s+a\s+live\s+audited\s+Outsider\s+correction/iu
         .test(frozenControlText)
       || /修复.{0,24}(?:必须|只能).{0,24}(?:经|通过).{0,24}审计.{0,24}Outsider/iu
+        .test(frozenControlText)
+      /* The live Codex contract phrases the same authority condition as
+         "only after Outsider delivers a formal correction may you repair".
+         A rejected factual audit must not fall through to an acceptance-output
+         hint that the worker can reasonably interpret as edit authority. */
+      || /只有在.{0,160}Outsider.{0,160}送达.{0,32}正式纠正.{0,80}(?:后|才).{0,80}(?:修复|修改)/isu
+        .test(frozenControlText)
+      || /only\s+after.{0,160}Outsider.{0,160}(?:formal|audited)\s+correction.{0,160}(?:repair|edit|modify)/isu
         .test(frozenControlText);
     if (auditedRepairRequired) {
       const hold = "本轮没有产生通过事实审计的 Outsider correction，因此没有任何 artifact 修复权限。"
@@ -6281,6 +6693,16 @@ export class OutsiderKernelController {
   }
 
   subagentStop({ input, agent = "claude-code" }) {
+    const explicitSubagentId = input?.agent_id ?? input?.agentId
+      ?? input?.subagent_id ?? input?.subagentId ?? null;
+    if (agent === "codex" && explicitSubagentId == null) {
+      const reason = "Codex SubagentStop 缺少可绑定的子 Agent 身份；不能把匿名交付归到 main 或任一待办任务。";
+      this.event("task_tree_gap", {
+        agentId: null,
+        reason: "Codex SubagentStop carried no explicit agent_id/subagent_id",
+      });
+      return { decision: { verdict: "warn", corrective: reason }, output: stopBlock(reason) };
+    }
     const actor = this.registerActor(input);
     if (actor.identityConflict) {
       const reason = "Outsider 检测到 SubagentStop 身份 lineage 冲突；不能错误归属交付。";
@@ -6298,6 +6720,10 @@ export class OutsiderKernelController {
         agentId: actor.agentId,
         reason: "subagent has no attributable delegated task",
       });
+      if (agent === "codex") {
+        const reason = "Codex 子 Agent 的完成事件无法唯一绑定到已委派任务；为避免错误归因，本次退出保持阻断。";
+        return { decision: { verdict: "warn", corrective: reason }, output: stopBlock(reason) };
+      }
       return { decision: { verdict: "allow", reason: "subagent task could not be attributed" }, output: stopApprove() };
     }
     const durableTask = actor.task?.id ? this.state().tasks?.[actor.task.id] : null;
@@ -6336,13 +6762,50 @@ export class OutsiderKernelController {
       });
       return { decision: { verdict: "warn", corrective: reason }, output: stopBlock(reason) };
     }
-    const reference = this.store.readJson(actor.task.snapshotFile) ?? this.baseline;
+    const completionReport = finalReportApprovalEvidence(input);
+    if (completionReport.observed !== true || completionReport.transcriptBound !== true) {
+      this.event("subagent_report_unbound", {
+        taskId: actor.task.id,
+        agentId: actor.agentId,
+        observed: completionReport.observed === true,
+        transcriptBound: completionReport.transcriptBound === true,
+        reason: completionReport.reason ?? "SUBAGENT_REPORT_NOT_BOUND",
+      });
+      if (agent === "codex") {
+        const reason = "Codex SubagentStop 的 last_assistant_message 未能与该子 Agent rollout 的最新 assistant report 逐字绑定；任务仍保持未完成。";
+        return { decision: { verdict: "warn", corrective: reason }, output: stopBlock(reason) };
+      }
+    }
+    let reviewActor = actor;
+    if (completionReport.observed === true && completionReport.transcriptBound === true) {
+      const currentState = this.state();
+      const tasks = { ...(currentState.tasks ?? {}) };
+      const currentTask = tasks[actor.task.id] ?? actor.task;
+      tasks[actor.task.id] = {
+        ...currentTask,
+        status: currentTask.status === "completed" ? "completed" : "awaiting-verification",
+        completionReport,
+        completionReportBoundAt: new Date().toISOString(),
+      };
+      this.store.saveState({ tasks });
+      this.event("subagent_report_bound", {
+        taskId: actor.task.id,
+        agentId: actor.agentId,
+        reportHash: completionReport.textHash,
+        reportBytes: completionReport.textBytes,
+        source: completionReport.source,
+        transcriptBound: true,
+        workerAssertionsAcceptedAsOutcomeEvidence: false,
+      });
+      reviewActor = { ...actor, task: tasks[actor.task.id] };
+    }
+    const reference = this.store.readJson(reviewActor.task.snapshotFile) ?? this.baseline;
     const supervised = this.supervise({
       input,
       agent,
       boundary: "SubagentStop",
-      trigger: `subagent-delivery:${actor.task.id}`,
-      actor,
+      trigger: `subagent-delivery:${reviewActor.task.id}`,
+      actor: reviewActor,
       reference,
     });
     if (supervised.status === "correction") {
@@ -6356,14 +6819,16 @@ export class OutsiderKernelController {
       const state = this.state();
       const tasks = { ...(state.tasks ?? {}) };
       const agents = { ...(state.agents ?? {}) };
-      tasks[actor.task.id] = { ...tasks[actor.task.id], status: "completed",
+      tasks[reviewActor.task.id] = { ...tasks[reviewActor.task.id], status: "completed",
         independentlyVerified: true, completedAt: new Date().toISOString() };
       agents[actor.agentId] = { ...agents[actor.agentId], status: "completed" };
       this.store.saveState({ tasks, agents });
       this.event("task_completed", {
-        taskId: actor.task.id,
+        taskId: reviewActor.task.id,
         agentId: actor.agentId,
         independentlyVerified: true,
+        completionReportHash: completionReport.textHash ?? null,
+        completionReportTranscriptBound: completionReport.transcriptBound === true,
       });
       if (open) {
         const subagentSnapshot = this.snapshot(this.store.cwd);
@@ -6407,10 +6872,14 @@ export class OutsiderKernelController {
       return { decision: { verdict: "allow", reason: "delegated task independently verified" }, output: stopApprove() };
     }
     this.event("task_unverified", {
-      taskId: actor.task.id,
+      taskId: reviewActor.task.id,
       agentId: actor.agentId,
       reason: supervised.status,
     });
+    if (agent === "codex") {
+      const reason = `Codex 子 Agent 交付尚未通过独立任务门（${supervised.status}）；任务保持 awaiting-verification。`;
+      return { decision: { verdict: "warn", corrective: reason }, output: stopBlock(reason) };
+    }
     return { decision: { verdict: "allow", reason: "subagent verification unavailable; parent remains accountable" }, output: stopApprove() };
   }
 
@@ -6418,9 +6887,12 @@ export class OutsiderKernelController {
     if (!["claude-code", "codex"].includes(agent)) {
       throw new Error(`UNSUPPORTED_HOST: Stage 0.5 controller supports claude-code/codex, got ${agent}`);
     }
+    const event = eventName(input);
+    if (agent === "codex" && !CODEX_HOOK_EVENTS.has(event)) {
+      throw new Error(`UNSUPPORTED_HOOK_EVENT:${event || "missing"}`);
+    }
     this.lastTranscriptPath = actorTranscriptPath(input) ?? this.lastTranscriptPath;
     this.recordEvaluatorFault(input);
-    const event = eventName(input);
     if (event === "TaskCreated") {
       return this.taskCreated({ input });
     }
@@ -6439,8 +6911,16 @@ export class OutsiderKernelController {
     if (event === "SubagentStop") {
       return this.subagentStop({ input, agent });
     }
-    return event === "Stop" ? this.stop({ input, agent })
-      : this.preTool({ input, agent, strict });
+    if (event === "Stop") return this.stop({ input, agent });
+    if (PASSIVE_LIFECYCLE_EVENTS.has(event)) {
+      return { decision: { verdict: "defer", reason: event === "PermissionRequest"
+        ? "native permission decision remains with the host and operator"
+        : "lifecycle observation only" }, output: {} };
+    }
+    if (event === "PreToolUse") return this.preTool({ input, agent, strict });
+    /* Codex was exhaustively rejected above. Retain the historical fallback
+       only for other provider-specific tool event names. */
+    return this.preTool({ input, agent, strict });
   }
 
   finish({ requireIntervention = false } = {}) {

@@ -34,6 +34,11 @@ test("product doctor proves persistent storage and host capabilities without a m
     /^(?:local-only-no-external|explicit-external-consented)$/);
   assert.equal(report.surfaces.codex.hookTrustStatus,
     "UNKNOWN_REQUIRES_CODEX_HOOKS_REVIEW");
+  assert.deepEqual(report.surfaces.codex.requiredEvents,
+    ["SessionStart", "UserPromptSubmit", "PreToolUse", "PermissionRequest",
+      "PostToolUse", "PreCompact", "PostCompact", "SubagentStart", "SubagentStop", "Stop"]);
+  assert.deepEqual(report.surfaces.codex.advisoryEvents, ["SessionEnd"]);
+  assert.equal(report.surfaces.codex.advisoryHooksConfigured, false);
   assert.equal(report.surfaces.codex.controlledRunSeen, false);
   assert.equal(report.surfaces.chatgpt.universalPluginPackagePresent, true);
   assert.equal(report.surfaces.chatgpt.livePluginInstallSeen, false);
@@ -51,8 +56,9 @@ test("product doctor separates Codex install, trust, runtime and controlled stat
     "[marketplaces.outsider]", 'source_type = "local"',
     "", '[plugins.\"outsider-stage05@outsider\"]', "enabled = true", "",
   ].join("\n"));
-  const events = ["SessionStart", "UserPromptSubmit", "PreToolUse", "PostToolUse",
-    "PreCompact", "Stop"];
+  const events = ["SessionStart", "UserPromptSubmit", "PreToolUse",
+    "PermissionRequest", "PostToolUse", "PreCompact", "PostCompact", "SubagentStart",
+    "SubagentStop", "Stop"];
   writeFileSync(path.join(codexHome, "hooks.json"), JSON.stringify({ hooks:
     Object.fromEntries(events.map((event) => [event, [{ hooks: [{ type: "command",
       command: "'/usr/local/bin/node' '/opt/outsider/bin/outsider-hook.mjs' hook codex --attached-control" }] }]])) }));
@@ -76,8 +82,15 @@ test("product doctor separates Codex install, trust, runtime and controlled stat
   assert.equal(report.surfaces.codex.pluginConfigured, true);
   assert.equal(report.surfaces.codex.pluginCached, true);
   assert.equal(report.surfaces.codex.hooksConfigured, true);
+  assert.equal(report.surfaces.codex.advisoryHooksConfigured, false,
+    "SessionEnd is reported separately instead of making the ten-core inventory red");
+  assert.deepEqual(report.surfaces.codex.installedAdvisoryEvents, []);
   assert.equal(report.surfaces.codex.runtimeConformanceSeen, true);
   assert.equal(report.surfaces.codex.ledgerCompletionCandidateSeen, true);
+  assert.equal(report.surfaces.codex.consequentialClosedLoopRunSeen, false,
+    "an unverified ledger completion cannot become source-bound run evidence");
+  assert.equal(report.surfaces.codex.consequentialControlEvidenceVerification,
+    "NOT_ESTABLISHED");
   assert.equal(report.surfaces.codex.controlledRunSeen, false);
   assert.equal(report.surfaces.codex.controlAssessmentVerification,
     "NOT_EVALUATED_USE_SOURCE_BOUND_CODEX_CONTROL_PROBE");
@@ -97,8 +110,9 @@ test("product doctor selects cached plugins by semver and rejects runtime versio
     "[marketplaces.outsider]", 'source_type = "local"',
     "", '[plugins.\"outsider-stage05@outsider\"]', "enabled = true", "",
   ].join("\n"));
-  const events = ["SessionStart", "UserPromptSubmit", "PreToolUse", "PostToolUse",
-    "PreCompact", "Stop"];
+  const events = ["SessionStart", "SessionEnd", "UserPromptSubmit", "PreToolUse",
+    "PermissionRequest", "PostToolUse", "PreCompact", "PostCompact", "SubagentStart",
+    "SubagentStop", "Stop"];
   writeFileSync(path.join(codexHome, "hooks.json"), JSON.stringify({ hooks:
     Object.fromEntries(events.map((event) => [event, [{ hooks: [{ type: "command",
       command: "'/usr/local/bin/node' '/opt/outsider/bin/outsider-hook.mjs' hook codex --attached-control" }] }]])) }));

@@ -19,11 +19,9 @@ export const SUPPORT = {
   },
   codex: {
     /*
-     * Runtime-proven legacy treatment capabilities only.  call_id now really
-     * survives the rollout parser, so uid is true.  The installed 0.144.5
-     * schema advertises the remaining hook features, but its Outsider hook is
-     * currently untrusted and has not produced authenticated delivery evidence;
-     * schema metadata cannot turn those treatment booleans true.
+     * Legacy rollout-parser capability table only. call_id survives the parser,
+     * so uid is true. These false treatment booleans do not describe the direct
+     * attached-control runtime, whose evidence is assessed separately.
      */
     uid: true,
     contextToModel: false,

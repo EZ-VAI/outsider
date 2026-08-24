@@ -1,4 +1,4 @@
-/* Codex rollout JSONL + native hook metadata -> Worker Adapter v1.
+/* Codex rollout JSONL + native hook metadata -> Worker Adapter v2.
  *
  * Rollout parsing is real observation.  The hook schema/list probe is real
  * provider capability metadata.  Neither is, by itself, proof that a trusted
@@ -15,23 +15,39 @@ import {
   verifyWorkerObservation, workerDigest,
 } from "./outsider-worker-adapter.js";
 
-export const CODEX_HOOK_PROBE_SCHEMA = "outsider/codex-hook-capability-probe/v1";
+export const CODEX_HOOK_PROBE_SCHEMA = "outsider/codex-hook-capability-probe/v2";
 export const CODEX_LIVE_CONFORMANCE_SCHEMA = "outsider/codex-live-hook-conformance/v1";
-export const CODEX_WORKER_ADAPTER_VERSION = 1;
+const EXPECTED_HOOK_EVENTS = Object.freeze([
+  "preToolUse", "permissionRequest", "postToolUse", "preCompact", "postCompact",
+  "sessionStart", "sessionEnd", "userPromptSubmit", "subagentStart", "subagentStop", "stop",
+]);
+export const CODEX_REQUIRED_LIFECYCLE_EVENTS = Object.freeze([
+  "sessionStart", "userPromptSubmit", "preToolUse", "permissionRequest",
+  "postToolUse", "preCompact", "postCompact", "subagentStart", "subagentStop", "stop",
+]);
+/* Codex Desktop currently exposes ten live hook boundaries.  SessionEnd is
+   accepted by the generated schema and installed when the host exposes it, but
+   absence of this advisory shutdown notification must not falsify the ten-core
+   live-control inventory. */
+export const CODEX_ADVISORY_LIFECYCLE_EVENTS = Object.freeze(["sessionEnd"]);
+export const CODEX_WORKER_ADAPTER_VERSION = 2;
 export const CODEX_WORKER_ADAPTER_CLOSURE_HASH = workerDigest({
   name: "outsider-codex-worker-adapter",
   version: CODEX_WORKER_ADAPTER_VERSION,
   input: "codex-rollout-jsonl",
   rawContentPolicy: "hash-only",
   callPairing: ["function_call", "custom_tool_call"],
+  hookInventoryPolicy: {
+    schema: CODEX_HOOK_PROBE_SCHEMA,
+    requiredLifecycleEvents: [...CODEX_REQUIRED_LIFECYCLE_EVENTS],
+    advisoryLifecycleEvents: [...CODEX_ADVISORY_LIFECYCLE_EVENTS],
+    exactOneEnabledTrustedHookPerEvent: true,
+  },
 });
 
 const HASH = /^sha256:[a-f0-9]{64}$/;
-const EXPECTED_HOOK_EVENTS = Object.freeze([
-  "preToolUse", "permissionRequest", "postToolUse", "preCompact", "postCompact",
-  "sessionStart", "userPromptSubmit", "subagentStart", "subagentStop", "stop",
-]);
-const REQUIRED_CONTROL_EVENTS = Object.freeze(["preToolUse", "postToolUse", "stop"]);
+const ATTACHED_CONTROL = /(?:^|\s)--attached-control(?:\s|$)/;
+const BYPASS_HOOK_TRUST = /--dangerously-bypass-hook-trust/;
 const REQUIRED_OUTPUT_KINDS = Object.freeze(["context", "feedback", "stop"]);
 const TOP_LEVEL_TYPES = new Set([
   "session_meta", "event_msg", "response_item", "world_state", "turn_context",
@@ -77,26 +93,43 @@ export function createCodexHookCapabilityProbe({
     throw new Error("CODEX_HOOK_PROBE_SCHEMA_VALUE_INVALID");
   }
   const hooks = configuredHooks.map((hook) => {
-    if (!plain(hook) || typeof hook.eventName !== "string"
+    if (!plain(hook) || !EXPECTED_HOOK_EVENTS.includes(hook.eventName)
       || typeof hook.enabled !== "boolean"
+      || typeof hook.attachedControl !== "boolean"
+      || typeof hook.bypassedHookTrust !== "boolean"
       || !["managed", "untrusted", "trusted", "modified"].includes(hook.trustStatus)
       || !HASH.test(String(hook.currentHash ?? ""))) {
       throw new Error("CODEX_HOOK_METADATA_INVALID");
     }
     return { eventName: hook.eventName, enabled: hook.enabled,
-      trustStatus: hook.trustStatus, currentHash: hook.currentHash };
+      trustStatus: hook.trustStatus, currentHash: hook.currentHash,
+      attachedControl: hook.attachedControl, bypassedHookTrust: hook.bypassedHookTrust };
   }).sort((a, b) => a.eventName.localeCompare(b.eventName)
     || a.currentHash.localeCompare(b.currentHash));
-  const engineSupportsCandidate = REQUIRED_CONTROL_EVENTS.every((name) => events.includes(name))
+  const engineSupportsCandidate = CODEX_REQUIRED_LIFECYCLE_EVENTS.every((name) =>
+    events.includes(name))
     && REQUIRED_OUTPUT_KINDS.every((kind) => outputs.includes(kind));
-  const requiredHooks = REQUIRED_CONTROL_EVENTS.map((eventName) =>
-    hooks.find((hook) => hook.eventName === eventName));
-  const installedPreToolTrusted = Boolean(requiredHooks[0]?.enabled
-    && ["managed", "trusted"].includes(requiredHooks[0].trustStatus));
-  const installedControlHooksTrusted = requiredHooks.every((hook) => Boolean(hook?.enabled)
-    && ["managed", "trusted"].includes(hook.trustStatus));
-  const installedControlHookHashes = sortedUnique(requiredHooks
-    .filter(Boolean).map((hook) => hook.currentHash));
+  const engineSupportsAdvisoryEvents = CODEX_ADVISORY_LIFECYCLE_EVENTS.every((name) =>
+    events.includes(name));
+  const requiredHookGroups = CODEX_REQUIRED_LIFECYCLE_EVENTS.map((eventName) =>
+    hooks.filter((hook) => hook.eventName === eventName
+      && hook.attachedControl && !hook.bypassedHookTrust));
+  const bypassPresent = hooks.some((hook) => hook.bypassedHookTrust);
+  const preTool = requiredHookGroups[CODEX_REQUIRED_LIFECYCLE_EVENTS.indexOf("preToolUse")];
+  const installedPreToolTrusted = Boolean(!bypassPresent
+    && preTool?.length === 1 && preTool[0].enabled
+    && ["managed", "trusted"].includes(preTool[0].trustStatus));
+  const installedControlHooksTrusted = !bypassPresent
+    && requiredHookGroups.every((group) => group.length === 1
+      && group[0].enabled && ["managed", "trusted"].includes(group[0].trustStatus));
+  const advisoryHookGroups = CODEX_ADVISORY_LIFECYCLE_EVENTS.map((eventName) =>
+    hooks.filter((hook) => hook.eventName === eventName
+      && hook.attachedControl && !hook.bypassedHookTrust));
+  const installedAdvisoryHooksTrusted = !bypassPresent
+    && advisoryHookGroups.every((group) => group.length === 1
+      && group[0].enabled && ["managed", "trusted"].includes(group[0].trustStatus));
+  const installedControlHookHashes = sortedUnique(requiredHookGroups
+    .flat().map((hook) => hook.currentHash));
   const body = {
     schema: CODEX_HOOK_PROBE_SCHEMA,
     provider: "codex",
@@ -106,9 +139,13 @@ export function createCodexHookCapabilityProbe({
     configuredHooks: hooks,
     assessment: {
       zeroModelProbe: true,
+      requiredLifecycleEvents: [...CODEX_REQUIRED_LIFECYCLE_EVENTS],
+      advisoryLifecycleEvents: [...CODEX_ADVISORY_LIFECYCLE_EVENTS],
       engineSupportsControlledCandidate: engineSupportsCandidate,
+      engineSupportsAdvisoryEvents,
       installedPreToolTrusted,
       installedControlHooksTrusted,
+      installedAdvisoryHooksTrusted,
       installedControlHookHash: installedControlHooksTrusted
         && installedControlHookHashes.length === 1 ? installedControlHookHashes[0] : null,
       liveHookConformanceObserved: false,
@@ -128,7 +165,9 @@ export function codexHookMetadataFromList(hooksList) {
   return (hooksList?.data ?? []).flatMap((entry) => entry.hooks ?? [])
     .filter((hook) => typeof hook.command === "string" && /outsider/i.test(hook.command))
     .map((hook) => ({ eventName: hook.eventName, enabled: hook.enabled,
-      trustStatus: hook.trustStatus, currentHash: hook.currentHash }));
+      trustStatus: hook.trustStatus, currentHash: hook.currentHash,
+      attachedControl: ATTACHED_CONTROL.test(hook.command),
+      bypassedHookTrust: BYPASS_HOOK_TRUST.test(hook.command) }));
 }
 
 export function codexHookSchemaCapabilities(schemaBytes) {

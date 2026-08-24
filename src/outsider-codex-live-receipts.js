@@ -69,7 +69,8 @@ function atomicJson(file, value) {
 
 function eventName(input = {}) {
   const raw = String(input.hook_event_name ?? input.hookEventName ?? "");
-  return ({ SessionStart: "sessionStart", UserPromptSubmit: "userPromptSubmit",
+  return ({ SessionStart: "sessionStart", SessionEnd: "sessionEnd",
+    UserPromptSubmit: "userPromptSubmit",
     PreToolUse: "preToolUse", PostToolUse: "postToolUse", PreCompact: "preCompact",
     PostCompact: "postCompact", Stop: "stop", SubagentStart: "subagentStart",
     SubagentStop: "subagentStop", PermissionRequest: "permissionRequest" })[raw] ?? raw;

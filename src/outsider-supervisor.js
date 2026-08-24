@@ -9,8 +9,8 @@
  * (measureExecutionTrace), keeps the existing pathology flags, adds the claim
  * ledger's said-vs-did mismatches, and turns the union into a decision. The
  * growing prefix is re-scored at every step (a prefix / process-scoring shape).
- * (No frontier model runs here — the scoring is the rules + measurement in this
- * repo; the CM-1/CM-2 research models are a separate track, not called from here.)
+ * (No separate research path runs here — the scoring is the rules + measurement
+ * in this Stage 0.5 runtime.)
  *
  * THE ONE RULE FOR INTERRUPTING A HUMAN
  * =====================================

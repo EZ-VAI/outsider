@@ -21,10 +21,10 @@ frozen operator contract
 → sealed causal proof
 ```
 
-The next stage adds reliability evidence around that same kernel.  It does not
-add another detector or another LLM judge.  It also does not claim Codex/Trae
-control, cross-host portability, universal semantic correctness, pricing,
-guarantee, insurance payout or WorldConstitution authority.
+The reliability gates add repeated and long-duration evidence around that same
+kernel. They do not turn one bounded Codex live loop into complete Codex tool
+coverage, cross-host portability, universal semantic correctness, operating-
+system containment, or financial authority.
 
 ## Gate order
 

@@ -1,7 +1,8 @@
 {
   "schema": "outsider/stage05-public-package-profile/v1",
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "boundary": "PUBLIC_STAGE05_RUNTIME_ONLY_LOCAL_RESEARCH_EXCLUDED",
+  "dependencyPathSetSha256": "sha256:b8d17d8b499c036d00daf945502d5acced178b6597b6787322b3932f64acaf22",
   "entrypoints": [
     "bin/outsider.mjs",
     "bin/outsider-run.mjs",
@@ -35,7 +36,7 @@
     "docs/GLOBAL-OUTSIDER.md",
     "docs/PRODUCT-GUIDE.md",
     "docs/PUBLIC-RELEASE.md",
-    "docs/RELEASE-NOTES-1.3.98.md",
+    "docs/RELEASE-NOTES-1.3.99.md",
     "docs/STAGE05-DELIVERY.md",
     "docs/STAGE05-RELIABILITY-GATES.md",
     "docs/WORKER-ADAPTER-V1.md",
@@ -66,12 +67,12 @@
     "^test/",
     "^dist/",
     "^\\.outsider/",
-    "(^|/)(acquire-|outsider-(actuarial|bridgedata|ca-dmv|cas-|cdi-ncigf|clinical|fda-|fema-|fra-phmsa|institutional-capital|judgment-fund|ncua-pbgc|nhtsa-recall|outreach|real-case|real-evidence|real-loss|real-responsibility|reality-|remedy-|rma-|stage1-|stage15-|stage2-|stage234-|stage3-|stage34-|stage4-|waymo))",
-    "(^|/)outsider-evidence-registry\\.js$",
+    "(^|/)[^/]*(private|internal|confidential|secret|research|roadmap|dataset|raw[-_.]?data|run[-_.]?data)[^/]*$",
     "\\.(csv|pdf|tfrecord|zip|xlsx|xls|jsonl)$"
   ],
   "forbiddenContentPatterns": [
-    "outsider/evidence-registry/v1",
-    "outsider/real-case-responsibility-flywheel/v1"
+    "(?:BEGIN|END)[_ -]+(?:PRIVATE|CONFIDENTIAL|INTERNAL)(?:[_ -]+(?:DATA|PLAN|ONLY))?",
+    "(?:PRIVATE|CONFIDENTIAL|INTERNAL)[_ -]+(?:ONLY|DATA|PLAN|RESEARCH|ROADMAP)(?![A-Za-z])",
+    "(?:classification|visibility)(?:\\x22|\\x27)?\\s*:\\s*(?:\\x22|\\x27)?(?:private|confidential|internal)"
   ]
 }

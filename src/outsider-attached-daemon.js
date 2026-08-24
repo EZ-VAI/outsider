@@ -9,7 +9,14 @@ import { finalizeStage05Evidence } from "./outsider-stage05-evidence.js";
 import { defaultStateRoot } from "./outsider-kernel-store.js";
 import { CodexLiveReceiptStore } from "./outsider-codex-live-receipts.js";
 
-const eventName = (input) => String(input?.hook_event_name ?? input?.hookEventName ?? "PreToolUse");
+const eventName = (input) => String(input?.hook_event_name ?? input?.hookEventName ?? "");
+const CODEX_HOOK_EVENTS = new Set([
+  "SessionStart", "SessionEnd", "UserPromptSubmit", "PreToolUse", "PermissionRequest",
+  "PostToolUse", "PreCompact", "PostCompact", "SubagentStart", "SubagentStop", "Stop",
+]);
+const ACTUAL_CONTROLLER_ROUTE = Symbol("outsider.actual-controller-route");
+const MAX_CODEX_TERMINAL_REPAIR_GENERATIONS = 3;
+const MAX_CODEX_REPAIR_REARM_ATTEMPTS = 3;
 const stopBlock = (reason) => ({ decision: { verdict: "deny", corrective: reason },
   output: { decision: "block", reason } });
 const terminalStop = (status, message) => ({
@@ -466,6 +473,92 @@ export class AttachedDaemonController {
     });
   }
 
+  markCodexTerminalRepair(session, { reason, final = null } = {}) {
+    const active = session.ledger.value.active ?? {};
+    const previous = active.codexTerminalRepair ?? null;
+    const repair = {
+      generation: Number(previous?.generation ?? 0) + 1,
+      maximumGenerations: MAX_CODEX_TERMINAL_REPAIR_GENERATIONS,
+      priorRunId: session.run?.runId ?? active.runId ?? null,
+      requiredAt: new Date().toISOString(),
+      reason: String(reason ?? "Codex terminal verification was incomplete"),
+      proofErrors: Array.isArray(final?.proof?.errors) ? final.proof.errors.slice(0, 12) : [],
+      rearmed: false,
+      rearmAttempts: 0,
+      actionAuthorized: false,
+      actionObserved: false,
+    };
+    /* `finish()` has terminalized the physical controller generation, but the
+       operator contract remains active. Keep the logical run reference and
+       durable active record until a replacement generation is armed at the
+       first repair action. An unchanged Stop therefore cannot fall through an
+       empty-run/idempotent branch and become falsely green. */
+    session.ledger.setActive({ ...active, status: "running", codexTerminalRepair: repair });
+    return repair;
+  }
+
+  updateCodexTerminalRepair(session, patch = {}) {
+    const active = session.ledger.value.active;
+    const repair = active?.codexTerminalRepair;
+    if (!active || !repair) return null;
+    const next = { ...repair, ...patch };
+    session.ledger.setActive({ ...active, codexTerminalRepair: next });
+    return next;
+  }
+
+  async rearmCodexTerminalRepair(session) {
+    const active = session.ledger.value.active;
+    const repair = active?.codexTerminalRepair;
+    if (!active?.ask || !repair) return { ok: false, error: "REPAIR_CONTRACT_MISSING" };
+    if (repair.rearmed === true) return { ok: true };
+    if (Number(repair.generation) > MAX_CODEX_TERMINAL_REPAIR_GENERATIONS) {
+      return { ok: false, error: "REPAIR_GENERATION_BUDGET_EXHAUSTED" };
+    }
+    const attempt = Number(repair.rearmAttempts ?? 0) + 1;
+    if (attempt > MAX_CODEX_REPAIR_REARM_ATTEMPTS) {
+      return { ok: false, error: "REPAIR_REARM_BUDGET_EXHAUSTED" };
+    }
+    const terminalRun = session.run;
+    try {
+      /* A thrown finish can leave its controller generation alive. Fence that
+         physical authority before creating the replacement; retain the
+         logical reference until bootstrap succeeds so no hook can observe an
+         empty/open-loop state. */
+      try {
+        if (typeof terminalRun?.supersede === "function") {
+          await terminalRun.supersede("codex-terminal-repair-rearm");
+        } else await terminalRun?.rpc?.close?.();
+      } catch {
+        try { await terminalRun?.rpc?.close?.(); } catch { /* already terminal */ }
+      }
+      const started = await this.bootstrap(session, active.ask, session.bootstrapEpoch);
+      if (!started?.controlled || !session.run || session.run === terminalRun) {
+        throw new Error("REPAIR_CONTROLLER_NOT_REARMED");
+      }
+      const running = session.ledger.value.active;
+      session.ledger.setActive({ ...running, codexTerminalRepair: {
+        ...repair,
+        rearmed: true,
+        rearmAttempts: attempt,
+        replacementRunId: session.run.runId ?? running?.runId ?? null,
+        rearmedAt: new Date().toISOString(),
+      } });
+      return { ok: true };
+    } catch (error) {
+      /* Keep the terminal logical run and active contract visible. A failed
+         rearm may be retried only at another explicit PreToolUse boundary and
+         is itself bounded; it never authorizes the pending action. */
+      session.run = terminalRun;
+      session.ledger.setActive({ ...active, codexTerminalRepair: {
+        ...repair,
+        rearmAttempts: attempt,
+        lastRearmError: String(error?.message ?? error),
+        lastRearmFailedAt: new Date().toISOString(),
+      } });
+      return { ok: false, error: String(error?.message ?? error) };
+    }
+  }
+
   async onPrompt(session, input) {
     const prompt = attachedPrompt(input);
     if (!prompt) return promptContext("Outsider 没有收到可冻结的操作方原话；本轮不会声称受控交付。");
@@ -576,9 +669,13 @@ export class AttachedDaemonController {
     catch (error) { this.recordBootstrapFailure(session, active.ask, error); }
   }
 
-  async handleHookCore({ agent = "claude-code", input = {}, strict = false } = {}) {
+  async handleHookCore({ agent = "claude-code", input = {}, strict = false,
+    [ACTUAL_CONTROLLER_ROUTE]: actualRoute = null } = {}) {
     if (input?._outsiderAttachedPing) return allow("attached daemon ready");
     const event = eventName(input);
+    if (agent === "codex" && !CODEX_HOOK_EVENTS.has(event)) {
+      throw new Error(`UNSUPPORTED_HOOK_EVENT:${event || "missing"}`);
+    }
     const session = this.session(agent, input);
     if (!session) {
       const reason = "宿主没有提供 session_id 或 transcript_path；Outsider 无法隔离并发会话。";
@@ -601,6 +698,15 @@ export class AttachedDaemonController {
       session.ledger.save({ lastCompactionAt: new Date().toISOString() });
       return allow("contract ledger persisted before compaction");
     }
+    if (event === "PostCompact") {
+      session.ledger.save({ lastCompactionCompletedAt: new Date().toISOString() });
+      return allow("post-compaction lifecycle recorded");
+    }
+    if (event === "PermissionRequest") {
+      session.ledger.save({ lastPermissionRequestAt: new Date().toISOString() });
+      return { decision: { verdict: "defer",
+        reason: "native permission decision remains with the host and operator" }, output: {} };
+    }
     if (event === "SessionEnd") {
       if (session.run) {
         try { await session.run.supersede?.("host-session-ended-without-complete-stop"); }
@@ -612,6 +718,21 @@ export class AttachedDaemonController {
       }
       session.ledger.save({ sessionEndedAt: new Date().toISOString() });
       return allow("session end recorded");
+    }
+    let terminalRepair = agent === "codex"
+      ? session.ledger.value.active?.codexTerminalRepair ?? null : null;
+    if (terminalRepair && event === "Stop"
+      && (terminalRepair.rearmed !== true || terminalRepair.actionObserved !== true)) {
+      return stopBlock("Codex 上一次最终验收仍为红；未观察到受控修复动作和结果，"
+        + "原样重试 Stop 已拒绝。请先执行最小修复，再重新验收。");
+    }
+    if (terminalRepair && event === "PreToolUse" && terminalRepair.rearmed !== true) {
+      const rearmed = await this.rearmCodexTerminalRepair(session);
+      if (!rearmed.ok) {
+        return preToolBlock(`Codex repair controller 未能安全重启：${rearmed.error}。`
+          + "当前动作未执行；修复预算耗尽时必须提交新的操作方任务。");
+      }
+      terminalRepair = session.ledger.value.active?.codexTerminalRepair ?? terminalRepair;
     }
     await this.ensureRecovery(session);
     const active = session.ledger.value.active;
@@ -720,10 +841,14 @@ export class AttachedDaemonController {
        different JSONL dialect. Select its measured parser without sending the
        Claude Desktop transport label into a kernel that correctly treats
        Cowork/Desktop trajectories as Claude-shaped. */
-    try { response = await session.run.handleHook({
+    try {
+      if (actualRoute) actualRoute.kernelControllerInvoked = true;
+      response = await session.run.handleHook({
       agent: kernelAgentForAttachedHost(session.agent), input, strict,
-    }); }
+      });
+    }
     catch (error) {
+      if (/^UNSUPPORTED_HOOK_EVENT:/.test(String(error?.message ?? error))) throw error;
       const reason = `Outsider controller 不可用：${error?.message ?? error}`;
       return event === "Stop" || event === "SubagentStop" ? stopBlock(reason)
         : event === "PreToolUse" ? preToolBlock(reason) : allow(reason);
@@ -744,15 +869,38 @@ export class AttachedDaemonController {
       session.needsMandate = false;
       session.ledger.setActive({ ...session.ledger.value.active, mandateDelivered: true });
     }
+    if (session.agent === "codex" && session.ledger.value.active?.codexTerminalRepair) {
+      if (event === "PreToolUse"
+        && response?.output?.hookSpecificOutput?.permissionDecision === "allow") {
+        this.updateCodexTerminalRepair(session, {
+          actionAuthorized: true,
+          actionAuthorizedAt: new Date().toISOString(),
+        });
+      } else if (event === "PostToolUse"
+        && session.ledger.value.active.codexTerminalRepair.actionAuthorized === true) {
+        this.updateCodexTerminalRepair(session, {
+          actionObserved: true,
+          actionObservedAt: new Date().toISOString(),
+        });
+      }
+    }
     if (event === "Stop" && response?.output?.decision !== "block") {
       let final;
       try { final = await session.run.finish(); } catch (error) {
+        if (session.agent === "codex") {
+          this.markCodexTerminalRepair(session, {
+            reason: `finalization-error:${error?.message ?? error}`,
+          });
+          return stopBlock(`最终证明失败：${error?.message ?? error}。本次 Codex Stop 已拒绝，`
+            + "active contract 已保留，只有完成受控修复并重新验收转绿后才能结束。");
+        }
         session.ledger.completeActive("incomplete", { error: String(error?.message ?? error) });
         session.run = null;
         return terminalStop("conservative-stop",
           `最终证明失败：${error?.message ?? error}。controller 已终态，本轮不会伪称交付，也不会形成永久 Stop 墙。`);
       }
-      const evidenceComplete = final.evidence == null || final.evidence.ok === true;
+      const evidenceComplete = session.agent === "codex"
+        ? final?.evidence?.ok === true : final.evidence == null || final.evidence.ok === true;
       const complete = final?.proof?.complete === true && evidenceComplete;
       /* Outcome correctness and causal attribution are separate claims. When
          final mechanical acceptance, semantic verification and PASS audit all
@@ -762,6 +910,14 @@ export class AttachedDaemonController {
          status and never label it Stage 0.5 causal proof. */
       const deliveryComplete = complete || (final?.proof?.deliveryComplete === true
         && final?.acceptance?.passed === true && evidenceComplete);
+      if (session.agent === "codex" && !deliveryComplete) {
+        this.markCodexTerminalRepair(session, {
+          reason: "acceptance-semantic-or-evidence-incomplete",
+          final,
+        });
+        return stopBlock("Codex 最终机械验收、语义结果、因果证明或证据封存不完整；"
+          + "本次 Stop 已拒绝，active contract 已保留。请执行受控修复后重新验收。");
+      }
       const terminalStatus = complete ? "complete"
         : deliveryComplete ? "delivered-unattributed" : "incomplete";
       session.ledger.completeActive(terminalStatus, {
@@ -783,24 +939,54 @@ export class AttachedDaemonController {
 
   async handleHook(payload = {}) {
     const { agent = "claude-code", input = {} } = payload;
+    if (agent === "codex" && !input?._outsiderAttachedPing
+      && !CODEX_HOOK_EVENTS.has(eventName(input))) {
+      throw new Error(`UNSUPPORTED_HOOK_EVENT:${eventName(input) || "missing"}`);
+    }
     if (agent !== "codex" || input?._outsiderAttachedPing) {
       return this.handleHookCore(payload);
     }
-    const before = this.session(agent, input);
-    const kernelBefore = Boolean(before?.run);
-    const result = await this.handleHookCore(payload);
+    const actualRoute = { kernelControllerInvoked: false };
+    const controllerResult = await this.handleHookCore({
+      ...payload,
+      [ACTUAL_CONTROLLER_ROUTE]: actualRoute,
+    });
+    const event = eventName(input);
+    let nativeResult = controllerResult;
+    /* Codex's current command-hook runtime rejects `permissionDecision:allow`;
+       an allowed PreToolUse is represented by no decision at all. Keep only
+       additionalContext when the first controlled boundary carries the frozen
+       mandate. Likewise, Stop/SubagentStop continues on an empty object;
+       `approve` is the Claude envelope and is invalid on the Codex transport.
+       Preserve the canonical controller result until after its signed receipt
+       is recorded; only the returned native envelope is projected. */
+    if (event === "PreToolUse"
+      && controllerResult?.output?.hookSpecificOutput?.permissionDecision === "allow") {
+      const additionalContext = controllerResult.output.hookSpecificOutput.additionalContext;
+      const { hookSpecificOutput: _allow, ...output } = controllerResult.output;
+      nativeResult = { ...controllerResult, output: {
+        ...output,
+        ...(typeof additionalContext === "string" && additionalContext
+          ? { hookSpecificOutput: { hookEventName: "PreToolUse", additionalContext } } : {}),
+      } };
+    }
+    if (["Stop", "SubagentStop"].includes(event)
+      && controllerResult?.output?.decision === "approve") {
+      const { decision: _approve, ...output } = controllerResult.output;
+      nativeResult = { ...controllerResult, output };
+    }
     const after = this.session(agent, input);
-    const kernelAfter = Boolean(after?.run);
-    const serialized = JSON.stringify(result);
+    const serialized = JSON.stringify(controllerResult);
     const controllerFailure = /controller 不可用|attach 未进入受控模式|启动预检暂时失败/.test(serialized);
     const failClosed = controllerFailure
-      && (result?.output?.decision === "block"
-        || result?.output?.hookSpecificOutput?.permissionDecision === "deny");
-    const controllerPath = failClosed ? "ATTACHED_FAIL_CLOSED"
+      && (controllerResult?.output?.decision === "block"
+        || controllerResult?.output?.hookSpecificOutput?.permissionDecision === "deny");
+    const controllerPath = actualRoute.kernelControllerInvoked ? "KERNEL_CONTROLLER"
+      : failClosed ? "ATTACHED_FAIL_CLOSED"
       : controllerFailure ? "ATTACHED_FAIL_VISIBLE"
-      : kernelBefore || kernelAfter ? "KERNEL_CONTROLLER" : "ATTACHED_POLICY";
+        : "ATTACHED_POLICY";
     try {
-      const persisted = this.codexReceiptStore.record({ input, result,
+      const persisted = this.codexReceiptStore.record({ input, result: controllerResult,
         runtime: { ...(payload.codexRuntime ?? {}) }, controllerPath,
         controllerAvailable: !controllerFailure });
       after?.ledger?.save({ codexControllerReceiptHead: {
@@ -810,12 +996,11 @@ export class AttachedDaemonController {
         signingKeySource: persisted.signingKeySource,
         recordedAt: persisted.receipt.recordedAt,
       } });
-      return result;
+      return nativeResult;
     } catch (error) {
       const reason = `Outsider Codex controller receipt 未能安全持久化：${error?.message ?? error}`;
-      const event = eventName(input);
       if (event === "PreToolUse") return preToolBlock(reason);
-      if (event === "Stop") return stopBlock(reason);
+      if (event === "Stop" || event === "SubagentStop") return stopBlock(reason);
       throw new Error(`CODEX_CONTROLLER_RECEIPT_PERSIST_FAILED:${error?.message ?? error}`);
     }
   }

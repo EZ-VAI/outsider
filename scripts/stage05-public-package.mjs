@@ -12,6 +12,31 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = path.resolve(HERE, "..");
 const PROFILE_FILE = "release-public-files.json";
 const JS_EXTENSIONS = ["", ".js", ".mjs", ".cjs", ".json"];
+const PROFILE_SCHEMA_VERSION = "1.1.0";
+
+export const publicReleaseForbiddenPathPatterns = Object.freeze([
+  "^artifacts/",
+  "^test/",
+  "^dist/",
+  "^\\.outsider/",
+  "(^|/)[^/]*(private|internal|confidential|secret|research|roadmap|dataset|raw[-_.]?data|run[-_.]?data)[^/]*$",
+  "\\.(csv|pdf|tfrecord|zip|xlsx|xls|jsonl)$",
+]);
+
+export const publicReleaseForbiddenContentPatterns = Object.freeze([
+  "(?:BEGIN|END)[_ -]+(?:PRIVATE|CONFIDENTIAL|INTERNAL)(?:[_ -]+(?:DATA|PLAN|ONLY))?",
+  "(?:PRIVATE|CONFIDENTIAL|INTERNAL)[_ -]+(?:ONLY|DATA|PLAN|RESEARCH|ROADMAP)(?![A-Za-z])",
+  "(?:classification|visibility)(?:\\x22|\\x27)?\\s*:\\s*(?:\\x22|\\x27)?(?:private|confidential|internal)",
+]);
+
+const EXPECTED_EXCLUSIONS = Object.freeze({
+  nonStage05Assets: true,
+  privateDataAndRuns: true,
+  internalPlanning: true,
+  tests: true,
+});
+
+const EXPECTED_INCLUSIONS = Object.freeze({ stage05Runtime: true });
 
 function fail(code, detail = null) {
   throw new Error(detail == null ? code : `${code}:${detail}`);
@@ -98,6 +123,15 @@ export function publicDependencyFiles({ sourceRoot = DEFAULT_ROOT, entrypoints }
     .map((file) => path.relative(root, file).split(path.sep).join("/")).sort();
 }
 
+export function dependencyPathSetSha256(paths) {
+  if (!Array.isArray(paths) || paths.some((item) => typeof item !== "string")) {
+    fail("PUBLIC_PACKAGE_DEPENDENCY_PATH_SET_INVALID");
+  }
+  const canonical = [...new Set(paths)].sort();
+  if (canonical.length !== paths.length) fail("PUBLIC_PACKAGE_DEPENDENCY_PATH_SET_INVALID");
+  return `sha256:${createHash("sha256").update(JSON.stringify(canonical)).digest("hex")}`;
+}
+
 export function assertPublicPackagePaths(paths, profile) {
   if (!Array.isArray(paths) || !profile) fail("PUBLIC_PACKAGE_PATH_AUDIT_INVALID");
   const forbidden = profile.forbiddenPathPatterns.map((item) => new RegExp(item, "i"));
@@ -107,13 +141,13 @@ export function assertPublicPackagePaths(paths, profile) {
 }
 
 export function assertPublicPackageContents(root, paths, profile) {
-  const forbidden = profile.forbiddenContentPatterns.map((item) => Buffer.from(item));
+  const forbidden = profile.forbiddenContentPatterns.map((item) => new RegExp(item, "u"));
   for (const relative of paths) {
     if (relative === PROFILE_FILE) continue;
-    const bytes = readFileSync(path.join(root, relative));
-    const violation = forbidden.find((pattern) => bytes.includes(pattern));
+    const contents = readFileSync(path.join(root, relative), "utf8");
+    const violation = forbidden.find((pattern) => pattern.test(contents));
     if (violation) fail("PUBLIC_PACKAGE_FORBIDDEN_CONTENT",
-      `${relative}:${violation.toString("utf8")}`);
+      `${relative}:${violation.source}`);
   }
 }
 
@@ -149,10 +183,13 @@ function sha256(file) {
 export function readPublicPackageProfile(sourceRoot = DEFAULT_ROOT) {
   const profile = JSON.parse(readFileSync(path.join(sourceRoot, PROFILE_FILE), "utf8"));
   if (!exactKeys(profile, ["schema", "schemaVersion", "boundary", "entrypoints",
-    "staticFiles", "forbiddenPathPatterns", "forbiddenContentPatterns"])
+    "dependencyPathSetSha256", "staticFiles", "forbiddenPathPatterns",
+    "forbiddenContentPatterns"])
     || profile.schema !== "outsider/stage05-public-package-profile/v1"
-    || profile.schemaVersion !== "1.0.0"
+    || profile.schemaVersion !== PROFILE_SCHEMA_VERSION
     || profile.boundary !== "PUBLIC_STAGE05_RUNTIME_ONLY_LOCAL_RESEARCH_EXCLUDED"
+    || typeof profile.dependencyPathSetSha256 !== "string"
+    || !/^sha256:[0-9a-f]{64}$/.test(profile.dependencyPathSetSha256)
     || !Array.isArray(profile.entrypoints) || profile.entrypoints.length === 0
     || !Array.isArray(profile.staticFiles) || !Array.isArray(profile.forbiddenPathPatterns)
     || !Array.isArray(profile.forbiddenContentPatterns)
@@ -160,7 +197,18 @@ export function readPublicPackageProfile(sourceRoot = DEFAULT_ROOT) {
       typeof item !== "string" || item.length === 0 || path.isAbsolute(item)
       || item.split(/[\\/]/).includes(".."))
     || [...profile.forbiddenPathPatterns, ...profile.forbiddenContentPatterns].some((item) =>
-      typeof item !== "string" || item.length === 0)) fail("PUBLIC_PACKAGE_PROFILE_INVALID");
+      typeof item !== "string" || item.length === 0)
+    || JSON.stringify(profile.forbiddenPathPatterns)
+      !== JSON.stringify(publicReleaseForbiddenPathPatterns)
+    || JSON.stringify(profile.forbiddenContentPatterns)
+      !== JSON.stringify(publicReleaseForbiddenContentPatterns)) {
+    fail("PUBLIC_PACKAGE_PROFILE_INVALID");
+  }
+  const dependencyPaths = publicDependencyFiles({ sourceRoot, entrypoints: profile.entrypoints });
+  const actualPathSetSha256 = dependencyPathSetSha256(dependencyPaths);
+  if (actualPathSetSha256 !== profile.dependencyPathSetSha256) {
+    fail("PUBLIC_PACKAGE_DEPENDENCY_PATH_SET_MISMATCH", actualPathSetSha256);
+  }
   return profile;
 }
 
@@ -216,23 +264,14 @@ export function stagePublicNpmPackage({ sourceRoot = DEFAULT_ROOT, targetRoot } 
       sha256: `sha256:${sha256(path.join(target, file))}` }));
   const manifest = {
     schema: "outsider/stage05-public-package-manifest/v1",
-    schemaVersion: "1.0.0",
+    schemaVersion: PROFILE_SCHEMA_VERSION,
     package: { name: publicPackage.name, version: publicPackage.version },
     boundary: profile.boundary,
+    dependencyPathSetSha256: profile.dependencyPathSetSha256,
     memberCount: manifestMembers.length,
     members: manifestMembers,
-    excluded: {
-      localStages1Through4: true,
-      realityStewardshipResearch: true,
-      governedResponsibilityAndActuarialResearch: true,
-      outreachCatalog: true,
-      rawAndCanonicalArtifacts: true,
-      tests: true,
-    },
-    included: {
-      stage05RuntimePolicyAndHeuristics: true,
-      legacyStage05BehaviorUtilities: true,
-    },
+    excluded: { ...EXPECTED_EXCLUSIONS },
+    included: { ...EXPECTED_INCLUSIONS },
   };
   writeFileSync(path.join(target, "public-package-manifest.json"),
     `${JSON.stringify(manifest, null, 2)}\n`, { mode: 0o644, flag: "wx" });

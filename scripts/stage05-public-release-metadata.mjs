@@ -20,23 +20,27 @@ function parse(argv) {
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const pkg = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
 const options = parse(process.argv.slice(2));
-const directory = path.resolve(options["out-dir"] ?? path.join(root, "dist"));
+const artifactsDirectory = path.resolve(options["artifacts-dir"] ?? path.join(root, "dist"));
+const directory = path.resolve(options["out-dir"]
+  ?? path.join(artifactsDirectory, `public-release-${pkg.version}`));
 const result = writePublicReleaseMetadata({
   certificatePath: path.resolve(options.certificate
-    ?? path.join(directory, `release-certificate-${pkg.version}.json`)),
+    ?? path.join(artifactsDirectory, `release-certificate-${pkg.version}.json`)),
   npmArtifactPath: path.resolve(options.artifact
-    ?? path.join(directory, `${pkg.name}-${pkg.version}.tgz`)),
+    ?? path.join(artifactsDirectory, `${pkg.name}-${pkg.version}.tgz`)),
   pluginArtifactPath: path.resolve(options.plugin
-    ?? path.join(directory, `${pkg.name}-${pkg.version}-claude.plugin.zip`)),
+    ?? path.join(artifactsDirectory, `${pkg.name}-${pkg.version}-claude.plugin.zip`)),
   outputDirectory: directory,
   expectedProduct: { name: pkg.name, version: pkg.version },
+  stagePublicUploadSet: true,
 });
 
 process.stdout.write(`${JSON.stringify({
   publicCertificate: result.publicCertificate,
   publicCertificateSha256: result.publicCertificateSha256,
   sha256Sums: result.sha256Sums,
+  publicUploadDirectory: result.publicUploadDirectory,
+  publicUploadManifest: result.publicUploadManifest,
   releaseDecision: result.projection.releaseDecision,
   stablePublicReleaseReady: result.projection.stablePublicReleaseReady,
 }, null, 2)}\n`);
-

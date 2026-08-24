@@ -1,13 +1,17 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
-import { readFileSync } from "node:fs";
+import {
+  lstatSync, mkdtempSync, readFileSync, rmSync, writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import {
   assessEnduranceEvidence,
   assessEnduranceEvents,
   assessEnduranceSmokeEvidence,
   assessReleaseReadiness,
+  writePrivateReleaseCertificate,
 } from "../src/outsider-release-certification.js";
 
 const at = (milliseconds) => new Date(Date.UTC(2026, 0, 1) + milliseconds).toISOString();
@@ -24,6 +28,18 @@ const stableFieldEvidence = () => ({
   codexLifecycleControl: { status: "PASS" },
   chatgptLivePluginInstall: { status: "PASS" },
   chatgptNewChatSkillEvaluation: { status: "PASS" },
+});
+
+test("private release certificates are forced to mode 0600 even when replacing 0644", (t) => {
+  const directory = mkdtempSync(path.join(tmpdir(), "outsider-private-release-cert-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const file = path.join(directory, "release-certificate-1.3.99.json");
+  writeFileSync(file, "old private certificate\n", { mode: 0o644 });
+  writePrivateReleaseCertificate(file, { schema: "synthetic/private-release-certificate/v1" });
+  assert.equal(lstatSync(file).mode & 0o777, 0o600);
+  assert.deepEqual(JSON.parse(readFileSync(file, "utf8")), {
+    schema: "synthetic/private-release-certificate/v1",
+  });
 });
 
 test("stable release cannot collapse the four live reliability gates into one canary", () => {
@@ -102,6 +118,11 @@ test("the release certifier has evidence inputs for Cowork and a signed distinct
   assert.match(source, /options\["second-machine-record"\]/);
   assert.match(source, /options\["second-machine-public-key"\]/);
   assert.match(source, /verifySecondMachineConformance/);
+  assert.match(source, /validateClaudeHostedPluginLayout/);
+  assert.match(source, /coworkPluginArtifact: certifiedPluginArtifact/);
+  assert.match(source, /layoutValidation: "PASS"/);
+  assert.match(source, /byteLength: bytes\.length/);
+  assert.match(source, /writePrivateReleaseCertificate\(certificateFile, certificate\)/);
 });
 
 test("the release certifier consumes multi-surface doctor v2 without laundering diagnostic health into Claude conformance", () => {

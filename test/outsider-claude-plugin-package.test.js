@@ -8,6 +8,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { claudeHostedPluginManifestFile, claudeHostedRuntimeEntries, stageClaudeHostedPlugin,
   validateClaudeHostedPluginLayout } from "../scripts/claude-plugin-package.mjs";
+import { dependencyPathSetSha256 } from "../scripts/stage05-public-package.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -31,27 +32,34 @@ test("hosted Claude plugin has no top-level bin and declares its runtime hook", 
     assert.equal(runtimePackage.bin, undefined);
     const runtimeManifest = JSON.parse(readFileSync(path.join(temporary,
       "runtime", "public-runtime-manifest.json"), "utf8"));
-    assert.equal(runtimeManifest.localStages1Through4Excluded, true);
-    assert.equal(runtimeManifest.realityStewardshipResearchExcluded, true);
-    assert.equal(runtimeManifest.governedResponsibilityAndActuarialResearchExcluded, true);
-    assert.equal(runtimeManifest.outreachCatalogExcluded, true);
-    assert.equal(runtimeManifest.stage05RuntimePolicyAndHeuristicsIncluded, true);
-    assert.equal(runtimeManifest.schemaVersion, "1.0.0");
+    assert.deepEqual(runtimeManifest.excluded, {
+      nonStage05Assets: true,
+      privateDataAndRuns: true,
+      internalPlanning: true,
+      tests: true,
+    });
+    assert.deepEqual(runtimeManifest.included, { stage05Runtime: true });
+    assert.equal(runtimeManifest.schemaVersion, "1.1.0");
     assert(runtimeManifest.files.length > 0);
+    assert.equal(runtimeManifest.dependencyPathSetSha256,
+      dependencyPathSetSha256(runtimeManifest.files.map((file) => file.path)
+        .filter((file) => file !== "package.json")));
     assert.equal(runtimeManifest.files.some((file) =>
-      /(?:stage1-|stage2-|stage3-|stage4-|reality-|actuarial|responsibility|outreach)/i
+      /(?:^|\/)[^/]*(?:private|internal|confidential|secret|research|roadmap|dataset)[^/]*$/i
         .test(file.path)), false);
-    assert.equal(existsSync(path.join(temporary, "runtime", "src",
-      "outsider-actuarial-model-evolution.js")), false);
     const pluginManifest = JSON.parse(readFileSync(path.join(temporary,
       claudeHostedPluginManifestFile), "utf8"));
     const sourcePackage = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
     assert.equal(pluginManifest.schema,
       "outsider/claude-hosted-public-plugin-manifest/v1");
-    assert.equal(pluginManifest.schemaVersion, "1.0.0");
+    assert.equal(pluginManifest.schemaVersion, "1.1.0");
     assert.equal(pluginManifest.manifestFile, claudeHostedPluginManifestFile);
     assert.equal(pluginManifest.package.name, sourcePackage.name);
     assert.equal(pluginManifest.package.version, sourcePackage.version);
+    assert.equal(pluginManifest.dependencyPathSetSha256,
+      runtimeManifest.dependencyPathSetSha256);
+    assert.deepEqual(pluginManifest.excluded, runtimeManifest.excluded);
+    assert.deepEqual(pluginManifest.included, runtimeManifest.included);
     assert.equal(pluginManifest.memberCount, pluginManifest.members.length + 1);
     assert.deepEqual(report.archiveMembers,
       [...pluginManifest.members.map((member) => member.path), claudeHostedPluginManifestFile]
@@ -99,16 +107,17 @@ test("the Claude ZIP contains exactly its manifest-declared files and revalidate
     assert.deepEqual(extractedReport.archiveMembers, report.archiveMembers);
   });
 
-test("hosted plugin validator rejects an unmanifested local-model runtime file", () => {
+test("hosted plugin validator rejects an unmanifested private-category runtime file", () => {
   const temporary = mkdtempSync(path.join(tmpdir(), "outsider-hosted-plugin-extra-"));
   try {
     stageClaudeHostedPlugin({ sourceRoot: root, targetRoot: temporary });
-    writeFileSync(path.join(temporary, "runtime", "src",
-      "outsider-governed-behavior-model.js"),
-    "export const syntheticForbiddenResearchMember = true;\n");
+    writeFileSync(path.join(temporary, "runtime", "src", "private-data.mjs"),
+      "export const syntheticPrivateMember = true;\n");
     const report = validateClaudeHostedPluginLayout(temporary);
     assert.equal(report.ok, false);
     assert.ok(report.errors.includes("RUNTIME_ACTUAL_MEMBER_SET_MISMATCH"));
+    assert.ok(report.errors.some((error) =>
+      error.includes("PUBLIC_PACKAGE_FORBIDDEN_MEMBER:src/private-data.mjs")));
   } finally {
     rmSync(temporary, { recursive: true, force: true });
   }
@@ -184,5 +193,20 @@ test("hosted plugin validator rejects extra members and content mutation", () =>
   } finally {
     rmSync(extraTemporary, { recursive: true, force: true });
     rmSync(mutationTemporary, { recursive: true, force: true });
+  }
+});
+
+test("hosted plugin validator rejects a generic private content marker", () => {
+  const temporary = mkdtempSync(path.join(tmpdir(), "outsider-plugin-private-content-"));
+  try {
+    stageClaudeHostedPlugin({ sourceRoot: root, targetRoot: temporary });
+    const runtimeEntry = path.join(temporary, "runtime", "bin", "outsider-hook.mjs");
+    writeFileSync(runtimeEntry, `${readFileSync(runtimeEntry, "utf8")}\n// INTERNAL_ONLY fixture\n`);
+    const report = validateClaudeHostedPluginLayout(temporary);
+    assert.equal(report.ok, false);
+    assert.ok(report.errors.some((error) =>
+      error.includes("PUBLIC_PACKAGE_FORBIDDEN_CONTENT:bin/outsider-hook.mjs")));
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
   }
 });

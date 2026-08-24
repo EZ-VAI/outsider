@@ -10,13 +10,19 @@ import { assertPublicPackageContents, assertPublicPackagePaths, listPublicPackag
 import { validateOpenAIUniversalPlugin } from "./openai-universal-plugin-validate.mjs";
 
 const root = path.resolve(".");
+const profile = readPublicPackageProfile(root);
 const manifest = JSON.parse(readFileSync(path.join(root, "public-package-manifest.json"), "utf8"));
 if (manifest?.schema !== "outsider/stage05-public-package-manifest/v1"
+  || manifest.schemaVersion !== "1.1.0"
   || manifest.boundary !== "PUBLIC_STAGE05_RUNTIME_ONLY_LOCAL_RESEARCH_EXCLUDED"
-  || manifest.excluded?.localStages1Through4 !== true
-  || manifest.excluded?.realityStewardshipResearch !== true
-  || manifest.excluded?.governedResponsibilityAndActuarialResearch !== true
-  || manifest.excluded?.rawAndCanonicalArtifacts !== true) {
+  || manifest.dependencyPathSetSha256 !== profile.dependencyPathSetSha256
+  || JSON.stringify(manifest.excluded) !== JSON.stringify({
+    nonStage05Assets: true,
+    privateDataAndRuns: true,
+    internalPlanning: true,
+    tests: true,
+  })
+  || JSON.stringify(manifest.included) !== JSON.stringify({ stage05Runtime: true })) {
   throw new Error("PUBLIC_PACKAGE_MANIFEST_INVALID");
 }
 const declaredPaths = manifest.members.map((member) => member.path);
@@ -37,7 +43,6 @@ const actualPaths = listPublicPackageFiles(root)
 if (JSON.stringify(actualPaths) !== JSON.stringify(declaredPaths)) {
   throw new Error("PUBLIC_PACKAGE_ACTUAL_MEMBER_SET_MISMATCH");
 }
-const profile = readPublicPackageProfile(root);
 assertPublicPackagePaths(actualPaths, profile);
 assertPublicPackageContents(root, actualPaths, profile);
 const universalPlugin = validateOpenAIUniversalPlugin({ root });
@@ -61,5 +66,5 @@ if (unsupported.status !== 1
   throw new Error("PUBLIC_PACKAGE_UNKNOWN_SCHEMA_FAIL_CLOSED_INVALID");
 }
 process.stdout.write(`${JSON.stringify({ ok: true, package: manifest.package,
-  membersVerified: manifest.members.length, localResearchExcluded: true,
+  membersVerified: manifest.members.length, nonStage05AssetsExcluded: true,
   universalPluginValidated: true })}\n`);

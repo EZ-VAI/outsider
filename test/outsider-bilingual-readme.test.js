@@ -29,13 +29,16 @@ test("both README files bind one release identity and install workflow", () => {
   const escapedVersion = pkg.version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   for (const body of [english, chinese]) {
     assert.match(body, new RegExp(`outsider-guard-${escapedVersion}\\.tgz`));
-    assert.match(body, /codex plugin marketplace add EZ-VAI\/outsider --ref v1\.3\.98/);
+    assert.match(body, new RegExp(`outsider-guard-${escapedVersion}-claude\\.plugin\\.zip`));
+    assert.match(body, new RegExp(`release-certificate-public-${escapedVersion}\\.json`));
+    assert.match(body, /SHA256SUMS/);
+    assert.match(body, new RegExp(`codex plugin marketplace add EZ-VAI/outsider --ref v${escapedVersion}`));
     assert.match(body, /codex plugin add outsider-stage05@outsider/);
     assert.match(body, /outsider doctor --json/);
     assert.match(body, /outsider doctor --share-json/);
-    assert.match(body, /git clone --branch v1\.3\.98 --depth 1/);
+    assert.match(body, new RegExp(`git clone --branch v${escapedVersion} --depth 1`));
     assert.doesNotMatch(body, /outsider-guard-1\.3\.97/);
-    assert.match(body, /v1\.3\.98.*(?:published|发布)/is);
+    assert.match(body, new RegExp(`v${escapedVersion}.*(?:published|发布)`, "is"));
   }
 });
 
@@ -44,6 +47,8 @@ test("both README files preserve ChatGPT and Codex claim boundaries", () => {
   assert.match(english, /Codex hooks are a guardrail, not complete tool coverage/i);
   assert.match(chinese, /普通 ChatGPT 对话没有通用 pre\/post\/stop 生命周期/);
   assert.match(chinese, /hosted tools 与部分特殊路径不经过 hooks/);
+  assert.match(english, /did\s+not\s+expose `SessionEnd`/i);
+  assert.match(chinese, /没有暴露当前 Codex\s*hook 文档中列出的 `SessionEnd`/);
   assert.match(english, /live ChatGPT\s+Desktop install and new-chat evaluation are not yet established/i);
   assert.match(chinese, /真实 ChatGPT Desktop 安装与\s*新会话评测尚未建立/);
   assert.match(english, /OUTSIDER_SUPERVISOR_ARGV/);

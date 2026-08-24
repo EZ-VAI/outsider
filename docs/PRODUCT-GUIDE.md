@@ -2,8 +2,11 @@
 
 ## Install once; external control remains an explicit choice
 
+Use the commands below only after the matching reviewed `v1.3.99` tag and
+release assets have actually been published.
+
 ```bash
-npm install -g ./outsider-guard-1.3.98.tgz
+npm install -g ./outsider-guard-1.3.99.tgz
 outsider install --scope user
 outsider doctor
 ```
@@ -41,7 +44,7 @@ User scope writes `~/.claude/settings.json` and affects every Claude project on 
 the Claude/Cowork session you currently depend on. For a one-repository trial, run `outsider install --scope project` from that repository;
 it writes only `.claude/settings.json` there.
 
-For Cowork, upload `outsider-guard-1.3.98-claude.plugin.zip` once in Desktop Plugins/Customize. The plugin is a thin authenticated client
+For Cowork, upload `outsider-guard-1.3.99-claude.plugin.zip` once in Desktop Plugins/Customize. The plugin is a thin authenticated client
 to the explicit system helper and never launches a misleading supervisor inside the hosted sandbox. Ordinary Claude Chat does not
 execute plugin hooks and is therefore not a controlled surface.
 
@@ -49,7 +52,7 @@ For ChatGPT and Codex, the same Git repository exposes the validated
 `outsider-stage05` universal plugin through `.agents/plugins/marketplace.json`:
 
 ```bash
-codex plugin marketplace add EZ-VAI/outsider --ref v1.3.98
+codex plugin marketplace add EZ-VAI/outsider --ref v1.3.99
 codex plugin add outsider-stage05@outsider
 ```
 
@@ -159,7 +162,7 @@ field evidence, not hardware remote attestation.
 | Claude ordinary Chat | plugin may be visible, hooks do not run | Unsupported |
 | remote Cowork without local hook boundary | none | Unsupported |
 | ChatGPT desktop / Work with repo plugin access | `outsider-stage05` universal skill plugin | Install and evidence-verification skill only; no universal pre/post/stop interception and therefore not globally controlled Stage 0.5 |
-| Codex CLI/Desktop 0.144.5 | native hook + authenticated attached-controller candidate; current audited host cannot exact-item-bind app-server hook delivery, so evidence remains observation-only | Not Stage 0.5 on the audited host |
+| Codex CLI/Desktop/IDE | companion runtime with ten required core hooks plus best-effort advisory `SessionEnd` | A bounded project-local consequential loop has been verified; strict app-server item cross-binding and complete hosted/specialized tool coverage remain unestablished |
 | Trae / CodeBuddy | standalone legacy observer; repository state cannot grant command authority | Not Stage 0.5 |
 
 The distinction between “packaged”, “installed”, and “observed at runtime” is intentional. A file on disk is not proof that a host loaded it.
@@ -167,13 +170,11 @@ Evidence likewise separates `SAFE_DELIVERY`, `VERIFIED_DELIVERY_UNATTRIBUTED`, `
 Only the first is a completed Stage 0.5 causal claim; a correct artifact without attribution and a blocked seeded false green remain useful,
 attestable evidence without being relabeled as closure.
 
-## Cross-provider use
+## Optional signed exchange
 
-Global Outsider adds a separate research-preview plane for signed task plans,
-task-bound checkpoints, bilateral artifact handoffs and content-addressed
-evidence packets across Claude, DeepSeek Harness, Codex, Trae and deterministic
-workflows. The plan freezes operator/instrument/Way ownership and dependencies;
-an operator accepts only by signing its own checkpoint. It does not
-raise the Stage 0.5 row in the table above: provider-local capability ceilings
-remain authoritative. See [GLOBAL-OUTSIDER.md](GLOBAL-OUTSIDER.md) for the key
-boundary, command sequence, durable registry and learning-data restrictions.
+The public runtime also includes an opt-in protocol for signed task plans,
+checkpoints, handoffs, and content-addressed evidence packets. It preserves each
+provider's local capability ceiling: exchanging a signed packet cannot promote
+an observer or unsupported surface into Stage 0.5 control. See
+[GLOBAL-OUTSIDER.md](GLOBAL-OUTSIDER.md) for the current protocol and privacy
+boundary.

@@ -6,8 +6,10 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 
-import { listPublicPackageFiles,
-  stagePublicNpmPackage } from "../scripts/stage05-public-package.mjs";
+import { assertPublicPackageContents, assertPublicPackagePaths, dependencyPathSetSha256,
+  listPublicPackageFiles, publicDependencyFiles, publicReleaseForbiddenContentPatterns,
+  publicReleaseForbiddenPathPatterns, stagePublicNpmPackage,
+} from "../scripts/stage05-public-package.mjs";
 
 const ROOT = path.resolve(".");
 
@@ -30,26 +32,23 @@ test("public npm staging contains only the reviewed Stage 0.5 dependency closure
   assert.equal(staged.package.private, false);
   assert.equal(staged.manifest.boundary,
     "PUBLIC_STAGE05_RUNTIME_ONLY_LOCAL_RESEARCH_EXCLUDED");
-  assert.equal(staged.manifest.excluded.localStages1Through4, true);
-  assert.equal(staged.manifest.excluded.realityStewardshipResearch, true);
-  assert.equal(staged.manifest.excluded.governedResponsibilityAndActuarialResearch, true);
-  assert.equal(staged.manifest.included.stage05RuntimePolicyAndHeuristics, true);
-  assert.equal(staged.manifest.excluded.outreachCatalog, true);
-  assert.equal(staged.manifest.excluded.rawAndCanonicalArtifacts, true);
-  assert.equal(staged.manifest.excluded.tests, true);
+  assert.deepEqual(staged.manifest.excluded, {
+    nonStage05Assets: true,
+    privateDataAndRuns: true,
+    internalPlanning: true,
+    tests: true,
+  });
+  assert.deepEqual(staged.manifest.included, { stage05Runtime: true });
+  const dependencies = publicDependencyFiles({ sourceRoot: ROOT,
+    entrypoints: staged.profile.entrypoints });
+  assert.equal(staged.profile.dependencyPathSetSha256,
+    dependencyPathSetSha256(dependencies));
+  assert.equal(staged.manifest.dependencyPathSetSha256,
+    staged.profile.dependencyPathSetSha256);
   const paths = staged.manifest.members.map((item) => item.path);
   assert(paths.includes("bin/outsider.mjs"));
   assert(paths.includes("src/outsider-kernel-controller.js"));
   assert(paths.includes("src/outsider-federation-producers.js"));
-  for (const missing of [
-    "src/outsider-actuarial-model-evolution.js",
-    "src/outsider-governed-behavior-model.js",
-    "src/outsider-reality-stewardship.js",
-    "src/outsider-real-responsibility-math-diagnostics.js",
-    "src/outsider-outreach-prospect-catalog.js",
-    "src/outsider-evidence-registry.js",
-    "scripts/stage1-curate-corpus-registry.mjs",
-  ]) assert.equal(existsSync(path.join(stage, missing)), false, missing);
   assert.equal(existsSync(path.join(stage, "test")), false);
   assert.equal(existsSync(path.join(stage, "artifacts")), false);
 
@@ -68,15 +67,55 @@ test("public npm staging contains only the reviewed Stage 0.5 dependency closure
     "the npm archive must contain exactly the hash-manifested staging set");
   assert.equal(members.some((item) => /^(?:artifacts|test|dist)\//.test(item)), false);
   assert.equal(members.some((item) =>
-    /(?:actuarial|responsibility|reality-|outreach|stage1-|stage2-|stage3-|stage4-)/i
+    /(?:^|\/)[^/]*(?:private|internal|confidential|secret|research|roadmap|dataset)[^/]*$/i
       .test(item)), false);
-  for (const member of members) {
-    if (member === "release-public-files.json") continue;
-    const bytes = readFileSync(path.join(stage, member));
-    assert.equal(bytes.includes(Buffer.from("outsider/evidence-registry/v1")), false, member);
-    assert.equal(bytes.includes(Buffer.from("outsider/real-case-responsibility-flywheel/v1")),
-      false, member);
-  }
+});
+
+test("the reviewed dependency path set is fixed and rejects a synthetic private import", (t) => {
+  const temporary = mkdtempSync(path.join(tmpdir(), "outsider-public-closure-"));
+  const source = path.join(temporary, "source");
+  t.after(() => rmSync(temporary, { recursive: true, force: true }));
+  mkdirSync(source, { recursive: true });
+  writeFileSync(path.join(source, "entry.mjs"), "export const publicValue = true;\n");
+  writeFileSync(path.join(source, "package.json"), `${JSON.stringify({
+    name: "synthetic-public-closure", version: "1.0.0", private: true,
+    license: "MIT", type: "module", engines: { node: ">=20" },
+  }, null, 2)}\n`);
+  const profile = {
+    schema: "outsider/stage05-public-package-profile/v1",
+    schemaVersion: "1.1.0",
+    boundary: "PUBLIC_STAGE05_RUNTIME_ONLY_LOCAL_RESEARCH_EXCLUDED",
+    dependencyPathSetSha256: dependencyPathSetSha256(["entry.mjs"]),
+    entrypoints: ["entry.mjs"],
+    staticFiles: [],
+    forbiddenPathPatterns: [...publicReleaseForbiddenPathPatterns],
+    forbiddenContentPatterns: [...publicReleaseForbiddenContentPatterns],
+  };
+  writeFileSync(path.join(source, "release-public-files.json"),
+    `${JSON.stringify(profile, null, 2)}\n`);
+  stagePublicNpmPackage({ sourceRoot: source, targetRoot: path.join(temporary, "clean") });
+
+  writeFileSync(path.join(source, "entry.mjs"),
+    "import './private-data.mjs';\nexport const publicValue = true;\n");
+  writeFileSync(path.join(source, "private-data.mjs"),
+    "export const syntheticFixture = true;\n");
+  assert.throws(() => stagePublicNpmPackage({ sourceRoot: source,
+    targetRoot: path.join(temporary, "drift") }),
+  /PUBLIC_PACKAGE_DEPENDENCY_PATH_SET_MISMATCH/);
+});
+
+test("generic path and content policy rejects synthetic private fixtures", (t) => {
+  const temporary = mkdtempSync(path.join(tmpdir(), "outsider-public-policy-"));
+  t.after(() => rmSync(temporary, { recursive: true, force: true }));
+  const profile = {
+    forbiddenPathPatterns: publicReleaseForbiddenPathPatterns,
+    forbiddenContentPatterns: publicReleaseForbiddenContentPatterns,
+  };
+  assert.throws(() => assertPublicPackagePaths(["src/private-data.mjs"], profile),
+    /PUBLIC_PACKAGE_FORBIDDEN_MEMBER/);
+  writeFileSync(path.join(temporary, "fixture.txt"), "INTERNAL_ONLY synthetic fixture\n");
+  assert.throws(() => assertPublicPackageContents(temporary, ["fixture.txt"], profile),
+    /PUBLIC_PACKAGE_FORBIDDEN_CONTENT/);
 });
 
 test("the actual public archive replays its smoke and isolated stage-only install", (t) => {
@@ -131,7 +170,9 @@ test("the actual public archive replays its smoke and isolated stage-only instal
     ["TaskCreated", "TaskCompleted", "TeammateIdle"]);
   assert.equal(diagnostic.surfaces.codex.hooksConfigured, true);
   assert.deepEqual(diagnostic.surfaces.codex.installedEvents,
-    ["SessionStart", "UserPromptSubmit", "PreToolUse", "PostToolUse", "PreCompact", "Stop"]);
+    ["SessionStart", "UserPromptSubmit", "PreToolUse", "PermissionRequest", "PostToolUse",
+      "PreCompact", "PostCompact", "SubagentStart", "SubagentStop", "Stop"]);
+  assert.deepEqual(diagnostic.surfaces.codex.installedAdvisoryEvents, ["SessionEnd"]);
   assert.equal(diagnostic.surfaces.codex.hookTrustStatus,
     "UNKNOWN_REQUIRES_CODEX_HOOKS_REVIEW");
   assert.equal(diagnostic.surfaces.codex.runtimeConformanceSeen, false);
@@ -145,14 +186,14 @@ test("the actual public archive replays its smoke and isolated stage-only instal
   }
 });
 
-test("public package smoke rejects an unmanifested local-model file", (t) => {
+test("public package smoke rejects an unmanifested private-category file", (t) => {
   const temporary = mkdtempSync(path.join(tmpdir(), "outsider-public-package-extra-"));
   const stage = path.join(temporary, "stage");
   t.after(() => rmSync(temporary, { recursive: true, force: true }));
   stagePublicNpmPackage({ sourceRoot: ROOT, targetRoot: stage });
   mkdirSync(path.join(stage, "src"), { recursive: true });
-  writeFileSync(path.join(stage, "src", "outsider-governed-behavior-model.js"),
-    "export const syntheticForbiddenResearchMember = true;\n");
+  writeFileSync(path.join(stage, "src", "private-data.mjs"),
+    "export const syntheticPrivateMember = true;\n");
   const smoke = spawnSync(process.execPath, ["scripts/stage05-public-package-smoke.mjs"],
     { cwd: stage, encoding: "utf8" });
   assert.notEqual(smoke.status, 0);

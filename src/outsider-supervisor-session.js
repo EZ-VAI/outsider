@@ -22,8 +22,10 @@
  * The previous design's escalation asked the WORKER why it had not complied —
  * i.e. it handed re-diagnosis back to the party whose judgement was already the
  * problem. If the worker could see it had drifted, it would not have drifted.
- * So its narration is not evidence here, and its absence from the packet is the
- * point rather than an omission.
+ * So its narration is not outcome evidence here.  The one narrow exception is
+ * a transcript-bound SubagentStop report: it may prove what handoff text the
+ * child actually emitted, never that the reported facts are true.  Those facts
+ * still have to come from controller-sealed tool actions and artifacts.
  */
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -264,7 +266,7 @@ export function currentSourceEvidence(snapshot, contract, {
   return selected;
 }
 
-export const SUPERVISOR_PROMPT = `你是这项工作的独立监工。你没有参与过这项工作，也看不到工人的任何自述 —— 这是故意的。
+export const SUPERVISOR_PROMPT = `你是这项工作的独立监工。你没有参与过这项工作，也不会把工人的自述当作结果证据。
 
 下面给你的东西只有四样：操作方冻结的原话、冻结在 t=0 的可执行验收定义、仓库的起始状态、以及到目前为止的客观证据（有顺序的工具动作、读过和改过哪些文件、验收命令的真实退出码）。
 
@@ -294,10 +296,20 @@ insufficient 是一个互斥的控制结论，不是备注栏：若 canonicalArt
 宿主 TaskUpdate(status=completed) 的提交中间；taskStatus 尚为 in_progress/awaiting-verification 是正确事务顺序，不是遗漏的
 收尾动作。不要要求再次 TaskUpdate 或先看到 completed：controller 只会在本 gate 放行、且同一 toolUseId 的 PostToolUse
 成功后提交 completed。此时只审切片 effect、精确 check、scope 与绑定身份；intent 缺失/歧义或这些证据不合格才是 drift。
+如果 evidence.decisionScope.kind=intermediate-subagent-task-delivery，本次问题同样只审当前 Codex/Claude 子 Agent 的
+本地委派切片，不审后续 main/parent 工作流。必须用 actorEvidence 中精确绑定的 registration、contextInjection、
+durableActions 与 transcript-bound completionReportBinding 核对交付；宿主加密的 prompt 正文不可见时，结合冻结操作方合同、
+可读 task label、真实动作和报告判断。globalIncompletenessExpected=true 时，main 以后要 Stop、编辑、测试或集成都不能写进
+本次放行 plan。若该子任务已就绪，必须严格输出 onTrack=true、drift=""、plan=[]、expectedNextActions=[]；若当前子任务
+本身仍需动作，则输出 onTrack=false 和针对该子任务的 plan。不得用 plan 复述冻结合同中属于未来 parent 的阶段。
 workspaceEvidence.canonicalArtifact 是 controller 自己从冻结 cwd 读取的源码、diff 和验收结果，
 它对 artifact identity 有裁决权。trajectory 里的 /sessions/.../mnt 等路径只是 worker execution telemetry；
 除非 sandboxPathAlias.status 明确为 verified，否则不要声称两条路径是同一挂载，也不要因为无法证明
 这个补充别名而否定 canonicalArtifact 已经直接证明的源码缺陷或验收失败。
+若 actor.delegatedTask.promptBinding.visibility="host-encrypted"，说明 Codex 宿主只把 spawn message 的密文投影给 hook；
+payloadHash 是被绑定的宿主 payload，不能冒充可读正文，也不能仅因 plaintext 不可见就否定冻结操作方合同与已观察行为。
+actor.delegatedTask.completionReport 只有 transcriptBound=true 时才是子 Agent 实际交付文字的逐字绑定；它只能用于核验
+委派交付的报告内容/形状，报告里的事实仍必须由 trajectory、readEvidence、diff 与 controller 事件独立证明。
 controller 只会从这份回答投影出最小 correction authority；drift 和 acceptanceRisk 仅作遥测，不会交给 worker。
 authority 中的反例、修复步骤和预期动作会由另一个 fresh 会话逐项重算。expectedNextActions 允许
 edit:/delete:/read:/run:；当冻结合同要求 Agent Team 时，还允许
@@ -327,7 +339,8 @@ onTrack=true，也不得把只有 read/run 的方案包装成 correction。
 
 /*
  * 送给监工的证据包 —— 每一项都是工人无法编辑的事实。
- * 工人的复述、它的计划、它的自我评价，一个字都不在里面。
+ * 工人的计划和自我评价不在里面。唯一允许的自述是 transcript-bound
+ * SubagentStop completion report，而且显式标记为不可证明 outcome facts。
  */
 export function supervisorPacket({ contract, steps = [], diff = null, lastTest = null,
   acceptance = null, semanticOutcome = null, trigger = null, actor = null,
@@ -423,8 +436,19 @@ export function supervisorPacket({ contract, steps = [], diff = null, lastTest =
       parentAgentId: actor.parentAgentId ?? null,
       delegatedTask: actor.task ? {
         taskId: actor.task.id,
-        prompt: String(actor.task.prompt ?? "").slice(0, 4000),
+        prompt: actor.task.promptVisibility === "host-encrypted"
+          ? null : String(actor.task.prompt ?? "").slice(0, 4000),
         description: String(actor.task.description ?? "").slice(0, 800),
+        promptBinding: {
+          visibility: actor.task.promptVisibility === "host-encrypted"
+            ? "host-encrypted" : "plaintext",
+          payloadHash: actor.task.promptHash ?? null,
+          hostConfidential: actor.task.promptVisibility === "host-encrypted",
+        },
+        completionReport: actor.task.completionReport ? boundedValue({
+          ...actor.task.completionReport,
+          workerAssertionsAcceptedAsOutcomeEvidence: false,
+        }, 8_000) : null,
       } : null,
     } : null,
     priorInterventions: interventionHistory.slice(-12),

@@ -1,5 +1,8 @@
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import {
+  closeSync, constants, existsSync, fchmodSync, fstatSync, fsyncSync, lstatSync,
+  mkdirSync, openSync, readFileSync, writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { assessAgentTeamConformance } from "./outsider-agent-team-conformance.js";
 import { verifyStage05RunDirectory } from "./outsider-stage05-evidence.js";
@@ -17,6 +20,35 @@ const STABLE_PUBLIC_FIELD_EVIDENCE = [
   "chatgptLivePluginInstall",
   "chatgptNewChatSkillEvaluation",
 ];
+
+const NOFOLLOW = constants.O_NOFOLLOW ?? 0;
+
+export function writePrivateReleaseCertificate(file, certificate) {
+  if (typeof file !== "string" || !file || !certificate
+    || typeof certificate !== "object" || Array.isArray(certificate)) {
+    throw new Error("PRIVATE_RELEASE_CERTIFICATE_INPUT_INVALID");
+  }
+  const serialized = `${JSON.stringify(certificate, null, 2)}\n`;
+  const absolute = path.resolve(file);
+  mkdirSync(path.dirname(absolute), { recursive: true, mode: 0o700 });
+  const descriptor = openSync(absolute,
+    constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | NOFOLLOW, 0o600);
+  try {
+    if (!fstatSync(descriptor).isFile()) {
+      throw new Error("PRIVATE_RELEASE_CERTIFICATE_FILE_REQUIRED");
+    }
+    fchmodSync(descriptor, 0o600);
+    writeFileSync(descriptor, serialized);
+    fsyncSync(descriptor);
+  } finally {
+    closeSync(descriptor);
+  }
+  const written = lstatSync(absolute);
+  if (!written.isFile() || written.isSymbolicLink() || (written.mode & 0o777) !== 0o600) {
+    throw new Error("PRIVATE_RELEASE_CERTIFICATE_MODE_INVALID");
+  }
+  return absolute;
+}
 
 export function assessReleaseReadiness({ deterministicReady, fieldEvidence } = {}) {
   const privateBetaReady = deterministicReady === true;
