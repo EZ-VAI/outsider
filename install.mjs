@@ -14,19 +14,27 @@ import { existsSync, readFileSync, mkdtempSync, rmSync } from "node:fs";
 import { homedir, platform, tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { stageClaudeHostedPlugin } from "./scripts/claude-plugin-package.mjs";
-import { decideToolCall } from "./src/outsider-hook.js";
-import { hookConfigFor, securelyMergeHookConfigFile } from "./src/outsider-agents.js";
-import {
+
+const A = process.argv.slice(2);
+const INSTALL_HELP = "Usage: node install.mjs [--help] [--scope user|project] [--check] "
+  + "[--strict] [--stage-only] [--supervisor <cmd>|--supervisor-argv <json>] "
+  + "[--allow-external-supervisor]\n";
+
+if (A.includes("--help")) {
+  process.stdout.write(INSTALL_HELP);
+} else {
+const { stageClaudeHostedPlugin } = await import("./scripts/claude-plugin-package.mjs");
+const { decideToolCall } = await import("./src/outsider-hook.js");
+const { hookConfigFor, securelyMergeHookConfigFile } = await import("./src/outsider-agents.js");
+const {
   externalSupervisorConfigurationEnvironment, hookCommandWithExternalSupervisor,
   installSystemHelper, shellQuoteHookValue,
-} from "./src/outsider-system-helper.js";
+} = await import("./src/outsider-system-helper.js");
 
 const HOME = homedir();
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const BASE_HOOK = `${shellQuoteHookValue(process.execPath)} ${shellQuoteHookValue(path.join(HERE,
   "bin", "outsider-hook.mjs"))}`;
-const A = process.argv.slice(2);
 const CHECK = A.includes("--check"), STRICT = A.includes("--strict");
 const STAGE_ONLY = A.includes("--stage-only");
 const scopeIndex = A.indexOf("--scope");
@@ -347,3 +355,4 @@ say("    · 已通过的 Codex bounded live run 闭合了具体 Stop/纠正/复�
   + " 不等于严格 source-bound app-server 评估，也不是对所有 Codex 行为的 100% 保证。");
 say("    · 别挪这个文件夹,钩子里是绝对路径。挪了就重跑一次 node install.mjs。");
 say("");
+}
