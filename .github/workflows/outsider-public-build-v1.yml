@@ -1,0 +1,63 @@
+name: Outsider public software build v1
+run-name: outsider-build-${{ github.event.client_payload.ticket || inputs.ticket }}
+on:
+  repository_dispatch:
+    types: [outsider-public-build-v1]
+  workflow_dispatch:
+    inputs:
+      ticket:
+        required: true
+        type: string
+      packet:
+        required: true
+        type: string
+permissions: {}
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Build public source and exercise its HTTP contract
+        env:
+          OUTSIDER_PACKET: ${{ github.event.client_payload.packet || inputs.packet }}
+          OUTSIDER_TICKET: ${{ github.event.client_payload.ticket || inputs.ticket }}
+        shell: bash
+        run: |
+          node --input-type=module <<'OUTSIDER_BUILD'
+          import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
+          import { createHash } from 'node:crypto';
+          import { execFileSync } from 'node:child_process';
+          import assert from 'node:assert/strict';
+          const bytes = Buffer.from(process.env.OUTSIDER_PACKET, 'base64');
+          delete process.env.OUTSIDER_PACKET;
+          if (bytes.length > 48000) throw Error('PUBLIC_BUILD_PACKET_TOO_LARGE');
+          const packet = JSON.parse(bytes);
+          const sha = data => 'sha256:' + createHash('sha256').update(data).digest('hex');
+          if (packet.visibility !== 'PUBLIC' || !/^[a-f0-9]{32}$/.test(process.env.OUTSIDER_TICKET)) throw Error('PUBLIC_BUILD_INPUT_INVALID');
+          mkdirSync('public-source');
+          for (const [name, source] of Object.entries(packet.files)) {
+            if (!/^[a-zA-Z0-9_-]+\.(ts|js|mjs)$/.test(name) || typeof source !== 'string') throw Error('SOURCE_FILE_INVALID');
+            writeFileSync('public-source/' + name, source);
+          }
+          if (!Object.hasOwn(packet.files, packet.entry)) throw Error('ENTRY_MISSING');
+          // No checkout, repository secrets, cache, artifact upload, or privileged
+          // repository token is given to the submitted source. Standard public CI.
+          execFileSync('npm', ['exec', '--yes', '--package=esbuild@0.25.10', '--', 'esbuild',
+            'public-source/' + packet.entry, '--bundle', '--platform=browser', '--format=esm',
+            '--target=es2022', '--outfile=built.mjs'], { stdio: ['ignore', 'ignore', 'inherit'], timeout: 90000 });
+          const artifact = readFileSync('built.mjs');
+          if (artifact.length > 48000) throw Error('PUBLIC_BUILD_OUTPUT_TOO_LARGE');
+          const handler = (await import('file://' + process.cwd() + '/built.mjs')).default;
+          const checks = [];
+          for (const test of packet.checks) {
+            const response = await handler.fetch(new Request('https://build.invalid' + test.path,
+              { method: test.method, ...(test.body === null ? {} : { body: test.body, headers: { 'content-type': 'application/json' } }) }), {}, {});
+            const body = await response.text();
+            assert.equal(response.status, test.expectedStatus);
+            assert.deepEqual(JSON.parse(body), JSON.parse(test.expectedBody));
+            checks.push({ method: test.method, path: test.path, status: response.status, bodyHash: sha(body) });
+          }
+          console.log('OUTSIDER_BUILD_RESULT ' + Buffer.from(JSON.stringify({ schema: 'outsider/public-software-build-result/v1',
+            ticket: process.env.OUTSIDER_TICKET, sourceHash: sha(bytes), artifactHash: sha(artifact),
+            artifactBase64: artifact.toString('base64'), checks, compiler: 'esbuild@0.25.10' })).toString('base64'));
+          OUTSIDER_BUILD
