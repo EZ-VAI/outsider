@@ -1,0 +1,32 @@
+{
+  "ucp": {
+    "version": "2026-08-25",
+    "services": {
+      "dev.ucp.shopping": [{
+        "version": "2026-08-25",
+        "spec": "https://ucp.dev/2026-08-25/specification/overview",
+        "transport": "mcp",
+        "schema": "https://ucp.dev/2026-08-25/services/shopping/mcp.openrpc.json"
+      }]
+    },
+    "capabilities": {
+      "dev.ucp.shopping.catalog.search": [{ "version": "2026-08-25" }],
+      "dev.ucp.shopping.catalog.lookup": [{ "version": "2026-08-25" }],
+      "dev.shopify.catalog.global": [{
+        "version": "2026-08-25",
+        "extends": ["dev.ucp.shopping.catalog.search", "dev.ucp.shopping.catalog.lookup"]
+      }],
+      "dev.shopify.catalog": [{
+        "version": "2026-08-25",
+        "extends": ["dev.ucp.shopping.catalog.search", "dev.ucp.shopping.catalog.lookup"]
+      }],
+      "dev.ucp.shopping.cart": [{ "version": "2026-08-25" }],
+      "dev.ucp.shopping.checkout": [{ "version": "2026-08-25" }],
+      "dev.ucp.shopping.fulfillment": [{
+        "version": "2026-08-25",
+        "extends": ["dev.ucp.shopping.cart", "dev.ucp.shopping.checkout"]
+      }]
+    },
+    "payment_handlers": {}
+  }
+}
