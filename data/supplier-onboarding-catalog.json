@@ -2,7 +2,7 @@
   "version": "supplier-setup-2026-09-16",
   "termsVersion": "provider-network-2026-09-16",
   "paymentTerms": {"version":"provider-network-2026-09-16","method":"ACH","dueBusinessDays":5,"startsAt":"CUSTOMER_ACCEPTANCE","bankCalendarId":"US_ACH"},
-  "paymentText": "For jobs paid through HapNex, HapNex initiates ACH payment within five business days after customer acceptance. Banks control posting time.",
+  "paymentText": "For applicable jobs, payment is initiated within five business days after customer acceptance. Banks control posting time.",
   "acceptanceText": "Acceptance follows customer approval, or 48 hours after complete evidence and the acceptance notice reach the customer without a documented issue.",
   "recoveryText": "No fixed late-arrival penalty. Documented incremental replacement costs caused by your breach are capped at your fee for that job, with evidence and an opportunity to contest.",
   "cancellations": [

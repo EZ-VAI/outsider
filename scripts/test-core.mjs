@@ -6,6 +6,10 @@ import { readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const browserTests = [
+  "test/outsider-browser-coordination.test.js",
+  "test/outsider-browser-owner.test.js",
+];
 const coreTests = [
   // Existing public suite, preserved from main at 86401cd.
   "test/generate-ed25519-keypair.test.js",
@@ -106,6 +110,7 @@ const coreTests = [
   "test/outsider-shared-resource-coordinator.test.js",
   "test/outsider-shared-goal-coordinator.test.js",
   "test/outsider-shared-agent-layer.test.js",
+  ...browserTests,
   "test/outsider-user-held-durable-execution-v2.test.js",
   "test/outsider-native-capacity-production.test.js",
   "test/outsider-calendly-supply-adapter.test.js",
@@ -120,9 +125,16 @@ const tests = research
     .filter(name => name.endsWith('.test.js'))
     .map(name => `test/${name}`).filter(name => !coreTests.includes(name)).sort()
   : coreTests;
-const result = spawnSync(process.execPath, ['--test', '--test-concurrency=4',
-  ...argumentsFromUser.filter(value => value !== '--research'), ...tests],
-{ cwd: root, stdio: 'inherit' });
-if (result.error) throw result.error;
-if (result.signal) process.kill(process.pid, result.signal);
-else process.exitCode = result.status ?? 1;
+// ponytail: run browser processes separately to fit small CI machines; split
+// them across dedicated runners if browser coverage grows.
+const groups = research ? [{ files: tests, concurrency: 4 }] : [
+  { files: tests.filter(file => !browserTests.includes(file)), concurrency: 4 },
+  { files: browserTests, concurrency: 1 },
+];
+for (const group of groups) {
+  const result = spawnSync(process.execPath, ['--test', `--test-concurrency=${group.concurrency}`,
+    ...argumentsFromUser.filter(value => value !== '--research'), ...group.files], { cwd: root, stdio: 'inherit' });
+  if (result.error) throw result.error;
+  if (result.signal) { process.kill(process.pid, result.signal); break; }
+  if (result.status !== 0) { process.exitCode = result.status ?? 1; break; }
+}

@@ -1,6 +1,6 @@
 # Contributing to Outsider
 
-Thank you for helping make outcome coordination usable across agents and resources. A focused change with a reproducible example is a useful contribution, whether it improves an adapter, a verifier, a planner, a recovery path, or documentation.
+Thank you for helping agents from different providers work together on shared interfaces. A focused change with a reproducible example is a useful contribution, whether it improves browser integration, an agent client, coordination, recovery, or documentation.
 
 ## Local setup
 
@@ -15,16 +15,13 @@ Run the relevant test file during development, then the default suite before sub
 
 ## Choose a small starting point
 
-- Add a planner constraint and demonstrate a feasible and an infeasible plan.
 - Add an adapter for one owner-controlled resource, with tests for duplicate requests, ambiguous responses, and reconciliation.
 - Exercise shared-page/resource coordination with two agents: lease expiry, a stale fencing token, version conflict, or a restart during an external write.
-- Connect a provider's actual agent loop through the [mutual layer](docs/MUTUAL-AGENT-LAYER.md), or contribute an owner-side browser/device adapter with a reproducible multi-goal example. Start with `npm run demo:shared-goals` and `npm run test:coordination`.
-- Add a durable execution scenario where the primary fails, recovery runs, the witness observes, and the program resumes after interruption.
-- Add a source verifier with provenance, validity, and revocation cases.
-- Improve actor/delegation or obligation lifecycle examples.
+- Connect a provider's agent loop through the [mutual layer](docs/MUTUAL-AGENT-LAYER.md), or contribute a browser/device adapter with a reproducible multi-goal example. Start with `npm run demo:browser` and `npm run test:browser`.
+- Improve browser observations, cross-session synchronization, or task handoff between providers.
 - Make one public API or fixture easier to understand.
 
-For a major new protocol, a change to a versioned contract, or a new financial execution path, open an issue describing the concrete use case and affected boundary before building the larger change. Bug fixes and small improvements can go straight to a pull request.
+For a major new protocol or a change to a versioned contract, open an issue describing the concrete use case and affected boundary before building the larger change. Bug fixes and small improvements can go straight to a pull request.
 
 ## Implementation conventions
 
@@ -48,13 +45,13 @@ Do not include account identifiers, private transcripts, addresses, tokens, cred
 
 Test observable behavior and the failure the change addresses. For coordination and execution changes, useful cases include stale state, duplicate commands, partial reservation, restart after provider acceptance, uncertain effect, and recovery exhaustion. For evidence changes, verify source bindings, expiry/revocation, and changed payloads.
 
-A passing fixture establishes behavior within its stated assumptions. Document when a live adapter or external institutional integration is still needed. In particular, local signatures and accounting records do not create coverage, custody, settlement authority, or legal discharge.
+A passing fixture establishes behavior within its stated assumptions. Document which agent hosts, browser sessions, and resource adapters the change exercises.
 
 ## Pull requests
 
 Describe the problem and resulting behavior, the relevant validation, and any adapter assumptions. Include a short before/after example when it helps. Keep generated output out of the diff unless it is a small, intentional fixture needed to reproduce the change.
 
-This repository focuses on Outsider's reusable infrastructure. HapNex product interfaces and business workflows are maintained separately; please keep contributions applicable to the core.
+This repository focuses on reusable coordination for agents and shared resources; please keep contributions applicable to that core.
 
 ## License
 

@@ -230,7 +230,7 @@ export function stagePublicNpmPackage({ sourceRoot = DEFAULT_ROOT, targetRoot } 
     name: sourcePackage.name,
     version: sourcePackage.version,
     private: false,
-    description: sourcePackage.description,
+    description: "Standalone Outsider CLI for agent-run supervision.",
     license: sourcePackage.license,
     author: sourcePackage.author,
     repository: sourcePackage.repository,
@@ -254,6 +254,11 @@ export function stagePublicNpmPackage({ sourceRoot = DEFAULT_ROOT, targetRoot } 
   };
   writeFileSync(path.join(target, "package.json"), `${JSON.stringify(publicPackage, null, 2)}\n`,
     { mode: 0o644, flag: "wx" });
+  // This smaller legacy package does not include the repository's browser layer.
+  if (existsSync(path.join(target, "README.md"))) writeFileSync(path.join(target, "README.md"),
+    `# Outsider\n\nThis package contains the standalone CLI. The mutual agent layer and browser integrations are available in the [source repository](${sourcePackage.homepage}).\n`);
+  if (existsSync(path.join(target, "README.zh-CN.md"))) writeFileSync(path.join(target, "README.zh-CN.md"),
+    `# Outsider\n\n此包包含独立命令行工具。Agent 共用协调层与浏览器接入见[源码仓库](${sourcePackage.homepage})。\n`);
   copyBoundFile(source, target, PROFILE_FILE);
 
   const members = listPublicPackageFiles(target);

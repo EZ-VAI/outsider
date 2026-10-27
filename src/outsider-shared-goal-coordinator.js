@@ -168,16 +168,20 @@ export function createSharedGoalCoordinator({ directory, authorize, verifyTask, 
   }
   function resourceHandle(input, scopedActor) {
     const resource = resources[input.resourceId];
+    const context = () => ({ goalId: load().definition.goalId, taskId: input.taskId,
+      agentId: input.actorId, claimGeneration: input.generation });
     return createSharedResourceCoordinator({ directory: resourceDirectory, resourceId: input.resourceId, clock,
       authorize: async ({ actorId, action }) => {
         if (actorId !== scopedActor) return false;
         await resourceAccess(load(), input, action); return true;
       },
-      adapter: { observe: command => resource.adapter.observe(command), reconcile: command => resource.adapter.reconcile(command), execute: async command => {
+      adapter: { observe: command => resource.adapter.observe({ ...command, ...context() }),
+        ...(resource.adapter.capture ? { capture: command => resource.adapter.capture({ ...command, ...context() }) } : {}),
+        reconcile: command => resource.adapter.reconcile({ ...command, ...context() }), execute: async command => {
         // Check the task generation again at the owner's dispatch boundary.
         assertClaim(load(), input);
-        return resource.adapter.execute({ ...command, goalId: load().definition.goalId,
-          taskId: input.taskId, agentId: input.actorId, claimGeneration: input.generation });
+        return resource.adapter.execute({ ...command, ...context(),
+          assertCurrentClaim: () => resourceAccess(load(), input, command.action) });
       } },
     });
   }
@@ -302,6 +306,11 @@ export function createSharedGoalCoordinator({ directory, authorize, verifyTask, 
       await resourceAccess(load(), input);
       const actorId = resourceActor(load(), input);
       return resourceHandle(input, actorId).observe({ actorId });
+    },
+    async captureResource(input) {
+      await resourceAccess(load(), input);
+      const actorId = resourceActor(load(), input);
+      return resourceHandle(input, actorId).capture({ actorId });
     },
     async performResource(input) {
       if (!id(input.stepId) || !Number.isSafeInteger(input.expectedVersion)

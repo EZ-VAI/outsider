@@ -47,8 +47,8 @@ export function createSharedResourceCoordinator({ directory, resourceId, adapter
   async function allowed(actorId, operation, action = null) {
     if (!id(actorId) || await authorize({ resourceId, actorId, operation, action }) !== true) fail('NOT_AUTHORIZED');
   }
-  async function readState(state) {
-    const observed = copy(await adapter.observe({ resourceId }));
+  async function readState(state, actorId) {
+    const observed = copy(await adapter.observe({ resourceId, actorId }));
     const stateHash = hash(observed);
     if (state.stateHash !== stateHash) {
       state.version += 1; state.stateHash = stateHash;
@@ -77,7 +77,7 @@ export function createSharedResourceCoordinator({ directory, resourceId, adapter
       return copy(operation);
     }
     // A successful write without a readable resulting state remains unresolved.
-    const observed = await readState(state);
+    const observed = await readState(state, operation.actorId);
     operation.status = result.status; operation.resultHash = hash(result);
     operation.resultingVersion = observed.version; operation.resultingStateHash = observed.stateHash;
     state.pendingOperationId = null;
@@ -89,7 +89,13 @@ export function createSharedResourceCoordinator({ directory, resourceId, adapter
   return Object.freeze({
     async observe({ actorId }) {
       await allowed(actorId, 'OBSERVE');
-      return locked(readState);
+      return locked(state => readState(state, actorId));
+    },
+    async capture({ actorId }) {
+      await allowed(actorId, 'OBSERVE');
+      if (typeof adapter.capture !== 'function') fail('CAPTURE_UNAVAILABLE');
+      return locked(async state => ({ snapshot: await readState(state, actorId),
+        image: await adapter.capture({ resourceId, actorId }) }));
     },
     async acquire({ actorId, ttlMs = 30_000 }) {
       await allowed(actorId, 'ACQUIRE'); ttl(ttlMs);
@@ -97,9 +103,9 @@ export function createSharedResourceCoordinator({ directory, resourceId, adapter
         if (state.pendingOperationId) fail('RECONCILIATION_REQUIRED');
         if (state.lease && Date.parse(state.lease.expiresAt) > time()) {
           if (state.lease.actorId !== actorId) fail('BUSY');
-          return { ...copy(state.lease), snapshot: await readState(state) };
+          return { ...copy(state.lease), snapshot: await readState(state, actorId) };
         }
-        const snapshot = await readState(state);
+        const snapshot = await readState(state, actorId);
         state.generation += 1;
         state.lease = { actorId, leaseId: randomUUID(), fencingToken: state.generation,
           expiresAt: new Date(time() + ttlMs).toISOString() };
@@ -131,7 +137,7 @@ export function createSharedResourceCoordinator({ directory, resourceId, adapter
         }
         const lease = assertLease(state, input);
         if (state.pendingOperationId) fail('RECONCILIATION_REQUIRED');
-        const current = await readState(state);
+        const current = await readState(state, actorId);
         if (current.version !== expectedVersion || current.stateHash !== expectedStateHash) fail('STALE_STATE');
         await allowed(actorId, 'EXECUTE', actionCopy);
         assertLease(state, input);

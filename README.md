@@ -2,85 +2,39 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-**A mutual layer for agents from different providers to operate on the same interface or device toward one or multiple goals.**
+**A mutual layer for agents from different providers to operate on the same page or interface, toward one or multiple goals.**
 
-Outsider starts with a simple idea: a person describes something they want to happen, with a budget and an expectation of completion. Software should organize the resources, carry the work through failure, and preserve responsibility until the result is resolved.
+Outsider gives agents a common place to claim work, see the shared interface, take coordinated actions, and hand results to one another. An owner controls which agents and browser sessions can join. Agents connect over MCP or HTTP; they do not need the same model or agent framework.
 
-This repository contains the reusable infrastructure behind that idea: outcome planning and durable execution, evidence and attestation, actor and delegation records, recovery coordination, and research modules for pricing, guarantees, claims, and settlement. It excludes the separate HapNex application and its product interfaces.
+## What works
 
-## What you can build
+- **Shared browser interaction.** Agents observe the page's text and controls, request a screenshot, and perform ordered batches of clicks, typing, key presses, selections, or checkbox changes. The Playwright adapter connects an agent to its assigned browser page.
+- **Different browsers, same shared page.** The example uses Chrome and Edge to interact with the same web application. Agents can also share one browser tab; separate browser sessions depend on the application sharing its state.
+- **One or multiple goals.** Agents claim parallel or dependent tasks, receive accepted outputs from previous tasks, and submit their own results for owner-configured verification.
+- **Coordination and handoff.** Task claims expire and can be renewed or handed off. Shared resources use exclusive access, state checks, and stable operation IDs. A write with an unknown result stays available for reconciliation before another write proceeds.
+- **Provider-independent access.** The MCP server exposes these capabilities as tools for compatible agent hosts; the HTTP and JavaScript APIs support other clients.
 
-- **Durable agent workflows.** Compile a defined result into an `OutcomeProgram`, execute its dependency graph, resume after interruption, and activate an already-bound recovery route when the primary fails.
-- **Resource coordination.** Plan over declared capabilities, costs, time windows, and shared capacity. Bind execution to owner-controlled adapters and evaluate results through the configured observation path.
-- **Multi-agent shared-resource access.** Coordinate agents editing the same page or operating the same resource through a lease, fencing token, version check, and idempotent command. An uncertain external effect must be reconciled before the next command proceeds.
-- **Shared goals across providers.** Personal, company, and coding agents can connect through an authenticated HTTP protocol, claim parallel work, hand off verified dependency outputs, and coordinate access across multiple goals. The existing OutcomeProgram runtime schedules the work.
-- **Evidence and responsibility records.** Preserve source-bound observations, actor/delegation bindings, attempts, challenges, and continuing obligations across agent or provider replacement.
-- **Risk and settlement research.** Explore curated evidence, loss/exposure models, non-binding quotes, guarantee gates, and claims lifecycles without treating local records as financial authority.
+The browser adapter works with an owner-provided Playwright `Page`. Its actual page access, authentication, and acceptance checks are configured by the owner. Chrome and Edge are exercised by the integration test.
 
-For example, a personal agent writes a page heading, a company agent supplies the terms, and a coding agent publishes their combined result. A second goal can update the same page's branding through the same gateway. Run the four-process example below: it includes a lost write response and recovery without duplicate execution. The same adapter pattern supports a device; each real interface/device needs its owner's control and reconciliation integration.
+## Try it
 
-## Current implementation
-
-| Area | Available in this repository |
-| --- | --- |
-| Outcome planning | Bounded world-state planning over supplied actions/resources, goal interpretation against a capability catalog, and compilation into the existing program format. |
-| Durable execution | Primary/recovery/witness bindings, dependency-aware execution, durable operation identities, restart recovery, observation, and resource lifecycle handling. |
-| Shared resources | A generic coordination mechanism for cooperating agents and an owner-controlled executor boundary. Actual pages and devices need their own adapters. |
-| Shared agent layer | Multiple goals, task claims/renewal, verified dependency handoff, HTTP client/worker, task-scoped resource access, cross-goal contention, restart and uncertain-effect recovery. |
-| Evidence and responsibility | Local integrity verification, lifecycle/source re-verification, actor/delegation records, network intake/conformance, and durable obligation tracking. |
-| Pricing | Research and shadow analysis. The Stage 2 quote frontier returns `NON_BINDING_ABSTAIN`. |
-| Guarantees and settlement | Local accounting, source-binding gates, and candidate claims workflows. Commercial coverage, custody, payment execution, adjudication, and final discharge require actual external integrations. |
-
-Development records include a digital publication run that exercised primary failure, a recovery route, external observation, and resource release. It is evidence for that adapter composition. The open test suite supplies reproducible local checks; it does not require a live cloud account or move money.
-
-## Get started
-
-Use **Node.js 22 or newer**; Node.js 24 LTS is recommended.
+Use **Node.js 22 or newer**, with Chrome and Edge installed:
 
 ```bash
 npm ci
+npm run demo:browser
 npm test
-npm run demo:shared-goals
 ```
 
-Start with the local planner and orchestrator tests to understand an outcome's lifecycle:
+The demo launches isolated Chrome and Edge sessions plus three MCP connections, each with its own server process, representing two agent roles. They edit and publish one real web page while completing two goals. It uses scripted clients and a local web application, so no model credentials are required. `npm run test:browser` runs the focused integration test.
 
-```bash
-node --test test/outsider-world-state-resource-planner.test.js
-node --test test/outsider-durable-outcome-program-orchestrator-v1.test.js
-```
+To run the same kind of collaboration with logged-in Codex and Claude Code clients, use `npm run demo:live-agents`. This optional command uses their existing account usage; its Claude Code call is capped at $0.25.
 
-Tests and examples use explicit fixture adapters. Live provider operations are separate: configure an adapter, supply the relevant owner authorization, and choose the intended action explicitly. Keep credentials and live run directories outside version control.
-
-This is a source contribution repository. Modules are ES modules in `src/`; versioned filenames preserve existing contracts while newer compositions evolve. See [Architecture](docs/ARCHITECTURE.md) for the component map and [Contributing](CONTRIBUTING.md) for focused starting points.
-
-
-Start with the [mutual agent layer](docs/MUTUAL-AGENT-LAYER.md) for the V3–V4 composition, HTTP protocol, and provider integration. The underlying lease/adapter contract is in [shared-resource coordination](docs/SHARED-RESOURCE-COORDINATION.md). See [data and evidence](docs/DATA-AND-EVIDENCE.md) for source replay and dataset licenses. `npm run test:research` runs the additional research suite and requires its documented source data.
-
-## Two views of the system
-
-The execution stack has three layers:
-
-1. **Outcome OS:** define, coordinate, observe, and replay a result.
-2. **Formation and recovery:** bind usable capabilities and a contingency, including trigger, expiry, cost, and exercise conditions.
-3. **Outcome commitment:** admit a bounded commitment only when the required reservations, authority, observation, and financial gates are present.
-
-The evidence-to-settlement pipeline describes a different axis:
-
-| Stage | Purpose | Present boundary |
-| --- | --- | --- |
-| 0.5 — MEASURE | Capture the task contract and agent execution evidence; support lifecycle supervision on configured hosts. | Exact host hooks and runtime conformance determine control coverage. |
-| 1 — ATTEST | Verify integrity, source replay, and evidence lifecycle. | A verified signature establishes a key-bound statement, not institutional standing. |
-| 1.5 — CURATE | Organize evidence with provenance, rights, and reuse constraints. | Intake and curation do not automatically authorize training or financial use. |
-| 2 — PRICE | Study prospective risk, exposure, loss, and pricing. | Research/non-binding outputs; no executable insurance quote. |
-| 3 — GUARANTEE | Check source bindings, request accounting, and one-use capability gates. | No policy issuance, proven reserve, custody, or fund transfer. |
-| 4 — CLAIMS / SETTLE | Preserve claims, challenges, receipts, and settlement candidates. | Current frontier remains `HOLD`; it does not move funds or finally close obligations. |
-
-These stage names describe components and a development direction. They are not a claim that a global financial clearing network is operating.
+For an existing agent or browser, start with the [browser and agent integration guide](docs/MUTUAL-AGENT-LAYER.md). It describes the owner gateway, connecting browser pages, MCP tools, credentials, goal definitions, and recovery. The underlying components are mapped in [Architecture](docs/ARCHITECTURE.md).
 
 ## Contribute
 
-Useful contributions include a small provider adapter with reconciliation tests, a planner constraint, a shared-resource concurrency case, a reproducible restart/recovery scenario, a source verifier, or a clearer example. Please start with [CONTRIBUTING.md](CONTRIBUTING.md).
+Useful contributions include agent-provider integrations, browser adapters, robust page observations, and reproducible cross-agent handoff cases. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

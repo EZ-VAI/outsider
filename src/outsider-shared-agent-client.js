@@ -24,6 +24,7 @@ export function createSharedAgentClient({ origin, token, fetchImpl = fetch, time
       [name, (body = {}, options) => request(`${route}/${name}`, body, options)]));
     return Object.freeze({ ...methods, inspect: options => request(route, undefined, options),
       observeResource: (body, options) => request(`${route}/resources/observe`, body, options),
+      captureResource: (body, options) => request(`${route}/resources/capture`, body, options),
       performResource: (body, options) => request(`${route}/resources/perform`, body, options),
       reconcileResource: (body, options) => request(`${route}/resources/reconcile`, body, options) });
   }
@@ -61,7 +62,7 @@ export async function runSharedGoalWorker({ goal, executeTask, ttlMs = 30_000, p
     }, Math.floor(ttlMs / 3));
     const stop = async () => { clearInterval(timer); await renewal; };
     try {
-      const resource = Object.fromEntries(['observe', 'perform', 'reconcile'].map(method => [method,
+      const resource = Object.fromEntries(['observe', 'capture', 'perform', 'reconcile'].map(method => [method,
         input => goal[`${method}Resource`]({ ...input, ...identity }, { signal: taskSignal })]));
       const output = await executeTask({ ...claim, resource, signal: taskSignal });
       if (leaseError) throw leaseError; taskSignal.throwIfAborted();

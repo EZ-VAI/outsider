@@ -26,6 +26,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+        env:
+          OUTSIDER_REQUIRE_BROWSERS: '1'
       - run: npm run test:corpus
       - run: npm run plugin:validate
       - run: npm run experience:deploy:cloudflare:dry
@@ -33,6 +35,7 @@ jobs:
 
   package-macos:
     runs-on: macos-15
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
