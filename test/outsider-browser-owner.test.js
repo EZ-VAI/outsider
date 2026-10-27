@@ -36,10 +36,18 @@ test('an MCP agent connects through the owner gateway to an already open browser
   let connectedBrowser, gateway, agent;
   t.after(async () => {
     await agent?.close();
-    if (gateway && gateway.exitCode === null) { gateway.kill('SIGTERM'); await Promise.race([once(gateway, 'exit'), delay(3000)]); }
+    const stop = async child => {
+      if (!child || child.exitCode !== null || child.signalCode !== null) return;
+      const closed = once(child, 'close'); child.kill('SIGTERM');
+      await Promise.race([closed, delay(3000)]);
+      if (child.exitCode === null && child.signalCode === null) { child.kill('SIGKILL'); await closed; }
+    };
+    await stop(gateway);
     await connectedBrowser?.close();
-    if (chrome.exitCode === null) { chrome.kill('SIGTERM'); await Promise.race([once(chrome, 'exit'), delay(3000)]); }
-    await new Promise(resolve => site.close(resolve)); rmSync(directory, { recursive: true, force: true });
+    await stop(chrome);
+    await new Promise(resolve => site.close(resolve));
+    // Chrome helper processes can briefly finish writing after the parent exits.
+    rmSync(directory, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
   });
   const activePort = path.join(profile, 'DevToolsActivePort');
   for (let i = 0; i < 200 && !existsSync(activePort); i++) {
