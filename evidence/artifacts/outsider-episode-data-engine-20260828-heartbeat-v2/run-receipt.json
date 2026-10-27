@@ -1,0 +1,173 @@
+{
+  "schema": "outsider/episode-data-engine-run-receipt/v2",
+  "schemaVersion": "2.0.0",
+  "input": {
+    "mode": "FULL_SOURCE_REDERIVED",
+    "sourceRecordCount": 9547,
+    "publicAgentRecordCount": 9381,
+    "supplementalSources": [
+      {
+        "datasetId": "microsoft/CUAVerifierBench",
+        "revision": "c19eb323cd802add5c3d2840ff13044061364867",
+        "trustClass": "RAW_SOURCE_AND_MANIFEST_REPLAY_BOUND",
+        "sourceReplayStatus": "FULL_SELECTED_LOGICAL_SOURCE_REDERIVED",
+        "sourceRecordCount": 106,
+        "manifestHash": "sha256:e3da3f31a6828e0ef2b9c2aaad09ad9ffffadea3f6aa7a3e1b5d019d0d5a1b4b",
+        "recordSetHash": "sha256:44cda027450f88ab76cbea576aec57b7640a79137a43c00582e808338efee670",
+        "summaryHash": "sha256:0b98d22a1e8841f73c22f4fdb5682d89398b4b23843d6729c36584e22f8c7a5b",
+        "fullSourceVerificationHash": "sha256:4c00519a31cef279802dfe1e864e0d7aa0e489f4a2773573bafd9865a7647568",
+        "trainingReportHash": "sha256:c0285ad15ca3dc7c9e252e975d476dc62a05f3ad7b2553e4208bae26e69c2eef",
+        "modelSetHash": "sha256:58b9ce148e328a884fa83b3f0b3cafb0deb5d06da61d5e81bae139c4de2220d4",
+        "trainingReceiptHash": "sha256:57a651ada0ddd15690002977c51d113c1f2701b2beb464fa97d6907f4d53406a",
+        "standaloneSealAccepted": false
+      },
+      {
+        "datasetId": "REBOOT26/sample_recovery-demonstration",
+        "revision": "0633573d0438be1185bddebdf1a2c8f5505f7b2a",
+        "trustClass": "FULL_SOURCE_REPLAY",
+        "sourceReplayStatus": "FULL_SOURCE_REPLAY",
+        "sourceRecordCount": 60,
+        "frameCount": 53886,
+        "sourceRoot": "sha256:70e52a3bbf396d075ac45bfc0996b24a744caac10768554ea6c199242783b0a6",
+        "manifestHash": "sha256:d82c74b5ea2b19dcc06a9309c42e4bdb2d149bce4015c45ceefcfccb09ae4373",
+        "episodeProjectionHash": "sha256:075e11edb53a2867585b26fc4d1f915320322aa8e1cce8b5e8ec4276f0f2e695",
+        "sourceArtifactHash": "sha256:9b03a089ad5d9dbb4d661b9cabbcc2fcd3634de96ec1aad71b23797dbee6af4f",
+        "standaloneSealAccepted": false
+      }
+    ],
+    "unifiedSourceSetHash": "sha256:46b9f0b0de6909c4b0c6cb40ef7d187f0794be2d7007230877f11be771231dca",
+    "fullSourceVerificationHash": "sha256:559a677fdd653a434e55d821125b3dbebbb66544fb67853179b5b2c02ead7948",
+    "manifestHash": "sha256:6eb0f38efbb80c9d64540688675fdd9994c0c82c3e9d419681a6202125e02f55",
+    "recordSetHash": "sha256:be29fc81e3a0b805d928dc7c4052aec5decb7b970912820c67c9b055e1ce2376",
+    "verifiedSourceObjectSetHash": "sha256:bed464abe75593e7256c28c3fbd173d9e4b6b721de9a8bfc03de7d0341407b3e"
+  },
+  "output": {
+    "reportHash": "sha256:edc2a5db68cfc79049c7dc9b315e90e95182f475b6902bc808382ee771bbaaee",
+    "reportFileContentHash": "sha256:fc56a8ce10314b2e3fd09885fac2a7805a6568b394b8b393eaf87d495169d683",
+    "researchModelsFit": 4,
+    "optimizedCandidatesSelected": 1,
+    "feederCandidatesDispatched": 0,
+    "completeThreeSegmentEpisodes": 0
+  },
+  "result": {
+    "xlangai/computer-agent-arena": {
+      "decision": "EVALUATED_RETRIEVAL_PRIORITY_ONLY",
+      "modelSelection": "USE_OPTIMIZED_AS_NEXT_FEEDER_CANDIDATE",
+      "baselineMetrics": {
+        "auc": 0.644967328474,
+        "sampleBrier": 0.232575375569,
+        "balancedAccuracy": 0.518936918824,
+        "threshold": 0.5,
+        "confusion": {
+          "truePositive": 24,
+          "falsePositive": 23,
+          "trueNegative": 323,
+          "falseNegative": 206
+        },
+        "calibrationClaimed": false
+      },
+      "optimizedMetrics": {
+        "auc": 0.654416938929,
+        "sampleBrier": 0.223632885,
+        "balancedAccuracy": 0.599585322945,
+        "threshold": 0.5,
+        "confusion": {
+          "truePositive": 95,
+          "falsePositive": 74,
+          "trueNegative": 272,
+          "falseNegative": 135
+        },
+        "calibrationClaimed": false
+      },
+      "delta": {
+        "auc": 0.009449610455,
+        "sampleBrier": -0.008942490569,
+        "balancedAccuracy": 0.080648404121,
+        "negativeOutcomeFollowUpYield": 6,
+        "precision": 0.118247126437,
+        "recall": 0.026086956522
+      },
+      "feederDispatched": false
+    },
+    "uw-syfi/TraceLab": {
+      "decision": "ISSUE_FINDER_GAP_ACCOUNTING_ONLY_NO_OUTCOME",
+      "modelSelection": "ABSTAIN",
+      "baselineMetrics": null,
+      "optimizedMetrics": null,
+      "delta": null,
+      "feederDispatched": false
+    },
+    "OpenHands/openhands-feedback": {
+      "decision": "ABSTAIN_SINGLE_COLLECTOR_CORRELATION_COMPONENT",
+      "modelSelection": "ABSTAIN",
+      "baselineMetrics": null,
+      "optimizedMetrics": null,
+      "delta": null,
+      "feederDispatched": false
+    },
+    "nebius/SWE-rebench-openhands-trajectories": {
+      "decision": "EVALUATED_RETRIEVAL_PRIORITY_ONLY",
+      "modelSelection": "KEEP_BASELINE",
+      "baselineMetrics": {
+        "auc": 0.608695652174,
+        "sampleBrier": 0.273816381221,
+        "balancedAccuracy": 0.626482213439,
+        "threshold": 0.5,
+        "confusion": {
+          "truePositive": 10,
+          "falsePositive": 2,
+          "trueNegative": 9,
+          "falseNegative": 13
+        },
+        "calibrationClaimed": false
+      },
+      "optimizedMetrics": {
+        "auc": 0.584980237154,
+        "sampleBrier": 0.273692621726,
+        "balancedAccuracy": 0.604743083004,
+        "threshold": 0.5,
+        "confusion": {
+          "truePositive": 9,
+          "falsePositive": 2,
+          "trueNegative": 9,
+          "falseNegative": 14
+        },
+        "calibrationClaimed": false
+      },
+      "delta": {
+        "auc": -0.02371541502,
+        "sampleBrier": -0.000123759495,
+        "balancedAccuracy": -0.021739130435,
+        "negativeOutcomeFollowUpYield": 0,
+        "precision": 0,
+        "recall": 0
+      },
+      "feederDispatched": false
+    }
+  },
+  "boundary": {
+    "trainingPurpose": "EPISODE_OUTCOME_FOLLOWUP_PRIORITY_ONLY",
+    "researchTrainingPerformed": true,
+    "automaticTraining": false,
+    "automaticTrainingPromotion": false,
+    "authority": "none",
+    "authorityUnits": 0,
+    "actionReady": false,
+    "executable": false,
+    "causalExperienceUnits": 0,
+    "CEU": 0,
+    "lossEvidenceUnits": 0,
+    "economicLossObserved": false,
+    "responsibilityTruthEstablished": false,
+    "modelDeploymentAuthorized": false,
+    "pseudoLabelsPromoted": false,
+    "permits": {
+      "PRICE": false,
+      "GUARANTEE": false,
+      "SETTLE": false,
+      "DEPLOY_MODEL": false,
+      "EXPAND_DELEGATION": false
+    }
+  },
+  "receiptHash": "sha256:0f057fbd8fe9b29b79a593c39f5d6898037a0adf6ea953d5923f4de5492127f7"
+}

@@ -1,0 +1,17 @@
+{
+  "schema": "outsider/local-artifact-index-supersession/v1",
+  "status": "SUPERSEDED_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v1/index.json",
+    "indexHash": "sha256:3ff8583bd4ca6bc2585dea31de24d3c1501f600385c715078f93f3c76f7d9312",
+    "fileSha256": "sha256:aa639d6bac52e1121990b8ca9b3c6432c728043d6f6b3f2f49b642156542b4f0",
+    "fileBytes": 76816
+  },
+  "successor": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v2/index.json",
+    "schema": "outsider/local-artifact-canonical-index/v2"
+  },
+  "reason": "V2 binds schema-authoritative supersession markers and every regular byte in declared, source, intermediate, unversioned and root-file quarantine scopes.",
+  "oldBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false
+}

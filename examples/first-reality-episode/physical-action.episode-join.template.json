@@ -1,0 +1,71 @@
+{
+  "templateStatus": "NON_PROTOCOL_UNEXECUTED_TEMPLATE",
+  "profile": "PHYSICAL_ACTION",
+  "isExecuted": false,
+  "rawDataPolicy": {
+    "rawBytesEmbedded": false,
+    "sourceObjectsStoredOutOfBand": true,
+    "worksheetIsNotConstructorInput": true
+  },
+  "outOfBandArtifactSlots": {
+    "deviceStreamSourceReplay": {
+      "module": "outsider-device-stream-physics-frontier.js",
+      "entrypoints": [
+        "DeviceStreamAdapterRegistry.register",
+        "DeviceStreamAdapterRegistry.replay"
+      ],
+      "adapterDescriptorHash": null,
+      "immutableSourceManifestHash": null,
+      "platformParameterManifestHash": null,
+      "adapterOutputHash": null,
+      "sourceReplayReceiptHash": null
+    },
+    "delegationEnvelope": {
+      "module": "outsider-physical-delegation.js",
+      "constructor": "createPhysicalDelegationEnvelope",
+      "artifactSchema": "outsider/physical-delegation-envelope/v1",
+      "artifactStoredOutOfBand": true,
+      "immutableObjectReferenceHash": null,
+      "byteLength": null,
+      "sha256": null,
+      "artifactHash": null
+    },
+    "primitiveAttempt": {
+      "module": "outsider-physical-delegation.js",
+      "constructor": "createPrimitiveAttempt",
+      "artifactSchema": "outsider/primitive-attempt/v1",
+      "artifactStoredOutOfBand": true,
+      "immutableObjectReferenceHash": null,
+      "byteLength": null,
+      "sha256": null,
+      "artifactHash": null
+    },
+    "telemetryAssessment": {
+      "module": "outsider-physical-telemetry.js",
+      "constructor": "createPhysicalTelemetryAssessment",
+      "artifactSchema": "outsider/physical-telemetry-assessment/v1",
+      "artifactStoredOutOfBand": true,
+      "immutableObjectReferenceHash": null,
+      "byteLength": null,
+      "sha256": null,
+      "artifactHash": null
+    }
+  },
+  "attemptCensusSlotCommitmentHash": null,
+  "disposition": "HOLD_UNEXECUTED_MISSING_PHYSICAL_ARTIFACTS",
+  "boundary": {
+    "lane": "RESEARCH_AND_ADVISORY_ONLY",
+    "authority": "none",
+    "causalExperienceUnits": 0,
+    "readyForRealAction": false,
+    "readyForPromotion": false,
+    "permits": {
+      "EXECUTE": false,
+      "TRAIN": false,
+      "PRICE": false,
+      "GUARANTEE": false,
+      "SETTLE": false,
+      "CLOSE": false
+    }
+  }
+}

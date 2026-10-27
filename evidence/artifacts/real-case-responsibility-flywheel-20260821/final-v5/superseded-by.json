@@ -1,0 +1,30 @@
+{
+  "schema": "outsider/real-case-responsibility-flywheel-supersession/v1",
+  "recordedAt": "2026-08-21T16:00:00.000Z",
+  "superseded": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v5/flywheel.json",
+    "artifactHash": "sha256:ce12f5a3d7ca21c2759d8e2c2ccc38c95697e4525909d4550d7aba98ba15c714",
+    "artifactFileHash": "sha256:7448884f9f4ead7793fb04b262a1bd4879e13e26fa12e44a83fd30b39b6d206a",
+    "artifactFileBytes": 535084,
+    "receiptCount": 12,
+    "laneCount": 23
+  },
+  "successor": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v6/flywheel.json",
+    "artifactHash": "sha256:d743479d2c46e4d59d0df7aaad750319bdd350d95bc67214eee38291611673dd",
+    "artifactFileHash": "sha256:0627082c7ad67cacd67f58e0a6a742e2b6c67c19846a55bd8b0a3762197bf835",
+    "artifactFileBytes": 535847,
+    "receiptCount": 12,
+    "laneCount": 23
+  },
+  "reason": "CANONICAL_GENERATED_AT_LOCK_AND_CANDIDATE_TIME_RESEAL_REJECTION",
+  "canonicalGeneratedAt": "2026-08-21T16:00:00.000Z",
+  "candidateGeneratedAtUsedForReplay": false,
+  "pastOrFutureCoherentResealAccepted": false,
+  "previousArtifactBytesPreserved": true,
+  "previousArtifactIsCurrentCanonical": false,
+  "successorRequiresFullSourceReplay": true,
+  "targetSpecificGapClosureCredit": 0,
+  "operationalAuthorityGranted": false,
+  "markerHash": "sha256:eb9ce9e007b79857c21c2a73737bdf5bd6fe3ecd2542d1a381b61ab8c8404d13"
+}

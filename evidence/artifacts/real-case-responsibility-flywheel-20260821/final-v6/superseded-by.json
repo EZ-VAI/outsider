@@ -1,0 +1,32 @@
+{
+  "schema": "outsider/real-case-responsibility-flywheel-supersession/v1",
+  "recordedAt": "2026-08-22T00:15:00.000Z",
+  "superseded": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v6/flywheel.json",
+    "artifactHash": "sha256:d743479d2c46e4d59d0df7aaad750319bdd350d95bc67214eee38291611673dd",
+    "artifactFileHash": "sha256:0627082c7ad67cacd67f58e0a6a742e2b6c67c19846a55bd8b0a3762197bf835",
+    "artifactFileBytes": 535847,
+    "receiptCount": 12,
+    "laneCount": 23
+  },
+  "successor": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v7/flywheel.json",
+    "artifactHash": "sha256:eab42d55e58b59874d88603368af71895ae86fd6cbc90840d0cfe4a60fdb0ca6",
+    "artifactFileHash": "sha256:fa2ef2ae12a9cb3a6721aeb838114b04dcf9000a08bd5d45213dbace312ccdee",
+    "artifactFileBytes": 585047,
+    "receiptCount": 14,
+    "laneCount": 25
+  },
+  "reason": "SOURCE_AWARE_BRIDGEDATA_V2_AND_WAYMO_OUTCOME_EXPOSURE_LANES_ADDED",
+  "canonicalGeneratedAt": "2026-08-22T00:15:00.000Z",
+  "bridgeTrainingCandidateHeld": true,
+  "bridgeTrainerRowsEnqueued": 0,
+  "waymoCrossLanePoolingPerformed": false,
+  "targetTransferEstablished": false,
+  "previousArtifactBytesPreserved": true,
+  "previousArtifactIsCurrentCanonical": false,
+  "successorRequiresFullSourceReplay": true,
+  "targetSpecificGapClosureCredit": 0,
+  "operationalAuthorityGranted": false,
+  "markerHash": "sha256:b029ce7e3e1fdaf0d594d6e4b467a5d9a8414c060fe707d3867f397a00836889"
+}

@@ -1,0 +1,89 @@
+{
+  "kind": "PUBLIC_JSON_FUNCTION",
+  "description": "公开的主执行与异供应方替代组合计算器。输入数量、预算、时限和候选报价，输出符合输入约束的最低成本不同提供方组合。包含明确的 JavaScript、SQL 实现及有限验收案例；输入假设不是现实权限或供应商接受。",
+  "value": {
+    "checks": [
+      {
+        "expected": {
+          "alternate": "beta",
+          "etaMinutes": 85,
+          "primary": "gamma",
+          "status": "FEASIBLE",
+          "totalMinor": 2900
+        },
+        "input": {
+          "deadlineMinutes": 120,
+          "maximumTotalMinor": 4000,
+          "offers": [
+            {
+              "capacity": 4,
+              "id": "alpha",
+              "leadMinutes": 90,
+              "provider": "p1",
+              "unitPriceMinor": 350
+            },
+            {
+              "capacity": 4,
+              "id": "beta",
+              "leadMinutes": 70,
+              "provider": "p2",
+              "unitPriceMinor": 425
+            },
+            {
+              "capacity": 4,
+              "id": "gamma",
+              "leadMinutes": 85,
+              "provider": "p1",
+              "unitPriceMinor": 300
+            },
+            {
+              "capacity": 4,
+              "id": "late",
+              "leadMinutes": 150,
+              "provider": "p3",
+              "unitPriceMinor": 200
+            },
+            {
+              "capacity": 2,
+              "id": "short",
+              "leadMinutes": 80,
+              "provider": "p4",
+              "unitPriceMinor": 200
+            }
+          ],
+          "quantity": 4
+        }
+      },
+      {
+        "expected": {
+          "status": "UNAVAILABLE"
+        },
+        "input": {
+          "deadlineMinutes": 120,
+          "maximumTotalMinor": 5000,
+          "offers": [
+            {
+              "capacity": 8,
+              "id": "one",
+              "leadMinutes": 20,
+              "provider": "same",
+              "unitPriceMinor": 100
+            },
+            {
+              "capacity": 8,
+              "id": "two",
+              "leadMinutes": 30,
+              "provider": "same",
+              "unitPriceMinor": 200
+            }
+          ],
+          "quantity": 2
+        }
+      }
+    ],
+    "functionBody": "const n=input.quantity,b=input.maximumTotalMinor,t=input.deadlineMinutes;const eligible=input.offers.filter(o=>o.capacity>=n&&o.leadMinutes<=t);const plans=[];for(let i=0;i<eligible.length;i++)for(let j=i+1;j<eligible.length;j++){let a=eligible[i],c=eligible[j];if(a.provider===c.provider)continue;if(a.unitPriceMinor>c.unitPriceMinor||(a.unitPriceMinor===c.unitPriceMinor&&a.id>c.id))[a,c]=[c,a];const total=n*(a.unitPriceMinor+c.unitPriceMinor);if(total<=b)plans.push({status:'FEASIBLE',primary:a.id,alternate:c.id,totalMinor:total,etaMinutes:Math.max(a.leadMinutes,c.leadMinutes)});}plans.sort((a,b)=>a.totalMinor-b.totalMinor||a.etaMinutes-b.etaMinutes||a.primary.localeCompare(b.primary)||a.alternate.localeCompare(b.alternate));return plans[0]??{status:'UNAVAILABLE'};",
+    "postgresBody": "COALESCE((WITH offers AS (SELECT x->>'id' id,x->>'provider' provider,(x->>'unitPriceMinor')::numeric price,(x->>'leadMinutes')::numeric eta,(x->>'capacity')::numeric capacity FROM jsonb_array_elements(input->'offers') x),pairs AS (SELECT CASE WHEN a.price<b.price OR (a.price=b.price AND a.id<b.id) THEN a.id ELSE b.id END primary_id,CASE WHEN a.price<b.price OR (a.price=b.price AND a.id<b.id) THEN b.id ELSE a.id END alternate_id,(a.price+b.price)*(input->>'quantity')::numeric total,GREATEST(a.eta,b.eta) eta FROM offers a JOIN offers b ON a.id<b.id AND a.provider<>b.provider WHERE a.capacity>=(input->>'quantity')::numeric AND b.capacity>=(input->>'quantity')::numeric AND a.eta<=(input->>'deadlineMinutes')::numeric AND b.eta<=(input->>'deadlineMinutes')::numeric AND (a.price+b.price)*(input->>'quantity')::numeric<=(input->>'maximumTotalMinor')::numeric) SELECT jsonb_build_object('status','FEASIBLE','primary',primary_id,'alternate',alternate_id,'totalMinor',total,'etaMinutes',eta) FROM pairs ORDER BY total,eta,primary_id,alternate_id LIMIT 1),jsonb_build_object('status','UNAVAILABLE'))",
+    "visibility": "PUBLIC"
+  }
+}
+

@@ -1,0 +1,82 @@
+{
+  "templateStatus": "NON_PROTOCOL_INCOMPLETE_PREREGISTRATION_WORKSHEET",
+  "profile": null,
+  "frozenBeforeFirstAction": false,
+  "preregistration": {
+    "protocolIdHash": null,
+    "protocolVersionHash": null,
+    "registeredAt": null,
+    "claimHash": null,
+    "wayHash": null,
+    "worldHash": null,
+    "cohort": {
+      "cohortIdHash": null,
+      "populationDefinitionHash": null,
+      "inclusionRuleHash": null,
+      "exclusionRuleHash": null,
+      "plannedAttemptCount": null,
+      "enrollmentOpensAt": null,
+      "enrollmentClosesAt": null
+    },
+    "assignment": {
+      "methodHash": null,
+      "armsHash": null,
+      "propensityRuleHash": null
+    },
+    "primaryOutcome": {
+      "definitionHash": null,
+      "observationWindowHash": null,
+      "missingOutcomeTreatment": "INCLUDE_AS_MISSING_NOT_SUCCESS",
+      "independentAdjudicationRequired": true,
+      "outcomeSourceHash": null
+    },
+    "stoppingAndCensoring": {
+      "stoppingRuleHash": null,
+      "earlyStoppingAllowed": null,
+      "timeoutRuleHash": null,
+      "abortRuleHash": null,
+      "reversalAndReopeningRuleHash": null
+    },
+    "monitoringRegime": {
+      "monitorDisclosure": "UNKNOWN",
+      "agentMonitorKnowledge": "UNKNOWN",
+      "monitorIdentityHash": null,
+      "monitorPolicyVersionHash": null,
+      "monitorIndependence": "UNKNOWN",
+      "traceVisibility": "UNKNOWN",
+      "targetDeploymentRegimeHash": null,
+      "transportabilityAssumptionsHash": null
+    },
+    "stewardship": {
+      "realityBoundaryHash": null,
+      "resourceOwnerRootHash": null,
+      "affectedPartyRegisterHash": null,
+      "experienceRightsHash": null,
+      "recoveryPlanHash": null,
+      "challengePolicyHash": null,
+      "consequenceHorizonsHash": null
+    }
+  },
+  "attemptCensusSlotCommitmentHash": null,
+  "rawDataPolicy": {
+    "rawBytesEmbedded": false,
+    "sourceObjectsStoredOutOfBand": true
+  },
+  "implementationStatus": "HOLD_PRODUCT_CENSUS_PATH_PRESENT_EPISODE_PREACTION_JOIN_NOT_IMPLEMENTED",
+  "disposition": "HOLD_NOT_PREREGISTERED_NO_CENSUS_SLOT_OR_EXTERNAL_OWNER_GATE",
+  "boundary": {
+    "ledgerClosed": false,
+    "denominatorCompletenessEstablished": false,
+    "authority": "none",
+    "causalExperienceUnits": 0,
+    "automaticTraining": false,
+    "permits": {
+      "EXECUTE": false,
+      "TRAIN": false,
+      "PRICE": false,
+      "GUARANTEE": false,
+      "SETTLE": false,
+      "CLOSE": false
+    }
+  }
+}

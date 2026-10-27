@@ -1,0 +1,28 @@
+{
+  "schema": "outsider/artifact-supersession-marker/v1",
+  "generatedAt": "2026-08-22T02:25:00.000Z",
+  "supersededArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v8/diagnostics.json",
+    "artifactHash": "sha256:f9a998fcd3f9bf8c608ed514a03893cbf05dd99f9475451ae4768ad8a267a07d",
+    "serializedFileHash": "sha256:746d157a7263ba8bd3022f2ecd34a565593a7a14b16c0133acfcf26c57977cc3",
+    "serializedBytes": 473021,
+    "bytePreserved": true,
+    "remainsValidForItsFrozenProjection": true,
+    "isCurrentProjection": false
+  },
+  "currentArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v9/diagnostics.json",
+    "artifactHash": "sha256:d4e8a2aa5ead3ded04b6b41b69810a954122dddf2433047d4c6bf0eb7f51e338",
+    "serializedFileHash": "sha256:487aa4f7059825ef7f1f156f8cbc3bb14027a42dd0779ffac3fcd79ccdfe9d39",
+    "serializedBytes": 488426,
+    "isCurrentProjection": true
+  },
+  "reason": "Final-v9 binds the source-replayed 49-row Wave5 intake taxonomy beside the already-preserved ClinicalTrials lane through catalog final-v11 and flywheel final-v10. The added factors are retrospective source-domain diagnostics only: all Wave5 rows remain unavailable pre-action and contribute zero trainer rows, target predictors, prices, or authority.",
+  "wave5SourceNativeRows": 49,
+  "wave5PreActionAvailableRows": 0,
+  "wave5TrainerRowsEnqueued": 0,
+  "wave5TargetPredictorEligibleRows": 0,
+  "wave5TargetPriceEligibleRows": 0,
+  "targetDomainTransferEstablished": false,
+  "operationalAuthorityGranted": false
+}

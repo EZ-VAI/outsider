@@ -1,0 +1,422 @@
+{
+  "schema": "outsider/nhtsa-recall-remedy-evidence/v1",
+  "generatedAt": "2026-08-21T15:45:00.000Z",
+  "source": {
+    "sourceId": "NHTSA_RECALL_REMEDY_STATUS_2026_08_21",
+    "publisher": "UNITED_STATES_NATIONAL_HIGHWAY_TRAFFIC_SAFETY_ADMINISTRATION",
+    "frozenAt": "2026-08-21T15:30:00.000Z",
+    "officialIndexUrl": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
+    "programUrl": "https://www.nhtsa.gov/recalls",
+    "sourceReality": "REAL_MANUFACTURER_RECALL_AND_STATUS_REPORTS_AGENCY_PUBLISHED",
+    "profileMatchedAtBuild": true,
+    "sourceSetHash": "sha256:b4552ffd3ebb2bc1d05b368c0bca3d6ccd42ac97d21f360b7eef63c3bfea5bb1",
+    "acquisitionManifestSha256": "sha256:b20bc43b921c08db9b7d646e591e69f53e3db05ee99c9946093fac89a1237d82",
+    "files": [
+      {
+        "name": "RCL.txt",
+        "kind": "OFFICIAL_RECALL_DATA_DICTIONARY",
+        "url": "https://static.nhtsa.gov/odi/ffdd/rcl/RCL.txt",
+        "bytes": 3053,
+        "sha256": "sha256:3438cc7e4131efa401dfe6437dbe035607e092c129155dfb411d459d58802203",
+        "entryName": null,
+        "entryBytes": null,
+        "entrySha256": null,
+        "columns": null,
+        "rows": null
+      },
+      {
+        "name": "RCL_Qtrly_Rpts.txt",
+        "kind": "OFFICIAL_QUARTERLY_STATUS_DATA_DICTIONARY",
+        "url": "https://static.nhtsa.gov/odi/ffdd/rcl/RCL_Qtrly_Rpts.txt",
+        "bytes": 1244,
+        "sha256": "sha256:b76ab35073e3585a56912f058aa0a53dc865de68c8ea12b687faa32f3952c8bf",
+        "entryName": null,
+        "entryBytes": null,
+        "entrySha256": null,
+        "columns": null,
+        "rows": null
+      },
+      {
+        "name": "RCL_Annual_Rpts.txt",
+        "kind": "OFFICIAL_ANNUAL_STATUS_DATA_DICTIONARY",
+        "url": "https://static.nhtsa.gov/odi/ffdd/rcl/RCL_Annual_Rpts.txt",
+        "bytes": 1635,
+        "sha256": "sha256:ff45c24d4474d5b2d9bc6b93f96fef1b0d227d5b2ca71f79c7980956fea4219a",
+        "entryName": null,
+        "entryBytes": null,
+        "entrySha256": null,
+        "columns": null,
+        "rows": null
+      },
+      {
+        "name": "FLAT_RCL_POST_2010.zip",
+        "kind": "OFFICIAL_POST_2010_RECALL_FLAT_FILE_ZIP",
+        "url": "https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_POST_2010.zip",
+        "bytes": 14795029,
+        "sha256": "sha256:a4dda749c0038988fe6569be4f61b926bf5ff85bdd28587cb89318f58dc4d2f1",
+        "entryName": "FLAT_RCL_POST_2010.txt",
+        "entryBytes": 309897727,
+        "entrySha256": "sha256:1f6e1a9dc80a291c02edafa9bf33ba695b6a2ac25cc6f095c8b7c209bb989456",
+        "columns": 29,
+        "rows": 244499
+      },
+      {
+        "name": "FLAT_RCL_Qrtly_Rpts.zip",
+        "kind": "OFFICIAL_QUARTERLY_RECALL_STATUS_FLAT_FILE_ZIP",
+        "url": "https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_Qrtly_Rpts.zip",
+        "bytes": 1477488,
+        "sha256": "sha256:36d2d7a568851bf83da8d399ca7fcfb655e36f2752512b82640a68fffb68b278",
+        "entryName": "FLAT_RCL_Qrtly_Rpts.txt",
+        "entryBytes": 9300641,
+        "entrySha256": "sha256:1aeaa5d8350826ac2df642ffa81b2fef0789752cfbd7d1e846f427cfc79d7e18",
+        "columns": 13,
+        "rows": 75624
+      },
+      {
+        "name": "FLAT_RCL_Annual_Rpts.zip",
+        "kind": "OFFICIAL_ANNUAL_RECALL_STATUS_FLAT_FILE_ZIP",
+        "url": "https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_Annual_Rpts.zip",
+        "bytes": 174304,
+        "sha256": "sha256:8590c600ca34a5d9a3310942061b5c654fe960bcad2c3f8997b9dd68c463716a",
+        "entryName": "FLAT_RCL_Annual_Rpts.txt",
+        "entryBytes": 779691,
+        "entrySha256": "sha256:14c08720150517cafb8b258fc78cefa6884b2ee062f94f68bf1bda22a7dcdef4",
+        "columns": 13,
+        "rows": 5875
+      }
+    ],
+    "documentation": {
+      "recallCampaignDefinitionPinned": true,
+      "quarterlyCumulativeFieldsPinned": true,
+      "annualEligibilityBoundaryPinned": true
+    },
+    "publisherChecksumObserved": false,
+    "localExactSha256IsNotPublisherChecksum": true,
+    "transportAttested": false
+  },
+  "ontology": {
+    "recallCampaignIsRealInstitutionalRecord": true,
+    "manufacturerStatusReportIsRealInstitutionalRecord": true,
+    "officialRecordAutomaticallyEqualsUnderlyingWorldTruth": false,
+    "recallEstablishesIndependentCausality": false,
+    "statusRowEstablishesAffectedPartyReceipt": false,
+    "remediedCountEstablishesIndividuallyVerifiedCompleteRepair": false,
+    "affectedPopulationEstablishesCurrentExposure": false,
+    "statusCountsEstablishPaidIncurredOrUltimateLoss": false,
+    "recallManagementRecordIsEnforcementOrder": false,
+    "publicOriginNeitherDowngradesNorUpgradesDataReality": true,
+    "researchOrShadowIsInferenceAndAuthorityBoundaryNotSourceReality": true
+  },
+  "recallPopulation": {
+    "sourceUnit": "RECALL_FLAT_FILE_RECORD_WITH_CAMPAIGN_LEVEL_DEDUPLICATION",
+    "rows": 244499,
+    "expectedColumns": 29,
+    "observedColumnWidths": {
+      "29": 244499
+    },
+    "blankLines": 0,
+    "schemaMismatchRows": 0,
+    "uniqueRecordIds": 244499,
+    "duplicateRecordIds": 0,
+    "invalidRecordIds": 0,
+    "uniqueCampaigns": 15197,
+    "invalidCampaignIds": 0,
+    "receivedDateRange": {
+      "minimum": "20100101",
+      "maximum": "20260814"
+    },
+    "recordCreationDateRange": {
+      "minimum": "20100104",
+      "maximum": "20260817"
+    },
+    "rowProductTypeCounts": {
+      "C": 426,
+      "E": 5994,
+      "T": 20281,
+      "V": 217798
+    },
+    "campaignProductTypeCounts": {
+      "C": 70,
+      "E": 1359,
+      "T": 199,
+      "V": 13569
+    },
+    "campaignsByPart573ReceivedYear": {
+      "2010": 722,
+      "2011": 655,
+      "2012": 661,
+      "2013": 710,
+      "2014": 868,
+      "2015": 971,
+      "2016": 1031,
+      "2017": 897,
+      "2018": 1033,
+      "2019": 963,
+      "2020": 881,
+      "2021": 1094,
+      "2022": 1051,
+      "2023": 1000,
+      "2024": 1073,
+      "2025": 997,
+      "2026": 590
+    },
+    "affectedPopulation": {
+      "singlePopulationCampaigns": 15197,
+      "conflictingPopulationCampaigns": 0,
+      "missingPopulationCampaigns": 0,
+      "zeroPopulationCampaigns": 7,
+      "totalPotentialAffectedAcrossSinglePopulationCampaigns": "699086836",
+      "summedOncePerCampaign": true,
+      "actualExposureOrUniqueVehiclesOnRoadEstablished": false
+    },
+    "remedyPublication": {
+      "campaignsWithCorrectiveActionText": 15197,
+      "rowsMissingCorrectiveActionText": 0,
+      "campaignsWithOwnerNotificationBeginDate": 14836,
+      "campaignsMarkedDoNotDriveYes": 210,
+      "campaignsMarkedParkOutsideYes": 103,
+      "correctiveActionTextEstablishesRepairCompleted": false,
+      "ownerNotificationDateEstablishesConsumerReceipt": false
+    },
+    "conflictsAndInvalidity": {
+      "invalidPopulationRows": 0,
+      "invalidReceivedDateRows": 0,
+      "invalidRecordCreationDateRows": 0,
+      "conflictingReceivedDateCampaigns": 0,
+      "conflictingProductTypeCampaigns": 0
+    },
+    "entrySha256": "sha256:1f6e1a9dc80a291c02edafa9bf33ba695b6a2ac25cc6f095c8b7c209bb989456"
+  },
+  "quarterlyStatus": {
+    "sourceUnit": "QUARTERLY_MANUFACTURER_RECALL_STATUS_REPORT_ROW",
+    "rows": 75624,
+    "expectedColumns": 13,
+    "observedColumnWidths": {
+      "13": 75624
+    },
+    "blankLines": 0,
+    "schemaMismatchRows": 0,
+    "uniqueRowHashes": 75624,
+    "exactDuplicateRows": 0,
+    "uniqueCampaigns": 11834,
+    "invalidCampaignRows": 0,
+    "submissionDateRange": {
+      "minimum": "20141202",
+      "maximum": "20260817"
+    },
+    "validReportingPeriodRange": {
+      "minimum": "2015-1",
+      "maximum": "2026-2"
+    },
+    "sourceQualityAnomalies": {
+      "invalidPeriodRows": 2,
+      "invalidSubmissionDateRows": 0,
+      "invalidReportNumberRows": 0,
+      "invalidNumericRows": 0,
+      "zeroInvolvedRows": 1,
+      "componentSumExceedsInvolvedRows": 1,
+      "conflictingLogicalKeyRows": 0,
+      "invalidPeriodExamples": [
+        {
+          "rowHash": "sha256:9ef18f18639856528f26eb0dfea9fd10c858dbdf166a1e2dbf9ac230cc888c21",
+          "campaignFingerprint": "sha256:62ad36773ff9e5e9f6fd106cee23b2f7ed722b5ee8164fc6ad765a6d39c1d453",
+          "observedPeriod": "2099-"
+        },
+        {
+          "rowHash": "sha256:39a1075ec9e440a79ac99cd30a96c41ca07ce20d811e88ad9a70c25e70e2cb84",
+          "campaignFingerprint": "sha256:9aa6c919d3cb12538cbe5864ee55a8705a5eaf0296243a9959c76b2b6103d802",
+          "observedPeriod": "2022"
+        }
+      ],
+      "arithmeticAnomalyExamples": [
+        {
+          "rowHash": "sha256:9337b350c60bc75030ff8e8f4c42821159f87403f6bc37767548b14e28ac6b5a",
+          "campaignFingerprint": "sha256:3bab9c0d70b100d838adfa31a2ef0ddb85c667827206d96baaf2ae6b71f83bbb",
+          "period": "2016-4",
+          "involved": "0",
+          "remedied": "22",
+          "unreachable": "0",
+          "removed": "584"
+        }
+      ],
+      "anomaliesRetainedNotRepaired": true
+    },
+    "latestObservedCampaignSnapshot": {
+      "selectionRule": "MAX_SUBMISSION_DATE_THEN_REPORT_NUMBER_THEN_PERIOD_THEN_ROW_HASH_PER_CAMPAIGN",
+      "latestRowsAreNotReplacedByEarlierValidRows": true,
+      "selectedCampaigns": 11834,
+      "deferredLatestCampaigns": 0,
+      "deferReasons": {},
+      "selectedCampaignsLinkedToPost2010Recall": 11833,
+      "involved": "487232535",
+      "remedied": "295629360",
+      "unreachable": "11450565",
+      "removed": "17965750",
+      "remediedToInvolvedRatio": 0.606752092202,
+      "ratioIsDescriptivePublisherStatusSnapshot": true,
+      "ratioIsNotUniqueRepairReceiptOrActuarialRate": true
+    },
+    "post2010RecallLinkage": {
+      "rowsLinked": 75616,
+      "campaignsLinked": 11833,
+      "campaignsOutsideCapturedPost2010RecallSlice": 1,
+      "missingLinkDoesNotImplyInvalidStatusRecord": true
+    },
+    "entrySha256": "sha256:1aeaa5d8350826ac2df642ffa81b2fef0789752cfbd7d1e846f427cfc79d7e18"
+  },
+  "annualStatus": {
+    "sourceUnit": "ANNUAL_MANUFACTURER_RECALL_STATUS_REPORT_ROW",
+    "rows": 5875,
+    "expectedColumns": 13,
+    "observedColumnWidths": {
+      "13": 5875
+    },
+    "blankLines": 0,
+    "schemaMismatchRows": 0,
+    "uniqueRowHashes": 5875,
+    "exactDuplicateRows": 0,
+    "uniqueCampaigns": 2796,
+    "invalidCampaignRows": 0,
+    "submissionDateRange": {
+      "minimum": "20230403",
+      "maximum": "20260818"
+    },
+    "validReportingPeriodRange": {
+      "minimum": "2022-1 to 2022-4",
+      "maximum": "2025-3 to 2026-2"
+    },
+    "sourceQualityAnomalies": {
+      "invalidPeriodRows": 0,
+      "invalidSubmissionDateRows": 0,
+      "invalidReportNumberRows": 0,
+      "invalidNumericRows": 0,
+      "zeroInvolvedRows": 0,
+      "componentSumExceedsInvolvedRows": 0,
+      "conflictingLogicalKeyRows": 0,
+      "invalidPeriodExamples": [],
+      "arithmeticAnomalyExamples": [],
+      "anomaliesRetainedNotRepaired": true
+    },
+    "latestObservedCampaignSnapshot": {
+      "selectionRule": "MAX_SUBMISSION_DATE_THEN_REPORT_NUMBER_THEN_PERIOD_THEN_ROW_HASH_PER_CAMPAIGN",
+      "latestRowsAreNotReplacedByEarlierValidRows": true,
+      "selectedCampaigns": 2796,
+      "deferredLatestCampaigns": 0,
+      "deferReasons": {},
+      "selectedCampaignsLinkedToPost2010Recall": 2796,
+      "involved": "108749786",
+      "remedied": "72493743",
+      "unreachable": "2286543",
+      "removed": "4348768",
+      "remediedToInvolvedRatio": 0.666610442801,
+      "ratioIsDescriptivePublisherStatusSnapshot": true,
+      "ratioIsNotUniqueRepairReceiptOrActuarialRate": true
+    },
+    "post2010RecallLinkage": {
+      "rowsLinked": 5875,
+      "campaignsLinked": 2796,
+      "campaignsOutsideCapturedPost2010RecallSlice": 0,
+      "missingLinkDoesNotImplyInvalidStatusRecord": true
+    },
+    "entrySha256": "sha256:14c08720150517cafb8b258fc78cefa6884b2ee062f94f68bf1bda22a7dcdef4"
+  },
+  "lifecycleLinkage": {
+    "post2010RecallCampaigns": 15197,
+    "withQuarterlyStatus": 11833,
+    "withAnnualStatus": 2796,
+    "withBothQuarterlyAndAnnualStatus": 2796,
+    "linkKey": "NHTSA_CAMPAIGN_NUMBER",
+    "quarterlyPopulationReconciliation": {
+      "selectedStatusCampaigns": 11834,
+      "statusCampaignsWithRecallPopulation": 11833,
+      "statusCampaignsOutsideCapturedRecallPopulation": 1,
+      "exactMatches": 11780,
+      "statusInvolvedGreater": 17,
+      "recallPotentialAffectedGreater": 36,
+      "totalAbsoluteDifference": "316960",
+      "reconciliationDifferenceRetainedNotAdjusted": true,
+      "eitherFieldIsCurrentInServiceExposureEstablished": false
+    },
+    "annualPopulationReconciliation": {
+      "selectedStatusCampaigns": 2796,
+      "statusCampaignsWithRecallPopulation": 2796,
+      "statusCampaignsOutsideCapturedRecallPopulation": 0,
+      "exactMatches": 2796,
+      "statusInvolvedGreater": 0,
+      "recallPotentialAffectedGreater": 0,
+      "totalAbsoluteDifference": "0",
+      "reconciliationDifferenceRetainedNotAdjusted": true,
+      "eitherFieldIsCurrentInServiceExposureEstablished": false
+    },
+    "linkageIsPublisherRecordAssociationNotCausalOrConsumerReceiptProof": true,
+    "completeRepairChainEstablished": false,
+    "paymentRecoveryReopeningClosureChainEstablished": false
+  },
+  "qualityAndMissingness": {
+    "exactCompressedAndUncompressedBytesReplayed": true,
+    "officialNamedPost2010SliceNotAllHistoricalCampaigns": true,
+    "current2026PeriodIncompleteAtFreeze": true,
+    "quarterlyRowsAreRepeatedCumulativeStatusNotIndependentExposures": true,
+    "annualRowsHavePublisherEligibilitySelection": true,
+    "manufacturerStatusRowsAreNotIndependentRepairAudits": true,
+    "completionStatusesMayBeRevisedAfterFreeze": true,
+    "latestObservedIsNotGuaranteedLatestPublisherTruthAfterFreeze": true,
+    "campaignPopulationMayDifferFromStatusInvolvedPopulation": true,
+    "campaignPotentialAffectedCrossCampaignVehicleOverlapUnresolved": true,
+    "quarterlyAndAnnualRatiosNotComparableWithoutCohortAlignment": true,
+    "noVehicleInServiceExposureDenominator": true,
+    "noIndependentRepairAuditPopulation": true,
+    "knownSourceAnomaliesMachineDeferredNotNormalized": true,
+    "enforcementActionOrConsentOrderBodiesCaptured": false
+  },
+  "privacy": {
+    "rawSourcePersonalDataAbsenceConcluded": false,
+    "rawNarrativeOrContactFieldsEmitted": false,
+    "manufacturerNamesEmitted": false,
+    "campaignIdentifiersEmitted": false,
+    "anomalyCampaignIdentifiersDomainHashed": true,
+    "outputIsAggregateAndDeterministicallyMinimized": true,
+    "trainingAdmitted": false
+  },
+  "rights": {
+    "officialPublicDownloadObserved": true,
+    "exactPublicBytesReplayed": true,
+    "rawRedistributionRightConcluded": false,
+    "commercialUseRightConcluded": false,
+    "modelTrainingRightConcluded": false,
+    "legalConclusionMade": false,
+    "allowedUse": [
+      "DESCRIPTIVE_SOURCE_REPLAY",
+      "SHADOW_REMEDY_STATUS_SENSING"
+    ]
+  },
+  "progress": {
+    "stage1_5": [
+      "REAL_RECALL_CASE_IDENTITIES",
+      "REAL_REMEDY_STATUS_REPORTING_CHANNEL"
+    ],
+    "stage2": [
+      "CAMPAIGN_TO_QUARTERLY_AND_ANNUAL_STATUS_LINKAGE",
+      "QUALITY_GATED_DESCRIPTIVE_COMPLETION_REFERENCE"
+    ],
+    "stage3": [],
+    "stage4": [],
+    "sourceDomainOutcomeSensing": true,
+    "sourceDomainRemedyStatusSensing": true,
+    "affectedPartyReceiptSensing": false,
+    "actuarialLossCalibration": false,
+    "targetTransferAdmitted": false,
+    "priceInputAdmitted": false,
+    "productionReadiness": false
+  },
+  "authority": {
+    "PRICE": false,
+    "GUARANTEE": false,
+    "SETTLE": false,
+    "TRAIN": false,
+    "CLOSE": false,
+    "EXECUTE": false
+  },
+  "admission": "ADMIT_REAL_NHTSA_RECALL_AND_REMEDY_STATUS_REFERENCE_ONLY",
+  "artifactHash": "sha256:92e617a6ce63c98be160ba7432c03ab1c470924e4cf99e9ea91cf7c49fb83505"
+}

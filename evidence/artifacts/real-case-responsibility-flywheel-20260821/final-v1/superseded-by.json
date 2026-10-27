@@ -1,0 +1,27 @@
+{
+  "schema": "outsider/real-case-responsibility-flywheel-supersession/v1",
+  "recordedAt": "2026-08-21T13:30:00.000Z",
+  "superseded": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v1/flywheel.json",
+    "artifactHash": "sha256:345c458c65ca0c297931910d036e86a6d3efeef657399eacd4e19f32bab0b56d",
+    "artifactFileHash": "sha256:dd07d6602a6c3c609a0e047b57191b1dc728ae5e2e1d94c8507ee5dbecb84bba",
+    "artifactFileBytes": 354669,
+    "receiptCount": 8,
+    "laneCount": 15
+  },
+  "successor": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v2/flywheel.json",
+    "artifactHash": "sha256:3c013214fa605818867bebc9843d2d0a9ba2cb9a96fc96a05123241e49657df9",
+    "artifactFileHash": "sha256:c51bea759ccc9be9b8150257a87e4418ab42ffeb0fdeba125db800b915f5590b",
+    "artifactFileBytes": 419154,
+    "receiptCount": 9,
+    "laneCount": 18
+  },
+  "reason": "SOURCE_AWARE_NCUA_PBGC_MSHA_RECEIPT_AND_THREE_NON_POOLED_LANES_ADDED",
+  "previousArtifactBytesPreserved": true,
+  "previousArtifactIsCurrentCanonical": false,
+  "successorRequiresFullSourceReplay": true,
+  "targetSpecificGapClosureCredit": 0,
+  "operationalAuthorityGranted": false,
+  "markerHash": "sha256:ad374211a6f5c96e5401106b13235c24005e51ef169411cbf82c9771b339ec7a"
+}

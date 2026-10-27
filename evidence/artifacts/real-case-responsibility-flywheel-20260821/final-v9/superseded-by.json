@@ -1,0 +1,33 @@
+{
+  "schema": "outsider/real-case-responsibility-flywheel-supersession/v1",
+  "recordedAt": "2026-08-22T00:15:00.000Z",
+  "superseded": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v9/flywheel.json",
+    "artifactHash": "sha256:7eba1092e0cb33b246410664a9fbe5f7c8615f7b866cc1d3c0ba3ed6f2c8583e",
+    "artifactFileHash": "sha256:cf08a696940ea5781102a1c24e2cabe34a1cbc33bbad3782be2bf4efdfd01ff4",
+    "artifactFileBytes": 608566,
+    "receiptCount": 15,
+    "laneCount": 26
+  },
+  "successor": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v10/flywheel.json",
+    "artifactHash": "sha256:382265c10c0d1e1114ac5c769b945bdceaec2466e4d25ebda6c355dceb4b81b3",
+    "artifactFileHash": "sha256:7df8a9ecc88810091f1eec061d7545eeefb30eaa8b9cb456844c3346769e1094",
+    "artifactFileBytes": 610164,
+    "receiptCount": 16,
+    "laneCount": 26
+  },
+  "reason": "WAVE5_SOURCE_AWARE_TAXONOMY_STAGE1_CATALOG_FLYWHEEL_INTEGRATION_WITH_ZERO_TRAINER_TARGET_PRICE_AUTHORITY",
+  "canonicalGeneratedAt": "2026-08-22T00:15:00.000Z",
+  "wave5SourceNativeRows": 49,
+  "wave5PreActionAvailableRows": 0,
+  "wave5TrainerRowsEnqueued": 0,
+  "wave5TargetPredictorEligibleRows": 0,
+  "targetTransferEstablished": false,
+  "previousArtifactBytesPreserved": true,
+  "previousArtifactIsCurrentCanonical": false,
+  "successorRequiresFullSourceReplay": true,
+  "targetSpecificGapClosureCredit": 0,
+  "operationalAuthorityGranted": false,
+  "markerHash": "sha256:86bcb2f945372a4a094cdc6055020655d6c5f42c46848d9c6fec77bc4c731065"
+}

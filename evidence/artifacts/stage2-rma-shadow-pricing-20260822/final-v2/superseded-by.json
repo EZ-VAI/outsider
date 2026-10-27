@@ -1,0 +1,20 @@
+{
+  "schema": "outsider/local-artifact-supersession-pointer/v1",
+  "status": "SUPERSEDED_STALE_CURRENT_CHAIN_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "final-v2/historical-loss-cost.json",
+    "fileSha256": "sha256:6ddf593d753a47b05a1d9e787cdd59d7024781741a3540fd7aca349bc9dafddb",
+    "fileBytes": 7158,
+    "artifactHash": "sha256:e44e14fc5bce5c26483b1435104a99ff8113cb49c830db3554e5aaff25a229a6",
+    "reasonCodes": ["BOUND_SUPERSEDED_CURRENT_CHAIN_FINAL_V1"]
+  },
+  "canonical": {
+    "path": "../final-v3/historical-loss-cost.json",
+    "fileSha256": "sha256:f4fc63d32d1beb667a9aacb96506c315cb4d912cc157ebe8c0c071e04a67ca92",
+    "fileBytes": 7163,
+    "artifactHash": "sha256:448981f4caf23d392a56e08852e7d96d3bfcd10700907799e0d5f25f8e370bf3",
+    "requiredVerificationLevel": "FULL_RMA_SOURCE_REPLAYED_CURRENT_CHAIN_FINAL_V3_CANONICAL_BYTES"
+  },
+  "oldArtifactBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false
+}

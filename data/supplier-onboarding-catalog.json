@@ -1,0 +1,871 @@
+{
+  "version": "supplier-setup-2026-09-16",
+  "termsVersion": "provider-network-2026-09-16",
+  "paymentTerms": {"version":"provider-network-2026-09-16","method":"ACH","dueBusinessDays":5,"startsAt":"CUSTOMER_ACCEPTANCE","bankCalendarId":"US_ACH"},
+  "paymentText": "For jobs paid through HapNex, HapNex initiates ACH payment within five business days after customer acceptance. Banks control posting time.",
+  "acceptanceText": "Acceptance follows customer approval, or 48 hours after complete evidence and the acceptance notice reach the customer without a documented issue.",
+  "recoveryText": "No fixed late-arrival penalty. Documented incremental replacement costs caused by your breach are capped at your fee for that job, with evidence and an opportunity to contest.",
+  "cancellations": [
+    {
+      "id": "free48",
+      "label": "Free until 48 hours before; 50% after",
+      "hours": 48,
+      "latePercent": 50
+    },
+    {
+      "id": "free24",
+      "label": "Free until 24 hours before; 50% after",
+      "hours": 24,
+      "latePercent": 50
+    },
+    {
+      "id": "flexible",
+      "label": "Free cancellation before work starts",
+      "hours": 0,
+      "latePercent": 0
+    }
+  ],
+  "categories": [
+    {
+      "id": "venue",
+      "name": "Event space",
+      "hoursPreset": "sixdays",
+      "services": [
+        {
+          "id": "space4",
+          "name": "Private event space \u2014 4 hours",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "booking",
+          "durationMinutes": 240,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Exclusive use of agreed space",
+            "Access during booked hours"
+          ],
+          "excluded": [
+            "Catering",
+            "Alcohol",
+            "AV equipment",
+            "Cleanup outside agreed scope"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false,
+          "customerAddressRequired": false
+        }
+      ]
+    },
+    {
+      "id": "catering",
+      "name": "Catering",
+      "hoursPreset": "sixdays",
+      "services": [
+        {
+          "id": "buffet",
+          "name": "Delivered buffet meal",
+          "defaultOn": true,
+          "kind": "PER_UNIT",
+          "unit": "guest",
+          "durationMinutes": 120,
+          "durationBasis": "FIXED",
+          "minimumUnits": 10,
+          "maximumUnits": 100,
+          "priceLabel": "Price per guest",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Prepared buffet meal",
+            "Delivery and setup"
+          ],
+          "excluded": [
+            "Alcohol",
+            "Servers",
+            "Tableware",
+            "Dietary substitutions not agreed"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "av",
+      "name": "Audio and visual",
+      "hoursPreset": "sixdays",
+      "services": [
+        {
+          "id": "sound",
+          "name": "Small event sound package \u2014 4 hours",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "booking",
+          "durationMinutes": 240,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Two speakers",
+            "Mixer and one microphone",
+            "Delivery, setup and collection"
+          ],
+          "excluded": [
+            "Lighting",
+            "Projection",
+            "On-site technician"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        },
+        {
+          "id": "technician",
+          "name": "Event AV technician",
+          "defaultOn": false,
+          "kind": "PER_UNIT",
+          "unit": "hour",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 2,
+          "maximumUnits": 12,
+          "priceLabel": "Price per hour",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "One technician",
+            "Operation of agreed equipment"
+          ],
+          "excluded": [
+            "Equipment rental",
+            "Rigging"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "photo",
+      "name": "Photography",
+      "hoursPreset": "sixdays",
+      "services": [
+        {
+          "id": "photography",
+          "name": "Event photography",
+          "defaultOn": true,
+          "kind": "PER_UNIT",
+          "unit": "hour",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 2,
+          "maximumUnits": 12,
+          "priceLabel": "Price per hour",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "One photographer",
+            "Basic image editing",
+            "Private digital gallery within 14 days"
+          ],
+          "excluded": [
+            "Video",
+            "Prints",
+            "Raw files"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "rentals",
+      "name": "Event rentals",
+      "hoursPreset": "sixdays",
+      "services": [
+        {
+          "id": "tables",
+          "name": "Event table package \u2014 up to 30 guests",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "booking",
+          "durationMinutes": 240,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Five six-person tables",
+            "30 chairs",
+            "Delivery and collection within service area"
+          ],
+          "excluded": [
+            "Linens",
+            "Setup",
+            "Outdoor weather protection"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "decor",
+      "name": "Event decor",
+      "hoursPreset": "sixdays",
+      "services": [
+        {
+          "id": "decor_setup",
+          "name": "Decor setup and teardown",
+          "defaultOn": true,
+          "kind": "PER_UNIT",
+          "unit": "hour",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 2,
+          "maximumUnits": 12,
+          "priceLabel": "Price per hour",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "One installer",
+            "Setup of client-supplied decor"
+          ],
+          "excluded": [
+            "Flowers",
+            "Decor materials",
+            "Ceiling rigging",
+            "Open flames"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "staff",
+      "name": "Event staff",
+      "hoursPreset": "sixdays",
+      "services": [
+        {
+          "id": "staffing",
+          "name": "Event service staff",
+          "defaultOn": true,
+          "kind": "PER_UNIT",
+          "unit": "staff-hour",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 2,
+          "maximumUnits": 12,
+          "priceLabel": "Price per staff-hour",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "One event staff member per booked hour",
+            "Setup, guest service and cleanup support"
+          ],
+          "excluded": [
+            "Security",
+            "Food preparation",
+            "Alcohol service"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "music",
+      "name": "Music and entertainment",
+      "hoursPreset": "sixdays",
+      "services": [
+        {
+          "id": "dj",
+          "name": "DJ performance \u2014 4 hours",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "booking",
+          "durationMinutes": 240,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "One DJ",
+            "Playlist consultation",
+            "DJ controller"
+          ],
+          "excluded": [
+            "Sound system",
+            "Lighting",
+            "Travel outside selected towns"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "transport",
+      "name": "Passenger transport",
+      "hoursPreset": "sixdays",
+      "services": [
+        {
+          "id": "shuttle",
+          "name": "Private shuttle vehicle with driver",
+          "defaultOn": true,
+          "kind": "PER_UNIT",
+          "unit": "hour",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 2,
+          "maximumUnits": 12,
+          "priceLabel": "Price per hour",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "One vehicle and licensed driver",
+            "Fuel within agreed route"
+          ],
+          "excluded": [
+            "Parking and tolls unless included in price",
+            "Unscheduled route changes",
+            "Overnight service"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "printing",
+      "name": "Printed materials",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "print100",
+          "name": "100 single-sided letter-size flyers",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "batch",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Full-color printing",
+            "Standard paper",
+            "One print-ready customer file"
+          ],
+          "excluded": [
+            "Graphic design",
+            "Proof changes",
+            "Delivery"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "moving",
+      "name": "Moving",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "local_move",
+          "name": "Local move \u2014 hourly crew",
+          "defaultOn": true,
+          "kind": "PER_UNIT",
+          "unit": "hour",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 2,
+          "maximumUnits": 12,
+          "priceLabel": "Price for the whole crew per hour",
+          "baseLabel": "Truck fee (optional)",
+          "included": [
+            "Two movers",
+            "Loading and unloading",
+            "Blanket wrapping",
+            "Bed frame disassembly"
+          ],
+          "excluded": [
+            "Pianos",
+            "Safes",
+            "Items over 300 lb",
+            "Walk-ups above 3 floors",
+            "Packing materials"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false,
+          "crewSizeOptions": [
+            2,
+            3,
+            4
+          ],
+          "defaultCrewSize": 2
+        },
+        {
+          "id": "packing",
+          "name": "Packing \u2014 one packer",
+          "defaultOn": false,
+          "kind": "PER_UNIT",
+          "unit": "hour",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 2,
+          "maximumUnits": 12,
+          "priceLabel": "Price per hour",
+          "baseLabel": "Truck fee (optional)",
+          "included": [
+            "One packer",
+            "Packing customer belongings"
+          ],
+          "excluded": [
+            "Packing materials",
+            "Hazardous materials"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "cleaning",
+      "name": "Cleaning",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "cleaning",
+          "name": "Move-in or move-out cleaning \u2014 one cleaner",
+          "defaultOn": true,
+          "kind": "PER_UNIT",
+          "unit": "cleaner-hour",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 2,
+          "maximumUnits": 12,
+          "priceLabel": "Price per cleaner-hour",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Accessible surfaces",
+            "Kitchen and bathroom cleaning",
+            "Floors",
+            "Cleaning supplies"
+          ],
+          "excluded": [
+            "Biohazards",
+            "Mold remediation",
+            "Exterior windows",
+            "Construction debris"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "painting",
+      "name": "Painting",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "paint_visit",
+          "name": "Painting assessment \u2014 up to 60 minutes",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "visit",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "On-site measurements",
+            "Condition review",
+            "Written scope and quote within two business days"
+          ],
+          "excluded": [
+            "Painting work",
+            "Materials",
+            "Lead paint testing or abatement"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": true
+        }
+      ]
+    },
+    {
+      "id": "plumbing",
+      "name": "Plumbing",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "plumb_visit",
+          "name": "Plumbing diagnostic visit \u2014 up to 60 minutes",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "visit",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Licensed technician diagnosis",
+            "Written findings and repair quote"
+          ],
+          "excluded": [
+            "Repairs",
+            "Parts",
+            "Permit fees",
+            "Emergency service"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": true
+        }
+      ]
+    },
+    {
+      "id": "electrical",
+      "name": "Electrical",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "electric_visit",
+          "name": "Electrical diagnostic visit \u2014 up to 60 minutes",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "visit",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Licensed electrician diagnosis",
+            "Written findings and repair quote"
+          ],
+          "excluded": [
+            "Repair or installation work",
+            "Parts",
+            "Permit fees",
+            "Emergency service"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": true
+        }
+      ]
+    },
+    {
+      "id": "hvac",
+      "name": "Heating and cooling",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "hvac_visit",
+          "name": "HVAC diagnostic visit \u2014 up to 60 minutes",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "visit",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "One system assessment",
+            "Written diagnosis and repair quote"
+          ],
+          "excluded": [
+            "Repairs",
+            "Refrigerant",
+            "Equipment replacement",
+            "Emergency service"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": true
+        }
+      ]
+    },
+    {
+      "id": "furniture",
+      "name": "Furniture supply",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "furniture_visit",
+          "name": "Furniture selection consultation \u2014 60 minutes",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "visit",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Space and needs review",
+            "Written itemized furniture proposal within two business days"
+          ],
+          "excluded": [
+            "Furniture purchase",
+            "Delivery",
+            "Assembly"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": true
+        }
+      ]
+    },
+    {
+      "id": "assembly",
+      "name": "Furniture assembly",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "assembly",
+          "name": "Flat-pack furniture assembly",
+          "defaultOn": true,
+          "kind": "PER_UNIT",
+          "unit": "hour",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 2,
+          "maximumUnits": 12,
+          "priceLabel": "Price per hour",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "One assembler",
+            "Assembly from manufacturer instructions",
+            "Tools"
+          ],
+          "excluded": [
+            "Parts",
+            "Wall anchoring",
+            "Electrical work",
+            "Disposal"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "clearance",
+      "name": "Junk removal",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "clearance_visit",
+          "name": "Clear-out assessment \u2014 up to 60 minutes",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "visit",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "On-site volume and access assessment",
+            "Written removal quote within two business days"
+          ],
+          "excluded": [
+            "Hauling",
+            "Disposal charges",
+            "Hazardous waste"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": true
+        }
+      ]
+    },
+    {
+      "id": "locksmith",
+      "name": "Locksmith",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "rekey",
+          "name": "Rekey one standard residential lock",
+          "defaultOn": true,
+          "kind": "PER_UNIT",
+          "unit": "lock",
+          "durationMinutes": 30,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 2,
+          "maximumUnits": 12,
+          "priceLabel": "Price per lock",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Rekey existing compatible cylinder",
+            "Two keys per lock"
+          ],
+          "excluded": [
+            "New locks",
+            "Smart locks",
+            "Door repairs",
+            "Emergency lockout"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": false
+        }
+      ]
+    },
+    {
+      "id": "pest",
+      "name": "Pest control",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "pest_visit",
+          "name": "Pest inspection \u2014 up to 60 minutes",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "visit",
+          "durationMinutes": 60,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Accessible-area inspection",
+            "Written findings and treatment quote"
+          ],
+          "excluded": [
+            "Treatment",
+            "Structural repairs",
+            "Guaranteed elimination"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": true
+        }
+      ]
+    },
+    {
+      "id": "moisture",
+      "name": "Moisture assessment",
+      "hoursPreset": "weekdays",
+      "services": [
+        {
+          "id": "moisture_visit",
+          "name": "Moisture assessment \u2014 up to 90 minutes",
+          "defaultOn": true,
+          "kind": "FIXED",
+          "unit": "visit",
+          "durationMinutes": 90,
+          "durationBasis": "PER_UNIT",
+          "minimumUnits": 1,
+          "maximumUnits": 1,
+          "priceLabel": "Total package price",
+          "baseLabel": "Visit / delivery fee (optional)",
+          "included": [
+            "Non-destructive visual inspection",
+            "Moisture readings",
+            "Written findings and next steps"
+          ],
+          "excluded": [
+            "Mold laboratory tests",
+            "Remediation",
+            "Waterproofing",
+            "Structural certification"
+          ],
+          "travelMinutes": 30,
+          "minimumNoticeMinutes": 1440,
+          "cancellation": "free48",
+          "assessmentOnly": true
+        }
+      ]
+    }
+  ],
+  "serviceTowns": [
+    "Boston",
+    "Brookline",
+    "Allston",
+    "Brighton",
+    "Cambridge",
+    "Somerville",
+    "Medford",
+    "Watertown",
+    "Newton",
+    "Quincy",
+    "Waltham",
+    "Dedham",
+    "Arlington",
+    "Belmont",
+    "Winchester",
+    "Lexington",
+    "Needham",
+    "Wellesley",
+    "Milton",
+    "Malden",
+    "Everett",
+    "Chelsea",
+    "Revere",
+    "Braintree",
+    "Burlington",
+    "Woburn",
+    "Natick",
+    "Weston",
+    "Weymouth",
+    "Reading",
+    "Stoneham",
+    "Wakefield"
+  ]
+}

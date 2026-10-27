@@ -1,0 +1,24 @@
+{
+  "schema": "outsider/local-artifact-supersession-pointer/v1",
+  "status": "SUPERSEDED_PRE_TEMPORAL_QUARANTINE_HOLD_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "final-v3/historical-loss-cost.json",
+    "fileSha256": "sha256:f4fc63d32d1beb667a9aacb96506c315cb4d912cc157ebe8c0c071e04a67ca92",
+    "fileBytes": 7163,
+    "artifactHash": "sha256:448981f4caf23d392a56e08852e7d96d3bfcd10700907799e0d5f25f8e370bf3",
+    "reasonCodes": [
+      "BOUND_PRE_TEMPORAL_AUDIT_CURRENT_CHAIN_CONTRACT",
+      "DID_NOT_PROPAGATE_SEVEN_TEMPORAL_QUARANTINE_RECEIPTS",
+      "DID_NOT_PROPAGATE_FORTY_TEMPORAL_QUARANTINE_REFERENCE_FACTORS"
+    ]
+  },
+  "canonical": {
+    "path": "../final-v4/historical-loss-cost.json",
+    "fileSha256": "sha256:e812c35df7fc55c2ff6dc8bf7e0f4ecd43d46fe6270b5140842d8ea3b118a31f",
+    "fileBytes": 10208,
+    "artifactHash": "sha256:d51252880264d2ba8dc546d715876f864f85da00b29b709c2b154d0f42807f1c",
+    "requiredVerificationLevel": "FULL_PINNED_FINAL_V4_BYTES_RMA_SOURCE_REPLAYED_WITH_TEMPORAL_QUARANTINE_HOLD_CONTRACT_BYTES"
+  },
+  "oldArtifactBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false
+}

@@ -1,0 +1,2257 @@
+{
+  "schema": "outsider/local-artifact-canonical-index/v1",
+  "indexedAt": "2026-08-22T02:49:00.000Z",
+  "indexedAtExternallyAttested": false,
+  "artifactsRoot": "artifacts",
+  "entries": [
+    {
+      "family": "actuarial-model-evolution-20260822",
+      "currentRelease": "final-v5",
+      "canonicalPath": "actuarial-model-evolution-20260822/final-v5/architecture.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:ab509051a9c143a21e61ea64cace700da263d0b839b45b897a8cb19057a033f8",
+      "canonicalFileSha256": "sha256:197a627349ddb6fc1c96c5dfe3dfd555c7aa2ee066a3f3dd9c37f0441e3b01f2",
+      "canonicalFileBytes": 199230,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 199230,
+      "currentDirectoryHash": "sha256:8bf7db15bfc1b274a79261e23ac789a6887c6091f61cd8bcd773fe64f941faa9",
+      "currentDirectoryFiles": [
+        {
+          "path": "architecture.json",
+          "bytes": 199230,
+          "sha256": "sha256:197a627349ddb6fc1c96c5dfe3dfd555c7aa2ee066a3f3dd9c37f0441e3b01f2"
+        }
+      ],
+      "supersededReleaseCount": 4,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "bridgedata-v2-training-evidence-20260822",
+      "currentRelease": "final-v5",
+      "canonicalPath": "bridgedata-v2-training-evidence-20260822/final-v5/evidence.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:1db2d9b893cdb6cfc604154a787d70092b5a6c03d2122f2b81f56fa9e79e97c2",
+      "canonicalFileSha256": "sha256:c5eaba1e0e910733ab6fad1007d90839762a6e8ae97ee68e9ddeb4266da5f25f",
+      "canonicalFileBytes": 36204,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 36204,
+      "currentDirectoryHash": "sha256:181cf7d2d160202cfd49cd5d512d80e0a7c93a1ac0039402edeceabb9873670e",
+      "currentDirectoryFiles": [
+        {
+          "path": "evidence.json",
+          "bytes": 36204,
+          "sha256": "sha256:c5eaba1e0e910733ab6fad1007d90839762a6e8ae97ee68e9ddeb4266da5f25f"
+        }
+      ],
+      "supersededReleaseCount": 4,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "ca-dmv-av-outcome-sensing-20260821",
+      "currentRelease": "final-v3",
+      "canonicalPath": "ca-dmv-av-outcome-sensing-20260821/final-v3/outcome-sensing.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:1894ff1026062b9459cd532a3f75c49c8544d8e87c7aec3e76cfb01389e79138",
+      "canonicalFileSha256": "sha256:ecaab3ebfe7b4989c7c587f4506605f1920bcbacf6da6bfcd3d1b803fd14c5cd",
+      "canonicalFileBytes": 14355,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 14355,
+      "currentDirectoryHash": "sha256:c7a3b7c0b7371549cf0a22ea07e29c6fb331bb7c9a9f96a8007cf68d0bfe5d01",
+      "currentDirectoryFiles": [
+        {
+          "path": "outcome-sensing.json",
+          "bytes": 14355,
+          "sha256": "sha256:ecaab3ebfe7b4989c7c587f4506605f1920bcbacf6da6bfcd3d1b803fd14c5cd"
+        }
+      ],
+      "supersededReleaseCount": 2,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "cdi-ncigf-real-rate-guaranty-20260821",
+      "currentRelease": "final-v1",
+      "canonicalPath": "cdi-ncigf-real-rate-guaranty-20260821/final-v1/evidence.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:2ee3625eac2c35e1be5113a78477ac1128d6a663d2e2ee6c66e53570d09b086a",
+      "canonicalFileSha256": "sha256:2ea48baea38c71f7fe9aeb1029ea2bc00484eb65620a2f43db20e6bfec4a6823",
+      "canonicalFileBytes": 27832,
+      "currentDirectoryFileCount": 3,
+      "currentDirectoryBytes": 29845,
+      "currentDirectoryHash": "sha256:efa27f787348960c76afc9c5768a26022a7f5bcbec4e8a7b451ab76d74acb68d",
+      "currentDirectoryFiles": [
+        {
+          "path": "evidence.json",
+          "bytes": 27832,
+          "sha256": "sha256:2ea48baea38c71f7fe9aeb1029ea2bc00484eb65620a2f43db20e6bfec4a6823"
+        },
+        {
+          "path": "run-receipt.json",
+          "bytes": 1263,
+          "sha256": "sha256:43f8166fb62cd0f83207cb0b117b6dc723418b45835bafba1c765c1a5cd92a79"
+        },
+        {
+          "path": "verification.json",
+          "bytes": 750,
+          "sha256": "sha256:d272968a9cc06ec7090ca1250b3589445eb5a83fdaad8156520ae59dab7de44a"
+        }
+      ],
+      "supersededReleaseCount": 0,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "clinicaltrials-posted-results-evidence-20260822",
+      "currentRelease": "final-v3",
+      "canonicalPath": "clinicaltrials-posted-results-evidence-20260822/final-v3/evidence.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:93ae703761d069b7adbdc8ad781cc2ebb1d91b836aa21e027a5f6657f84840a6",
+      "canonicalFileSha256": "sha256:cc6a3847ca58003db1cf91ba3fdc6cb365152c3c7ca82bb9c6be4b42f491f210",
+      "canonicalFileBytes": 81982,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 81982,
+      "currentDirectoryHash": "sha256:597674413ff95bc10a034d51613bf40ca6b5af53358702900e2746128a276e3b",
+      "currentDirectoryFiles": [
+        {
+          "path": "evidence.json",
+          "bytes": 81982,
+          "sha256": "sha256:cc6a3847ca58003db1cf91ba3fdc6cb365152c3c7ca82bb9c6be4b42f491f210"
+        }
+      ],
+      "supersededReleaseCount": 2,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "fda-maude-outcome-sensing-20260821",
+      "currentRelease": "final-v2",
+      "canonicalPath": "fda-maude-outcome-sensing-20260821/final-v2/outcome-sensing.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:450da676c54f9e8781cff0589618e5f8fbbbf66286c0b38316ae4eb95f643c73",
+      "canonicalFileSha256": "sha256:21478252c218b2732417ab5a1c8b554198c8d52b5b8b6cbdd259d3fb2a164cd5",
+      "canonicalFileBytes": 21368,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 21368,
+      "currentDirectoryHash": "sha256:f07208aef0a93901f414d59d73dc151e98caacce3f25d675b224dd1bc739002b",
+      "currentDirectoryFiles": [
+        {
+          "path": "outcome-sensing.json",
+          "bytes": 21368,
+          "sha256": "sha256:21478252c218b2732417ab5a1c8b554198c8d52b5b8b6cbdd259d3fb2a164cd5"
+        }
+      ],
+      "supersededReleaseCount": 1,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "fra-phmsa-safety-20260821",
+      "currentRelease": "final-v2",
+      "canonicalPath": "fra-phmsa-safety-20260821/final-v2/evidence.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:faf6c83de86433ad2e97abfb63fca2a1b6045692acd39a8ff56916fcd9082836",
+      "canonicalFileSha256": "sha256:97326061fffefe20cb06c6640ea0f1c28e55a2edc2cd8a211ecb8dd1db4ba7ff",
+      "canonicalFileBytes": 33606,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 33606,
+      "currentDirectoryHash": "sha256:da61b358f4ec786634c7fa111bb489efc6461c0392d309f7561c9aecd0246048",
+      "currentDirectoryFiles": [
+        {
+          "path": "evidence.json",
+          "bytes": 33606,
+          "sha256": "sha256:97326061fffefe20cb06c6640ea0f1c28e55a2edc2cd8a211ecb8dd1db4ba7ff"
+        }
+      ],
+      "supersededReleaseCount": 1,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "judgment-fund-gao-real-cases-20260821",
+      "currentRelease": "final-v1",
+      "canonicalPath": "judgment-fund-gao-real-cases-20260821/final-v1/evidence.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:e10699896cd8e7de3ca420f4f7092d4871324110a0a299e8cd9c07f19263109e",
+      "canonicalFileSha256": "sha256:85277537539f6ed38d08a29b5b320c9c4572f237d7d440bebbcf3a5d7c676c09",
+      "canonicalFileBytes": 99103,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 99103,
+      "currentDirectoryHash": "sha256:b4ec12a318414e88e118dc3e4dcb8a650593513ceada46c44d781637f29bf3b0",
+      "currentDirectoryFiles": [
+        {
+          "path": "evidence.json",
+          "bytes": 99103,
+          "sha256": "sha256:85277537539f6ed38d08a29b5b320c9c4572f237d7d440bebbcf3a5d7c676c09"
+        }
+      ],
+      "supersededReleaseCount": 0,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "ncua-pbgc-msha-real-experience-20260821",
+      "currentRelease": "final-v1",
+      "canonicalPath": "ncua-pbgc-msha-real-experience-20260821/final-v1/evidence.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:ddc277d4548b097e7053487ae8572385046e7162246175f2a664d1f87be14973",
+      "canonicalFileSha256": "sha256:42cc5a07643dd638569e4ef6de7e0c81fc196ebcda516040db9cb9ca849d38e4",
+      "canonicalFileBytes": 35972,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 35972,
+      "currentDirectoryHash": "sha256:430076edb93e22d51e79edb4e8d6ee2e076e89e14b9502299acb9193b88f8161",
+      "currentDirectoryFiles": [
+        {
+          "path": "evidence.json",
+          "bytes": 35972,
+          "sha256": "sha256:42cc5a07643dd638569e4ef6de7e0c81fc196ebcda516040db9cb9ca849d38e4"
+        }
+      ],
+      "supersededReleaseCount": 0,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "nhtsa-recall-remedy-evidence-20260821",
+      "currentRelease": "final-v6",
+      "canonicalPath": "nhtsa-recall-remedy-evidence-20260821/final-v6/evidence.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:afad74141571a82e40564f7b43bcacb0ccea2671684f3809e4bf4717af069034",
+      "canonicalFileSha256": "sha256:47ff5b8ccb8f780efe235d39bcf21c890917a54baa4f1de1114881af1fad628e",
+      "canonicalFileBytes": 15646,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 15646,
+      "currentDirectoryHash": "sha256:163877c85c460dac3ac02a01c7d50e16456e3bda3b0b61ca0fc1428a6b51ce8f",
+      "currentDirectoryFiles": [
+        {
+          "path": "evidence.json",
+          "bytes": 15646,
+          "sha256": "sha256:47ff5b8ccb8f780efe235d39bcf21c890917a54baa4f1de1114881af1fad628e"
+        }
+      ],
+      "supersededReleaseCount": 5,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "ntsb-bls-real-outcome-20260821",
+      "currentRelease": "final-v1",
+      "canonicalPath": "ntsb-bls-real-outcome-20260821/final-v1/outcome-evidence.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:a49deae0ee325ce1cbc725ef32143181c824ab10d2826da9b4b139d6e92145f9",
+      "canonicalFileSha256": "sha256:18f4a8d461f0cc49e24f415b76c107a6086187b9a6419532c153ae71dc533c55",
+      "canonicalFileBytes": 46469,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 46469,
+      "currentDirectoryHash": "sha256:e07d2cfe90c36fad14bffa3484a0fabdcddab7f1a430a3312d68866229f9ab9b",
+      "currentDirectoryFiles": [
+        {
+          "path": "outcome-evidence.json",
+          "bytes": 46469,
+          "sha256": "sha256:18f4a8d461f0cc49e24f415b76c107a6086187b9a6419532c153ae71dc533c55"
+        }
+      ],
+      "supersededReleaseCount": 0,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "public-agent-wave2-20260821",
+      "currentRelease": "final-v1",
+      "canonicalPath": "public-agent-wave2-20260821/final-v1/run-receipt.json",
+      "semanticHashField": "receiptHash",
+      "semanticHash": "sha256:98fb29cdb1210e88d18a869edeb4ee3aba8387a2a2dd9ebe6d74c4230ea67030",
+      "canonicalFileSha256": "sha256:ae3b7b5fb81137334b500649034b71d6c5bb71b66e0560766dfb4f4a5d7e5d6b",
+      "canonicalFileBytes": 1754,
+      "currentDirectoryFileCount": 7,
+      "currentDirectoryBytes": 4198266,
+      "currentDirectoryHash": "sha256:d3942b544ba08941d2915d48434542a2debde3f340dceeb38e519b366fef4fd8",
+      "currentDirectoryFiles": [
+        {
+          "path": "acquisition-manifest.json",
+          "bytes": 11878,
+          "sha256": "sha256:96167c171c8b23456547cb7c142b387e47a18ad7c51353503ba88c3beb712052"
+        },
+        {
+          "path": "candidate-decision.json",
+          "bytes": 5436,
+          "sha256": "sha256:2e9ca27ba00c8e5e98be35beea7c05b2cd78964d9caea924820a643c789e1283"
+        },
+        {
+          "path": "effect-summary.json",
+          "bytes": 3544,
+          "sha256": "sha256:a2b192b7756d57176a7b2f4f6fad9ffcffd4e7795e87d11e95b8ed30108350a6"
+        },
+        {
+          "path": "full-source-verification.json",
+          "bytes": 1425,
+          "sha256": "sha256:2f82b27b4f99b6f0a0410c0ed1ebfc2f1319cb5004eca26733f2ea6c031952a9"
+        },
+        {
+          "path": "normalized-records.jsonl",
+          "bytes": 4057390,
+          "sha256": "sha256:d6f2ec8dc0391f12ece6c14095a7bfedb133cb27edc17c619e192c15b978564d"
+        },
+        {
+          "path": "record-set.json",
+          "bytes": 116839,
+          "sha256": "sha256:68181e737d9fafd1d41be705848743d52d28ef47f520b5e17373c1ca356cb93e"
+        },
+        {
+          "path": "run-receipt.json",
+          "bytes": 1754,
+          "sha256": "sha256:ae3b7b5fb81137334b500649034b71d6c5bb71b66e0560766dfb4f4a5d7e5d6b"
+        }
+      ],
+      "supersededReleaseCount": 0,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "public-agent-wave3-20260821",
+      "currentRelease": "final-v1",
+      "canonicalPath": "public-agent-wave3-20260821/final-v1/run-receipt.json",
+      "semanticHashField": "receiptHash",
+      "semanticHash": "sha256:05d42c8d1311929d149a0f2666e07151214f7008f874f27a2a9f569c76831377",
+      "canonicalFileSha256": "sha256:d0301268b2b40419f61c9f81f7c2f48ac9acd7a06f93da98ac8b3b0081240265",
+      "canonicalFileBytes": 1754,
+      "currentDirectoryFileCount": 7,
+      "currentDirectoryBytes": 796327,
+      "currentDirectoryHash": "sha256:e0d96735bc94efb2b86244caf20f1f86df59b62afdab0d175906b018a56780c2",
+      "currentDirectoryFiles": [
+        {
+          "path": "candidate-decision.json",
+          "bytes": 2187,
+          "sha256": "sha256:e1f432e813180244aab1249c263ca1e74c04c1a7e58de60e257ce4c3a1d5d1d3"
+        },
+        {
+          "path": "metadata-manifest.json",
+          "bytes": 4432,
+          "sha256": "sha256:f422d51bd090e2b76c3e7dab3d65fbe4019bf0d22842000158d4f186b5d1312a"
+        },
+        {
+          "path": "metadata-summary.json",
+          "bytes": 1730,
+          "sha256": "sha256:4e33d84239d9186e9dae7d7a06e55673e95516f730532c962af0469cb3f6dbf1"
+        },
+        {
+          "path": "metadata-verification.json",
+          "bytes": 1527,
+          "sha256": "sha256:d69e377773d6eef5cddcb1226a0598e720eed53dcd0c568d53f441b465fa0df5"
+        },
+        {
+          "path": "normalized-labels.jsonl",
+          "bytes": 762609,
+          "sha256": "sha256:26cfdc225ab5c1de59f6194f9294a397a29062cfe1ebdef927be02193b9b3cf5"
+        },
+        {
+          "path": "record-set.json",
+          "bytes": 22088,
+          "sha256": "sha256:525bf89b8a2a06ca1d33ee8b10bce13c97148332a5e72d6bd9d021a95edecda8"
+        },
+        {
+          "path": "run-receipt.json",
+          "bytes": 1754,
+          "sha256": "sha256:d0301268b2b40419f61c9f81f7c2f48ac9acd7a06f93da98ac8b3b0081240265"
+        }
+      ],
+      "supersededReleaseCount": 0,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "public-agent-wave4-20260821",
+      "currentRelease": "final-v2",
+      "canonicalPath": "public-agent-wave4-20260821/final-v2/run-receipt.json",
+      "semanticHashField": "receiptHash",
+      "semanticHash": "sha256:4e1e3af969c33eda8d9fe0103f9c8870b4f8e8e133861e8b620386db845178bf",
+      "canonicalFileSha256": "sha256:d6d1a7da3d2fd586b1332f0fb032e3eeff50c54e9ea0e58096547423d785583c",
+      "canonicalFileBytes": 2000,
+      "currentDirectoryFileCount": 7,
+      "currentDirectoryBytes": 126810,
+      "currentDirectoryHash": "sha256:627007c55c4cd1efae2d24300f492b4fd5c139a7bfcf35392cca00ffd08c2921",
+      "currentDirectoryFiles": [
+        {
+          "path": "candidate-decision.json",
+          "bytes": 2943,
+          "sha256": "sha256:88ab21e41f44799fdb65c801f1831e4d90edfb3e2aac5ce5b112f384373dbe83"
+        },
+        {
+          "path": "failure-trace-manifest.json",
+          "bytes": 5714,
+          "sha256": "sha256:8756511081256d9e467b876a050217a0d73d77a9d1712c1f33ce2ca7313c3283"
+        },
+        {
+          "path": "failure-trace-summary.json",
+          "bytes": 3420,
+          "sha256": "sha256:888eaa0abfa9996317f58fec90b47f8850a4ee20b9cc2a2e9d587179cb31d636"
+        },
+        {
+          "path": "failure-trace-verification.json",
+          "bytes": 2874,
+          "sha256": "sha256:90ec1a00dabee0e3569b23c6458c794d0dc33caa1c248f8a56a52c3a4e9dae24"
+        },
+        {
+          "path": "normalized-failure-traces.jsonl",
+          "bytes": 106804,
+          "sha256": "sha256:4c0a2169a33217b441a9b3b362388f4fc1e1e26dcd20f5f9d88924a3d36141ac"
+        },
+        {
+          "path": "record-set.json",
+          "bytes": 3055,
+          "sha256": "sha256:6deb22ef9e7b9e7d7ce15ca2ce7c616c966d5b0fb2139d0c82006f507a3cb76c"
+        },
+        {
+          "path": "run-receipt.json",
+          "bytes": 2000,
+          "sha256": "sha256:d6d1a7da3d2fd586b1332f0fb032e3eeff50c54e9ea0e58096547423d785583c"
+        }
+      ],
+      "supersededReleaseCount": 1,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "public-evidence-wave5-20260821",
+      "currentRelease": "final-v3",
+      "canonicalPath": "public-evidence-wave5-20260821/final-v3/verification.json",
+      "semanticHashField": "verificationHash",
+      "semanticHash": "sha256:60849386032e4a10c8c1327188d4a154356dc0526388d10c2bde304f10005f48",
+      "canonicalFileSha256": "sha256:48eada41930cbb92f2504cc64b8c260fb773289e1471cf197f9df32b7d5ac7ab",
+      "canonicalFileBytes": 1342,
+      "currentDirectoryFileCount": 5,
+      "currentDirectoryBytes": 156636,
+      "currentDirectoryHash": "sha256:4a674d70096294211a2bea413c412b092de57aef286fad63c645e5a7a23a25c7",
+      "currentDirectoryFiles": [
+        {
+          "path": "manifest.json",
+          "bytes": 2992,
+          "sha256": "sha256:aff692d561b230af6a86a65297fc499beccbbc2f212e62e9c0d3d5b66d4eb864"
+        },
+        {
+          "path": "record-set.json",
+          "bytes": 3915,
+          "sha256": "sha256:209ead562f1fbd054c8053e75184db89fd6dea30d46d3f9ee94cd39740d84d7e"
+        },
+        {
+          "path": "records.jsonl",
+          "bytes": 145901,
+          "sha256": "sha256:74eb5ddf8a20f3850db659653c08145d1653edabdbbde796d4544e3c2984d8e8"
+        },
+        {
+          "path": "summary.json",
+          "bytes": 2486,
+          "sha256": "sha256:1f48dcfe7b1ebce34636fc07a4b55b50f913067254ebaf17815fe2a1e2966a71"
+        },
+        {
+          "path": "verification.json",
+          "bytes": 1342,
+          "sha256": "sha256:48eada41930cbb92f2504cc64b8c260fb773289e1471cf197f9df32b7d5ac7ab"
+        }
+      ],
+      "supersededReleaseCount": 2,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "public-evidence-wave5-intake-20260821",
+      "currentRelease": "final-v3",
+      "canonicalPath": "public-evidence-wave5-intake-20260821/final-v3/registry-verification.json",
+      "semanticHashField": "stateHash",
+      "semanticHash": "sha256:8c4178da549e0d7c4f133785d84ff098389bf54df5315213f5daad56b08306b1",
+      "canonicalFileSha256": "sha256:d06feb8fc5d0e6fd342ac81bd1551e25a46abab43218c793a9baad1d7ebb6509",
+      "canonicalFileBytes": 795,
+      "currentDirectoryFileCount": 9,
+      "currentDirectoryBytes": 638739,
+      "currentDirectoryHash": "sha256:e43a0a641f16501293f7b218a522ba35e418c86955b513a05c7cac256d9d0d01",
+      "currentDirectoryFiles": [
+        {
+          "path": "bootstrap-diff.json",
+          "bytes": 5044,
+          "sha256": "sha256:3f73752d03d8dbd0f93a6a215cc8a5fa743a7f203b10fde9e87832f95c775a36"
+        },
+        {
+          "path": "projection.jsonl",
+          "bytes": 201734,
+          "sha256": "sha256:2c7e37806fba5f80f22a0df48ca7b4c2beebf822b7daaf05e11a14041129d3d5"
+        },
+        {
+          "path": "registry/diffs/ddb9b034027a2a76c9e6569dc4f1099e13c775debebde295c8966d2aca924a45.json",
+          "bytes": 5044,
+          "sha256": "sha256:3f73752d03d8dbd0f93a6a215cc8a5fa743a7f203b10fde9e87832f95c775a36"
+        },
+        {
+          "path": "registry/events.jsonl",
+          "bytes": 1014,
+          "sha256": "sha256:e4fe3aa7095cf9d3be7f5f8db7dc1ab75e680dd7d945748c09c6cf4bc349010c"
+        },
+        {
+          "path": "registry/snapshots/2d40c4e44a7d9edb37ce15b526c8aa07bdca694db7cece8e9b3437c8307192ad.json",
+          "bytes": 208570,
+          "sha256": "sha256:b42a912a7a9ffcd31f9a0bf9670c078b71741edfb61ea722a203d22cd4f98ed5"
+        },
+        {
+          "path": "registry/state.json",
+          "bytes": 1042,
+          "sha256": "sha256:e711cc727a2433cd64232dadd0f2089f95f5cf1259eb57f0b1d985bb248cb39f"
+        },
+        {
+          "path": "registry-verification.json",
+          "bytes": 795,
+          "sha256": "sha256:d06feb8fc5d0e6fd342ac81bd1551e25a46abab43218c793a9baad1d7ebb6509"
+        },
+        {
+          "path": "snapshot.json",
+          "bytes": 208570,
+          "sha256": "sha256:b42a912a7a9ffcd31f9a0bf9670c078b71741edfb61ea722a203d22cd4f98ed5"
+        },
+        {
+          "path": "summary.json",
+          "bytes": 6926,
+          "sha256": "sha256:6b847b105e8583cd89ac71b41e3b9621490eddc30d05d7466647252f6ef9e0aa"
+        }
+      ],
+      "supersededReleaseCount": 1,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "real-case-gap-evidence-catalog-20260821",
+      "currentRelease": "final-v10",
+      "canonicalPath": "real-case-gap-evidence-catalog-20260821/final-v10/catalog.json",
+      "semanticHashField": "catalogHash",
+      "semanticHash": "sha256:c916ef5930614348b705f34b8d1c740f498c9d784f179b2e35c576035af79980",
+      "canonicalFileSha256": "sha256:b844b34b34663bf9ba2a2d208d2cc29846faf6a6bf7376453c2ec869b5c96f02",
+      "canonicalFileBytes": 66388,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 66388,
+      "currentDirectoryHash": "sha256:4d642aa4b31b483d3e47524197d42558c0383d41b07c6b8ef3e33874585b1fcf",
+      "currentDirectoryFiles": [
+        {
+          "path": "catalog.json",
+          "bytes": 66388,
+          "sha256": "sha256:b844b34b34663bf9ba2a2d208d2cc29846faf6a6bf7376453c2ec869b5c96f02"
+        }
+      ],
+      "supersededReleaseCount": 8,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "real-case-responsibility-flywheel-20260821",
+      "currentRelease": "final-v9",
+      "canonicalPath": "real-case-responsibility-flywheel-20260821/final-v9/flywheel.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:7eba1092e0cb33b246410664a9fbe5f7c8615f7b866cc1d3c0ba3ed6f2c8583e",
+      "canonicalFileSha256": "sha256:cf08a696940ea5781102a1c24e2cabe34a1cbc33bbad3782be2bf4efdfd01ff4",
+      "canonicalFileBytes": 608566,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 608566,
+      "currentDirectoryHash": "sha256:6d0a9caa1b2b8f8fa80aa5a1eef78807f4e266c3a606f85af440d5f137636279",
+      "currentDirectoryFiles": [
+        {
+          "path": "flywheel.json",
+          "bytes": 608566,
+          "sha256": "sha256:cf08a696940ea5781102a1c24e2cabe34a1cbc33bbad3782be2bf4efdfd01ff4"
+        }
+      ],
+      "supersededReleaseCount": 8,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "real-evidence-stage-progress-20260821",
+      "currentRelease": "final-v1",
+      "canonicalPath": "real-evidence-stage-progress-20260821/final-v1/progress.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:33e814497547ed4c49bd7c7e05f238915cd19cd71a6280ae20276364ba3a2b41",
+      "canonicalFileSha256": "sha256:a48ec04b872e0ea4215c0b20d697effb0a817c287d583fadbd2cd4de70540e7a",
+      "canonicalFileBytes": 20848,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 20848,
+      "currentDirectoryHash": "sha256:4e9490cdf40384b3db824e11759c7b7d75a23e4b8279aa4a72048b41f9652e4e",
+      "currentDirectoryFiles": [
+        {
+          "path": "progress.json",
+          "bytes": 20848,
+          "sha256": "sha256:a48ec04b872e0ea4215c0b20d697effb0a817c287d583fadbd2cd4de70540e7a"
+        }
+      ],
+      "supersededReleaseCount": 0,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "real-responsibility-math-diagnostics-20260821",
+      "currentRelease": "final-v8",
+      "canonicalPath": "real-responsibility-math-diagnostics-20260821/final-v8/diagnostics.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:f9a998fcd3f9bf8c608ed514a03893cbf05dd99f9475451ae4768ad8a267a07d",
+      "canonicalFileSha256": "sha256:746d157a7263ba8bd3022f2ecd34a565593a7a14b16c0133acfcf26c57977cc3",
+      "canonicalFileBytes": 473021,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 473021,
+      "currentDirectoryHash": "sha256:0fd417d2e82ed1c968af2a941e4839e0e5a6f13c70200b53c57bf35d3a81ee84",
+      "currentDirectoryFiles": [
+        {
+          "path": "diagnostics.json",
+          "bytes": 473021,
+          "sha256": "sha256:746d157a7263ba8bd3022f2ecd34a565593a7a14b16c0133acfcf26c57977cc3"
+        }
+      ],
+      "supersededReleaseCount": 7,
+      "supersessionChainEstablished": true
+    },
+    {
+      "family": "waymo-safety-impact-evidence-20260822",
+      "currentRelease": "final-v5",
+      "canonicalPath": "waymo-safety-impact-evidence-20260822/final-v5/evidence.json",
+      "semanticHashField": "artifactHash",
+      "semanticHash": "sha256:edccce782d93f0f8f6f01c14f427d44e4137d0b1cf5c040a0c84d0ada9da0a7a",
+      "canonicalFileSha256": "sha256:5bbb3c40d373551b5f3eeccc1521bd06c62ec0b46a23c8e0de7dda09313169bd",
+      "canonicalFileBytes": 29849,
+      "currentDirectoryFileCount": 1,
+      "currentDirectoryBytes": 29849,
+      "currentDirectoryHash": "sha256:3f22f9e0e3dcd09730a35e906a1eaf8793d8e9260f7d7973b08a50fb588bf423",
+      "currentDirectoryFiles": [
+        {
+          "path": "evidence.json",
+          "bytes": 29849,
+          "sha256": "sha256:5bbb3c40d373551b5f3eeccc1521bd06c62ec0b46a23c8e0de7dda09313169bd"
+        }
+      ],
+      "supersededReleaseCount": 4,
+      "supersessionChainEstablished": true
+    }
+  ],
+  "versionedFamilyCount": 21,
+  "unversionedQuarantine": [
+    {
+      "family": "actuarial-mechanism-shadow-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-negative-20260812-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-negative-20260812-e",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-negative-20260812-f",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-negative-20260812-g",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-negative-20260812-h",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-negative-20260812-i",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-negative-20260812-j",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-negative-20260812-k",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-negative-20260812-l",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-c",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-d",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-e",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-f",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-g",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-h",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-i",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-j",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-k",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-l",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-m",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-n",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "agent-team-probe-20260812-o",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "cowork-conformance-1.3.81",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "cowork-conformance-20260811",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "cowork-release-1.3.88",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "cross-dataset-public-eval-20260820",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "curate-droid100-20260819",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "curate-droid100-20260820",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "curate-public-robotics-20260820",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "empirical-factor-ledger-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "empirical-factor-ledger-v2-20260821.superseded-pre-nhtsa-observation-boundary",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "empirical-factor-ledger-v2-nhtsa-observation-boundary-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-1.3.85-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-1.3.86-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260811",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260811-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260811-c",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260811-d",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260811-e",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260811-f",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260811-g",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260811-h",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260811-i",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260812-j",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260812-k",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260812-l",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-live-20260812-v",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-wake-smoke-20260812-m",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-wake-smoke-20260812-n",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-wake-smoke-20260812-p",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-wake-smoke-20260812-q",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-wake-smoke-20260812-r",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-wake-smoke-20260812-s",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-wake-smoke-20260812-t",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "endurance-wake-smoke-20260812-u",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "eval-bin",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "factor-predictive-shadow-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "fema-real-cases-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "institutional-capital-claims-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "prospective-simulation-20260820",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "public-agent-corpus-20260820",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-cost-pilot-1.3.30-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-cost-pilot-1.3.30-20260814-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-cost-pilot-1.3.30-20260814-c",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-cost-pilot-1.3.30-20260814-d",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-formal-1.3.31-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-formal-1.3.32-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-formal-1.3.43-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-formal-1.3.43-20260815-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-formal-1.3.44-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-formal-1.3.44-20260815-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-formal-1.3.45-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-formal-1.3.46-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-formal-1.3.47-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.12-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.12-20260813-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.13-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.17-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.18-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.19-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.22-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.23-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.24-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.25-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.26-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.27-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.28-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.29-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.30-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.54",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.57",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.67-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.68-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.69-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.69-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.70-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.71-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.72-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.73-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.74-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.76-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.77-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.78-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.81-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.82-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.83-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.85-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.86-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r1-repeatability-1.3.88-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.12-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.12-20260813-b-negative",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.12-20260813-c-formal",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.19-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.24-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.25-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.28-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.30-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.54-evaluator",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.55-evaluator",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.56-evaluator",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.57-evaluator",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.67-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.68-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.69-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.71-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.72-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.73-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.76-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.77-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.78-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.81-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.83-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.83-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.84-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.85-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-1.3.86-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-formal-1.3.54",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-formal-1.3.55",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-formal-1.3.55-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-formal-1.3.56",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-negative-1.3.54",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-negative-1.3.56",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-negative-1.3.57",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-agent-team-negative-1.3.57-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-formal-1.3.31-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-formal-1.3.31-20260814-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-formal-1.3.32-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-formal-1.3.43-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-formal-1.3.46-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r2-formal-1.3.47-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.19-20260813-a-01",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.19-v2-20260813-01",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.19-v2-20260813-02",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.19-v2-20260813-03",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.25-20260814-01",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.25-20260814-02",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.25-20260814-03",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.25-20260814-04",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.25-20260814-05",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.25-20260814-06",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.25-20260814-07",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.25-20260814-08",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.85-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-1.3.86-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-correction-1.3.55",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-correction-1.3.56",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-correction-1.3.56-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-correction-1.3.56-c",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-agent-team-correction-1.3.57",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-formal-1.3.32-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-formal-1.3.33-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-formal-1.3.34-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-formal-1.3.35-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-formal-1.3.36-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-formal-1.3.43-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-formal-1.3.46-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-formal-1.3.47-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.28-20260814-01",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.28-20260814-02",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.67-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.68-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.69-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.71-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.72-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.73-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.76-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.77-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.78-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r3-integration-correction-1.3.81-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-1.3.14-runtime",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-1.3.15-runtime",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-1.3.16-runtime",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-1.3.17-runtime",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.14-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.15-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.16-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.17-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.18-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.19-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.21-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.22-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.23-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.24-20260813-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.25-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.26-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.27-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.28-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.29-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.30-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.36-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.41-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.42-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.43-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.43-20260815-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.44-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.45-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.46-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.47-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.54",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.56",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.57",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.65",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.66",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.67",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.68",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.69",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.70",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.71",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.72",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.73",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.74",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.76",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.77",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.78",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.80",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.81",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.82",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.83",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.85-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.86-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r4-recovery-1.3.88-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-1.3.81-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-1.3.88-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-1.3.88-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-1.3.89-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-1.3.89-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-1.3.89-c",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-1.3.90-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-1.3.91-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-1.3.92-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-smoke-1.3.57",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-smoke-1.3.57-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-smoke-1.3.57-c",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-smoke-1.3.57-d",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-smoke-1.3.58-e",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-smoke-1.3.58-f",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-smoke-1.3.58-g",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-endurance-smoke-1.3.58-h",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.43-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.46-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.47-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.48-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.48-20260815-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.58-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.59-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.61-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.62-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.63-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.64-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.67-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.68-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.69-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.73-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.76-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.77-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.78-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.79-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-formal-1.3.80-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.36-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.38-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.39-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.39-20260815-b",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.39-20260815-b2",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.39-20260815-c",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.39-20260815-d",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.40-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.47-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.49-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.50-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.51-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.52-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.53-20260815-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.68-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.77-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "r5-smoke-1.3.78-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "readiness-gap-ledger-v2-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "real-loss-calibration-shadow-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "reality-consequence-aiid-20260817",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "reality-consequence-osha-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "reality-institutional-ai-remedies-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "reality-stewardship-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "reliability-1.3.13-20260813",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "remedy-payment-recovery-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "runtime-1.3.18",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "runtime-1.3.19",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "runtime-1.3.20",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "runtime-1.3.21",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "runtime-1.3.32-r2",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "runtime-1.3.33-r3",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "second-host-1.3.81",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage1-curate-corpus-registry-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage1-curate-corpus-registry-20260821-superseded-v1",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage1-curate-corpus-registry-20260821-superseded-v2-source-claim-semantics",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage1-curate-corpus-registry-all-evidence-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage1-curate-corpus-registry-all-evidence-v2-nhtsa-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage1-curate-corpus-registry-wave3-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage1-curate-corpus-registry-wave3-20260821-superseded-pre-hardening",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage1-lifecycle-frontier-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage1-lifecycle-frontier-v2-nhtsa-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage1-lifecycle-frontier-v3-profiled-nhtsa-20260821",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage2-source-20260820",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage234-cas-schedule-p-2025",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "stage234-rma-crop-insurance-2024",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "supervised-experience-1.3.25-20260814-a",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    },
+    {
+      "family": "waymo-nhtsa-robot-outcome-exposure-20260822",
+      "status": "UNVERSIONED_OR_NONCANONICAL_QUARANTINE",
+      "selectedAsCanonical": false
+    }
+  ],
+  "unversionedQuarantineCount": 328,
+  "maximumVersionIsNotSelectionAuthority": true,
+  "declarationIsSelectionAuthority": true,
+  "indexReplaysArtifactSources": false,
+  "indexHash": "sha256:3ff8583bd4ca6bc2585dea31de24d3c1501f600385c715078f93f3c76f7d9312"
+}

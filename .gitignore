@@ -1,5 +1,5 @@
 # Private run data and local state
-artifacts/
+/artifacts/
 r2-agent-team-1.3.12-20260813-a/
 .outsider/
 
@@ -13,6 +13,7 @@ node_modules/
 .wrangler/
 .DS_Store
 *.log
+!evidence/**/*.log
 
 # Credentials and machine-local configuration
 .env

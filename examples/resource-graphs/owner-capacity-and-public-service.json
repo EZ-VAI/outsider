@@ -1,0 +1,48 @@
+{
+  "requestId": "r43-cross-category-owner-capacity-service",
+  "goal": "Prepare an existing owner-controlled test time resource while creating a public coordination service. Confirm the hold before service work, independently read both live service routes and the portable copy, check that the same hold is still current, then release the test hold. This is resource preparation, not a real meeting or a booked human service.",
+  "completionWithinMs": 240000,
+  "taskInput": {
+    "publicDiscoveryApproved": true,
+    "graph": {
+      "summary": "A temporary time-capacity plus digital-service network, jointly observed; release the test hold after successful handoff.",
+      "missingFacts": [],
+      "requirements": [
+        {
+          "id": "time_resource",
+          "outcome": "An authorized owner test slot is held during dependent resource preparation and released after the joint check.",
+          "capability": "RESOURCE_TIME_SLOT_HOLD",
+          "dependsOn": [],
+          "acceptance": ["OWNER_TEST_SLOT_HELD_THROUGH_JOINT_ACCEPTANCE_THEN_RELEASED_V1"],
+          "recoveryNeeds": ["If the owned resource cannot be held, do not promise the dependent task. No independent replacement seller is currently connected."],
+          "resourceKinds": ["OWNER_RESOURCE_GATEWAY", "TIME_CAPACITY"],
+          "discoveryQueries": ["Cal.com public API available time slots temporary reservations"],
+          "candidateDocumentationUrls": ["https://cal.com/docs/api-reference/v2/slots/reserve-a-slot"]
+        },
+        {
+          "id": "coordination_service",
+          "outcome": "A queryable public coordination dataset on two different providers, with a portable copy, delivered while the test time resource is still held.",
+          "capability": "PUBLIC_DATASET_SERVICE_V1",
+          "dependsOn": ["time_resource"],
+          "acceptance": ["EXACT_PUBLIC_RECORDS_TWO_QUERY_SERVICES_AND_PORTABLE_COPY_V1"],
+          "recoveryNeeds": ["A different-provider live query service plus an exact portable copy"],
+          "resourceKinds": ["DATABASE_SERVICE", "SERVERLESS_HTTP_SERVICE", "PORTABLE_ARTIFACT", "INDEPENDENT_WITNESS"],
+          "discoveryQueries": ["temporary public database REST API accountless provisioning"],
+          "candidateDocumentationUrls": []
+        }
+      ]
+    },
+    "operationInputs": {
+      "time_resource": {"windowStart": "2026-09-07T00:00:00.000Z", "windowEnd": "2026-09-09T00:00:00.000Z"},
+      "coordination_service": {
+        "visibility": "PUBLIC",
+        "networkPolicy": {"primaryAccount": "ACCOUNTLESS", "independentlyQueryableReplica": true},
+        "records": [
+          {"id": "scope", "value": "Public resource coordination preparation; no meeting, invitation or human service booked."},
+          {"id": "dependency", "value": "Owner time resource must be held before service execution and remain held through the fresh joint check."},
+          {"id": "delivery", "value": "Two live query services and one portable copy; the owner test hold is released after handoff."}
+        ]
+      }
+    }
+  }
+}

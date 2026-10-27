@@ -1,0 +1,56 @@
+{
+  "requestId": "r44-live-allocation-output-handoff",
+  "goal": "Acquire a temporary hold on the existing authorized owner test resource, then deliver its actual returned start, end, lease expiry and receipt hash through two query services and a portable copy. Fill those fields from this order's provider response, not caller-supplied values. Check the actual hold and published contents together, then release the test hold. No meeting, invitation or payment.",
+  "completionWithinMs": 240000,
+  "taskInput": {
+    "publicDiscoveryApproved": true,
+    "graph": {
+      "summary": "Deliver a public handoff of the actual time resource acquired by this order; jointly check the held resource and its delivered metadata, then release the test hold.",
+      "missingFacts": [],
+      "requirements": [
+        {
+          "id": "time_resource",
+          "outcome": "An authorized owner test resource is temporarily held and yields native allocation outputs.",
+          "capability": "RESOURCE_TIME_SLOT_HOLD",
+          "dependsOn": [],
+          "acceptance": ["OWNER_TEST_SLOT_HELD_THROUGH_JOINT_ACCEPTANCE_THEN_RELEASED_V1"],
+          "recoveryNeeds": ["No connected independent replacement owner; if the resource cannot be held, do not promise the task."],
+          "resourceKinds": ["TIME_CAPACITY", "OWNER_GATEWAY"],
+          "discoveryQueries": ["public API temporary time slot reservation"],
+          "candidateDocumentationUrls": []
+        },
+        {
+          "id": "resource_handoff",
+          "outcome": "Two queryable services and a portable copy contain this order's actual acquired resource metadata.",
+          "capability": "PUBLIC_DATASET_SERVICE_V1",
+          "dependsOn": ["time_resource"],
+          "acceptance": ["RESOURCE_ALLOCATION_OUTPUTS_MATERIALIZED_TO_PUBLIC_SERVICES_V1"],
+          "recoveryNeeds": ["Different-provider live query service plus portable copy"],
+          "resourceKinds": ["PUBLIC_QUERY_SERVICE", "PORTABLE_HANDOFF", "INDEPENDENT_WITNESS"],
+          "discoveryQueries": ["temporary public database REST API accountless provisioning"],
+          "candidateDocumentationUrls": []
+        }
+      ]
+    },
+    "operationInputs": {
+      "time_resource": {"windowStart": "2026-09-07T00:00:00.000Z", "windowEnd": "2026-09-09T00:00:00.000Z"},
+      "resource_handoff": {
+        "visibility": "PUBLIC",
+        "networkPolicy": {"primaryAccount": "ACCOUNTLESS", "independentlyQueryableReplica": true},
+        "records": [
+          {"id": "slot-start", "value": ""},
+          {"id": "slot-end", "value": ""},
+          {"id": "original-hold-expiry", "value": ""},
+          {"id": "native-allocation-receipt-hash", "value": ""},
+          {"id": "scope", "value": "Historical metadata of this order's owner test hold. The hold is released after joint acceptance. Not a current booking, meeting or service commitment."}
+        ]
+      }
+    },
+    "inputBindings": [
+      {"sourceNodeId": "time_resource", "sourceOutput": "slotStart", "targetNodeId": "resource_handoff", "targetRecordId": "slot-start"},
+      {"sourceNodeId": "time_resource", "sourceOutput": "slotEnd", "targetNodeId": "resource_handoff", "targetRecordId": "slot-end"},
+      {"sourceNodeId": "time_resource", "sourceOutput": "holdValidUntil", "targetNodeId": "resource_handoff", "targetRecordId": "original-hold-expiry"},
+      {"sourceNodeId": "time_resource", "sourceOutput": "holdReceiptHash", "targetNodeId": "resource_handoff", "targetRecordId": "native-allocation-receipt-hash"}
+    ]
+  }
+}

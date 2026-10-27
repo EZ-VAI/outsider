@@ -1,0 +1,320 @@
+{
+  "schema": "outsider/local-artifact-canonical-declaration/v2",
+  "indexedAt": "2026-09-02T22:23:27.000Z",
+  "entries": [
+    {
+      "family": "actuarial-model-evolution-20260822",
+      "currentRelease": "final-v7",
+      "canonicalFile": "architecture.json",
+      "semanticHashField": "artifactHash",
+      "selectionStatus": "ARCHIVED_CROSS_FAMILY_PREDECESSOR_ONLY"
+    },
+    {
+      "family": "actuarial-model-evolution-20260828",
+      "currentRelease": "final-v11",
+      "canonicalFile": "architecture.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "bridgedata-v2-training-evidence-20260822",
+      "currentRelease": "final-v5",
+      "canonicalFile": "evidence.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "ca-dmv-av-outcome-sensing-20260821",
+      "currentRelease": "final-v3",
+      "canonicalFile": "outcome-sensing.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "cdi-ncigf-real-rate-guaranty-20260821",
+      "currentRelease": "final-v1",
+      "canonicalFile": "evidence.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "clinicaltrials-posted-results-evidence-20260822",
+      "currentRelease": "final-v3",
+      "canonicalFile": "evidence.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "fda-maude-outcome-sensing-20260821",
+      "currentRelease": "final-v2",
+      "canonicalFile": "outcome-sensing.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "fra-phmsa-safety-20260821",
+      "currentRelease": "final-v2",
+      "canonicalFile": "evidence.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "institutional-capital-claims-20260828",
+      "currentRelease": "final-v4",
+      "canonicalFile": "evidence.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "judgment-fund-gao-real-cases-20260821",
+      "currentRelease": "final-v1",
+      "canonicalFile": "evidence.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "ncua-pbgc-msha-real-experience-20260821",
+      "currentRelease": "final-v1",
+      "canonicalFile": "evidence.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "nhtsa-recall-remedy-evidence-20260821",
+      "currentRelease": "final-v6",
+      "canonicalFile": "evidence.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "ntsb-bls-real-outcome-20260821",
+      "currentRelease": "final-v2",
+      "canonicalFile": "outcome-evidence.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "public-agent-wave2-20260821",
+      "currentRelease": "final-v1",
+      "canonicalFile": "run-receipt.json",
+      "semanticHashField": "receiptHash"
+    },
+    {
+      "family": "public-agent-wave3-20260821",
+      "currentRelease": "final-v1",
+      "canonicalFile": "run-receipt.json",
+      "semanticHashField": "receiptHash"
+    },
+    {
+      "family": "public-agent-wave4-20260821",
+      "currentRelease": "final-v2",
+      "canonicalFile": "run-receipt.json",
+      "semanticHashField": "receiptHash"
+    },
+    {
+      "family": "public-evidence-wave5-20260821",
+      "currentRelease": "final-v3",
+      "canonicalFile": "verification.json",
+      "semanticHashField": "verificationHash"
+    },
+    {
+      "family": "public-evidence-wave5-intake-20260821",
+      "currentRelease": "final-v3",
+      "canonicalFile": "snapshot.json",
+      "semanticHashField": "snapshotHash"
+    },
+    {
+      "family": "real-case-gap-evidence-catalog-20260821",
+      "currentRelease": "final-v11",
+      "canonicalFile": "catalog.json",
+      "semanticHashField": "catalogHash",
+      "selectionStatus": "ARCHIVED_CROSS_FAMILY_PREDECESSOR_ONLY"
+    },
+    {
+      "family": "real-case-gap-evidence-catalog-20260828",
+      "currentRelease": "final-v18",
+      "canonicalFile": "catalog.json",
+      "semanticHashField": "catalogHash"
+    },
+    {
+      "family": "real-case-responsibility-flywheel-20260821",
+      "currentRelease": "final-v10",
+      "canonicalFile": "flywheel.json",
+      "semanticHashField": "artifactHash",
+      "selectionStatus": "ARCHIVED_CROSS_FAMILY_PREDECESSOR_ONLY"
+    },
+    {
+      "family": "real-case-responsibility-flywheel-20260828",
+      "currentRelease": "final-v16",
+      "canonicalFile": "flywheel.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "real-evidence-stage-progress-20260821",
+      "currentRelease": "final-v1",
+      "canonicalFile": "progress.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "real-responsibility-math-diagnostics-20260821",
+      "currentRelease": "final-v10",
+      "canonicalFile": "diagnostics.json",
+      "semanticHashField": "artifactHash",
+      "selectionStatus": "ARCHIVED_CROSS_FAMILY_PREDECESSOR_ONLY"
+    },
+    {
+      "family": "real-responsibility-math-diagnostics-20260828",
+      "currentRelease": "final-v14",
+      "canonicalFile": "diagnostics.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "rma-temporal-loss-pricing-2010-2020",
+      "currentRelease": "final-v2",
+      "canonicalFile": "artifact.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "stage0-evidence-chain-current-20260828",
+      "currentRelease": "final-v1",
+      "canonicalFile": "manifest.json",
+      "semanticHashField": "manifestHash",
+      "selectionStatus": "ARCHIVED_CROSS_FAMILY_PREDECESSOR_ONLY"
+    },
+    {
+      "family": "stage0-evidence-chain-current-20260902",
+      "currentRelease": "final-v4",
+      "canonicalFile": "manifest.json",
+      "semanticHashField": "manifestHash"
+    },
+    {
+      "family": "stage0-source-temporal-audit-20260828",
+      "currentRelease": "final-v2",
+      "canonicalFile": "manifest.json",
+      "semanticHashField": "manifestHash"
+    },
+    {
+      "family": "stage05-governed-training-intake-20260822",
+      "currentRelease": "final-v1",
+      "canonicalFile": "diagnostic.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "stage2-current-chain-admission-20260822",
+      "currentRelease": "final-v1",
+      "canonicalFile": "contract.json",
+      "semanticHashField": "contractHash",
+      "selectionStatus": "ARCHIVED_CROSS_FAMILY_PREDECESSOR_ONLY"
+    },
+    {
+      "family": "stage2-current-chain-admission-20260828",
+      "currentRelease": "final-v4",
+      "canonicalFile": "contract.json",
+      "semanticHashField": "contractHash"
+    },
+    {
+      "family": "stage2-rma-shadow-pricing-20260822",
+      "currentRelease": "final-v4",
+      "canonicalFile": "historical-loss-cost.json",
+      "semanticHashField": "artifactHash"
+    },
+    {
+      "family": "waymo-safety-impact-evidence-20260822",
+      "currentRelease": "final-v5",
+      "canonicalFile": "evidence.json",
+      "semanticHashField": "artifactHash"
+    }
+  ],
+  "crossFamilyLineages": [
+    {
+      "predecessorFamily": "actuarial-model-evolution-20260822",
+      "predecessorTerminalRelease": "final-v7",
+      "predecessorArtifactHash": "sha256:d39afcb0c65be66636d16cf69c5410f0ea123af326e68a4afae9ab1bbc52dc6f",
+      "predecessorArtifactFileHash": "sha256:4297b0c04585d98500bfd2ade0df4e7a32a01f03016041a8a295471d0fefc719",
+      "predecessorArtifactFileBytes": 202291,
+      "predecessorMarkerRepositoryRelativePath": "artifacts/actuarial-model-evolution-20260822/final-v7/SUPERSEDED.json",
+      "predecessorMarkerSchema": "outsider/actuarial-model-evolution-supersession/v1",
+      "predecessorMarkerHash": "sha256:36d8bcad7f51ffe2b5bc77fdd8c0c82260e2a9366b60579cf842112176ee0b21",
+      "predecessorMarkerFileHash": "sha256:3b8bbc6333d357de246b24fbd3d44721a5bd3ddc67191e3a396eb070da61ced4",
+      "predecessorMarkerFileBytes": 1533,
+      "successorFamily": "actuarial-model-evolution-20260828",
+      "successorEntryRelease": "final-v8",
+      "successorArtifactHash": "sha256:e5885bf1c52e727d69cfdf1f7441e6d8aa6f73c461372dbe77c5287fa94b10d6",
+      "successorArtifactFileHash": "sha256:1d4f4b95fedde33652526ef8df4bc883cc8e7f31e598df42f1f27b699c9ad14e",
+      "successorArtifactFileBytes": 202695
+    },
+    {
+      "predecessorFamily": "real-case-gap-evidence-catalog-20260821",
+      "predecessorTerminalRelease": "final-v11",
+      "predecessorArtifactHash": "sha256:3e7a4cc56134315d9a32716d029929b9d18bad6316fe27d892cf9d45b482bf1a",
+      "predecessorArtifactFileHash": "sha256:3a6d50ab60305ba1338947648b97e1cfcd1ee069d7cc8a402751a5c30be5f706",
+      "predecessorArtifactFileBytes": 67501,
+      "predecessorMarkerRepositoryRelativePath": "artifacts/real-case-gap-evidence-catalog-20260821/final-v11/SUPERSEDED.json",
+      "predecessorMarkerSchema": "outsider/exact-artifact-lineage-supersession/v1",
+      "predecessorMarkerHash": "sha256:4edcd918f63ed4c82df373aeebc60552bddc9bb2bfc5d984023b0a70062e60cd",
+      "predecessorMarkerFileHash": "sha256:2b561dab3185720f1cc8d26fcb196f18cbc99d4bf4e670600f3b8df100ee132b",
+      "predecessorMarkerFileBytes": 2024,
+      "successorFamily": "real-case-gap-evidence-catalog-20260828",
+      "successorEntryRelease": "final-v12",
+      "successorArtifactHash": "sha256:0a2eb86fb1c93dbdfcb2b0f0f48fe4587bfa2920989e72f6edfe5d127b23cef9",
+      "successorArtifactFileHash": "sha256:7b4e9a432ba607b677396f01f7927496ba6ac62709aafd7032edb9aaffb9ebd9",
+      "successorArtifactFileBytes": 67501
+    },
+    {
+      "predecessorFamily": "real-case-responsibility-flywheel-20260821",
+      "predecessorTerminalRelease": "final-v10",
+      "predecessorArtifactHash": "sha256:382265c10c0d1e1114ac5c769b945bdceaec2466e4d25ebda6c355dceb4b81b3",
+      "predecessorArtifactFileHash": "sha256:7df8a9ecc88810091f1eec061d7545eeefb30eaa8b9cb456844c3346769e1094",
+      "predecessorArtifactFileBytes": 610164,
+      "predecessorMarkerRepositoryRelativePath": "artifacts/real-case-responsibility-flywheel-20260821/final-v10/SUPERSEDED.json",
+      "predecessorMarkerSchema": "outsider/exact-artifact-lineage-supersession/v1",
+      "predecessorMarkerHash": "sha256:374253ae12ad663050a8b135595173291d08d8862c6306ae6e19e5f79b36a11c",
+      "predecessorMarkerFileHash": "sha256:4f73a0b10a61cea776d792e66edcc75dd44b5a6ccfc669efe73a32a5d26dc1a3",
+      "predecessorMarkerFileBytes": 2057,
+      "successorFamily": "real-case-responsibility-flywheel-20260828",
+      "successorEntryRelease": "final-v11",
+      "successorArtifactHash": "sha256:2c4fc56c0d244ba08c298231f4fc747216123588c56057851f122ce7119e30f7",
+      "successorArtifactFileHash": "sha256:8f9c6e2938acccc79ae19a06029c84da9ac6ca6d448297b85c25af5d4793140c",
+      "successorArtifactFileBytes": 610204
+    },
+    {
+      "predecessorFamily": "real-responsibility-math-diagnostics-20260821",
+      "predecessorTerminalRelease": "final-v10",
+      "predecessorArtifactHash": "sha256:47d27d209d8fdca416f5d9f204085e94050c9ddb82906388ba38587574df69a0",
+      "predecessorArtifactFileHash": "sha256:0ad3097332073ecd1dfe394cf6e6041feacbfcc2ccfc488d9abc9784f720f2eb",
+      "predecessorArtifactFileBytes": 488556,
+      "predecessorMarkerRepositoryRelativePath": "artifacts/real-responsibility-math-diagnostics-20260821/final-v10/SUPERSEDED.json",
+      "predecessorMarkerSchema": "outsider/exact-artifact-lineage-supersession/v1",
+      "predecessorMarkerHash": "sha256:6338c089a0517149d8464c05192c58af3117d270a4644d12b0d6564e64f25fd3",
+      "predecessorMarkerFileHash": "sha256:c67e3fd6fbc42a90d802c26e6b2aad0c74553001f7016cababae86180b951359",
+      "predecessorMarkerFileBytes": 2071,
+      "successorFamily": "real-responsibility-math-diagnostics-20260828",
+      "successorEntryRelease": "final-v11",
+      "successorArtifactHash": "sha256:de8a1a267291a7494c61da50883190eba521383e5b6d1a00db9db326f4fc2ab4",
+      "successorArtifactFileHash": "sha256:2226ec4fbf2dd53f60309519c3f4100358b59bea7660fb8fa8df851b7bb8464e",
+      "successorArtifactFileBytes": 488655
+    },
+    {
+      "predecessorFamily": "stage0-evidence-chain-current-20260828",
+      "predecessorTerminalRelease": "final-v1",
+      "predecessorArtifactHash": "sha256:820f86336063ce1f2b07c9b814a076477e7655677fb7ad816ac690716cde0f52",
+      "predecessorArtifactFileHash": "sha256:46e74d23d146bfd9e273580e31c19efb3a79e0a1cc193dc685f7155b73dd5c2d",
+      "predecessorArtifactFileBytes": 13229,
+      "predecessorMarkerRepositoryRelativePath": "artifacts/stage0-evidence-chain-current-20260828/final-v1/SUPERSEDED.json",
+      "predecessorMarkerSchema": "outsider/exact-artifact-lineage-supersession/v1",
+      "predecessorMarkerHash": "sha256:5cd684882cbec98bedc0f9141458878e0b301807051c1a99e8d2444bc7c530cf",
+      "predecessorMarkerFileHash": "sha256:4298116bd14b8709570a8fb844cf37a904b9da3e749b888bd7df265484b783da",
+      "predecessorMarkerFileBytes": 2003,
+      "successorFamily": "stage0-evidence-chain-current-20260902",
+      "successorEntryRelease": "final-v2",
+      "successorArtifactHash": "sha256:2e1f34bcf3354cdfe32ee6607b95be28960ccf22e85b89ccb6cb5908b9ef72b1",
+      "successorArtifactFileHash": "sha256:84defcd0098df9870d7da96f34a21d73d2387f0bfa8a23b82e4b851805b23223",
+      "successorArtifactFileBytes": 13218
+    },
+    {
+      "predecessorFamily": "stage2-current-chain-admission-20260822",
+      "predecessorTerminalRelease": "final-v1",
+      "predecessorArtifactHash": "sha256:5020618c29b38b4c26a2c0218178a538e64ea5d3835d1c19da75f6c4c807071d",
+      "predecessorArtifactFileHash": "sha256:a2d13c696d80851ffafb95a5d4f870af21e1c8e9aafcd258831ec2290482061a",
+      "predecessorArtifactFileBytes": 13172,
+      "predecessorMarkerRepositoryRelativePath": "artifacts/stage2-current-chain-admission-20260822/final-v1/SUPERSEDED.json",
+      "predecessorMarkerSchema": "outsider/exact-artifact-lineage-supersession/v1",
+      "predecessorMarkerHash": "sha256:c086a648ff19d9a1e02a05e0c1286e366eaa6450b720e6f42ec86aa194faad44",
+      "predecessorMarkerFileHash": "sha256:ee863ff316e4df3bbe77095229f0c79a0f73975061448fccfb7e79845b14bb0f",
+      "predecessorMarkerFileBytes": 1999,
+      "successorFamily": "stage2-current-chain-admission-20260828",
+      "successorEntryRelease": "final-v2",
+      "successorArtifactHash": "sha256:5b0e4bfb71de50f3e25b016ae370adfe4b39215b57c7367cba6f3d57a8476b4b",
+      "successorArtifactFileHash": "sha256:23b78cfa18c39a7082c2b5a953c97ce091ee5f51c665443253d2bb7945c57a6a",
+      "successorArtifactFileBytes": 13176
+    }
+  ]
+}

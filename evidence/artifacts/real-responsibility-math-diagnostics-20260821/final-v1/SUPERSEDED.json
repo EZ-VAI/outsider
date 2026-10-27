@@ -1,0 +1,23 @@
+{
+  "schema": "outsider/artifact-supersession-marker/v1",
+  "generatedAt": "2026-08-21T13:45:00.000Z",
+  "supersededArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v1/diagnostics.json",
+    "artifactHash": "sha256:a7c6b1061d8c4100d16852c66d5ee0aad175364f5fd344bc3463341c3c8de7a5",
+    "serializedFileHash": "sha256:e4aab96ed0fced802a8389b485d11f27faa8a772facf8b176df9f792fe8f51c7",
+    "serializedBytes": 251547,
+    "bytePreserved": true,
+    "remainsValidForItsFrozenProjection": true,
+    "isCurrentProjection": false
+  },
+  "currentArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v2/diagnostics.json",
+    "artifactHash": "sha256:b2bda24fe32d5155570ffe93d361298aea1965f8124a1b34ba7cf17870064fc7",
+    "serializedFileHash": "sha256:251a1253e68dc3838e3ebcf99be78b13eb3ee12c8dcbe62171b4df2e3b8cfac3",
+    "serializedBytes": 322647,
+    "isCurrentProjection": true
+  },
+  "reason": "The current projection exact-binds the frozen ten-receipt flywheel final-v3 and adds source-replayed, separately bounded NCUA, PBGC, MSHA, CDI, and NCIGF diagnostics.",
+  "targetDomainTransferEstablished": false,
+  "operationalAuthorityGranted": false
+}

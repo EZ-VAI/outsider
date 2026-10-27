@@ -1,0 +1,29 @@
+{
+  "schema": "outsider/artifact-supersession-marker/v1",
+  "generatedAt": "2026-08-22T02:25:00.000Z",
+  "supersededArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v9/diagnostics.json",
+    "artifactHash": "sha256:d4e8a2aa5ead3ded04b6b41b69810a954122dddf2433047d4c6bf0eb7f51e338",
+    "serializedFileHash": "sha256:487aa4f7059825ef7f1f156f8cbc3bb14027a42dd0779ffac3fcd79ccdfe9d39",
+    "serializedBytes": 488426,
+    "bytePreserved": true,
+    "remainsValidForItsFrozenProjection": true,
+    "isCurrentProjection": false
+  },
+  "currentArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v10/diagnostics.json",
+    "artifactHash": "sha256:47d27d209d8fdca416f5d9f204085e94050c9ddb82906388ba38587574df69a0",
+    "serializedFileHash": "sha256:0ad3097332073ecd1dfe394cf6e6041feacbfcc2ccfc488d9abc9784f720f2eb",
+    "serializedBytes": 488556,
+    "isCurrentProjection": true
+  },
+  "reason": "Final-v9 retained artifactLifecycle.canonicalRelease=final-v8 despite its final-v9 path. Final-v10 fixes the internal and external release identity without changing the 49-row Wave5 facts, 102-factor dictionary, frozen catalog/flywheel pins, target boundary, price boundary, or authority boundary.",
+  "previousInternalCanonicalRelease": "final-v8",
+  "currentInternalCanonicalRelease": "final-v10",
+  "factorDictionaryHash": "sha256:64edf882a2b06b7050e0c5ec934fc40c3c5838ae114ab975377fb61d203e9456",
+  "wave5SourceNativeRows": 49,
+  "wave5TrainerRowsEnqueued": 0,
+  "targetDomainFactorsAdmitted": 0,
+  "targetDomainTransferEstablished": false,
+  "operationalAuthorityGranted": false
+}

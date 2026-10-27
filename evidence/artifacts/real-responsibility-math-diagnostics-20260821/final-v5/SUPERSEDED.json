@@ -1,0 +1,23 @@
+{
+  "schema": "outsider/artifact-supersession-marker/v1",
+  "generatedAt": "2026-08-22T02:45:00.000Z",
+  "supersededArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v5/diagnostics.json",
+    "artifactHash": "sha256:fc53740dbf8e0e1f655c875144083f755899338dfef16f79eac86cff60af2af8",
+    "serializedFileHash": "sha256:8ec64d5b685b7819561d98fcf1aed8416cf761c6662114a518cfd85bed7f80f7",
+    "serializedBytes": 457359,
+    "bytePreserved": true,
+    "remainsValidForItsFrozenProjection": true,
+    "isCurrentProjection": false
+  },
+  "currentArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v6/diagnostics.json",
+    "artifactHash": "sha256:9ab2528098b8ee673899ca2ff4a325d3352614a9fc02dee0cec6b88f0795c00d",
+    "serializedFileHash": "sha256:2b2eeb525d2ec221d17f2846925612005245c98fbcce34359c77d97a8ef7d1aa",
+    "serializedBytes": 472860,
+    "isCurrentProjection": true
+  },
+  "reason": "The current projection exact-binds the final-v9 catalog and final-v8 fifteen-source twenty-six-lane flywheel, adds three bounded ClinicalTrials.gov posted-results factors and one non-pooled diagnostic, and keeps training rows, target transfer, causality, price, capital, settlement, and authority at zero or false.",
+  "targetDomainTransferEstablished": false,
+  "operationalAuthorityGranted": false
+}

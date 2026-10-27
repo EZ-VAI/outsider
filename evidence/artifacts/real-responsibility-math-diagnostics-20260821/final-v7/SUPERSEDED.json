@@ -1,0 +1,26 @@
+{
+  "schema": "outsider/artifact-supersession-marker/v1",
+  "generatedAt": "2026-08-22T02:25:00.000Z",
+  "supersededArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v7/diagnostics.json",
+    "artifactHash": "sha256:80d211bbc6b94a525d438757acfca03dd06592df41918730ec30862188176b89",
+    "serializedFileHash": "sha256:585e47ea5ed50d38a7236921a47cf3c0f13b26c11fa36ab3489ef1a3deab5a65",
+    "serializedBytes": 472975,
+    "bytePreserved": true,
+    "remainsValidForItsFrozenProjection": true,
+    "isCurrentProjection": false
+  },
+  "currentArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v8/diagnostics.json",
+    "artifactHash": "sha256:f9a998fcd3f9bf8c608ed514a03893cbf05dd99f9475451ae4768ad8a267a07d",
+    "serializedFileHash": "sha256:746d157a7263ba8bd3022f2ecd34a565593a7a14b16c0133acfcf26c57977cc3",
+    "serializedBytes": 473021,
+    "isCurrentProjection": true
+  },
+  "reason": "The previous code-fixed generatedAt postdated the actual rebuild. Final-v8 exact-locks an already-past build minute while preserving the same final-v10 catalog, final-v9 flywheel, source facts, privacy and rights boundaries, factor dictionary, and zero target or authority admissions.",
+  "previousGeneratedAt": "2026-08-22T02:45:00.000Z",
+  "currentGeneratedAt": "2026-08-22T02:25:00.000Z",
+  "futureDatedCanonicalAccepted": false,
+  "targetDomainTransferEstablished": false,
+  "operationalAuthorityGranted": false
+}

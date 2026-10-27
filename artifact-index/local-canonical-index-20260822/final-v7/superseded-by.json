@@ -1,0 +1,31 @@
+{
+  "schema": "outsider/local-artifact-index-supersession/v3",
+  "status": "SUPERSEDED_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v7/index.json",
+    "schema": "outsider/local-artifact-canonical-index/v2",
+    "indexHash": "sha256:e468f6b50d7aa46d05f120a75a0fa861c495b602f736e7ff097de1e3e0e286e8",
+    "fileSha256": "sha256:a62c4c145cdaad86e200136c9f30b0df92d717f88e773995fbeea0889c36d190",
+    "fileBytes": 218967
+  },
+  "successor": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v8/index.json",
+    "schema": "outsider/local-artifact-canonical-index/v3",
+    "indexHash": "sha256:8968dbd1502212b7e31af0f43fcada3f25fa6f5119c32681e1f7decd92abdd3f",
+    "fileSha256": "sha256:4483f45458cf4e344ebc5a26291be7fd6c36e11fc0d67f19096c962218e96b85",
+    "fileBytes": 256899,
+    "indexedAt": "2026-08-28T10:58:31.300Z",
+    "versionedFamilyCount": 33,
+    "crossFamilyLineageCount": 1
+  },
+  "reason": "V8_BINDS_STAGE0_TEMPORAL_AUDIT_AND_THE_REISSUED_CATALOG_FLYWHEEL_MATH_MODEL_CURRENT_CHAIN_RMA_CHAIN_AND_EXACTLY_ROUTES_THE_ARCHIVED_20260822_MODEL_FAMILY_V7_TO_THE_20260828_FAMILY_V8_THEN_V9_V10_V11_WITHOUT_SOURCE_TRUTH_TRAINING_PRICING_OR_AUTHORITY",
+  "declarationSchema": "outsider/local-artifact-canonical-declaration/v2",
+  "oldBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false,
+  "sourceTruthEstablishedByThisMarker": false,
+  "trainingAdmission": false,
+  "pricingAdmission": false,
+  "operationalAuthorityGranted": false,
+  "markerHashDomain": "outsider/local-artifact-index-supersession/v3",
+  "markerHash": "sha256:6fd7bcb3de0bac0d1aeadde997e271a71bae492702d1df9a2917f766388dc9b5"
+}

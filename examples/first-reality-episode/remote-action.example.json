@@ -1,0 +1,121 @@
+{
+  "templateStatus": "NON_PROTOCOL_UNEXECUTED_EXAMPLE",
+  "profile": "REMOTE_ACTION",
+  "isExecuted": false,
+  "rawDataPolicy": {
+    "rawBytesEmbedded": false,
+    "sourceObjectsStoredOutOfBand": true,
+    "commitmentsOnlyAfterExactBytesAreOpened": true
+  },
+  "projectsTo": {
+    "executionTrace": "outsider/execution-trace/v1",
+    "realityBoundary": "outsider/reality-boundary/v1",
+    "stewardshipClaim": "outsider/reality-stewardship-claim/v1",
+    "realityExecutionReceipt": "outsider/reality-execution-receipt/v1"
+  },
+  "remoteSourceIngress": {
+    "rawSourceReference": {
+      "rawBytesEmbedded": false,
+      "immutableObjectReferenceHash": null,
+      "byteLength": null,
+      "sha256": null,
+      "mediaType": null
+    },
+    "adapter": {
+      "module": "outsider-execution-trace.js",
+      "adapterNameHint": null,
+      "adapterDescriptorCommitmentHash": null,
+      "adapterImplementationCommitmentHash": null,
+      "adapterSourceSchemaCommitmentHash": null,
+      "registrationEntrypoint": "registerAdapter",
+      "normalizationEntrypoint": "normalizeExecution",
+      "requiredCallOrder": [
+        "registerAdapter",
+        "normalizeExecution"
+      ],
+      "directWorksheetToMakeExecutionTraceAllowed": false
+    }
+  },
+  "remoteActionSourceSlots": {
+    "providerNativeActionIdHash": null,
+    "idempotencyKeyHash": null,
+    "authenticatedPrincipalHash": null,
+    "authorizationReceiptHash": null,
+    "scheduledAt": null,
+    "requestSentAt": null,
+    "acknowledgedAt": null,
+    "sourceClockIdHash": null,
+    "sourceClockUncertaintyNs": null,
+    "request": {
+      "rawBytesEmbedded": false,
+      "storageHandleHash": null,
+      "byteLength": null,
+      "sha256": null
+    },
+    "beforeState": {
+      "rawBytesEmbedded": false,
+      "storageHandleHash": null,
+      "byteLength": null,
+      "sha256": null,
+      "status": "UNKNOWN"
+    },
+    "providerAcknowledgement": {
+      "rawBytesEmbedded": false,
+      "storageHandleHash": null,
+      "byteLength": null,
+      "sha256": null,
+      "status": "UNKNOWN",
+      "semanticEffectEstablished": false
+    },
+    "afterState": {
+      "rawBytesEmbedded": false,
+      "storageHandleHash": null,
+      "byteLength": null,
+      "sha256": null,
+      "status": "UNKNOWN"
+    },
+    "rollbackOrReversal": {
+      "required": null,
+      "attempted": null,
+      "restorationStatus": "UNKNOWN",
+      "evidenceHash": null
+    },
+    "independentOutcome": {
+      "status": "UNKNOWN",
+      "outcomeHash": null,
+      "adjudicatorIdentityHash": null,
+      "organizationalIndependence": "UNKNOWN"
+    }
+  },
+  "monitoringRegime": {
+    "monitorDisclosure": "UNKNOWN",
+    "agentMonitorKnowledge": "UNKNOWN",
+    "monitorIdentityHash": null,
+    "monitorPolicyVersionHash": null,
+    "monitorIndependence": "UNKNOWN",
+    "traceVisibility": "UNKNOWN"
+  },
+  "stewardshipSlots": {
+    "realityBoundaryHash": null,
+    "stewardshipClaimHash": null,
+    "resourceOwnerRootHash": null,
+    "affectedPartyRegisterHash": null,
+    "recoveryPlanHash": null,
+    "delayedConsequenceStateHash": null
+  },
+  "disposition": "HOLD_UNEXECUTED_UNKNOWN_SOURCE_OUTCOME_AND_OWNER_GATE",
+  "boundary": {
+    "lane": "RESEARCH_AND_ADVISORY_ONLY",
+    "authority": "none",
+    "causalExperienceUnits": 0,
+    "automaticTraining": false,
+    "permits": {
+      "EXECUTE": false,
+      "TRAIN": false,
+      "PRICE": false,
+      "GUARANTEE": false,
+      "SETTLE": false,
+      "CLOSE": false
+    }
+  }
+}

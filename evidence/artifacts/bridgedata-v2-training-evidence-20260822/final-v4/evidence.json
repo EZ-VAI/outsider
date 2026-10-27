@@ -1,0 +1,1012 @@
+{
+  "schema": "outsider/bridgedata-v2-training-evidence/v1",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-22T00:00:00.000Z",
+  "source": {
+    "sourceId": "BERKELEY_RAIL_BRIDGEDATA_V2_TFDS_1_0_0_MINIMAL_RECORD_20260822",
+    "publisher": "UC_BERKELEY_ROBOTIC_AI_AND_LEARNING_LAB",
+    "sourceReality": "REAL_LAB_ROBOT_TRAJECTORY_DATA_AND_PUBLISHER_METADATA",
+    "profileMatchedAtBuild": true,
+    "callerBytesMatchedFrozenPins": true,
+    "capturedAt": "2026-08-22T00:00:00.000Z",
+    "files": [
+      {
+        "name": "bridgedata-v2-project-20260822.html",
+        "kind": "PROJECT_AND_DATA_LICENSE_PAGE",
+        "bytes": 31252,
+        "sha256": "sha256:9be7a758ab24782955a6fa4145bbed80527671939e4f40dff70e22ee9b69c580",
+        "url": "https://rail-berkeley.github.io/bridgedata/",
+        "httpRange": null
+      },
+      {
+        "name": "tfds-index-1.0.0-20260822.html",
+        "kind": "OFFICIAL_TFDS_DIRECTORY_INDEX",
+        "bytes": 317995,
+        "sha256": "sha256:975c80df400b8d6b2c1d0748f566f8ea189f695b8abce51bc5e81c574a04077a",
+        "url": "https://rail.eecs.berkeley.edu/datasets/bridge_release/data/tfds/bridge_dataset/1.0.0/",
+        "httpRange": null
+      },
+      {
+        "name": "dataset_info.json",
+        "kind": "TFDS_DATASET_INFO",
+        "bytes": 17009,
+        "sha256": "sha256:977f2efb2a4be1d839b0b67b9cae8f2007568a1da689ad170f1b72846dc54653",
+        "url": "https://rail.eecs.berkeley.edu/datasets/bridge_release/data/tfds/bridge_dataset/1.0.0/dataset_info.json",
+        "httpRange": null
+      },
+      {
+        "name": "features.json",
+        "kind": "TFDS_FEATURE_SCHEMA",
+        "bytes": 14194,
+        "sha256": "sha256:b1b139dc3d48bc71b1f01552f6ad267fc35527cb756dbea4b089a44d6d128c4f",
+        "url": "https://rail.eecs.berkeley.edu/datasets/bridge_release/data/tfds/bridge_dataset/1.0.0/features.json",
+        "httpRange": null
+      },
+      {
+        "name": "action_proprio_stats_7d6a416829d818b733e7342f225f3c522a8265a5224e0175f2ab28e26a932ff1.json",
+        "kind": "ACTION_PROPRIO_STATS_PROFILE",
+        "bytes": 1254,
+        "sha256": "sha256:1d22ea6845cea045ba9f09f86b142039a165bf049c7d9578000e464d88ecb860",
+        "url": "https://rail.eecs.berkeley.edu/datasets/bridge_release/data/tfds/bridge_dataset/1.0.0/action_proprio_stats_7d6a416829d818b733e7342f225f3c522a8265a5224e0175f2ab28e26a932ff1.json",
+        "httpRange": null
+      },
+      {
+        "name": "action_proprio_stats_9ccaabde9b86d1b6d3bfdf6fcfc1ab326e3265b928ae4dd4cab47e2067b9ecab.json",
+        "kind": "ACTION_PROPRIO_STATS_PROFILE",
+        "bytes": 1262,
+        "sha256": "sha256:156db9daf1790df2e07bacf176f8dadb2c4fc48cb6606eb14b07a477b487979c",
+        "url": "https://rail.eecs.berkeley.edu/datasets/bridge_release/data/tfds/bridge_dataset/1.0.0/action_proprio_stats_9ccaabde9b86d1b6d3bfdf6fcfc1ab326e3265b928ae4dd4cab47e2067b9ecab.json",
+        "httpRange": null
+      },
+      {
+        "name": "action_proprio_stats_4203a9a0c2e65f37c33c477d42e8f9d87929e12a4df4e51dbf1479f417d7f3e5.json",
+        "kind": "ACTION_PROPRIO_STATS_PROFILE",
+        "bytes": 1254,
+        "sha256": "sha256:8c305fb34df6123e7e5783f5613ef90ac78762bb54a77219499ef82019ed3536",
+        "url": "https://rail.eecs.berkeley.edu/datasets/bridge_release/data/tfds/bridge_dataset/1.0.0/action_proprio_stats_4203a9a0c2e65f37c33c477d42e8f9d87929e12a4df4e51dbf1479f417d7f3e5.json",
+        "httpRange": null
+      },
+      {
+        "name": "action_proprio_stats_eb41baf7d978d166b787f61ef00e0c6a1b747c3dc68e2d19167bf750b025c417.json",
+        "kind": "ACTION_PROPRIO_STATS_PROFILE",
+        "bytes": 1242,
+        "sha256": "sha256:fb0e6bd375fb5d2b04dd7f7da34fec23918d1b4a46bc506ed593f755481281cf",
+        "url": "https://rail.eecs.berkeley.edu/datasets/bridge_release/data/tfds/bridge_dataset/1.0.0/action_proprio_stats_eb41baf7d978d166b787f61ef00e0c6a1b747c3dc68e2d19167bf750b025c417.json",
+        "httpRange": null
+      },
+      {
+        "name": "bridge_dataset-train-record-00000.tfrecord",
+        "kind": "EXACT_FIRST_TFRECORD_BYTE_RANGE_SAMPLE",
+        "bytes": 3092034,
+        "sha256": "sha256:c23e3a89f8be58533e132a5c9102281ad208f13952441641332b4483e932fbf0",
+        "url": "https://rail.eecs.berkeley.edu/datasets/bridge_release/data/tfds/bridge_dataset/1.0.0/bridge_dataset-train.tfrecord-00000-of-01024",
+        "httpRange": "bytes=0-3092033"
+      }
+    ],
+    "sourceSetHash": "sha256:546495e05d3777562bd8dd9f70325bd4e4e1b07778ac8324178e629a36e6ef4d"
+  },
+  "dataset": {
+    "version": "1.0.0",
+    "projectClaimedTrajectories": 60096,
+    "projectClaimedTeleoperatedDemonstrations": 50365,
+    "projectClaimedScriptedRollouts": 9731,
+    "projectClaimedEnvironments": 24,
+    "projectClaimedSkills": 13,
+    "robotPlatform": "WIDOWX_250_6DOF",
+    "controlFrequencyHz": 5,
+    "projectAverageTrajectoryTimesteps": 38,
+    "tfds": {
+      "splits": [
+        {
+          "name": "train",
+          "bytes": "117084911456",
+          "shards": 1024,
+          "examples": 53192,
+          "minExamplesPerShard": 51,
+          "maxExamplesPerShard": 52,
+          "firstShardExamples": 52
+        },
+        {
+          "name": "val",
+          "bytes": "15401054101",
+          "shards": 128,
+          "examples": 6872,
+          "minExamplesPerShard": 53,
+          "maxExamplesPerShard": 54,
+          "firstShardExamples": 54
+        }
+      ],
+      "totalExamples": 60064,
+      "totalBytes": "132485965557",
+      "directory": {
+        "trainShardLinks": 1024,
+        "validationShardLinks": 128,
+        "contiguousShardIndexes": true,
+        "metadataLinksPresent": true
+      }
+    },
+    "reconciliation": {
+      "projectMinusTfdsExamples": 32,
+      "countsExactlyReconciled": false,
+      "reasonPublishedInCapturedMetadata": false
+    }
+  },
+  "sample": {
+    "sourceParentShard": "bridge_dataset-train.tfrecord-00000-of-01024",
+    "parentShardContentLength": 108381239,
+    "byteRange": "bytes=0-3092033",
+    "capturedWholeShard": false,
+    "capturedWholeCorpus": false,
+    "capturedTrainShards": 0,
+    "capturedValidationShards": 0,
+    "capturedWholeRecords": 1,
+    "knownRecordsInParentShard": 52,
+    "knownTrainRecords": 53192,
+    "wholeRecordCoverageOfParentShard": 0.019230769230769232,
+    "wholeRecordCoverageOfTrainSplit": 0.00001879981952173259,
+    "tfrecord": {
+      "recordCount": 1,
+      "payloadBytes": 3092018,
+      "framedBytes": 3092034,
+      "lengthCrc32cMasked": 192335602,
+      "dataCrc32cMasked": 4153647161,
+      "allCrc32cValid": true,
+      "features": [
+        {
+          "key": "episode_metadata/episode_id",
+          "kind": "INT64_LIST",
+          "valueCount": 1,
+          "payloadBytes": 1,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": true
+        },
+        {
+          "key": "episode_metadata/file_path",
+          "kind": "BYTES_LIST",
+          "valueCount": 1,
+          "payloadBytes": 142,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        },
+        {
+          "key": "episode_metadata/has_image_0",
+          "kind": "INT64_LIST",
+          "valueCount": 1,
+          "payloadBytes": 1,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": true
+        },
+        {
+          "key": "episode_metadata/has_image_1",
+          "kind": "INT64_LIST",
+          "valueCount": 1,
+          "payloadBytes": 1,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": true
+        },
+        {
+          "key": "episode_metadata/has_image_2",
+          "kind": "INT64_LIST",
+          "valueCount": 1,
+          "payloadBytes": 1,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": true
+        },
+        {
+          "key": "episode_metadata/has_image_3",
+          "kind": "INT64_LIST",
+          "valueCount": 1,
+          "payloadBytes": 1,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": true
+        },
+        {
+          "key": "episode_metadata/has_language",
+          "kind": "INT64_LIST",
+          "valueCount": 1,
+          "payloadBytes": 1,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": true
+        },
+        {
+          "key": "steps/action",
+          "kind": "FLOAT_LIST",
+          "valueCount": 196,
+          "payloadBytes": 784,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        },
+        {
+          "key": "steps/discount",
+          "kind": "FLOAT_LIST",
+          "valueCount": 28,
+          "payloadBytes": 112,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        },
+        {
+          "key": "steps/is_first",
+          "kind": "INT64_LIST",
+          "valueCount": 28,
+          "payloadBytes": 28,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": true
+        },
+        {
+          "key": "steps/is_last",
+          "kind": "INT64_LIST",
+          "valueCount": 28,
+          "payloadBytes": 28,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": true
+        },
+        {
+          "key": "steps/is_terminal",
+          "kind": "INT64_LIST",
+          "valueCount": 28,
+          "payloadBytes": 28,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": true
+        },
+        {
+          "key": "steps/language_embedding",
+          "kind": "FLOAT_LIST",
+          "valueCount": 14336,
+          "payloadBytes": 57344,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        },
+        {
+          "key": "steps/language_instruction",
+          "kind": "BYTES_LIST",
+          "valueCount": 28,
+          "payloadBytes": 980,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        },
+        {
+          "key": "steps/observation/image_0",
+          "kind": "BYTES_LIST",
+          "valueCount": 28,
+          "payloadBytes": 1057587,
+          "emptyValueCount": 0,
+          "jpegValueCount": 28,
+          "jpegProfiles": [
+            {
+              "profile": "256x256x3@0xc0",
+              "count": 28
+            }
+          ],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        },
+        {
+          "key": "steps/observation/image_1",
+          "kind": "BYTES_LIST",
+          "valueCount": 28,
+          "payloadBytes": 961524,
+          "emptyValueCount": 0,
+          "jpegValueCount": 28,
+          "jpegProfiles": [
+            {
+              "profile": "256x256x3@0xc0",
+              "count": 28
+            }
+          ],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        },
+        {
+          "key": "steps/observation/image_2",
+          "kind": "BYTES_LIST",
+          "valueCount": 28,
+          "payloadBytes": 965162,
+          "emptyValueCount": 0,
+          "jpegValueCount": 28,
+          "jpegProfiles": [
+            {
+              "profile": "256x256x3@0xc0",
+              "count": 28
+            }
+          ],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        },
+        {
+          "key": "steps/observation/image_3",
+          "kind": "BYTES_LIST",
+          "valueCount": 28,
+          "payloadBytes": 46228,
+          "emptyValueCount": 0,
+          "jpegValueCount": 28,
+          "jpegProfiles": [
+            {
+              "profile": "256x256x3@0xc0",
+              "count": 28
+            }
+          ],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        },
+        {
+          "key": "steps/observation/state",
+          "kind": "FLOAT_LIST",
+          "valueCount": 196,
+          "payloadBytes": 784,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        },
+        {
+          "key": "steps/reward",
+          "kind": "FLOAT_LIST",
+          "valueCount": 28,
+          "payloadBytes": 112,
+          "emptyValueCount": 0,
+          "jpegValueCount": 0,
+          "jpegProfiles": [],
+          "nonfiniteFloatValueCount": 0,
+          "int64AllBooleanDomain": null
+        }
+      ]
+    },
+    "dimensionChecks": {
+      "timesteps": 28,
+      "actionValues": 196,
+      "actionDimensionsPerStep": 7,
+      "actionValuesReconcile": true,
+      "stateValues": 196,
+      "stateDimensionsPerStep": 7,
+      "stateValuesReconcile": true,
+      "languageEmbeddingValues": 14336,
+      "languageEmbeddingDimensionsPerStep": 512,
+      "languageEmbeddingValuesReconcile": true,
+      "imageStreamsWithOneValuePerStep": 4,
+      "languageInstructionValuesReconcile": true,
+      "rewardDiscountAndBoundaryFlagsReconcile": true
+    },
+    "declaredRepresentationChecks": {
+      "declaredFeatures": 20,
+      "allKindsMatch": true,
+      "allDeclaredValueCountsMatch": true,
+      "allFloatValuesFinite": true,
+      "allBooleanValuesInDomain": true,
+      "allDeclaredJpegImagesDecodeHeaderAs256x256x3": true,
+      "checks": [
+        {
+          "key": "episode_metadata/episode_id",
+          "sequence": "EPISODE",
+          "dtype": "int32",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "INT64_LIST",
+          "observedExampleKind": "INT64_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 1,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 1,
+          "observedValueCount": 1,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "episode_metadata/file_path",
+          "sequence": "EPISODE",
+          "dtype": "string",
+          "encoding": "utf8_bytes",
+          "shape": [],
+          "expectedExampleKind": "BYTES_LIST",
+          "observedExampleKind": "BYTES_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 1,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 1,
+          "observedValueCount": 1,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "episode_metadata/has_image_0",
+          "sequence": "EPISODE",
+          "dtype": "bool",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "INT64_LIST",
+          "observedExampleKind": "INT64_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 1,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 1,
+          "observedValueCount": 1,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": true,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "episode_metadata/has_image_1",
+          "sequence": "EPISODE",
+          "dtype": "bool",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "INT64_LIST",
+          "observedExampleKind": "INT64_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 1,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 1,
+          "observedValueCount": 1,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": true,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "episode_metadata/has_image_2",
+          "sequence": "EPISODE",
+          "dtype": "bool",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "INT64_LIST",
+          "observedExampleKind": "INT64_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 1,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 1,
+          "observedValueCount": 1,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": true,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "episode_metadata/has_image_3",
+          "sequence": "EPISODE",
+          "dtype": "bool",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "INT64_LIST",
+          "observedExampleKind": "INT64_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 1,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 1,
+          "observedValueCount": 1,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": true,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "episode_metadata/has_language",
+          "sequence": "EPISODE",
+          "dtype": "bool",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "INT64_LIST",
+          "observedExampleKind": "INT64_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 1,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 1,
+          "observedValueCount": 1,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": true,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "steps/action",
+          "sequence": "TIMESTEP",
+          "dtype": "float32",
+          "encoding": "none",
+          "shape": [
+            7
+          ],
+          "expectedExampleKind": "FLOAT_LIST",
+          "observedExampleKind": "FLOAT_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 7,
+          "expectedValueCount": 196,
+          "observedValueCount": 196,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": true
+        },
+        {
+          "key": "steps/discount",
+          "sequence": "TIMESTEP",
+          "dtype": "float32",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "FLOAT_LIST",
+          "observedExampleKind": "FLOAT_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 28,
+          "observedValueCount": 28,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": true
+        },
+        {
+          "key": "steps/is_first",
+          "sequence": "TIMESTEP",
+          "dtype": "bool",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "INT64_LIST",
+          "observedExampleKind": "INT64_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 28,
+          "observedValueCount": 28,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": true,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "steps/is_last",
+          "sequence": "TIMESTEP",
+          "dtype": "bool",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "INT64_LIST",
+          "observedExampleKind": "INT64_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 28,
+          "observedValueCount": 28,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": true,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "steps/is_terminal",
+          "sequence": "TIMESTEP",
+          "dtype": "bool",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "INT64_LIST",
+          "observedExampleKind": "INT64_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 28,
+          "observedValueCount": 28,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": true,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "steps/language_embedding",
+          "sequence": "TIMESTEP",
+          "dtype": "float32",
+          "encoding": "none",
+          "shape": [
+            512
+          ],
+          "expectedExampleKind": "FLOAT_LIST",
+          "observedExampleKind": "FLOAT_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 512,
+          "expectedValueCount": 14336,
+          "observedValueCount": 14336,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": true
+        },
+        {
+          "key": "steps/language_instruction",
+          "sequence": "TIMESTEP",
+          "dtype": "string",
+          "encoding": "utf8_bytes",
+          "shape": [],
+          "expectedExampleKind": "BYTES_LIST",
+          "observedExampleKind": "BYTES_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 28,
+          "observedValueCount": 28,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "steps/observation/image_0",
+          "sequence": "TIMESTEP",
+          "dtype": "uint8",
+          "encoding": "jpeg",
+          "shape": [
+            256,
+            256,
+            3
+          ],
+          "expectedExampleKind": "BYTES_LIST",
+          "observedExampleKind": "BYTES_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 28,
+          "observedValueCount": 28,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": true,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "steps/observation/image_1",
+          "sequence": "TIMESTEP",
+          "dtype": "uint8",
+          "encoding": "jpeg",
+          "shape": [
+            256,
+            256,
+            3
+          ],
+          "expectedExampleKind": "BYTES_LIST",
+          "observedExampleKind": "BYTES_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 28,
+          "observedValueCount": 28,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": true,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "steps/observation/image_2",
+          "sequence": "TIMESTEP",
+          "dtype": "uint8",
+          "encoding": "jpeg",
+          "shape": [
+            256,
+            256,
+            3
+          ],
+          "expectedExampleKind": "BYTES_LIST",
+          "observedExampleKind": "BYTES_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 28,
+          "observedValueCount": 28,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": true,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "steps/observation/image_3",
+          "sequence": "TIMESTEP",
+          "dtype": "uint8",
+          "encoding": "jpeg",
+          "shape": [
+            256,
+            256,
+            3
+          ],
+          "expectedExampleKind": "BYTES_LIST",
+          "observedExampleKind": "BYTES_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 28,
+          "observedValueCount": 28,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": true,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": null
+        },
+        {
+          "key": "steps/observation/state",
+          "sequence": "TIMESTEP",
+          "dtype": "float32",
+          "encoding": "none",
+          "shape": [
+            7
+          ],
+          "expectedExampleKind": "FLOAT_LIST",
+          "observedExampleKind": "FLOAT_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 7,
+          "expectedValueCount": 196,
+          "observedValueCount": 196,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": true
+        },
+        {
+          "key": "steps/reward",
+          "sequence": "TIMESTEP",
+          "dtype": "float32",
+          "encoding": "none",
+          "shape": [],
+          "expectedExampleKind": "FLOAT_LIST",
+          "observedExampleKind": "FLOAT_LIST",
+          "kindMatches": true,
+          "sequenceEntries": 28,
+          "valuesPerSequenceEntry": 1,
+          "expectedValueCount": 28,
+          "observedValueCount": 28,
+          "valueCountMatches": true,
+          "imageEncodingAndDimensionsMatch": null,
+          "booleanDomainMatches": null,
+          "finiteFloatValues": true
+        }
+      ]
+    },
+    "expectedFeatureKeys": [
+      "episode_metadata/episode_id",
+      "episode_metadata/file_path",
+      "episode_metadata/has_image_0",
+      "episode_metadata/has_image_1",
+      "episode_metadata/has_image_2",
+      "episode_metadata/has_image_3",
+      "episode_metadata/has_language",
+      "steps/action",
+      "steps/discount",
+      "steps/is_first",
+      "steps/is_last",
+      "steps/is_terminal",
+      "steps/language_embedding",
+      "steps/language_instruction",
+      "steps/observation/image_0",
+      "steps/observation/image_1",
+      "steps/observation/image_2",
+      "steps/observation/image_3",
+      "steps/observation/state",
+      "steps/reward"
+    ],
+    "sampleFeatureKeys": [
+      "episode_metadata/episode_id",
+      "episode_metadata/file_path",
+      "episode_metadata/has_image_0",
+      "episode_metadata/has_image_1",
+      "episode_metadata/has_image_2",
+      "episode_metadata/has_image_3",
+      "episode_metadata/has_language",
+      "steps/action",
+      "steps/discount",
+      "steps/is_first",
+      "steps/is_last",
+      "steps/is_terminal",
+      "steps/language_embedding",
+      "steps/language_instruction",
+      "steps/observation/image_0",
+      "steps/observation/image_1",
+      "steps/observation/image_2",
+      "steps/observation/image_3",
+      "steps/observation/state",
+      "steps/reward"
+    ],
+    "featureKeysExactlyMatchTfdsSchema": true
+  },
+  "stats": {
+    "capturedProfiles": 4,
+    "profiles": [
+      {
+        "name": "action_proprio_stats_7d6a416829d818b733e7342f225f3c522a8265a5224e0175f2ab28e26a932ff1.json",
+        "actionDimensions": 7,
+        "proprioDimensions": 7,
+        "allFinite": true,
+        "allPositiveStandardDeviations": true,
+        "boundsContainMeans": true
+      },
+      {
+        "name": "action_proprio_stats_9ccaabde9b86d1b6d3bfdf6fcfc1ab326e3265b928ae4dd4cab47e2067b9ecab.json",
+        "actionDimensions": 7,
+        "proprioDimensions": 7,
+        "allFinite": true,
+        "allPositiveStandardDeviations": true,
+        "boundsContainMeans": true
+      },
+      {
+        "name": "action_proprio_stats_4203a9a0c2e65f37c33c477d42e8f9d87929e12a4df4e51dbf1479f417d7f3e5.json",
+        "actionDimensions": 7,
+        "proprioDimensions": 7,
+        "allFinite": true,
+        "allPositiveStandardDeviations": true,
+        "boundsContainMeans": true
+      },
+      {
+        "name": "action_proprio_stats_eb41baf7d978d166b787f61ef00e0c6a1b747c3dc68e2d19167bf750b025c417.json",
+        "actionDimensions": 7,
+        "proprioDimensions": 7,
+        "allFinite": true,
+        "allPositiveStandardDeviations": true,
+        "boundsContainMeans": true
+      }
+    ],
+    "allProfilesSevenDimensionalAndFinite": true
+  },
+  "rights": {
+    "publishedDatasetLicense": "CC_BY_4_0",
+    "licenseStatementBytePinned": true,
+    "licenseScopeStatement": "PROJECT_PAGE_STATES_ALL_DATA_IS_PROVIDED_UNDER_CC_BY_4_0",
+    "attributionRequired": true,
+    "indicationOfChangesRequired": true,
+    "noAdditionalRestrictionsRequired": true,
+    "legalReviewCompleted": false,
+    "recordLevelThirdPartyContentReviewCompleted": false,
+    "productionTrainingRightFinallyAdjudicated": false
+  },
+  "quality": {
+    "realRobotDataNotDowngradedForBeingPublished": true,
+    "actualRecordBytesCrcValidated": true,
+    "sampleFeatureKeysMatchedTfdsSchema": true,
+    "sampleDeclaredDtypeShapeEncodingMatchedTfdsRepresentation": true,
+    "fullCorpusSchemaConformanceEstablished": false,
+    "fullSchemaAndSemanticContractEstablished": false,
+    "metadataDescriptionContainsPlaceholder": true,
+    "metadataCitationContainsPlaceholder": true,
+    "projectTfdsCountMismatchPreserved": true,
+    "actionShapeDimensions": 7,
+    "actionDescriptionImpliedComponents": 10,
+    "actionShapeDescriptionMismatch": true,
+    "stateShapeDimensions": 7,
+    "stateDescriptionImpliedComponents": 10,
+    "stateShapeDescriptionMismatch": true,
+    "projectMentionsRgbdButTfdsDepthFeaturePresent": false,
+    "perRecordOutcomeOrFailureLabelPresent": false,
+    "sampleSelectionRandomOrRepresentativeEstablished": false,
+    "trainValidationSplitTemporalOrProspectiveEstablished": false,
+    "trajectoryCorrelationClustersMaterialized": false,
+    "sampleStructuralFeatureMissingnessAudited": true,
+    "sampleSemanticOrDummyValueMissingnessAudited": false
+  },
+  "stage15Evidence": {
+    "sourceDomain": "REAL_LAB_ROBOT_MANIPULATION",
+    "actualRobotTrajectoryBytesObserved": true,
+    "languageActionObservationStructuralFieldsObserved": true,
+    "languageActionObservationSemanticContractEstablished": false,
+    "publisherLicenseStatementSupportsGovernedCandidateReview": true,
+    "failureOrNegativeOutcomeSensingAdded": false,
+    "realWorldOpenEnvironmentTransferEstablished": false,
+    "targetRobotTransferEstablished": false,
+    "statisticalModelCapabilityImprovementEstablished": false
+  },
+  "trainingCandidate": {
+    "contract": "outsider/source-domain-training-candidate/v1",
+    "decision": "HOLD_FOR_SEMANTIC_CONTENT_AND_GOVERNANCE_REVIEW",
+    "candidateWholeRecords": 1,
+    "trainerRowsEnqueued": 0,
+    "automaticTraining": false,
+    "sourceHash": "sha256:546495e05d3777562bd8dd9f70325bd4e4e1b07778ac8324178e629a36e6ef4d",
+    "license": "CC_BY_4_0_WITH_ATTRIBUTION_AND_CHANGE_NOTICE",
+    "selectionCoverage": {
+      "corpusExamplesClaimedByTfds": 60064,
+      "trainExamplesClaimedByTfds": 53192,
+      "wholeRecordsCaptured": 1,
+      "trainShardsFullyCaptured": 0,
+      "trainShardCount": 1024,
+      "validationRecordsCaptured": 0
+    },
+    "requiredBeforeTrainerAdmission": [
+      "RESOLVE_PROJECT_VS_TFDS_32_TRAJECTORY_COUNT_DIFFERENCE",
+      "RESOLVE_ACTION_AND_STATE_SHAPE_DESCRIPTION_MISMATCHES",
+      "DECODE_AND_AUDIT_RECORD_LEVEL_MISSINGNESS_AND_CONTENT",
+      "MATERIALIZE_TRAJECTORY_ENVIRONMENT_OBJECT_AND_COLLECTION_CORRELATION_GROUPS",
+      "SEPARATE_TELEOPERATED_AND_SCRIPTED_PROVENANCE_AT_RECORD_LEVEL",
+      "ESTABLISH_NON_SUCCESS_FAILURE_AND_NEGATIVE_EXAMPLE_POLICY",
+      "COMPLETE_ATTRIBUTION_CHANGE_NOTICE_AND_THIRD_PARTY_CONTENT_REVIEW",
+      "CREATE_TARGET_ROBOT_HOLDOUT_AND_TRANSFER_GATE"
+    ]
+  },
+  "deferredSources": [
+    {
+      "sourceId": "OPEN_X_EMBODIMENT",
+      "machineStatus": "DEFERRED_DATASET_BY_DATASET_RIGHTS_AND_COLLECTION_REVIEW",
+      "reasonCodes": [
+        "TOP_LEVEL_CC_BY_DOES_NOT_RESOLVE_EACH_CONTRIBUTED_DATASET",
+        "REQUIRES_PER_DATASET_LICENSE_AND_COLLECTION_PROVENANCE"
+      ]
+    },
+    {
+      "sourceId": "WAYMO_OPEN_DATASET",
+      "machineStatus": "DEFERRED_FOR_OUTSIDER_PRODUCTION_TRAINING",
+      "reasonCodes": [
+        "NON_COMMERCIAL_USE_BOUNDARY",
+        "MANUAL_AND_AUTONOMOUS_SEGMENTS_NOT_LABELED_FOR_PERFORMANCE_EVALUATION"
+      ]
+    },
+    {
+      "sourceId": "NASA_ASRS_UAS",
+      "machineStatus": "DEFERRED_FULL_TRAINING_OR_RATE_TRUTH",
+      "reasonCodes": [
+        "VOLUNTARY_SELF_SELECTED_REPORTS",
+        "NASA_DOES_NOT_VALIDATE_REPORT_FACTS",
+        "ONLINE_EXPORT_LIMIT_10000",
+        "NO_EXPOSURE_DENOMINATOR"
+      ]
+    }
+  ],
+  "modelEntrance": {
+    "TRAIN": false,
+    "PRICE": false,
+    "CAPITAL": false,
+    "COVERAGE": false,
+    "SETTLE": false,
+    "sourceDomainTrainingCandidateOnly": true,
+    "targetDomainFactorAdmission": false,
+    "frequencyEligible": false,
+    "severityEligible": false,
+    "lossEligible": false,
+    "prospectiveHoldoutEligible": false
+  },
+  "authority": {
+    "mode": "none",
+    "TRAIN": false,
+    "PRICE": false,
+    "CAPITAL": false,
+    "COVERAGE": false,
+    "SETTLE": false,
+    "movesFunds": false
+  },
+  "artifactHash": "sha256:dbd9a5820ab3bbd3a02bf243fd4a15569da367511ffd80c63ee017f00dbcb6ff"
+}

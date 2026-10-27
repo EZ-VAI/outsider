@@ -1,0 +1,10 @@
+{
+  "status": "SUPERSEDED",
+  "reason": "DETERMINISTIC_CASE_FINGERPRINTS_REQUIRED_EXPLICIT_PSEUDONYMOUS_LINKABILITY_BOUNDARY",
+  "supersededArtifactHash": "sha256:544905f50e0205376ed29c1203a1cf9be0775dc4fd2e9ae4ac14b8b7cb7ed2a4",
+  "canonicalDirectory": "../final-v2",
+  "canonicalArtifact": "../final-v2/outcome-sensing.json",
+  "canonicalArtifactHash": "sha256:450da676c54f9e8781cff0589618e5f8fbbbf66286c0b38316ae4eb95f643c73",
+  "canonicalVerificationLevel": "FULL_OFFICIAL_FDA_MAUDE_SOURCE_REPLAYED",
+  "sourceArtifactsReverifiedByThisMarker": false
+}

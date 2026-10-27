@@ -1,0 +1,32 @@
+{
+  "schema": "outsider/real-case-responsibility-flywheel-supersession/v1",
+  "recordedAt": "2026-08-22T00:15:00.000Z",
+  "superseded": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v7/flywheel.json",
+    "artifactHash": "sha256:eab42d55e58b59874d88603368af71895ae86fd6cbc90840d0cfe4a60fdb0ca6",
+    "artifactFileHash": "sha256:fa2ef2ae12a9cb3a6721aeb838114b04dcf9000a08bd5d45213dbace312ccdee",
+    "artifactFileBytes": 585047,
+    "receiptCount": 14,
+    "laneCount": 25
+  },
+  "successor": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v8/flywheel.json",
+    "artifactHash": "sha256:c57c1ea487a29d83df72b3eceec3dd0d32d8cb2dcfd8f1087b2b2bccfe9f7ce5",
+    "artifactFileHash": "sha256:946f58ae5abb74586cad9495952f48f99a8659b933966e850c50cf2a720dbeb9",
+    "artifactFileBytes": 608326,
+    "receiptCount": 15,
+    "laneCount": 26
+  },
+  "reason": "SOURCE_AWARE_CLINICALTRIALS_SPONSOR_POSTED_AGGREGATE_RESULTS_LANE_ADDED",
+  "canonicalGeneratedAt": "2026-08-22T00:15:00.000Z",
+  "clinicalTrialsStudyTermGroupOrRatePoolingPerformed": false,
+  "clinicalTrialsTrainerRowsEnqueued": 0,
+  "clinicalTrialsTargetTransferEstablished": false,
+  "targetTransferEstablished": false,
+  "previousArtifactBytesPreserved": true,
+  "previousArtifactIsCurrentCanonical": false,
+  "successorRequiresFullSourceReplay": true,
+  "targetSpecificGapClosureCredit": 0,
+  "operationalAuthorityGranted": false,
+  "markerHash": "sha256:66200c00a002900506afd58653a0da7b5a823c1e4ba501f62c12c76f75dcc1e4"
+}

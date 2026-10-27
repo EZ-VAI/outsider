@@ -1,0 +1,23 @@
+{
+  "schema": "outsider/artifact-supersession-marker/v1",
+  "generatedAt": "2026-08-22T02:45:00.000Z",
+  "supersededArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v4/diagnostics.json",
+    "artifactHash": "sha256:739193173128aa8481210dcad00748a11cb11402959eb6ede8d1547961f51466",
+    "serializedFileHash": "sha256:32090580fd5da780091711da72c1b0ac225cc53d8c8c88c64d5229e01f60eea4",
+    "serializedBytes": 410261,
+    "bytePreserved": true,
+    "remainsValidForItsFrozenProjection": true,
+    "isCurrentProjection": false
+  },
+  "currentArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v5/diagnostics.json",
+    "artifactHash": "sha256:fc53740dbf8e0e1f655c875144083f755899338dfef16f79eac86cff60af2af8",
+    "serializedFileHash": "sha256:8ec64d5b685b7819561d98fcf1aed8416cf761c6662114a518cfd85bed7f80f7",
+    "serializedBytes": 457359,
+    "isCurrentProjection": true
+  },
+  "reason": "The current projection exact-binds the final-v8 catalog and final-v7 fourteen-source twenty-five-lane flywheel, adds bounded Waymo published outcome/exposure factors and BridgeData candidate-quality factors, and keeps training rows, target transfer, pooling, price, capital, settlement, and authority at zero or false.",
+  "targetDomainTransferEstablished": false,
+  "operationalAuthorityGranted": false
+}

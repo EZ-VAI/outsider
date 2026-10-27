@@ -1,347 +1,85 @@
-# Outsider Stage 0.5
+# Outsider
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-> **Open-source beta.** Outsider is a local lifecycle controller and evidence
-> system for long-running agent work. It is not an operating-system sandbox,
-> does not make a model universally correct, and only claims control on a host
-> surface after that exact surface passes runtime conformance.
+**An open foundation for coordinating outcomes, recovery, and responsibility across agents and real resources.**
 
-[Releases](https://github.com/EZ-VAI/outsider/releases) ·
-[Security](SECURITY.md) · [Privacy](PRIVACY.md) ·
-[Contributing](CONTRIBUTING.md)
+Outsider starts with a simple idea: a person describes something they want to happen, with a budget and an expectation of completion. Software should organize the resources, carry the work through failure, and preserve responsibility until the result is resolved.
 
-Outsider freezes the operator's acceptance criteria before the first tool
-action, watches long and multi-agent trajectories for drift and repeated waste,
-delivers bounded corrections at synchronous lifecycle boundaries, and
-independently verifies the result before the run is allowed to finish.
+This repository contains the reusable infrastructure behind that idea: outcome planning and durable execution, evidence and attestation, actor and delegation records, recovery coordination, and research modules for pricing, guarantees, claims, and settlement. It excludes the separate HapNex application and its product interfaces.
 
-An ordinary install is **local-only and read-only by default**. It does not
-start an external model and does not send workspace evidence to a third-party
-process. Semantic supervision is enabled only when the operator provides both a
-supervisor command and separate external-disclosure consent.
+## What you can build
 
-## What it does
+- **Durable agent workflows.** Compile a defined result into an `OutcomeProgram`, execute its dependency graph, resume after interruption, and activate an already-bound recovery route when the primary fails.
+- **Resource coordination.** Plan over declared capabilities, costs, time windows, and shared capacity. Bind execution to owner-controlled adapters and evaluate results through the configured observation path.
+- **Multi-agent shared-resource access.** Coordinate agents editing the same page or operating the same resource through a lease, fencing token, version check, and idempotent command. An uncertain external effect must be reconciled before the next command proceeds.
+- **Evidence and responsibility records.** Preserve source-bound observations, actor/delegation bindings, attempts, challenges, and continuing obligations across agent or provider replacement.
+- **Risk and settlement research.** Explore curated evidence, loss/exposure models, non-binding quotes, guarantee gates, and claims lifecycles without treating local records as financial authority.
 
-- Preserves the user's objective verbatim and seals an operator contract before
-  the first tool action.
-- Discovers repository-owned acceptance commands or reads an explicit
-  `.outsider.json` contract.
-- Separates sessions, tool calls, test results, edits, subagent graphs, and
-  controller generations.
-- Detects long-horizon drift, constraint loss, repeated no-progress work,
-  cross-agent conflicts, and stale or false-green validation.
-- Can deny a supported pre-tool call or continue a stopped turn when the exact
-  host hook and controller boundary are available.
-- Verifies mechanical acceptance, semantic completion, and an adversarial review
-  before recording a terminal result.
-- Produces hash-chained events, an evidence manifest, and a separately
-  verifiable terminal state.
+For example, several personal or company agents may need to update one shared page. A coordinator can serialize access and reject stale writes; the page owner's adapter checks authorization and actually performs each write. The same pattern can support a device adapter. Connecting another provider requires implementing and testing that provider's real control and reconciliation boundary.
 
-Outsider does not execute model-generated commands on the model's behalf. It
-also does not treat a correct final answer as proof that Outsider caused the
-correction.
+## Current implementation
 
-## Supported surfaces
-
-Installation, hook configuration, hook trust, runtime observation, and
-**controlled** are different states. `outsider doctor --json` reports them
-separately for local diagnosis. That raw report contains local filesystem
-paths; use `outsider doctor --share-json` if the report will be pasted into a
-chat or sent to another person.
-
-| Surface | Current boundary |
+| Area | Available in this repository |
 | --- | --- |
-| Claude Code CLI (macOS/Linux) | Companion runtime and native hooks are installable. Default is local-only/read-only; controlled status still requires a real conformance receipt. |
-| Claude Desktop Code tab | Uses the same Claude Code hooks and the same two-part supervisor consent. |
-| Claude Desktop Cowork (macOS) | Requires the release plugin archive plus the local helper and a real helper/plugin handshake. |
-| Remote Cowork | Supported only when that remote session can actually reach the helper and emits a conformance record. |
-| Ordinary Claude Chat | Unsupported; it does not run the required hooks. |
-| Codex CLI/Desktop/IDE | The universal plugin and companion runtime are installable. A project-local live run of the exact 1.3.99 source runtime bound one read-only child Agent, blocked a red Stop, delivered and observed a bounded correction, independently re-verified green acceptance, allowed the repaired Stop, finalized `SAFE_DELIVERY`, and verified its 63-event hash chain. The operator must still review the exact hook hash in `/hooks`; Codex hooks are a guardrail, not complete tool coverage. |
-| ChatGPT Chat/Work | The package is structurally eligible for accounts/workspaces that expose local plugin sources; a live ChatGPT Desktop install has not yet been exercised. Ordinary ChatGPT conversations do not expose a universal pre-tool/post-tool/stop lifecycle, so this surface is **not** globally controlled Stage 0.5. |
-| DeepSeek Harness | Research-grade cooperative delivery adapter only; no production semantic-effect or adversarial-host claim. |
-| Trae / CodeBuddy | Observer or wrapper only; no repository-authored command authority and no controlled-loop claim. |
+| Outcome planning | Bounded world-state planning over supplied actions/resources, goal interpretation against a capability catalog, and compilation into the existing program format. |
+| Durable execution | Primary/recovery/witness bindings, dependency-aware execution, durable operation identities, restart recovery, observation, and resource lifecycle handling. |
+| Shared resources | A generic coordination mechanism for cooperating agents and an owner-controlled executor boundary. Actual pages and devices need their own adapters. |
+| Evidence and responsibility | Local integrity verification, lifecycle/source re-verification, actor/delegation records, network intake/conformance, and durable obligation tracking. |
+| Pricing | Research and shadow analysis. The Stage 2 quote frontier returns `NON_BINDING_ABSTAIN`. |
+| Guarantees and settlement | Local accounting, source-binding gates, and candidate claims workflows. Commercial coverage, custody, payment execution, adjudication, and final discharge require actual external integrations. |
 
-Codex currently exposes synchronous hooks for shell/exec, `apply_patch`, MCP
-calls, and most local function tools. Hosted tools such as web search and some
-specialized paths may bypass that hook path; `write_stdin`/polling on an
-existing unified exec session does not run `PreToolUse` again. Those exceptions are part of the
-published boundary.
+Development records include a digital publication run that exercised primary failure, a recovery route, external observation, and resource release. It is evidence for that adapter composition. The open test suite supplies reproducible local checks; it does not require a live cloud account or move money.
 
-The tested Codex host exposed and trusted ten project hook definitions. It did
-not expose `SessionEnd`, even though that event appears in the current Codex
-hook documentation. `SessionEnd` is advisory: its output cannot steer Codex or
-keep a task open. Outsider therefore reports the missing event as a host
-capability gap and does not count eleven-event lifecycle coverage as
-established. The live result above covers the consequential contract, tool,
-correction, Stop, verification, and finalization path; it is not a claim that
-every documented or hosted Codex path was exercised.
+## Get started
 
-## Install the Stage 0.5 runtime
-
-Requires Node.js 20 or newer. **After the reviewed v1.3.99 release has actually
-been published**, download these files from that **same** GitHub release. Until
-then, use the local source-checkout flow below and do not treat the `latest`
-release page as a v1.3.99 installer:
-
-- `outsider-guard-1.3.99.tgz`
-- `outsider-guard-1.3.99-claude.plugin.zip` for Cowork
-- `release-certificate-public-1.3.99.json`
-- `SHA256SUMS`
-
-Verify the archive from an independent terminal, then install:
+Use **Node.js 22 or newer**; Node.js 24 LTS is recommended.
 
 ```bash
-shasum -a 256 outsider-guard-1.3.99.tgz
-npm install -g ./outsider-guard-1.3.99.tgz
-outsider install --scope user
-# Restart the host and start a real session, then:
-outsider doctor --json
-```
-
-Do not use `sudo` for a global npm install. If the default prefix is not
-writable, use a user-owned prefix:
-
-```bash
-npm install -g --prefix "$HOME/.local" ./outsider-guard-1.3.99.tgz
-export PATH="$HOME/.local/bin:$PATH"
-outsider install --scope user
-```
-
-Project scope is available for Claude Code:
-
-```bash
-cd your-project
-outsider install --scope project
-claude
-```
-
-The source checkout includes development tests and operator release tooling, so
-it intentionally refuses direct `npm pack` or `npm install -g .`. After the
-reviewed tag exists, source users must bind the checkout to that tag before
-staging the reviewed public Stage 0.5 import closure. Before the tag exists, use
-only an existing reviewed local checkout; do not treat mutable remote `main` as
-v1.3.99:
-
-```bash
-git clone --branch v1.3.99 --depth 1 https://github.com/EZ-VAI/outsider.git
-cd outsider
 npm ci
 npm test
-npm run test:corpus
-node scripts/stage05-public-package.mjs --out /tmp/outsider-stage05-public-1.3.99
-npm install -g /tmp/outsider-stage05-public-1.3.99
-outsider install --scope user
+npm run demo:shared-page -- --once
 ```
 
-## Install the ChatGPT/Codex universal plugin
-
-The repository now contains a validated universal plugin manifest at
-`plugins/outsider-stage05/` and a repo marketplace at
-`.agents/plugins/marketplace.json`.
-
-### Codex CLI, Desktop, and IDE
-
-For a local checkout (the path is the repository root), register the marketplace
-and install the plugin with the Codex CLI:
+Start with the local planner and orchestrator tests to understand an outcome's lifecycle:
 
 ```bash
-codex plugin marketplace add /path/to/outsider
-codex plugin add outsider-stage05@outsider
+node --test test/outsider-world-state-resource-planner.test.js
+node --test test/outsider-durable-outcome-program-orchestrator-v1.test.js
 ```
 
-After the reviewed `v1.3.99` Git tag has actually been published:
+Tests and examples use explicit fixture adapters. Live provider operations are separate: configure an adapter, supply the relevant owner authorization, and choose the intended action explicitly. Keep credentials and live run directories outside version control.
 
-```bash
-codex plugin marketplace add EZ-VAI/outsider --ref v1.3.99
-codex plugin add outsider-stage05@outsider
-```
+This is a source contribution repository. Modules are ES modules in `src/`; versioned filenames preserve existing contracts while newer compositions evolve. See [Architecture](docs/ARCHITECTURE.md) for the component map and [Contributing](CONTRIBUTING.md) for focused starting points.
 
-Restart Codex after installation. Open `/hooks`, inspect the source and exact
-command hash, and trust only the reviewed definition. Then start a real session
-and run:
 
-```bash
-outsider doctor --json
-codex plugin list
-codex plugin marketplace list
-```
+See [shared-resource coordination](docs/SHARED-RESOURCE-COORDINATION.md) for the runnable page example and adapter contract. See [data and evidence](docs/DATA-AND-EVIDENCE.md) for source replay and dataset licenses. `npm run test:research` runs the additional research suite and requires its documented source data.
 
-### Eligible ChatGPT Desktop accounts and workspaces
+## Two views of the system
 
-The Codex CLI command above can register the reviewed repo marketplace, but
-ChatGPT plugin installation and testing happen in the ChatGPT Desktop UI:
+The execution stack has three layers:
 
-1. Make the reviewed `v1.3.99` checkout the active repository, or register its
-   marketplace with `codex plugin marketplace add EZ-VAI/outsider --ref v1.3.99`.
-2. Restart ChatGPT Desktop.
-3. Open the Plugins Directory, choose the **Outsider** marketplace source, and
-   install **Outsider Stage 0.5**.
-4. Start a new conversation with the plugin enabled and test direct, indirect,
-   follow-up, negative, and intentional-boundary prompts.
+1. **Outcome OS:** define, coordinate, observe, and replay a result.
+2. **Formation and recovery:** bind usable capabilities and a contingency, including trigger, expiry, cost, and exercise conditions.
+3. **Outcome commitment:** admit a bounded commitment only when the required reservations, authority, observation, and financial gates are present.
 
-The Plugins Directory and local marketplace controls are available only on
-eligible accounts/workspaces and may be disabled by workspace policy. Installing
-the ChatGPT plugin exposes the Outsider skill; it does not install the companion
-runtime or create a global lifecycle interceptor.
+The evidence-to-settlement pipeline describes a different axis:
 
-The plugin package is structurally ready for repo/local marketplace installation
-on Codex and on eligible ChatGPT accounts/workspaces that expose local plugin
-sources. Codex installation has been exercised in isolation; a live ChatGPT
-Desktop install and new-chat evaluation are not yet established. Surface
-availability is controlled by the host account and workspace policy. A
-listing in the public universal Plugins Directory is a separate OpenAI
-submission and review step and is **not** claimed until it has actually been
-published there.
+| Stage | Purpose | Present boundary |
+| --- | --- | --- |
+| 0.5 — MEASURE | Capture the task contract and agent execution evidence; support lifecycle supervision on configured hosts. | Exact host hooks and runtime conformance determine control coverage. |
+| 1 — ATTEST | Verify integrity, source replay, and evidence lifecycle. | A verified signature establishes a key-bound statement, not institutional standing. |
+| 1.5 — CURATE | Organize evidence with provenance, rights, and reuse constraints. | Intake and curation do not automatically authorize training or financial use. |
+| 2 — PRICE | Study prospective risk, exposure, loss, and pricing. | Research/non-binding outputs; no executable insurance quote. |
+| 3 — GUARANTEE | Check source bindings, request accounting, and one-use capability gates. | No policy issuance, proven reserve, custody, or fund transfer. |
+| 4 — CLAIMS / SETTLE | Preserve claims, challenges, receipts, and settlement candidates. | Current frontier remains `HOLD`; it does not move funds or finally close obligations. |
 
-On ChatGPT, the plugin provides the Outsider install and evidence-verification
-skill. It does not install a hidden global interceptor. On Codex, the bundled
-hook is a boundary notice; the companion runtime owns the actual Stage 0.5 hook
-and controller path. Plugin visibility alone is never a controlled receipt.
+These stage names describe components and a development direction. They are not a claim that a global financial clearing network is operating.
 
-## Optional external supervisor: explicit two-part consent
+## Contribute
 
-Full semantic supervision requires both a command and separate consent.
-Omitting either keeps Outsider local-only/read-only and fail-closed for
-potential world changes.
+Useful contributions include a small provider adapter with reconciliation tests, a planner constraint, a shared-resource concurrency case, a reproducible restart/recovery scenario, a source verifier, or a clearer example. Please start with [CONTRIBUTING.md](CONTRIBUTING.md).
 
-```bash
-outsider install --scope user \
-  --supervisor-argv '["claude","-p"]' \
-  --allow-external-supervisor
-```
+## License
 
-The installer accepts only executable/argument identity. Inline tokens,
-passwords, private-key material, and credential-bearing query URLs are refused;
-authenticate the selected supervisor through its own protected credential
-store. Existing Claude/Codex settings fail closed if they are malformed,
-symlinked, or change during the update; the installer preserves the original
-and writes a unique mode-`0600` backup before the atomic replacement.
-
-In CLI environments without the system helper, both gates must be present in
-the environment that launches the host:
-
-```bash
-export OUTSIDER_SUPERVISOR_ARGV='["claude","-p"]'
-export OUTSIDER_ALLOW_EXTERNAL_SUPERVISOR=1
-claude
-```
-
-The selected command receives a recursively minimized and redacted packet.
-Sensitive-file evidence units, binary/non-plain objects, common credential
-blocks, authorization values, and URL queries are removed. The packet may still
-contain the non-sensitive source excerpts, task prompt, tool summaries, and
-acceptance output needed for review. Redaction is defense in depth, not a proof
-that every future secret format is recognizable. Read [PRIVACY.md](PRIVACY.md)
-before opting in.
-
-Standalone/legacy CodeBuddy and Trae adapters never obtain command authority
-from repository-writable `.outsider/run.json` or `.outsider/contract.json`.
-Only the authenticated controller/RunStore path may execute acceptance or
-supervisor commands; those adapters remain observer/unsupported surfaces.
-
-Headless runs enforce the same two gates:
-
-```bash
-outsider run "Complete this task" --accept "npm test" --max-budget-usd 20 \
-  --supervisor-argv '["claude","-p"]' --allow-external-supervisor
-```
-
-## Claude Desktop / Cowork
-
-Claude Desktop's Code tab uses the native Claude Code hooks.
-
-Cowork additionally requires:
-
-1. `outsider install --scope user` to register the private local helper.
-2. Uploading `outsider-guard-1.3.99-claude.plugin.zip` from the same release.
-3. A new Cowork session and a real runtime handshake.
-
-The plugin is a thin client; controller state remains outside the hosted
-sandbox. If the helper is unavailable, Outsider reports the surface as
-unsupported rather than pretending it is controlled.
-
-## Contracts and verification
-
-Outsider discovers repository-owned acceptance in this order:
-
-1. `.outsider.json` `acceptance`
-2. `package.json` `test`, then `check`, `verify`, or `ci`
-3. Conventional Python, Cargo, Go, or Make entrypoints
-
-Example:
-
-```json
-{
-  "acceptance": "npm run test:sealed"
-}
-```
-
-Without executable acceptance, Outsider reports observer-only. Knowledge work
-and non-code tasks need artifact-specific acceptance for a full terminal proof.
-
-Inspect local runs:
-
-```bash
-outsider runs
-outsider show <run-id>
-outsider verify /absolute/path/to/run
-```
-
-Attached state defaults to `~/.outsider/attached/`, headless state to
-`~/.outsider/runs/`; directories are mode `0700` and evidence files mode
-`0600`.
-
-## Optional experience contribution
-
-Telemetry and external contribution are off by default. Supervisor consent and
-contribution consent are separate boundaries.
-
-```bash
-outsider share preview <run-id>
-outsider share enable \
-  --endpoint <endpoint-from-the-same-reviewed-release> \
-  --server-public-key ./outsider-server-public-key.pem \
-  --accept-policy
-outsider share send <run-id>
-outsider share status
-outsider share disable
-outsider share revoke --send --reason USER_REQUEST
-```
-
-`preview` is offline. Each run requires an explicit send. The allowlisted
-projection excludes raw source, prompts, transcripts, paths, command output,
-credentials, and raw events. Contributions enter quarantine and cannot
-automatically become PRICE, GUARANTEE, or SETTLE evidence.
-
-See [Experience Contributions](docs/EXPERIENCE-CONTRIBUTIONS.md) and
-[Privacy Policy](PRIVACY.md).
-
-## Demo and deterministic checks
-
-The [Stage 0.5 demo](deploy/cloudflare-product-demo/) is a fixed replay of a
-privacy-projected Claude Agent Team canary. It verifies the public artifact hash
-and ordered evidence chain; it is not a live agent execution or customer
-production record.
-
-```bash
-npm run demo:serve
-npm test
-npm run test:corpus
-```
-
-Release reproduction is documented in
-[Public release procedure](docs/PUBLIC-RELEASE.md).
-
-## Known beta limits
-
-- Only exact host surfaces with runtime conformance can be called controlled.
-- Outsider is not an OS/process sandbox.
-- A canary or fixture is evidence only for its exact version, environment, and
-  instrumentation.
-- Synchronous controller timeouts can pause a tool call for up to the configured
-  budget before returning an explicit denial.
-- ChatGPT plugin installation does not create a universal ChatGPT lifecycle
-  interceptor.
-- Codex plugin installation does not automatically trust hooks and does not
-  cover hosted or opt-out tool paths.
+[Apache License 2.0](LICENSE).

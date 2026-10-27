@@ -1,0 +1,1884 @@
+{
+  "schema": "outsider/institutional-capital-claims-evidence/v1",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-21T10:30:00.000Z",
+  "adapter": {
+    "adapterId": "OUTSIDER_INSTITUTIONAL_CAPITAL_CLAIMS_EVIDENCE",
+    "adapterVersion": "1.0.0",
+    "specificationHash": "sha256:b7e04d79024b961e27dff4d30ddb8453cb54a613e862c441c2c230e989143005"
+  },
+  "sourceManifest": {
+    "frozenAt": "2026-08-21T10:30:00.000Z",
+    "sourceObjects": [
+      {
+        "path": "fdic-failures.json",
+        "kind": "FDIC_BANKFIND_FAILURES_API_JSON",
+        "sourceGroup": "FDIC_BANK_FAILURES_1934_2026",
+        "url": "https://api.fdic.gov/banks/failures?limit=10000&sort_by=FAILDATE&sort_order=ASC&fields=NAME,CERT,FIN,CITYST,FAILDATE,FAILYR,SAVR,RESTYPE,RESTYPE1,QBFDEP,QBFASSET,COST,PSTALP,BIDNAME,BIDCITY,BIDSTATE",
+        "sizeBytes": 1349551,
+        "sha256": "sha256:4f1efa1011326cf6d5dacc2b407d4a20a42c603ec79cb02a62ba26d1ff73fb3f"
+      },
+      {
+        "path": "fdic-failures-swagger.yaml",
+        "kind": "FDIC_BANKFIND_API_SPECIFICATION_YAML",
+        "sourceGroup": "FDIC_BANK_FAILURES_1934_2026",
+        "url": "https://api.fdic.gov/banks/docs/swagger.yaml",
+        "sizeBytes": 34749,
+        "sha256": "sha256:854500ae68d77185a12fc9260e0bbc0194e3848df0e54086f828656ea508852b"
+      },
+      {
+        "path": "fdic-failure-properties.yaml",
+        "kind": "FDIC_FAILURE_FIELD_DICTIONARY_YAML",
+        "sourceGroup": "FDIC_BANK_FAILURES_1934_2026",
+        "url": "https://api.fdic.gov/banks/docs/failure_properties.yaml",
+        "sizeBytes": 14728,
+        "sha256": "sha256:7e3137fb6fc93dd49371b4d032f48fad403efd3d9a7f5cc8ca5480c00807364c"
+      },
+      {
+        "path": "fdic-dividends.html",
+        "kind": "FDIC_RECEIVERSHIP_DIVIDEND_POLICY_HTML",
+        "sourceGroup": "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999",
+        "url": "https://closedbanks.fdic.gov/dividends/",
+        "sizeBytes": 12976,
+        "sha256": "sha256:e63c280e548aba441a332221bfcb4ccf4e57db5afd1941a54912430ba43173d4"
+      },
+      {
+        "path": "fdic-dividends.json",
+        "kind": "FDIC_RECEIVERSHIP_DIVIDEND_EVENTS_JSON",
+        "sourceGroup": "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999",
+        "url": "https://closedbanks.fdic.gov/dividends/search/All",
+        "sizeBytes": 930766,
+        "sha256": "sha256:21f79ac746296613a8c0df48993c7be2f692feb117c21ba44b464f9cb9ce6206"
+      },
+      {
+        "path": "fdic-dividends-repeat.json",
+        "kind": "FDIC_RECEIVERSHIP_DIVIDEND_EVENTS_REPEAT_FETCH_JSON",
+        "sourceGroup": "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999",
+        "url": "https://closedbanks.fdic.gov/dividends/search/All",
+        "sizeBytes": 930766,
+        "sha256": "sha256:00198c08f3c3b0a59151683ffb7786a50d2bc4de1d651dbc7cdfd8c0125d2c45"
+      },
+      {
+        "path": "fdic-dividends-app.js",
+        "kind": "FDIC_RECEIVERSHIP_DIVIDEND_ENDPOINT_CLIENT_JS",
+        "sourceGroup": "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999",
+        "url": "https://dpsx.fdic.gov/scripts/divfunds/divscripts.min.js",
+        "sizeBytes": 4724,
+        "sha256": "sha256:1ffb80fec775d4a2b50c4f4a3841d788931673de198d2fff453db4e0b15dc76f"
+      },
+      {
+        "path": "treasury-tcmm.html",
+        "kind": "US_TREASURY_COLLATERAL_CUSTODY_PROGRAM_HTML",
+        "sourceGroup": "TREASURY_TCMM_COLLATERAL_CUSTODY_RULES",
+        "url": "https://fiscal.treasury.gov/payments-to-government/treasury-collateral-management-monitoring-tcmm",
+        "sizeBytes": 118700,
+        "sha256": "sha256:2095ed9a9ad42c360328d2b844363651040d3a77b2812ed32cd041dcae29e4ba"
+      },
+      {
+        "path": "rli-edgar-index.json",
+        "kind": "SEC_EDGAR_FILING_DIRECTORY_JSON",
+        "sourceGroup": "SEC_RLI_2025_10K",
+        "url": "https://www.sec.gov/Archives/edgar/data/84246/000110465926018013/index.json",
+        "sizeBytes": 11754,
+        "sha256": "sha256:97c2b2a6731abd7fb5b416a94d8a9e204cba13560511fe824564054a36d8148b"
+      },
+      {
+        "path": "rli-2025-10k.html",
+        "kind": "SEC_EDGAR_INLINE_XBRL_10K_HTML",
+        "sourceGroup": "SEC_RLI_2025_10K",
+        "url": "https://www.sec.gov/Archives/edgar/data/84246/000110465926018013/rli-20251231x10k.htm",
+        "sizeBytes": 8558265,
+        "sha256": "sha256:a01661c1abfb9880fe8a6452a5e17d1cf407ba2bff5ed44cdf4c5aee4ee1e853"
+      },
+      {
+        "path": "asop-23-data-quality.html",
+        "kind": "ASB_ADOPTED_STANDARD_HTML",
+        "sourceGroup": "ASB_ASOP_23",
+        "url": "https://www.actuarialstandardsboard.org/asops/data-quality/",
+        "sizeBytes": 115940,
+        "sha256": "sha256:fa25a7aab95bcd5eec55db5c57197db5788cbd6f35edb8ada3be0f4059d0fb32"
+      },
+      {
+        "path": "asop-36-reserve-opinion.html",
+        "kind": "ASB_ADOPTED_STANDARD_HTML",
+        "sourceGroup": "ASB_ASOP_36",
+        "url": "https://www.actuarialstandardsboard.org/asops/asop-no-36-statements-of-actuarial-opinion-regarding-property-casualty-loss-loss-adjustment-expense-or-other-reserves/",
+        "sizeBytes": 141053,
+        "sha256": "sha256:a5f2fa8807fa1083d484336683b42f1eaa3cf123f035504d52a319595a81bddd"
+      },
+      {
+        "path": "asop-53-future-costs.html",
+        "kind": "ASB_ADOPTED_STANDARD_HTML",
+        "sourceGroup": "ASB_ASOP_53",
+        "url": "https://www.actuarialstandardsboard.org/asops/estimating-future-costs-prospective-propertycasualty-risk-transfer-risk-retention/",
+        "sizeBytes": 108333,
+        "sha256": "sha256:b97c0cd7ec5fccb4c3dda86908a65ec21d8839c4e01d7c1af3414c9eab594a5f"
+      },
+      {
+        "path": "asop-55-capital-adequacy.html",
+        "kind": "ASB_ADOPTED_STANDARD_HTML",
+        "sourceGroup": "ASB_ASOP_55",
+        "url": "https://www.actuarialstandardsboard.org/asops/capital-adequacy-assessment/",
+        "sizeBytes": 133774,
+        "sha256": "sha256:8c5df1297e90b32974ba5aac6c501b03d88263d605279fb92ca83a2d220cf89c"
+      }
+    ],
+    "sourceGroups": [
+      "FDIC_BANK_FAILURES_1934_2026",
+      "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999",
+      "TREASURY_TCMM_COLLATERAL_CUSTODY_RULES",
+      "SEC_RLI_2025_10K",
+      "ASB_ASOP_23",
+      "ASB_ASOP_36",
+      "ASB_ASOP_53",
+      "ASB_ASOP_55"
+    ],
+    "sourceBytes": 12466079,
+    "sourceSetHash": "sha256:057079002eeb216ef4dc047b9268d990d9dbf847f112967ae145605c72434f89",
+    "constructionMode": "RAW_FROZEN_BYTES_REBUILT_INSIDE_BUILDER",
+    "acceptsCallerSourceResult": false,
+    "acceptsCallerVerificationResult": false,
+    "acceptsCallerAdmissionCallback": false,
+    "sourceArtifactsReverifiedInsideBuilder": true
+  },
+  "measurementDictionary": {
+    "schema": "outsider/institutional-capital-claims-measurement-dictionary/v1",
+    "version": "1.0.0",
+    "arithmetic": "INTEGER_COUNTS_BIGINT_MONEY_AND_HALF_UP_FIXED_DECIMALS",
+    "entries": [
+      {
+        "measurementId": "FDIC_FAILURE_ENDPOINT_ACCOUNTING",
+        "sourceDomain": "US_BANK_RESOLUTION",
+        "equation": "PUBLISHED_ROWS_EQUALS_META_TOTAL_EQUALS_TOTALS_COUNT",
+        "denominator": "PINNED_ENDPOINT_SNAPSHOT",
+        "interpretation": "NOT_ALL_ACTIVE_BANKS"
+      },
+      {
+        "measurementId": "FDIC_FAILURE_RESOLUTION_CLASS",
+        "sourceDomain": "US_BANK_RESOLUTION",
+        "equation": "COUNT_BY_RESTYPE_AND_RESTYPE1_WITHOUT_COLLAPSING_CODES",
+        "denominator": "4115_FAILURE_OR_ASSISTANCE_ROWS",
+        "interpretation": "NOT_CAUSAL"
+      },
+      {
+        "measurementId": "FDIC_PRE_FAILURE_DEPOSITS",
+        "sourceDomain": "US_BANK_RESOLUTION",
+        "equation": "QBFDEP_AS_DOCUMENTED",
+        "denominator": "ROW_WITH_FIELD_PRESENT",
+        "interpretation": "THOUSANDS_USD_LAST_REPORT_CAVEAT"
+      },
+      {
+        "measurementId": "FDIC_PRE_FAILURE_ASSETS",
+        "sourceDomain": "US_BANK_RESOLUTION",
+        "equation": "QBFASSET_AS_DOCUMENTED",
+        "denominator": "ROW_WITH_FIELD_PRESENT",
+        "interpretation": "THOUSANDS_USD_EXCLUDES_OFF_BALANCE_SHEET"
+      },
+      {
+        "measurementId": "FDIC_ESTIMATED_DIF_RESOLUTION_LOSS",
+        "sourceDomain": "US_BANK_RESOLUTION",
+        "equation": "COST_AS_DOCUMENTED",
+        "denominator": "ROW_WITH_COST_PRESENT",
+        "interpretation": "REVISED_ESTIMATE_NOT_CLAIM_PAYMENT_OR_RESERVE"
+      },
+      {
+        "measurementId": "FDIC_COST_TO_DEPOSIT_RATIO",
+        "sourceDomain": "US_BANK_RESOLUTION",
+        "equation": "ROW_COST_DIVIDED_BY_POSITIVE_QBFDEP_ROUNDED_TO_8_DECIMALS",
+        "denominator": "COST_PRESENT_AND_POSITIVE_DEPOSIT",
+        "interpretation": "FAILED_INSTITUTIONS_ONLY"
+      },
+      {
+        "measurementId": "FDIC_COST_TO_ASSET_RATIO",
+        "sourceDomain": "US_BANK_RESOLUTION",
+        "equation": "ROW_COST_DIVIDED_BY_POSITIVE_QBFASSET_ROUNDED_TO_8_DECIMALS",
+        "denominator": "COST_PRESENT_AND_POSITIVE_ASSET",
+        "interpretation": "FAILED_INSTITUTIONS_ONLY"
+      },
+      {
+        "measurementId": "FDIC_DIVIDEND_EVENT",
+        "sourceDomain": "US_BANK_RECEIVERSHIP",
+        "equation": "ONE_PUBLISHED_ENDPOINT_ROW",
+        "denominator": "PINNED_POST_1999_LIST",
+        "interpretation": "EVENT_NOT_INDIVIDUAL_CLAIM_OR_BANK_TRANSFER_RECEIPT"
+      },
+      {
+        "measurementId": "FDIC_DIVIDEND_EVENT_PERCENT",
+        "sourceDomain": "US_BANK_RECEIVERSHIP",
+        "equation": "PAID_PERCENT",
+        "denominator": "CLAIM_PRIORITY_WITHIN_FUND",
+        "interpretation": "MARGINAL_PERCENT_NOT_DOLLARS"
+      },
+      {
+        "measurementId": "FDIC_DIVIDEND_CUMULATIVE_PERCENT",
+        "sourceDomain": "US_BANK_RECEIVERSHIP",
+        "equation": "TOTAL_PAID",
+        "denominator": "SAME_FUND_AND_NORMALIZED_PRIORITY_ONLY",
+        "interpretation": "NEVER_SUM_ACROSS_FUNDS_OR_PRIORITIES"
+      },
+      {
+        "measurementId": "FDIC_DIVIDEND_LATENCY",
+        "sourceDomain": "US_BANK_RECEIVERSHIP",
+        "equation": "PAY_DATE_MINUS_CLOSED_DATE_IN_UTC_DAYS",
+        "denominator": "DISTINCT_ROWS_WITH_VALID_DATES",
+        "interpretation": "NOT_HARM_RECOVERY_TIME"
+      },
+      {
+        "measurementId": "FDIC_FINAL_DIVIDEND_BOUNDARY",
+        "sourceDomain": "US_BANK_RECEIVERSHIP",
+        "equation": "COUNT_FINAL_ROWS_BY_TOTAL_PAID_BELOW_OR_EQUAL_100_PERCENT",
+        "denominator": "DIV_TYPE_FINAL",
+        "interpretation": "FINAL_EVENT_NOT_FULL_RECOVERY_OR_REALITY_RESTORATION"
+      },
+      {
+        "measurementId": "SEC_GROSS_CLAIM_LIABILITY",
+        "sourceDomain": "SELECTED_PUBLIC_INSURER_FILING",
+        "equation": "INLINE_XBRL_GROSS_LIABILITY_CURRENT_CONSOLIDATED_CONTEXT",
+        "denominator": "RLI_2025_10K",
+        "interpretation": "ISSUER_REPORTED_NOT_OUTSIDER_RESERVE"
+      },
+      {
+        "measurementId": "SEC_REINSURANCE_RECOVERABLE",
+        "sourceDomain": "SELECTED_PUBLIC_INSURER_FILING",
+        "equation": "INLINE_XBRL_RECOVERABLE_CURRENT_CONSOLIDATED_CONTEXT",
+        "denominator": "RLI_2025_10K",
+        "interpretation": "COUNTERPARTY_RECOVERABLE_NOT_CASH"
+      },
+      {
+        "measurementId": "SEC_NET_UNPAID_CLAIM_LIABILITY",
+        "sourceDomain": "SELECTED_PUBLIC_INSURER_FILING",
+        "equation": "GROSS_MINUS_RECOVERABLE_EQUALS_NET",
+        "denominator": "SAME_CURRENT_CONSOLIDATED_CONTEXT",
+        "interpretation": "GAAP_FILING_SCOPE_ONLY"
+      },
+      {
+        "measurementId": "SEC_STATUTORY_CAPITAL_AND_REQUIRED_RBC",
+        "sourceDomain": "SELECTED_PUBLIC_INSURER_FILING",
+        "equation": "SEPARATELY_EXTRACT_EXACT_SUBSIDIARY_SURPLUS_AND_PRINCIPAL_COMPANY_AUTHORIZED_CONTROL_LEVEL",
+        "denominator": "ENTITY_SCOPE_SPECIFIC",
+        "interpretation": "NO_CROSS_ENTITY_RATIO"
+      },
+      {
+        "measurementId": "SEC_RESTRICTED_REGULATORY_DEPOSIT",
+        "sourceDomain": "SELECTED_PUBLIC_INSURER_FILING",
+        "equation": "INLINE_XBRL_RESTRICTED_INVESTMENTS_CURRENT_CONSOLIDATED_CONTEXT",
+        "denominator": "RLI_2025_10K",
+        "interpretation": "REAL_RESTRICTION_NOT_OUTSIDER_CUSTODY"
+      },
+      {
+        "measurementId": "TREASURY_COLLATERAL_CUSTODY_STRUCTURE",
+        "sourceDomain": "US_PUBLIC_FUNDS_COLLATERAL",
+        "equation": "PIN_RULE_ROLE_AND_CUSTODY_STATEMENTS",
+        "denominator": "TCMM_PROGRAM_PAGE",
+        "interpretation": "STRUCTURAL_ONLY_NO_TRANSACTION_RECEIPT"
+      },
+      {
+        "measurementId": "ASOP_PROFESSIONAL_REVIEW_STRUCTURE",
+        "sourceDomain": "US_ACTUARIAL_PRACTICE",
+        "equation": "PIN_ADOPTED_STATUS_EFFECTIVE_DATE_AND_REQUIRED_TOPICS",
+        "denominator": "ASOP_23_36_53_55",
+        "interpretation": "STANDARD_IS_NOT_AN_OUTSIDER_REVIEW"
+      }
+    ]
+  },
+  "qualityGate": {
+    "schema": "outsider/source-quality-gate/v1",
+    "version": "1.0.0",
+    "dimensions": [
+      "reality",
+      "completeness",
+      "measurement",
+      "selectionBias",
+      "correlation",
+      "revision",
+      "independentReview",
+      "rights",
+      "sourceReplay"
+    ],
+    "publisherIdentityUsedAsQualityScore": false,
+    "assessments": [
+      {
+        "sourceId": "FDIC_BANK_FAILURES_1934_2026",
+        "sourcePaths": [
+          "fdic-failures.json",
+          "fdic-failures-swagger.yaml",
+          "fdic-failure-properties.yaml"
+        ],
+        "reality": "OBSERVED_REGULATORY_FAILURE_AND_ASSISTANCE_RECORDS",
+        "completeness": "PINNED_ENDPOINT_ROWS_ACCOUNTED_BUT_NO_ACTIVE_BANK_DENOMINATOR",
+        "measurement": "FIELD_DICTIONARY_PINNED_UNITS_AND_CAVEATS_PRESERVED",
+        "selectionBias": "ONLY_FAILED_OR_ASSISTED_INSTITUTIONS_AND_HISTORICAL_PROGRAM_CHANGES",
+        "correlation": "TIME_GEOGRAPHY_AND_RESOLUTION_DEPENDENCE_NOT_IDENTIFIED_AS_IID",
+        "revision": "COST_IS_REVISED_ESTIMATE_AND_ENDPOINT_INDEX_IS_MUTABLE",
+        "independentReview": "REGULATOR_PUBLISHED_NOT_INDEPENDENT_AUDIT_OF_EACH_ROW",
+        "rights": "PUBLIC_ACCESS_OBSERVED_REUSE_TRAINING_COMMERCIAL_RIGHTS_NOT_CONCLUDED",
+        "sourceReplay": "EXACT_RAW_BYTES_AND_DOCUMENTED_SCHEMA_REQUIRED",
+        "admissionDecision": "ADMIT_REAL_SOURCE_DOMAIN_DESCRIPTIVE"
+      },
+      {
+        "sourceId": "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999",
+        "sourcePaths": [
+          "fdic-dividends.html",
+          "fdic-dividends.json",
+          "fdic-dividends-repeat.json",
+          "fdic-dividends-app.js"
+        ],
+        "reality": "OBSERVED_RECEIVERSHIP_DIVIDEND_EVENTS",
+        "completeness": "PAGE_LIMITS_LIST_TO_FAILURES_SINCE_1999_NO_CLAIM_DENOMINATOR",
+        "measurement": "POLICY_DEFINES_EVENT_TYPES_AND_PERCENT_FIELDS_NOT_DOLLARS",
+        "selectionBias": "PROVEN_CLAIMANT_RECEIVERSHIPS_ONLY_NO_DENIED_CLAIM_POPULATION",
+        "correlation": "REPEATED_EVENTS_NESTED_WITHIN_FUND_AND_PRIORITY",
+        "revision": "TWO_FETCHES_SAME_EVENT_MULTISET_DIFFERENT_RAW_ORDER_AND_CUMULATIVE_REVISIONS_PRESENT",
+        "independentReview": "RECEIVER_PUBLISHED_NOT_INDEPENDENT_PAYMENT_RECEIPT_AUDIT",
+        "rights": "PUBLIC_ACCESS_OBSERVED_REUSE_TRAINING_COMMERCIAL_RIGHTS_NOT_CONCLUDED",
+        "sourceReplay": "BOTH_EXACT_RAW_RESPONSES_AND_POLICY_PAGE_REQUIRED",
+        "admissionDecision": "ADMIT_REAL_PAYMENT_LIFECYCLE_DESCRIPTIVE"
+      },
+      {
+        "sourceId": "TREASURY_TCMM_COLLATERAL_CUSTODY_RULES",
+        "sourcePaths": [
+          "treasury-tcmm.html"
+        ],
+        "reality": "OPERATING_GOVERNMENT_PROGRAM_DESCRIPTION",
+        "completeness": "RULE_AND_ROLE_PAGE_WITHOUT_TRANSACTION_POPULATION",
+        "measurement": "COLLATERAL_VALUATION_AND_CUSTODY_ROLES_DESCRIBED_NO_AMOUNTS_EXTRACTED",
+        "selectionBias": "PUBLIC_FUNDS_AND_INDIVIDUAL_SURETY_CONTEXTS_ONLY",
+        "correlation": "NOT_APPLICABLE_TO_STRUCTURAL_EVIDENCE",
+        "revision": "LIVE_PROGRAM_PAGE_CAN_CHANGE",
+        "independentReview": "PROGRAM_OPERATOR_STATEMENT_NOT_INDEPENDENT_AUDIT",
+        "rights": "PUBLIC_ACCESS_OBSERVED_REUSE_TRAINING_COMMERCIAL_RIGHTS_NOT_CONCLUDED",
+        "sourceReplay": "EXACT_RAW_PAGE_REQUIRED",
+        "admissionDecision": "STRUCTURAL_GOVERNANCE_ONLY"
+      },
+      {
+        "sourceId": "SEC_RLI_2025_10K",
+        "sourcePaths": [
+          "rli-edgar-index.json",
+          "rli-2025-10k.html"
+        ],
+        "reality": "REAL_ISSUER_REPORTED_2025_FINANCIAL_AND_REGULATORY_DISCLOSURES",
+        "completeness": "ONE_SELECTED_PUBLIC_INSURER_NOT_INSURER_POPULATION",
+        "measurement": "INLINE_XBRL_CONCEPT_CONTEXT_UNIT_AND_SCALE_REPLAYED",
+        "selectionBias": "SINGLE_PUBLIC_PROPERTY_CASUALTY_GROUP_SELECTED_FOR_MEASUREMENT_STRUCTURE",
+        "correlation": "FACTS_SHARE_ONE_REPORTING_GROUP_AND_ACCOUNTING_PERIOD",
+        "revision": "FILING_CAN_BE_AMENDED_OR_RESTATED_AND_ACCOUNTING_BASES_DIFFER",
+        "independentReview": "AUDITOR_REPORT_PRESENT_BUT FACT_LEVEL_AUDIT_SCOPE_NOT_INDEPENDENTLY_MAPPED",
+        "rights": "PUBLIC_ACCESS_OBSERVED_REUSE_TRAINING_COMMERCIAL_RIGHTS_NOT_CONCLUDED",
+        "sourceReplay": "EXACT_EDGAR_INDEX_AND_INLINE_XBRL_BYTES_REQUIRED",
+        "admissionDecision": "ADMIT_REAL_ISSUER_DISCLOSURE_DESCRIPTIVE"
+      },
+      {
+        "sourceId": "ASB_ASOP_23",
+        "sourcePaths": [
+          "asop-23-data-quality.html"
+        ],
+        "reality": "ADOPTED_PROFESSIONAL_STANDARD",
+        "completeness": "NAMED_STANDARD_ONLY_NOT_COMPLETE_LAW_REGULATION_OR_ASSIGNMENT_FILE",
+        "measurement": "STATUS_EFFECTIVE_DATE_SCOPE_AND_REQUIRED_TOPICS_PINNED",
+        "selectionBias": "US_ACTUARIAL_PRACTICE_SCOPE_ONLY",
+        "correlation": "NOT_EMPIRICAL_OUTCOME_DATA",
+        "revision": "STANDARD_CAN_BE_REVISED_OR_SUPERSEDED",
+        "independentReview": "DEFINES_PRACTICE_EXPECTATIONS_BUT PERFORMS_NO_OUTSIDER_REVIEW",
+        "rights": "PUBLIC_ACCESS_OBSERVED_REUSE_TRAINING_COMMERCIAL_RIGHTS_NOT_CONCLUDED",
+        "sourceReplay": "EXACT_RAW_STANDARD_PAGE_REQUIRED",
+        "admissionDecision": "STRUCTURAL_PROFESSIONAL_STANDARD_ONLY"
+      },
+      {
+        "sourceId": "ASB_ASOP_36",
+        "sourcePaths": [
+          "asop-36-reserve-opinion.html"
+        ],
+        "reality": "ADOPTED_PROFESSIONAL_STANDARD",
+        "completeness": "NAMED_STANDARD_ONLY_NOT_COMPLETE_LAW_REGULATION_OR_ASSIGNMENT_FILE",
+        "measurement": "STATUS_EFFECTIVE_DATE_SCOPE_AND_REQUIRED_TOPICS_PINNED",
+        "selectionBias": "US_ACTUARIAL_PRACTICE_SCOPE_ONLY",
+        "correlation": "NOT_EMPIRICAL_OUTCOME_DATA",
+        "revision": "STANDARD_CAN_BE_REVISED_OR_SUPERSEDED",
+        "independentReview": "DEFINES_PRACTICE_EXPECTATIONS_BUT PERFORMS_NO_OUTSIDER_REVIEW",
+        "rights": "PUBLIC_ACCESS_OBSERVED_REUSE_TRAINING_COMMERCIAL_RIGHTS_NOT_CONCLUDED",
+        "sourceReplay": "EXACT_RAW_STANDARD_PAGE_REQUIRED",
+        "admissionDecision": "STRUCTURAL_PROFESSIONAL_STANDARD_ONLY"
+      },
+      {
+        "sourceId": "ASB_ASOP_53",
+        "sourcePaths": [
+          "asop-53-future-costs.html"
+        ],
+        "reality": "ADOPTED_PROFESSIONAL_STANDARD",
+        "completeness": "NAMED_STANDARD_ONLY_NOT_COMPLETE_LAW_REGULATION_OR_ASSIGNMENT_FILE",
+        "measurement": "STATUS_EFFECTIVE_DATE_SCOPE_AND_REQUIRED_TOPICS_PINNED",
+        "selectionBias": "US_ACTUARIAL_PRACTICE_SCOPE_ONLY",
+        "correlation": "NOT_EMPIRICAL_OUTCOME_DATA",
+        "revision": "STANDARD_CAN_BE_REVISED_OR_SUPERSEDED",
+        "independentReview": "DEFINES_PRACTICE_EXPECTATIONS_BUT PERFORMS_NO_OUTSIDER_REVIEW",
+        "rights": "PUBLIC_ACCESS_OBSERVED_REUSE_TRAINING_COMMERCIAL_RIGHTS_NOT_CONCLUDED",
+        "sourceReplay": "EXACT_RAW_STANDARD_PAGE_REQUIRED",
+        "admissionDecision": "STRUCTURAL_PROFESSIONAL_STANDARD_ONLY"
+      },
+      {
+        "sourceId": "ASB_ASOP_55",
+        "sourcePaths": [
+          "asop-55-capital-adequacy.html"
+        ],
+        "reality": "ADOPTED_PROFESSIONAL_STANDARD",
+        "completeness": "NAMED_STANDARD_ONLY_NOT_COMPLETE_LAW_REGULATION_OR_ASSIGNMENT_FILE",
+        "measurement": "STATUS_EFFECTIVE_DATE_SCOPE_AND_REQUIRED_TOPICS_PINNED",
+        "selectionBias": "US_ACTUARIAL_PRACTICE_SCOPE_ONLY",
+        "correlation": "NOT_EMPIRICAL_OUTCOME_DATA",
+        "revision": "STANDARD_CAN_BE_REVISED_OR_SUPERSEDED",
+        "independentReview": "DEFINES_PRACTICE_EXPECTATIONS_BUT PERFORMS_NO_OUTSIDER_REVIEW",
+        "rights": "PUBLIC_ACCESS_OBSERVED_REUSE_TRAINING_COMMERCIAL_RIGHTS_NOT_CONCLUDED",
+        "sourceReplay": "EXACT_RAW_STANDARD_PAGE_REQUIRED",
+        "admissionDecision": "STRUCTURAL_PROFESSIONAL_STANDARD_ONLY"
+      }
+    ]
+  },
+  "diagnostics": {
+    "nonPoolingPolicy": {
+      "bankResolutionAmountsPooledWithInsuranceAmounts": false,
+      "selectedInsurerAmountsPooledWithOtherInsurers": false,
+      "sourceDomainAmountsUsedForAiAgentOrRobotTarget": false,
+      "percentagesPooledAcrossReceivershipFundOrPriority": false,
+      "targetTransferFabricated": false
+    },
+    "fdicFailures": {
+      "sourceDomain": "US_BANK_RESOLUTION",
+      "endpointAccounting": {
+        "publishedRows": 4115,
+        "metaTotal": 4115,
+        "totalsCount": 4115,
+        "uniqueRowIds": 4115,
+        "indexName": "failures_1779890467665",
+        "indexCreateTimestamp": "2026-05-27T14:01:07Z",
+        "firstFailureDate": "4/19/1934",
+        "lastFailureDate": "5/1/2026",
+        "rowOrder": "FAILDATE_ASCENDING_WITH_SOURCE_ORDER_WITHIN_DATE"
+      },
+      "selectionBoundary": {
+        "failedOrAssistedInstitutionsOnly": true,
+        "activeInstitutionExposureDenominatorObserved": false,
+        "failureFrequencyEligible": false,
+        "bankToInsuranceOrAiAgentTransferEligible": false,
+        "causalEffectEstimated": false
+      },
+      "resolutionCounts": {
+        "byRestype": {
+          "ASSISTANCE": 593,
+          "FAILURE": 3522
+        },
+        "byRestype1": {
+          "A/A": 579,
+          "ABT": 16,
+          "DINB": 9,
+          "IDT": 386,
+          "MGR": 37,
+          "OBAM": 13,
+          "P&A": 251,
+          "PA": 2105,
+          "PI": 143,
+          "PO": 573,
+          "REP": 3
+        },
+        "byInsurerProgramCode": {
+          "BIF": 583,
+          "DIF": 563,
+          "FDIC": 1644,
+          "FSLIC": 572,
+          "RTC": 747,
+          "SAIF": 6
+        },
+        "byFailureYear": {
+          "1934": 9,
+          "1935": 25,
+          "1936": 69,
+          "1937": 75,
+          "1938": 74,
+          "1939": 60,
+          "1940": 43,
+          "1941": 15,
+          "1942": 20,
+          "1943": 5,
+          "1944": 2,
+          "1945": 1,
+          "1946": 1,
+          "1947": 5,
+          "1948": 3,
+          "1949": 4,
+          "1950": 4,
+          "1951": 2,
+          "1952": 3,
+          "1953": 2,
+          "1954": 2,
+          "1955": 5,
+          "1956": 2,
+          "1957": 1,
+          "1958": 4,
+          "1959": 3,
+          "1960": 1,
+          "1961": 5,
+          "1962": 1,
+          "1963": 2,
+          "1964": 7,
+          "1965": 5,
+          "1966": 7,
+          "1967": 4,
+          "1968": 3,
+          "1969": 9,
+          "1970": 7,
+          "1971": 7,
+          "1972": 2,
+          "1973": 6,
+          "1974": 4,
+          "1975": 13,
+          "1976": 17,
+          "1977": 6,
+          "1978": 7,
+          "1979": 10,
+          "1980": 22,
+          "1981": 40,
+          "1982": 119,
+          "1983": 99,
+          "1984": 106,
+          "1985": 180,
+          "1986": 204,
+          "1987": 262,
+          "1988": 470,
+          "1989": 534,
+          "1990": 382,
+          "1991": 271,
+          "1992": 181,
+          "1993": 50,
+          "1994": 15,
+          "1995": 8,
+          "1996": 6,
+          "1997": 1,
+          "1998": 3,
+          "1999": 8,
+          "2000": 7,
+          "2001": 4,
+          "2002": 11,
+          "2003": 3,
+          "2004": 4,
+          "2007": 3,
+          "2008": 30,
+          "2009": 148,
+          "2010": 157,
+          "2011": 92,
+          "2012": 51,
+          "2013": 24,
+          "2014": 18,
+          "2015": 8,
+          "2016": 5,
+          "2017": 8,
+          "2019": 4,
+          "2020": 4,
+          "2023": 5,
+          "2024": 2,
+          "2025": 2,
+          "2026": 2
+        }
+      },
+      "missingnessAndRevision": {
+        "depositMissingRows": 2,
+        "depositZeroRows": 2,
+        "assetMissingRows": 154,
+        "costMissingRows": 638,
+        "costNegativeRows": 12,
+        "costZeroRows": 90,
+        "costPositiveRows": 3375,
+        "pre1986Rows": 1128,
+        "pre1986CostMissingRows": 599,
+        "since1986Rows": 2987,
+        "since1986CostMissingRows": 39,
+        "costIsEstimatedDifLossSubjectToRevision": true,
+        "costIsClaimPayment": false,
+        "costIsInsuranceReserve": false,
+        "amountsUnit": "THOUSANDS_USD_AS_DOCUMENTED_BY_FDIC"
+      },
+      "ratioDiagnostics": {
+        "costToPreFailureDeposits": {
+          "eligibleRows": 3475,
+          "perRowRounding": "HALF_UP_FIXED_8_DECIMALS_BEFORE_NEAREST_RANK",
+          "minimum": "-1.49631870",
+          "p50NearestRank": "0.21118274",
+          "p90NearestRank": "0.49181455",
+          "p95NearestRank": "0.65415888",
+          "p99NearestRank": "1.08887550",
+          "maximum": "3.63480114",
+          "negativeEstimateRows": 12,
+          "overOneRows": 51
+        },
+        "costToPreFailureAssets": {
+          "eligibleRows": 3477,
+          "perRowRounding": "HALF_UP_FIXED_8_DECIMALS_BEFORE_NEAREST_RANK",
+          "minimum": "-0.20032336",
+          "p50NearestRank": "0.19813502",
+          "p90NearestRank": "0.48474524",
+          "p95NearestRank": "0.68200288",
+          "p99NearestRank": "1.52781996",
+          "maximum": "10.87100999",
+          "negativeEstimateRows": 12,
+          "overOneRows": 94
+        },
+        "ratiosPooledAcrossProgramsOrYears": false,
+        "ratiosUsedAsOutsiderCapitalOrSeverityPrior": false
+      }
+    },
+    "fdicReceivershipDividends": {
+      "sourceDomain": "US_BANK_RECEIVERSHIP",
+      "endpointAccounting": {
+        "publishedRows": 2385,
+        "repeatPublishedRows": 2385,
+        "exactSameEventMultisetAcrossTwoFetches": true,
+        "exactRawOrderSameAcrossTwoFetches": false,
+        "distinctPublishedRows": 2382,
+        "exactDuplicateExtraRows": 3,
+        "normalizedFunds": 565,
+        "publishedInstitutionNameStrings": 566,
+        "fundsWithMultipleInstitutionNameStrings": 2,
+        "rowsWithFundWhitespace": 133
+      },
+      "categoryAccounting": {
+        "rawDividendTypeCounts": {
+          "ADVANCE": 1,
+          "ADVANCED": 2,
+          "FINAL": 496,
+          "SUBORDINATED DEBT": 1,
+          "TRAD-NONCASH": 7,
+          "TRADITIONAL": 1878
+        },
+        "rawPriorityCounts": {
+          "DEPOSITOR": 2349,
+          "DEPOSITORS": 19,
+          "GEN TRADE CREDITOR": 10,
+          "GENERAL TRADE CREDIT": 5,
+          "GENERAL TRADE CREDITOR": 1,
+          "TRADITIONAL": 1
+        },
+        "normalizedPriorityCounts": {
+          "DEPOSITOR": 2368,
+          "GENERAL_TRADE_CREDITOR": 16,
+          "UNRECOGNIZED": 1
+        },
+        "unrecognizedPriorityRows": 1,
+        "unrecognizedDividendTypeRows": 1,
+        "categoriesSilentlyDropped": false,
+        "anomalousRowsUsedForTargetModel": false
+      },
+      "groupedCumulativeDiagnostics": {
+        "groupingKey": "TRIMMED_FUND_PLUS_NORMALIZED_PRIORITY",
+        "groups": 578,
+        "groupsWithDownwardCumulativeRevision": 5,
+        "downwardCumulativeRevisionEvents": 5,
+        "percentagesSummedAcrossFunds": false,
+        "percentagesSummedAcrossPriorities": false,
+        "duplicateRowsRemovedOnlyFor_SEQUENCE_AND_LATENCY_DIAGNOSTICS": true
+      },
+      "closureToPaymentLatencyDays": {
+        "eligibleDistinctRows": 2382,
+        "quantileDefinition": "NEAREST_RANK_ON_DISTINCT_PUBLISHED_EVENT_ROWS",
+        "minimum": 0,
+        "p50": 1336,
+        "p90": 3758,
+        "p95": 4375,
+        "p99": 5260,
+        "maximum": 7014,
+        "zeroDayRows": 12,
+        "isHarmRecoveryTime": false
+      },
+      "finalDividendDiagnostics": {
+        "finalEventRows": 496,
+        "finalEventRowsBelow100Percent": 492,
+        "finalEventRowsAt100Percent": 4,
+        "minimumTotalPaidPercent": "18.347",
+        "p50TotalPaidPercent": "74.098",
+        "p90TotalPaidPercent": "91.102",
+        "maximumTotalPaidPercent": "100.000",
+        "groupsWithFinalEvent": 494,
+        "finalGroupsBelow100": 490,
+        "finalGroupsAt100": 4,
+        "finalMeansLastDividendEvent": true,
+        "finalMeansFullClaimRecovery": false,
+        "finalMeansRealityRestored": false
+      },
+      "evidenceBoundary": {
+        "claimAndProvenClaimantDefinitionsPinned": true,
+        "dividendAsCashDistributionDefinitionPinned": true,
+        "statutoryPriorityOrderPinned": true,
+        "quarterlyAvailabilityReviewPinned": true,
+        "individualClaimIdentityObserved": false,
+        "individualClaimAmountObserved": false,
+        "deniedClaimPopulationObserved": false,
+        "bankTransferReceiptObserved": false,
+        "appealOrFraudCaseFileObserved": false,
+        "outsiderClaimOrPaymentObserved": false
+      }
+    },
+    "secInsurerDisclosure": {
+      "sourceDomain": "SELECTED_PUBLIC_PROPERTY_CASUALTY_INSURER_FILING",
+      "filing": {
+        "registrant": "RLI_CORP",
+        "cik": "0000084246",
+        "form": "10-K",
+        "periodEnd": "2025-12-31",
+        "accession": "0001104659-26-018013",
+        "edgarDirectoryPinned": true,
+        "inlineXbrlSourcePinned": true,
+        "independentAuditorReportTextPresent": true,
+        "individualProjectedFactAuditScopeIndependentlyDetermined": false
+      },
+      "reserveReconciliation": {
+        "grossClaimsAndClaimAdjustmentLiability": {
+          "valueUsd": "2886819000",
+          "inlineFactOccurrences": 3,
+          "xbrlConcept": "us-gaap:LiabilityForClaimsAndClaimsAdjustmentExpense",
+          "contextDate": "2025-12-31"
+        },
+        "reinsuranceRecoverableForUnpaidClaims": {
+          "valueUsd": "746798000",
+          "inlineFactOccurrences": 3,
+          "xbrlConcept": "us-gaap:ReinsuranceRecoverableForUnpaidClaimsAndClaimsAdjustments",
+          "contextDate": "2025-12-31"
+        },
+        "netUnpaidClaimsAndClaimAdjustmentLiability": {
+          "valueUsd": "2140021000",
+          "inlineFactOccurrences": 2,
+          "xbrlConcept": "us-gaap:LiabilityForUnpaidClaimsAndClaimsAdjustmentExpenseNet",
+          "contextDate": "2025-12-31"
+        },
+        "equation": "GROSS_MINUS_REINSURANCE_RECOVERABLE_EQUALS_NET",
+        "reconciliationDifferenceUsd": "0",
+        "reinsuranceRecoverableShareOfGross": "0.25869235",
+        "recoverableIsCashCollected": false,
+        "reserveIsOutsiderReserve": false
+      },
+      "statutoryCapital": {
+        "exactAggregateInsuranceSubsidiaryStatutoryCapitalAndSurplus": {
+          "valueUsd": "1846615000",
+          "inlineFactOccurrences": 1,
+          "xbrlConcept": "us-gaap:StatutoryAccountingPracticesStatutoryCapitalAndSurplusBalance",
+          "contextDate": "2025-12-31"
+        },
+        "principalInsuranceCompanyAuthorizedControlLevelRbc": {
+          "valueUsd": "306000000",
+          "inlineFactOccurrences": 1,
+          "xbrlConcept": "us-gaap:StatutoryAccountingPracticesStatutoryCapitalAndSurplusRequired",
+          "contextDate": "2025-12-31"
+        },
+        "exactFactsHaveSameEntityScope": false,
+        "ratioBetweenExactFactsEligible": false,
+        "capitalAvailableToOutsider": false,
+        "solvencyOfOutsiderEstablished": false
+      },
+      "restrictedRegulatoryDeposit": {
+        "restrictedInvestments": {
+          "valueUsd": "107000000",
+          "inlineFactOccurrences": 1,
+          "xbrlConcept": "us-gaap:RestrictedInvestments",
+          "contextDate": "2025-12-31"
+        },
+        "filingTextDescribesDepositWithRegulatoryAuthoritiesRequiredByLaw": true,
+        "custodianIdentityInProjectedFactObserved": false,
+        "transactionReceiptObserved": false,
+        "outsiderCustodyEstablished": false
+      },
+      "transferBoundary": {
+        "selectedIssuerPopulationRepresentative": false,
+        "accountingBasisTransferAuthorized": false,
+        "reserveFactorTransferAuthorized": false,
+        "capitalRatioTransferAuthorized": false,
+        "custodyAuthorityTransferAuthorized": false,
+        "priceOrGuaranteeAuthorityTransferAuthorized": false
+      }
+    },
+    "treasuryCustodyStructure": {
+      "sourceDomain": "US_PUBLIC_FUNDS_COLLATERAL",
+      "observedStructure": {
+        "publicMoneyCollateralRequirementDescribed": true,
+        "federalReserveCustodyForIndividualSuretyAssetsDescribed": true,
+        "tcmmAcceptabilityAndValuationRoleDescribed": true,
+        "tcmmPossessionRoleDescribed": true,
+        "depositInsuranceLimitContextDescribed": true,
+        "rolesSeparatedAcrossDepositoryCustodianProgramAndContractingOfficer": true
+      },
+      "boundary": {
+        "transactionPopulationObserved": false,
+        "pledgedAssetLedgerObserved": false,
+        "custodianAgreementForOutsiderObserved": false,
+        "paymentRailObserved": false,
+        "outsiderCanTakePossession": false,
+        "outsiderCustodyAuthorityEstablished": false
+      }
+    },
+    "actuarialStandards": {
+      "sourceDomain": "US_ACTUARIAL_PROFESSIONAL_PRACTICE",
+      "standards": [
+        {
+          "asopNumber": 23,
+          "title": "Data Quality",
+          "documentNumber": "185",
+          "lastRevised": "December 2016",
+          "effectiveDate": "April 30, 2017",
+          "status": "ADOPTED",
+          "requiredTopicsPinned": [
+            "Selection of Data",
+            "Review of Data",
+            "Use of Data",
+            "Reliance on Data Supplied by Others",
+            "Communications and Disclosures"
+          ]
+        },
+        {
+          "asopNumber": 36,
+          "title": "Statements of Actuarial Opinion Regarding Property/Casualty Loss, Loss Adjustment Expense, or Other Reserves",
+          "documentNumber": "213",
+          "lastRevised": "March 2024",
+          "effectiveDate": "October 01, 2024",
+          "status": "ADOPTED",
+          "requiredTopicsPinned": [
+            "Types of Opinions",
+            "Qualified Opinion",
+            "No Opinion",
+            "Material Adverse Deviation",
+            "Adequacy of Assets Supporting Reserves"
+          ]
+        },
+        {
+          "asopNumber": 53,
+          "title": "Estimating Future Costs for Prospective Property/Casualty Risk Transfer and Risk Retention",
+          "documentNumber": "190",
+          "lastRevised": "December 2017",
+          "effectiveDate": "August 01, 2018",
+          "status": "ADOPTED",
+          "requiredTopicsPinned": [
+            "Exposure Base",
+            "Use of Historical Data",
+            "Credibility",
+            "Treatment of Catastrophes",
+            "Profit and Contingency Provisions and the Cost of Capital"
+          ]
+        },
+        {
+          "asopNumber": 55,
+          "title": "Capital Adequacy Assessment",
+          "documentNumber": "194",
+          "lastRevised": "June 2019",
+          "effectiveDate": "November 01, 2019",
+          "status": "ADOPTED",
+          "requiredTopicsPinned": [
+            "Scenario Tests and Stress Tests",
+            "Incorporating Management Actions",
+            "Risk Capital Target or Risk Capital Threshold",
+            "Reliance on Data or Other Information Supplied by Others",
+            "Communications and Disclosures"
+          ]
+        }
+      ],
+      "boundary": {
+        "standardsAreObservedInstitutionalPracticeRequirements": true,
+        "standardsAreEmpiricalOutcomeData": false,
+        "asop23PerformsAuditOfThisArtifact": false,
+        "asop36IsReserveOpinionForOutsider": false,
+        "asop53ApprovesFinalOutsiderPrice": false,
+        "asop55CertifiesOutsiderCapitalAdequacy": false,
+        "independentActuaryAssignedToOutsider": false,
+        "professionalReviewOfExactOutsiderModelCompleted": false
+      }
+    }
+  },
+  "diagnosticCommitmentHash": "sha256:c15ed437172823640d101c7fd676ff0b12ec663dc1aaf10f26e538d2ec9ee91e",
+  "gapSourceMatrix": {
+    "ledgerSchema": "outsider/readiness-gap-ledger/v2",
+    "ledgerHash": "sha256:817c6141f2048b9e3957cf52c96fb053c22d1e9bf9a4edb3c885ea7415f77349",
+    "ledgerAsOf": "2026-08-22T09:00:00.000Z",
+    "totalGaps": 69,
+    "internalSatisfied": 33,
+    "externalBlocked": 36,
+    "rows": [
+      {
+        "gapId": "S05_CLAUDE_COWORK_CONTROLLED_LOOP",
+        "stage": "MEASURE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S05_CODEX_CONTROL_READINESS_AND_RECEIPT_FRONTIER",
+        "stage": "MEASURE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S05_PROVIDER_NEUTRAL_RUNTIME_COVERAGE",
+        "stage": "MEASURE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S05_CONSENTED_CONTRIBUTION_PIPELINE",
+        "stage": "MEASURE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S05_CURRENT_ARTIFACT_R1_R5_CONFORMANCE",
+        "stage": "MEASURE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S05_EXTERNAL_USER_REPOSITORIES_AND_SECOND_MACHINES",
+        "stage": "MEASURE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S05_CORRECTION_EFFECT_AND_FALSE_INTERRUPTION_RATES",
+        "stage": "MEASURE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S05_CODEX_NATIVE_ITEM_BINDING_AND_CORRECTION_DELIVERY",
+        "stage": "MEASURE",
+        "category": "EXTERNAL_PLATFORM_CAPABILITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S05_OTHER_WORKER_NATIVE_CONTROL_SURFACES",
+        "stage": "MEASURE",
+        "category": "EXTERNAL_PLATFORM_CAPABILITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S1_ATTEST_V2_D1_D2_SOURCE_REPLAY",
+        "stage": "ATTEST",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S1_DURABLE_CORPUS_REGISTRY",
+        "stage": "ATTEST",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S1_LIFECYCLE_PROVIDER_INTERFACE_AND_LOCAL_POLICY",
+        "stage": "ATTEST",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S1_SEALED_SOURCE_REVERIFY_AT_INTAKE",
+        "stage": "ATTEST",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S1_REAL_CONTRIBUTED_RUNS",
+        "stage": "ATTEST",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S1_THIRD_PARTY_CHAIN_VERIFICATION",
+        "stage": "ATTEST",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S1_EXTERNALLY_GOVERNED_TRUST_TIME_RIGHTS_REGISTRY",
+        "stage": "ATTEST",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S15_HISTORICAL_SOURCE_ADAPTERS",
+        "stage": "CURATE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S15_SYNTHETIC_PROSPECTIVE_PROTOCOL",
+        "stage": "CURATE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S15_DEVICE_STREAM_AND_PHYSICS_FRONTIER",
+        "stage": "CURATE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S15_LEARNING_REUSE_ENFORCEMENT",
+        "stage": "CURATE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S15_GLOBAL_CEU_DEDUP_LEDGER",
+        "stage": "CURATE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S15_CAUSAL_JUDGE_SURVIVAL_INSTRUMENT",
+        "stage": "CURATE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S15_REAL_PROSPECTIVE_DEVICE_CONTROLS",
+        "stage": "CURATE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S15_INDEPENDENT_OUTCOME_SENSING_AND_PLATFORM_PARAMETERS",
+        "stage": "CURATE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S15_DATASET_AND_EXPERIENCE_RIGHTS_EVIDENCE",
+        "stage": "CURATE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S15_DEVICE_ACQUISITION_ROOT",
+        "stage": "CURATE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S15_OWNER_AFFECTED_PARTY_EXPERIMENT_GOVERNANCE",
+        "stage": "CURATE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S15_RIGHTS_REUSE_GOVERNANCE",
+        "stage": "CURATE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S15_REAL_CAUSAL_JUDGE_SURVIVAL_EVIDENCE",
+        "stage": "CURATE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S2_LOSS_EXPOSURE_QUARANTINE",
+        "stage": "PRICE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S2_SOURCE_BOUND_FACTOR_SHADOW",
+        "stage": "PRICE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S2_RMA_SOURCE_DOMAIN_HISTORICAL_LOSS_COST_PROTOTYPE",
+        "stage": "PRICE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S2_UNIFIED_TYPED_PRICING_PROGRESS_PROJECTION",
+        "stage": "PRICE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S2_PREACTION_RISK_INSTRUMENT",
+        "stage": "PRICE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S2_FREQUENCY_SEVERITY_MODEL",
+        "stage": "PRICE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S2_PORTFOLIO_DEPENDENCE_AND_DRIFT",
+        "stage": "PRICE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S2_EXACT_CROSS_STAGE_PRICE_BRIDGE",
+        "stage": "PRICE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S2_COMPLETE_ZERO_LOSS_EXPOSURE_WINDOWS",
+        "stage": "PRICE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S2_ADJUDICATED_ECONOMIC_LOSS_SEVERITY",
+        "stage": "PRICE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_BANK_FAILURES_1934_2026",
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "REAL_RESOLUTION_ESTIMATED_LOSS_AND_PAYMENT_PERCENT_STRUCTURE_NOT_ADJUDICATED_AGENT_ECONOMIC_LOSS",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S2_EXTERNAL_HOLDOUT_AND_CORRELATION_VALIDATION",
+        "stage": "PRICE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_BANK_FAILURES_1934_2026",
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999",
+          "SEC_RLI_2025_10K"
+        ],
+        "illumination": "NESTING_TIME_SELECTION_AND_SINGLE_ISSUER_DEPENDENCE_BOUNDARIES_ONLY",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S2_PROSPECTIVE_PREACTION_FACTOR_STREAM",
+        "stage": "PRICE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "ASB_ASOP_23",
+          "ASB_ASOP_53"
+        ],
+        "illumination": "DATA_AND_FUTURE_COST_PRACTICE_REQUIREMENTS_ONLY_NO_STREAM",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S2_INDEPENDENT_ACTUARIAL_REVIEW",
+        "stage": "PRICE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "ASB_ASOP_23",
+          "ASB_ASOP_36",
+          "ASB_ASOP_53",
+          "ASB_ASOP_55"
+        ],
+        "illumination": "REVIEW_STANDARD_STRUCTURE_ONLY_NO_REVIEWER_OR_OPINION_FOR_OUTSIDER",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S2_EXTERNAL_ADJUDICATION_FRAUD_TRUST",
+        "stage": "PRICE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "PROVEN_CLAIMANT_AND_PRIORITY_STRUCTURE_ONLY_NO_FRAUD_OR_APPEAL_FILES",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S2_LEGAL_PRODUCT_CLASSIFICATION",
+        "stage": "PRICE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "ASB_ASOP_53"
+        ],
+        "illumination": "RISK_TRANSFER_FUTURE_COST_SCOPE_IS_NOT_LEGAL_PRODUCT_CLASSIFICATION",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S3_GUARANTEE_CANDIDATE_BRIDGE",
+        "stage": "GUARANTEE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S3_SOURCE_REPLAYED_BINDING_GATE",
+        "stage": "GUARANTEE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S3_LOCAL_ATOMIC_REFERENCE_REQUEST_LEDGER",
+        "stage": "GUARANTEE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S3_LOCAL_ONE_USE_BEFORE_STATE_CAPABILITY_FRONTIER",
+        "stage": "GUARANTEE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S3_LOCAL_NONWAIVABLE_RECOVERY_CONTINUITY_INVARIANTS",
+        "stage": "GUARANTEE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S3_REAL_FUNDED_SHADOW_PILOT",
+        "stage": "GUARANTEE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "SEC_RLI_2025_10K",
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "REAL_INSURER_RESOURCES_AND_REAL_RECEIVERSHIP_PAYMENTS_AS_ANALOGS_ONLY",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S3_GATE_BYPASS_REVOCATION_FAILURE_EVIDENCE",
+        "stage": "GUARANTEE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_BANK_FAILURES_1934_2026"
+        ],
+        "illumination": "REAL_INSTITUTION_FAILURE_AND_RESOLUTION_CLASSES_NOT_OUTSIDER_GATE_FAILURES",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S3_STANDING_ISSUER_AND_LEGAL_AUTHORITY",
+        "stage": "GUARANTEE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "SEC_RLI_2025_10K"
+        ],
+        "illumination": "REAL_REPORTING_INSURER_EXISTS_BUT CONFERS_NO_OUTSIDER_STANDING",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S3_RESOURCE_OWNER_ADOPTION",
+        "stage": "GUARANTEE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [],
+        "illumination": "NO_ADMITTED_SOURCE_DIRECTLY_MEASURES_OR_CLOSES_THIS_GAP",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S3_CAPITAL_CUSTODY_POLICY_COUNTERPARTIES",
+        "stage": "GUARANTEE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "SEC_RLI_2025_10K",
+          "TREASURY_TCMM_COLLATERAL_CUSTODY_RULES",
+          "FDIC_BANK_FAILURES_1934_2026"
+        ],
+        "illumination": "REAL_CAPITAL_RESTRICTED_DEPOSIT_COLLATERAL_CUSTODY_AND_RESOLUTION_STRUCTURES_WITHOUT_OUTSIDER_COUNTERPARTIES",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S3_AFFECTED_PARTY_STANDING_POLICY_TERMS",
+        "stage": "GUARANTEE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "CLAIMANT_PRIORITY_STRUCTURE_ONLY_NOT_OUTSIDER_POLICY_TERMS",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S4_SETTLEMENT_CANDIDATE_BRIDGE",
+        "stage": "SETTLE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S4_CLAIM_REPLAY_DEDUP_IDEMPOTENCY",
+        "stage": "SETTLE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S4_APPEAL_REOPENING_STATE_MACHINE",
+        "stage": "SETTLE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S4_PAYMENT_RESTORATION_SEPARATION",
+        "stage": "SETTLE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S4_LOCAL_RESERVE_ACCOUNTING_AND_RECEIPT_FRONTIER",
+        "stage": "SETTLE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S4_DELAYED_CONSEQUENCE_RECOVERY_BINDING",
+        "stage": "SETTLE",
+        "category": "INTERNAL_ENGINEERING",
+        "ledgerStatus": "SATISFIED_INTERNAL",
+        "sourceIds": [],
+        "illumination": "OUT_OF_SCOPE_ALREADY_SATISFIED_INTERNAL",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "SATISFIED_INTERNAL"
+      },
+      {
+        "gapId": "S4_REAL_EXECUTION_LOSS_CLAIM",
+        "stage": "SETTLE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "REAL_RECEIVERSHIP_DIVIDEND_EVENTS_NOT_OUTSIDER_COVERED_EXECUTION_CLAIMS",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S4_FINAL_ADJUDICATION_APPEAL_EVIDENCE",
+        "stage": "SETTLE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "FINAL_DIVIDEND_IS_LAST_DISTRIBUTION_NOT_APPEAL_FINALITY",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S4_PAYMENT_AND_RECOVERY_EVIDENCE",
+        "stage": "SETTLE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "REAL_PARTIAL_AND_FINAL_PAYMENT_LIFECYCLE_WITHOUT_INDIVIDUAL_RECEIPTS_OR_HARM_RECOVERY",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S4_LONGITUDINAL_CONSEQUENCE_MATURITY",
+        "stage": "SETTLE",
+        "category": "EXTERNAL_EVIDENCE",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "MULTIYEAR_PAYMENT_LATENCY_ONLY_NOT_CONSEQUENCE_MATURITY",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S4_INDEPENDENT_CLAIMS_ADJUDICATOR",
+        "stage": "SETTLE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "RECEIVER_PROVEN_CLAIM_STRUCTURE_NOT_AN_OUTSIDER_ADJUDICATOR",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S4_CUSTODIAN_PAYMENT_RAIL",
+        "stage": "SETTLE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "TREASURY_TCMM_COLLATERAL_CUSTODY_RULES",
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "CUSTODY_ROLE_AND_PAYMENT_EVENTS_WITHOUT_AN_OUTSIDER_RAIL_OR_TRANSFER_RECEIPT",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S4_CLOSURE_REOPENING_AUTHORITY",
+        "stage": "SETTLE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "FINAL_EVENT_BOUNDARY_DOES_NOT_ESTABLISH_CLOSURE_REOPENING_AUTHORITY",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      },
+      {
+        "gapId": "S4_AFFECTED_PARTY_CHALLENGE_INSTITUTION",
+        "stage": "SETTLE",
+        "category": "EXTERNAL_INSTITUTION_AUTHORITY",
+        "ledgerStatus": "BLOCKED_EXTERNAL",
+        "sourceIds": [
+          "FDIC_RECEIVERSHIP_DIVIDENDS_POST_1999"
+        ],
+        "illumination": "CLAIMANT_CLASSIFICATION_WITHOUT_CHALLENGE_OR_APPEAL_RECORDS",
+        "sourceDomainTransferAuthorized": false,
+        "closureCredit": false,
+        "resultingStatus": "BLOCKED_EXTERNAL"
+      }
+    ],
+    "everyRowClosureCreditFalse": true,
+    "externalGapsRemainBlocked": true
+  },
+  "gapSourceMatrixHash": "sha256:9a269ded78b2a7bfb430261f539ea84d6d77509bc1d67c75ea72aed034a308be",
+  "researchedNotAdmitted": [
+    {
+      "sourceId": "NAIC_FINANCIAL_DATA_REPOSITORY_BULK",
+      "url": "https://content.naic.org/industry/financial-data-repository",
+      "disposition": "NOT_ACQUIRED_REQUIRES_PAID_LICENSE_OR_INSTITUTIONAL_ACCESS",
+      "usefulFor": "MULTI_INSURER_STATUTORY_CAPITAL_RESERVE_AND_SOLVENCY_COHORT"
+    },
+    {
+      "sourceId": "NAIC_RECEIVERSHIP_UNIFORM_DATA_STANDARDS",
+      "url": "https://content.naic.org/committees/e/receivership-insolvency-tf",
+      "disposition": "STRUCTURAL_SCHEMA_ONLY_NO_PUBLIC_CLAIM_ROW_COHORT_ADMITTED",
+      "usefulFor": "CLAIM_NOTES_PAYMENT_HISTORY_FINANCIAL_AND_CLOSING_REPORT_SCHEMAS"
+    },
+    {
+      "sourceId": "NCIGF_ASSESSMENT_LIABILITY_REPORT",
+      "url": "https://www.ncigf.org/assessment-liability-information",
+      "disposition": "NOT_ADMITTED_PUBLISHER_EXPLICITLY_DISCLAIMS_INDEPENDENT_VERIFICATION_AND_REUSE_RIGHTS_NOT_CLEARED",
+      "usefulFor": "GUARANTY_FUND_CAPACITY_ASSESSMENTS_REFUNDS_AND_FIVE_YEAR_HISTORY"
+    },
+    {
+      "sourceId": "CALIFORNIA_DOI_SERFF_PUBLIC_RATE_FILINGS",
+      "url": "https://www.insurance.ca.gov/0250-insurers/0800-rate-filings/0050-viewing-room/",
+      "disposition": "NOT_ADMITTED_NO_DETERMINISTIC_UNBIASED_COHORT_SELECTED_AND_INTERACTIVE_TERMS_REQUIRED",
+      "usefulFor": "REAL_RATE_REVIEW_EXPERIENCE_PREMIUM_CLAIMS_AND_ACTUARIAL_CERTIFICATION"
+    },
+    {
+      "sourceId": "CFPB_CONSUMER_COMPLAINT_DATABASE",
+      "url": "https://www.consumerfinance.gov/data-research/consumer-complaints/",
+      "disposition": "NOT_ADMITTED_COMPLAINTS_NOT_STATISTICAL_SAMPLE_OR_ADJUDICATED_CLAIMS",
+      "usefulFor": "COMPANY_RESPONSE_AND_REMEDY_PROCESS_DESCRIPTIVE_EVIDENCE"
+    },
+    {
+      "sourceId": "FEMA_CBCA_ARBITRATIONS",
+      "url": "https://www.fema.gov/flood-insurance/rules-legislation/appeals",
+      "disposition": "ROUTED_TO_SEPARATE_FEMA_NFIP_REAL_CASE_LANE_TO_AVOID_DUPLICATION",
+      "usefulFor": "INDEPENDENT_ARBITRATION_DECISIONS"
+    }
+  ],
+  "minimumExternalClosureBundles": [
+    {
+      "bundleId": "WORKER_PLATFORM_AND_MULTI_ENVIRONMENT_CONTROL",
+      "gapIds": [
+        "S05_CURRENT_ARTIFACT_R1_R5_CONFORMANCE",
+        "S05_EXTERNAL_USER_REPOSITORIES_AND_SECOND_MACHINES",
+        "S05_CORRECTION_EFFECT_AND_FALSE_INTERRUPTION_RATES",
+        "S05_CODEX_NATIVE_ITEM_BINDING_AND_CORRECTION_DELIVERY",
+        "S05_OTHER_WORKER_NATIVE_CONTROL_SURFACES"
+      ],
+      "requiredExternalClosure": "NATIVE_PLATFORM_CAPABILITIES_AND_REAL_MULTI_MACHINE_USER_EVIDENCE",
+      "cannotBeClosedByThisArtifact": true
+    },
+    {
+      "bundleId": "CONTRIBUTION_RIGHTS_TIME_AND_PROSPECTIVE_WORLD_EVIDENCE",
+      "gapIds": [
+        "S1_REAL_CONTRIBUTED_RUNS",
+        "S1_THIRD_PARTY_CHAIN_VERIFICATION",
+        "S1_EXTERNALLY_GOVERNED_TRUST_TIME_RIGHTS_REGISTRY",
+        "S15_REAL_PROSPECTIVE_DEVICE_CONTROLS",
+        "S15_INDEPENDENT_OUTCOME_SENSING_AND_PLATFORM_PARAMETERS",
+        "S15_DATASET_AND_EXPERIENCE_RIGHTS_EVIDENCE",
+        "S15_DEVICE_ACQUISITION_ROOT",
+        "S15_OWNER_AFFECTED_PARTY_EXPERIMENT_GOVERNANCE",
+        "S15_RIGHTS_REUSE_GOVERNANCE",
+        "S15_REAL_CAUSAL_JUDGE_SURVIVAL_EVIDENCE"
+      ],
+      "requiredExternalClosure": "CONSENTED_RUNS_DEVICE_ROOTS_RIGHTS_GOVERNANCE_AND_INDEPENDENT_OUTCOMES",
+      "cannotBeClosedByThisArtifact": true
+    },
+    {
+      "bundleId": "EXTERNAL_PRICE_EVIDENCE",
+      "gapIds": [
+        "S2_COMPLETE_ZERO_LOSS_EXPOSURE_WINDOWS",
+        "S2_ADJUDICATED_ECONOMIC_LOSS_SEVERITY",
+        "S2_EXTERNAL_HOLDOUT_AND_CORRELATION_VALIDATION",
+        "S2_PROSPECTIVE_PREACTION_FACTOR_STREAM"
+      ],
+      "requiredExternalClosure": "TARGET_DOMAIN_EXPOSURE_LOSS_HOLDOUT_DEPENDENCE_AND_PROSPECTIVE_FACTORS",
+      "cannotBeClosedByThisArtifact": true
+    },
+    {
+      "bundleId": "PROFESSIONAL_AND_LEGAL_PRODUCT_REVIEW",
+      "gapIds": [
+        "S2_INDEPENDENT_ACTUARIAL_REVIEW",
+        "S2_EXTERNAL_ADJUDICATION_FRAUD_TRUST",
+        "S2_LEGAL_PRODUCT_CLASSIFICATION"
+      ],
+      "requiredExternalClosure": "NAMED_INDEPENDENT_ACTUARY_COUNSEL_AND_ADJUDICATION_FRAUD_INSTITUTION_BOUND_TO_EXACT_PRODUCT",
+      "cannotBeClosedByThisArtifact": true
+    },
+    {
+      "bundleId": "ISSUER_OWNER_AND_AFFECTED_PARTY_POLICY",
+      "gapIds": [
+        "S3_STANDING_ISSUER_AND_LEGAL_AUTHORITY",
+        "S3_RESOURCE_OWNER_ADOPTION",
+        "S3_AFFECTED_PARTY_STANDING_POLICY_TERMS"
+      ],
+      "requiredExternalClosure": "AUTHORIZED_ISSUER_OWNER_ADOPTION_AND_BINDING_AFFECTED_PARTY_STANDING",
+      "cannotBeClosedByThisArtifact": true
+    },
+    {
+      "bundleId": "FUNDED_CAPITAL_CUSTODY_AND_FAILURE_PILOT",
+      "gapIds": [
+        "S3_REAL_FUNDED_SHADOW_PILOT",
+        "S3_GATE_BYPASS_REVOCATION_FAILURE_EVIDENCE",
+        "S3_CAPITAL_CUSTODY_POLICY_COUNTERPARTIES"
+      ],
+      "requiredExternalClosure": "FUNDED_RESERVE_CUSTODY_CONTRACT_NAMED_COUNTERPARTIES_AND_REAL_FAILURE_EXERCISE",
+      "cannotBeClosedByThisArtifact": true
+    },
+    {
+      "bundleId": "CLAIM_ADJUDICATION_APPEAL_AND_CHALLENGE",
+      "gapIds": [
+        "S4_REAL_EXECUTION_LOSS_CLAIM",
+        "S4_FINAL_ADJUDICATION_APPEAL_EVIDENCE",
+        "S4_INDEPENDENT_CLAIMS_ADJUDICATOR",
+        "S4_CLOSURE_REOPENING_AUTHORITY",
+        "S4_AFFECTED_PARTY_CHALLENGE_INSTITUTION"
+      ],
+      "requiredExternalClosure": "REAL_COVERED_CLAIM_INDEPENDENT_ADJUDICATION_APPEAL_CHALLENGE_AND_REOPENING",
+      "cannotBeClosedByThisArtifact": true
+    },
+    {
+      "bundleId": "PAYMENT_RECOVERY_LONGITUDINAL_AND_RAIL",
+      "gapIds": [
+        "S4_PAYMENT_AND_RECOVERY_EVIDENCE",
+        "S4_LONGITUDINAL_CONSEQUENCE_MATURITY",
+        "S4_CUSTODIAN_PAYMENT_RAIL"
+      ],
+      "requiredExternalClosure": "AUTHORIZED_RAIL_TRANSFER_RECEIPTS_RECOVERY_EVIDENCE_AND_LONG_TERM_CONSEQUENCE_OBSERVATION",
+      "cannotBeClosedByThisArtifact": true
+    }
+  ],
+  "rightsBoundary": {
+    "publicAccessObserved": true,
+    "governmentOrInstitutionalPublicationObserved": true,
+    "copyrightOwnershipDetermined": false,
+    "rawRedistributionAuthorized": false,
+    "commercialReuseAuthorized": false,
+    "trainingLegalConclusion": false,
+    "TRAIN": false,
+    "artifactContainsRawSourceRows": false,
+    "artifactContainsSourceDomainAggregatesAndPinnedFactProjectionsOnly": true
+  },
+  "authority": {
+    "mode": "none",
+    "OutsiderIssuer": false,
+    "OutsiderCapital": false,
+    "OutsiderCustody": false,
+    "OutsiderReserve": false,
+    "OutsiderPrice": false,
+    "OutsiderGuarantee": false,
+    "OutsiderSettlement": false,
+    "OutsiderClaimsAuthority": false,
+    "OutsiderAppealAuthority": false,
+    "OutsiderClosureAuthority": false,
+    "movesFunds": false,
+    "createsCoverage": false,
+    "closesReadinessGap": false,
+    "productionReady": false
+  },
+  "outputBoundary": {
+    "sourceDomainDiagnosticsOnly": true,
+    "noCrossDomainDollarPooling": true,
+    "noBankToInsuranceOrAgentCapitalTransfer": true,
+    "noSelectedInsurerToOutsiderCapitalTransfer": true,
+    "noPublicCustodyRuleToOutsiderCustodyTransfer": true,
+    "noStandardToCompletedIndependentReviewTransfer": true,
+    "noFinalDividendToFullRecoveryOrRestorationTransfer": true,
+    "noFailureFrequencyEstimate": true,
+    "noTargetFrequencySeverityPriceGuaranteeSettlementOrCapitalModel": true,
+    "productionReady": false
+  },
+  "artifactHash": "sha256:e794a578abeaada1f7f7da2ac3a1805515e01b6a0893d9d0383415b545328736"
+}

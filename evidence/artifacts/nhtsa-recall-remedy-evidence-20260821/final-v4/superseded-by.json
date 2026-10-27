@@ -1,0 +1,6 @@
+{
+  "schema": "outsider/artifact-supersession/v1",
+  "supersededArtifactHash": "sha256:96dee08da81a0cb4a8d747249c09f6724b73c7ecd3d441eea8bcc330b6adc04d",
+  "supersededBy": "../final-v5/evidence.json",
+  "reason": "Corrected the deterministic generatedAt timestamp so it does not postdate the actual build; source and all projections are unchanged."
+}

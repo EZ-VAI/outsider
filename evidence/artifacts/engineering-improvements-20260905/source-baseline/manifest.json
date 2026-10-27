@@ -1,0 +1,42 @@
+[
+  {
+    "path": "src/outsider-formation-candidate-ranking-bridge-v1.js",
+    "bytes": 18852,
+    "sha256": "86e88be26bdade0009793af78988bd05e94bfbca6780a7341947733b30029926"
+  },
+  {
+    "path": "src/outsider-first-physical-formation-ranking-materializer-v2.js",
+    "bytes": 9238,
+    "sha256": "4cd8b315171b8e760edd7644d35edb68c9b79bec50dc006cf77796eaab8c0da0"
+  },
+  {
+    "path": "scripts/outsider-first-physical-formation-decision-runner-v2.mjs",
+    "bytes": 12215,
+    "sha256": "25e2e36c38106319caf61e995a43ccfe19bfb7935f47bddfae0a26ee42e68478"
+  },
+  {
+    "path": "scripts/outsider-adafruit-shipping-reconciliation-live-runner-v10.mjs",
+    "bytes": 47850,
+    "sha256": "2af5fc0edfe4d6daa9c1b10e595d90d1a0dfb7fa49c7110298862214cff3fa17"
+  },
+  {
+    "path": "scripts/outsider-adafruit-shipping-reconciliation-grant-reissue-v10.mjs",
+    "bytes": 4313,
+    "sha256": "af3647b6fa712d5807d632238949703c70948cfdee9dda128f13c98cbbb83cfd"
+  },
+  {
+    "path": "test/outsider-adafruit-shipping-reconciliation-live-runner-v10.test.js",
+    "bytes": 22904,
+    "sha256": "de7773abab60773ccf6d99661c104ce4f9b0834d9cb94da139d80d6e0466252b"
+  },
+  {
+    "path": "docs/OUTCOME-FORMATION-NORTH-STAR-ENGINEERING-PLAN.md",
+    "bytes": 348611,
+    "sha256": "ce16c6b2a50655e496c6352c6f774f7026021373c1ada10c0615eab01e215efb"
+  },
+  {
+    "path": "OUTSIDER-\u4ea7\u54c1\u5b9a\u6848-\u5361\u4e0e\u989d\u5ea6-20260831.md",
+    "bytes": 16705,
+    "sha256": "90826208ed0fb442aad7d3b1d5b6481b8cbeb608216a66ef89c0c3309bca8eeb"
+  }
+]

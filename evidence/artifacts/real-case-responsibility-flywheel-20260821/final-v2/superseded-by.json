@@ -1,0 +1,27 @@
+{
+  "schema": "outsider/real-case-responsibility-flywheel-supersession/v1",
+  "recordedAt": "2026-08-21T13:30:00.000Z",
+  "superseded": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v2/flywheel.json",
+    "artifactHash": "sha256:3c013214fa605818867bebc9843d2d0a9ba2cb9a96fc96a05123241e49657df9",
+    "artifactFileHash": "sha256:c51bea759ccc9be9b8150257a87e4418ab42ffeb0fdeba125db800b915f5590b",
+    "artifactFileBytes": 419154,
+    "receiptCount": 9,
+    "laneCount": 18
+  },
+  "successor": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v3/flywheel.json",
+    "artifactHash": "sha256:deffbe8380002b96be07e0cf6b1a7a095eda05ecdbc474fd1280e2c12f67826f",
+    "artifactFileHash": "sha256:d5f5b4d8cfa3823ed1a39d0204c2a76b8c9ee578d96050e58751cc81182350b9",
+    "artifactFileBytes": 464683,
+    "receiptCount": 10,
+    "laneCount": 20
+  },
+  "reason": "SOURCE_AWARE_CDI_NCIGF_RECEIPT_AND_TWO_NON_POOLED_LANES_ADDED",
+  "previousArtifactBytesPreserved": true,
+  "previousArtifactIsCurrentCanonical": false,
+  "successorRequiresFullSourceReplay": true,
+  "targetSpecificGapClosureCredit": 0,
+  "operationalAuthorityGranted": false,
+  "markerHash": "sha256:f54ab6c61d08e2df5f4219da6f2f362664677e81859af57c57ba8fa5b5b8e0fc"
+}

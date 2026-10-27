@@ -1,0 +1,22 @@
+{
+  "schema": "outsider/local-artifact-supersession-pointer/v1",
+  "status": "SUPERSEDED_STALE_INSTITUTIONAL_CAPITAL_REFERENCE_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "final-v17/catalog.json",
+    "fileSha256": "sha256:f5973cd5f94c51d953a38c1d1887fdb21ce41230219c22d468cb937c30e1a56a",
+    "fileBytes": 69059,
+    "artifactHash": "sha256:193fb512bfe01422e29a1b375464fac1f12cadfaf4c15876a04ad89eec98ad35",
+    "reasonCodes": [
+      "FOUR_INSTITUTIONAL_CAPITAL_SOURCE_ROWS_PINNED_SUPERSEDED_FINAL_V3_INSTEAD_OF_LATEST_CONTENT_QUARANTINED_FINAL_V4"
+    ]
+  },
+  "canonical": {
+    "path": "../final-v18/catalog.json",
+    "fileSha256": "sha256:cce91100a329ad2d8687945d48e3c8774aa6f9a4ed6ccdc077fe5b9b9fc20eb0",
+    "fileBytes": 69059,
+    "artifactHash": "sha256:b690ddeb4a9a01b94938f6558dfe565e4f6703d16eb22e0b05fb88d9c32d6f66",
+    "requiredVerificationLevel": "CODE_FIXED_CATALOG_WITH_PINNED_TEMPORAL_AUDIT_REFERENCE_STRUCTURE_ONLY"
+  },
+  "oldArtifactBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false
+}

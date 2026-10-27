@@ -1,0 +1,34 @@
+{
+  "schema": "outsider/local-artifact-index-supersession/v4",
+  "status": "SUPERSEDED_DO_NOT_USE_AS_CANONICAL",
+  "lineageScope": "SAME_FAMILY_EXACT_SUCCESSOR",
+  "superseded": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v9/index.json",
+    "schema": "outsider/local-artifact-canonical-index/v4",
+    "indexHash": "sha256:27e3c1337ad20b1e4325f57a0f678c02d570e0d9b96ac8ea07f8f6b414eff870",
+    "fileSha256": "sha256:f97dfdb6885166b1046a6613d7b89c80d67b25b977818a324d92a60b660f17e8",
+    "fileBytes": 273464
+  },
+  "successor": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v10/index.json",
+    "schema": "outsider/local-artifact-canonical-index/v4",
+    "indexHash": "sha256:41591f3d5b6c0865f09a96d6717c04c49282bebe393e911422fb93cc48a02386",
+    "fileSha256": "sha256:95be7d94a4eeea13b24c9c1b6c28524167a250a4711fa2458cee51411bc34b66",
+    "fileBytes": 275554,
+    "indexedAt": "2026-08-28T18:27:40.430Z",
+    "versionedFamilyCount": 33,
+    "crossFamilyLineageCount": 5
+  },
+  "reason": "INDEX_V10_BINDS_NEWLY_QUARANTINED_INFRASTRUCTURE_ARTIFACTS",
+  "declarationSchema": "outsider/local-artifact-canonical-declaration/v2",
+  "oldBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false,
+  "sourceTruthEstablishedByThisMarker": false,
+  "closureCredit": 0,
+  "causalExperienceUnits": 0,
+  "trainingAdmission": false,
+  "pricingAdmission": false,
+  "operationalAuthorityGranted": false,
+  "markerHashDomain": "outsider/local-artifact-index-supersession/v4",
+  "markerHash": "sha256:9126768c18c9029b221d2ed89365c673cc8d038ee22fd69bc6e342dd79b8053e"
+}

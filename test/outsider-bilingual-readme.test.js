@@ -1,20 +1,26 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
 const english = readFileSync(new URL("../README.md", import.meta.url), "utf8");
 const chinese = readFileSync(new URL("../README.zh-CN.md", import.meta.url), "utf8");
 const social = readFileSync(new URL("../docs/SOCIAL-ANNOUNCEMENT-1.3.98.md",
   import.meta.url), "utf8");
-const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
 
 test("public README files are complete reciprocal language surfaces", () => {
   assert.match(english, /^# Outsider/m);
   assert.match(chinese, /^# Outsider/m);
   assert.match(english, /\[简体中文\]\(README\.zh-CN\.md\)/);
   assert.match(chinese, /\[English\]\(README\.md\)/);
-  assert(english.length > 8_000, "English README is not a token summary");
-  assert(chinese.length > 8_000, "Chinese README is not a token summary");
+  for (const body of [english, chinese]) {
+    for (const target of ["docs/ARCHITECTURE.md", "CONTRIBUTING.md", "LICENSE"]) {
+      assert(body.includes(`](${target})`), `README must link to ${target}`);
+      assert(existsSync(new URL(`../${target}`, import.meta.url)), `missing ${target}`);
+    }
+    assert.match(body, /OutcomeProgram/);
+    assert.match(body, /0\.5 — MEASURE/);
+    assert.match(body, /4 — CLAIMS \/ SETTLE/);
+  }
 });
 
 test("social copy keeps ChatGPT structural eligibility separate from live validation", () => {
@@ -25,41 +31,29 @@ test("social copy keeps ChatGPT structural eligibility separate from live valida
   assert.doesNotMatch(social, /ChatGPT can install the Outsider skill/i);
 });
 
-test("both README files bind one release identity and install workflow", () => {
-  const escapedVersion = pkg.version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+test("both README files provide the source contribution workflow", () => {
   for (const body of [english, chinese]) {
-    assert.match(body, new RegExp(`outsider-guard-${escapedVersion}\\.tgz`));
-    assert.match(body, new RegExp(`outsider-guard-${escapedVersion}-claude\\.plugin\\.zip`));
-    assert.match(body, new RegExp(`release-certificate-public-${escapedVersion}\\.json`));
-    assert.match(body, /SHA256SUMS/);
-    assert.match(body, new RegExp(`codex plugin marketplace add EZ-VAI/outsider --ref v${escapedVersion}`));
-    assert.match(body, /codex plugin add outsider-stage05@outsider/);
-    assert.match(body, /outsider doctor --json/);
-    assert.match(body, /outsider doctor --share-json/);
-    assert.match(body, new RegExp(`git clone --branch v${escapedVersion} --depth 1`));
-    assert.doesNotMatch(body, /outsider-guard-1\.3\.97/);
-    assert.match(body, new RegExp(`v${escapedVersion}.*(?:published|发布)`, "is"));
+    assert.match(body, /Node\.js 22/);
+    assert.match(body, /npm ci/);
+    assert.match(body, /npm test/);
+    for (const target of ["test/outsider-world-state-resource-planner.test.js",
+      "test/outsider-durable-outcome-program-orchestrator-v1.test.js"]) {
+      assert(body.includes(`node --test ${target}`));
+      assert(existsSync(new URL(`../${target}`, import.meta.url)), `missing ${target}`);
+    }
   }
 });
 
-test("both README files preserve ChatGPT and Codex claim boundaries", () => {
-  assert.match(english, /ChatGPT conversations do not expose a universal pre-tool\/post-tool\/stop lifecycle/i);
-  assert.match(english, /Codex hooks are a guardrail, not complete tool coverage/i);
-  assert.match(chinese, /普通 ChatGPT 对话没有通用 pre\/post\/stop 生命周期/);
-  assert.match(chinese, /hosted tools 与部分特殊路径不经过 hooks/);
-  assert.match(english, /did\s+not\s+expose `SessionEnd`/i);
-  assert.match(chinese, /没有暴露当前 Codex\s*hook 文档中列出的 `SessionEnd`/);
-  assert.match(english, /live ChatGPT\s+Desktop install and new-chat evaluation are not yet established/i);
-  assert.match(chinese, /真实 ChatGPT Desktop 安装与\s*新会话评测尚未建立/);
-  assert.match(english, /OUTSIDER_SUPERVISOR_ARGV/);
-  assert.match(chinese, /OUTSIDER_SUPERVISOR_ARGV/);
-  assert.match(english, /controller\/RunStore/);
-  assert.match(chinese, /controller\/RunStore/);
-  assert.match(english, /write_stdin/);
-  assert.match(chinese, /write_stdin/);
-  assert.match(english, /endpoint-from-the-same-reviewed-release/);
-  assert.match(chinese, /endpoint-from-the-same-reviewed-release/);
-  assert.match(english, /public universal Plugins Directory/);
-  assert.match(chinese, /公共 universal\s+Plugins Directory/);
-  for (const body of [english, chinese]) assert.match(body, /repo\/local\s+marketplace/);
+test("both README files distinguish local coordination from live adapters and financial authority", () => {
+  for (const body of [english, chinese]) {
+    assert.match(body, /NON_BINDING_ABSTAIN/);
+    assert.match(body, /`HOLD`/);
+    assert.match(body, /adapter/i);
+  }
+  assert.match(english, /Actual pages and devices need their own adapters/);
+  assert.match(english, /does not require a live cloud account or move money/);
+  assert.match(english, /not a claim that a global financial clearing network is operating/);
+  assert.match(chinese, /具体页面和设备需要接入 adapter/);
+  assert.match(chinese, /默认不需要云账号，也不会移动资金/);
+  assert.match(chinese, /目前没有运营覆盖任意现实目标的全球金融清算网络/);
 });

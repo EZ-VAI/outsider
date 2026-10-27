@@ -1,0 +1,17 @@
+{
+  "schema": "outsider/local-artifact-index-supersession/v1",
+  "status": "SUPERSEDED_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v2/index.json",
+    "indexHash": "sha256:1247497f85e426f837e5c35c3912c43dfa28333aedb07810a5cc08daa1ad8ac2",
+    "fileSha256": "sha256:ed72eebdf392288d6f090c49be208725d84b4eff3431a59df37b9a129b778374",
+    "fileBytes": 209003
+  },
+  "successor": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v3/index.json",
+    "schema": "outsider/local-artifact-canonical-index/v2"
+  },
+  "reason": "V3 additionally requires a same-family canonical target path for every supersession edge and rejects output-parent ancestor symlinks.",
+  "oldBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false
+}

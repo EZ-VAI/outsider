@@ -1,0 +1,19 @@
+{
+  "schema": "outsider/actuarial-model-evolution-supersession/v1",
+  "schemaVersion": "1.0.0",
+  "status": "SUPERSEDED",
+  "supersededRelease": "final-v4",
+  "supersededArtifactPath": "artifacts/actuarial-model-evolution-20260822/final-v4/architecture.json",
+  "supersededArtifactHash": "sha256:ab9a506dabb32bc449d4ada3b9edc51b02e352dc7eb926c5a9b47bf63567afdb",
+  "supersededArtifactFileHash": "sha256:31669d7edc006a3e737a3b7a4bd2fad1d652781b0baf62d8c3455392dd97c945",
+  "supersededArtifactFileBytes": 189804,
+  "supersededArtifactBytesPreserved": true,
+  "supersededByRelease": "final-v5",
+  "currentCanonicalPath": "artifacts/actuarial-model-evolution-20260822/final-v5/architecture.json",
+  "reason": "FUTURE_DATED_04_00Z_SNAPSHOT_CORRECTED_TO_ALREADY_PAST_02_35Z_AS_OF_AND_MODERN_TYPED_TARGET_SHIFT_FOUR_SEGMENT_CRC_ANYTIME_VALID_CAUSAL_OPE_MULTI_STATE_COMPETING_RISK_POT_GPD_TAIL_DEPENDENCE_DRO_AND_UQ_CONTRACTS_ADDED_WITH_ALL_TARGET_PRICE_RESPONSIBILITY_AND_AUTHORITY_OUTPUTS_NULL_OR_FALSE",
+  "previousGeneratedAt": "2026-08-22T04:00:00.000Z",
+  "currentSnapshotAsOf": "2026-08-22T02:35:00.000Z",
+  "futureDatedCanonicalAccepted": false,
+  "selectionAuthority": "CODE_FIXED_CURRENT_RELEASE_IN_OUTSIDER_ACTUARIAL_MODEL_EVOLUTION",
+  "markerHash": "sha256:756aa2314225836ab592830e19d07cc27aebfebcaf2a8a11150e54a00777f852"
+}

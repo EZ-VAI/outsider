@@ -1,0 +1,23 @@
+{
+  "schema": "outsider/artifact-supersession-marker/v1",
+  "generatedAt": "2026-08-21T16:15:00.000Z",
+  "supersededArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v3/diagnostics.json",
+    "artifactHash": "sha256:d370e36697ac26acfaba57a541be538729d975add18936d96caf1ec9cd0c0e88",
+    "serializedFileHash": "sha256:649088d5d15b05124f750e694d0bca42730f50ab09a298fc968a14aaaa2dcd05",
+    "serializedBytes": 368359,
+    "bytePreserved": true,
+    "remainsValidForItsFrozenProjection": true,
+    "isCurrentProjection": false
+  },
+  "currentArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v4/diagnostics.json",
+    "artifactHash": "sha256:739193173128aa8481210dcad00748a11cb11402959eb6ede8d1547961f51466",
+    "serializedFileHash": "sha256:32090580fd5da780091711da72c1b0ac225cc53d8c8c88c64d5229e01f60eea4",
+    "serializedBytes": 410261,
+    "isCurrentProjection": true
+  },
+  "reason": "The current projection exact-binds the fixed-time frozen twelve-receipt flywheel final-v6, adds bounded NHTSA recall and manufacturer remedy-status factors and diagnostics, and keeps complete repair, receipt, loss, enforcement, training, target transfer, pricing, and authority false.",
+  "targetDomainTransferEstablished": false,
+  "operationalAuthorityGranted": false
+}

@@ -1,0 +1,29 @@
+{
+  "quantity": 3,
+  "maximumTotalMinor": 4500,
+  "deadlineMinutes": 60,
+  "offers": [
+    {
+      "id": "delta",
+      "provider": "new-a",
+      "unitPriceMinor": 500,
+      "leadMinutes": 30,
+      "capacity": 10
+    },
+    {
+      "id": "epsilon",
+      "provider": "new-b",
+      "unitPriceMinor": 650,
+      "leadMinutes": 45,
+      "capacity": 10
+    },
+    {
+      "id": "zeta",
+      "provider": "new-a",
+      "unitPriceMinor": 400,
+      "leadMinutes": 40,
+      "capacity": 10
+    }
+  ]
+}
+

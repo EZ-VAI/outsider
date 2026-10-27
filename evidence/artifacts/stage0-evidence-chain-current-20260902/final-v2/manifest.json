@@ -1,0 +1,311 @@
+{
+  "schema": "outsider/stage0-evidence-chain-current/v1",
+  "schemaVersion": "1.0.0",
+  "createdAt": "2026-09-02T14:00:09.000Z",
+  "status": "CURRENT_ROUTING_POINTER_SOURCE_REPLAY_REQUIRED",
+  "reasonCodes": [
+    "MEMBER_BOUNDED_CANONICAL_REPLAY_CHANGED_DROID_IMPLEMENTATION_CLOSURE",
+    "SUPERSEDED_V3_BYTES_RETAINED_BUT_NOT_CURRENT_SOURCE_REPLAYABLE",
+    "V5_CHAIN_REISSUED_FROM_IDENTICAL_PINNED_RAW_DROID_OBJECTS"
+  ],
+  "superseded": {
+    "droid": {
+      "inventory": {
+        "repositoryRelativePath": "artifacts/curate-droid100-20260828/real-pilot-v3-canonical-hardening",
+        "fileCount": 5,
+        "totalBytes": 1708008,
+        "files": [
+          {
+            "path": "checkpoint.json",
+            "bytes": 877,
+            "fileSha256": "sha256:ee7a88d65eddd53f1a885f5c11c76ac635c50d7dbddaab4b42e9c081510f8d65"
+          },
+          {
+            "path": "clearances.json",
+            "bytes": 10950,
+            "fileSha256": "sha256:8fe25205f4c33247da909fe9dc97625ceee32f434ae46b7e39154ffce476c75d"
+          },
+          {
+            "path": "episodes.json",
+            "bytes": 1675581,
+            "fileSha256": "sha256:a7693d1a35a799d5f8aaf13c8448f4e75e8657ff4c7a8377e2a1dec5b9d4ab43"
+          },
+          {
+            "path": "manifest.json",
+            "bytes": 16531,
+            "fileSha256": "sha256:1c56dfd52ac90759c9696fa84168b6e605762809a92faf6dc22acd6fb19527af"
+          },
+          {
+            "path": "report.json",
+            "bytes": 4069,
+            "fileSha256": "sha256:4a4b00ce5eeaec942f0414b41a2e517c5f99a5ed0dfb3eeab5dc8c76863f9524"
+          }
+        ],
+        "directoryCommitment": "sha256:c6fae3816fce9d9e9a3f1e8c4d9ce1e876fab2ba4ce404770234cac412f450bd"
+      },
+      "reportHash": "sha256:1a50d3abe37ef4efc0ded680c53f9f64680cbaf74d4ad8503de460b4bbf8fd5b",
+      "artifactSetHash": "sha256:a5238667ed851f62e11db04295d7f22480727a71430300a13b60278c91a020e3",
+      "checkpointHash": "sha256:c744a7aaefd5e4276c090a8bb6f556e02662349eadd07f340721b63c3bb0e782",
+      "episodeCount": 2,
+      "totalSteps": 404
+    },
+    "stage1Registry": {
+      "inventory": {
+        "repositoryRelativePath": "artifacts/stage1-curate-corpus-registry-all-evidence-v3-canonical-hardening-20260828",
+        "fileCount": 10,
+        "totalBytes": 7814729,
+        "files": [
+          {
+            "path": "artifact-sets/6348b59405604ba5aa936f0e75fa9c7c3c3563fd6291b07d8a76aedd946a0bd0.json",
+            "bytes": 18623,
+            "fileSha256": "sha256:351031a570ed889ac85ba46ac8280368dfb8408174f0ed400b816e3ba888c6c3"
+          },
+          {
+            "path": "artifact-sets/6a902ce3f9720a73d84e19b4b1983227f12e8d1a0eb4c22a28230951e43e9f9e.json",
+            "bytes": 162575,
+            "fileSha256": "sha256:e86a62396ed2e3e76f84c1e6d44830b59e395c5ec6c9b48ac0b25c33b9dc7898"
+          },
+          {
+            "path": "artifact-sets/6f99fe852a362cfb3f9c1a12a15c05e6989e57f7783f6beb40dcf26a23c80d1d.json",
+            "bytes": 4469,
+            "fileSha256": "sha256:09d8875bd2b78b3a447120772c131fd03cda948d32f42d6ba4f29743e8251a37"
+          },
+          {
+            "path": "artifact-sets/7f5e63768fe4f21d3b432b105f53de3c5da332369de30c59a138b9b806721da8.json",
+            "bytes": 111803,
+            "fileSha256": "sha256:5c6f0566d1f79b4a67cd26b36eaed245305eca43aebeaa0ae25c2e1b331f21ff"
+          },
+          {
+            "path": "artifact-sets/c83cecfa4d1b67e84d4e4f36a41028bbfdfc967c18abdb43d63e1028eb9c64c7.json",
+            "bytes": 677212,
+            "fileSha256": "sha256:5a2c6dabfa54e1de236afb1b3ae6f7503b0385e4118efc99901e3cc8b9a68e5b"
+          },
+          {
+            "path": "artifact-sets/c9f3312d5919d4fb803f8020027548e6fc181c1f82078e178923a1fa30ae12ae.json",
+            "bytes": 5793821,
+            "fileSha256": "sha256:3c9890f21f010bb5ecc97c052053caac6490c7c925133c7cef286c0f1c11849b"
+          },
+          {
+            "path": "artifact-sets/fdb0a3b9495a72c30b00675ccd8b33a8c5d3f4dd7aaede01d725bbde57a95c4f.json",
+            "bytes": 1024776,
+            "fileSha256": "sha256:7f07de94529df4e87d1fbd4e9903bacea894f03d098f844dcc727b304c8425bb"
+          },
+          {
+            "path": "config.json",
+            "bytes": 1535,
+            "fileSha256": "sha256:0519534534c17ad01a5830416836412ebe858972f813f6d4f8067d6eb3cc1448"
+          },
+          {
+            "path": "events.jsonl",
+            "bytes": 4354,
+            "fileSha256": "sha256:56f289ab1610a63bc822e6708a593bf04c13366bf546cfef12919fabeadcdd13"
+          },
+          {
+            "path": "index.json",
+            "bytes": 15561,
+            "fileSha256": "sha256:1d6da7d7113c301ad59179a280e9e178103779b283050f393779873e416b2754"
+          }
+        ],
+        "directoryCommitment": "sha256:d56a820dbf8e7a8923d9c3dca565b575bde1ccfbda387092064718fe468b8002"
+      },
+      "indexHash": "sha256:abf59745d5dded915e2374cd665f1ce84deea898dfa1a7193884754f55a6f425",
+      "head": "sha256:92c9e6e027774ccdae0cd21ba650786e45bca8f7310344a5ddcab9e96e268354",
+      "artifactSets": 7,
+      "candidates": 12642
+    },
+    "empiricalLedger": {
+      "file": {
+        "repositoryRelativePath": "artifacts/empirical-factor-ledger-v3-canonical-hardening-20260828/ledger.json",
+        "bytes": 6006021,
+        "fileSha256": "sha256:e9c3288d4c32c5de666f54e73f6874745e839fbb4956782dfd389d4b1cfce838"
+      },
+      "ledgerHash": "sha256:550e0ed06c844335960607b53baa0cd8e7ff2a41b8ede4d4f4acd0046360e585",
+      "sourceProfiles": 6,
+      "factorRows": 463
+    }
+  },
+  "current": {
+    "droid": {
+      "inventory": {
+        "repositoryRelativePath": "artifacts/curate-droid100-20260902/real-pilot-v5-member-budget-replay",
+        "fileCount": 5,
+        "totalBytes": 1708008,
+        "files": [
+          {
+            "path": "checkpoint.json",
+            "bytes": 877,
+            "fileSha256": "sha256:5d0e8429ff422c5390e3c5d9eb6b134c65373f8f0b483ca4269a660e32070c00"
+          },
+          {
+            "path": "clearances.json",
+            "bytes": 10950,
+            "fileSha256": "sha256:3cc8ee30ebbf6d7234606f8d138991e560017b97a6ff244f2b914566f94e8020"
+          },
+          {
+            "path": "episodes.json",
+            "bytes": 1675581,
+            "fileSha256": "sha256:3f80ff941b7c36da3e8f7a387894ae60b9155bb9441513bf946a31a63b6eb665"
+          },
+          {
+            "path": "manifest.json",
+            "bytes": 16531,
+            "fileSha256": "sha256:1c56dfd52ac90759c9696fa84168b6e605762809a92faf6dc22acd6fb19527af"
+          },
+          {
+            "path": "report.json",
+            "bytes": 4069,
+            "fileSha256": "sha256:7d8fa7d28b11e6d2132f626bf94181c8b0cf313f70ff8da89f5d781efdd360ee"
+          }
+        ],
+        "directoryCommitment": "sha256:b18025d28274804d175d49b66701bb16a3f6c6f3fdc8d54de7b014fba98ad5fb"
+      },
+      "reportHash": "sha256:08ebf337b588b1cceb1884ebcbe242ef43a027b5e48d32234672843112c72119",
+      "artifactSetHash": "sha256:1166b69194ec79542a70b5253a9ae30fe21cbbe1c96a1101b4bf25dbd62d9a16",
+      "checkpointHash": "sha256:1b5bf1a749b9803dee93cd5bba8390b2b23d2e5ec1c858d9b35493687baec081",
+      "episodeCount": 2,
+      "totalSteps": 404
+    },
+    "stage1Registry": {
+      "inventory": {
+        "repositoryRelativePath": "artifacts/stage1-curate-corpus-registry-all-evidence-v4-source-replay-20260902",
+        "fileCount": 10,
+        "totalBytes": 7814677,
+        "files": [
+          {
+            "path": "artifact-sets/2dfe2ed1dc7ecf2c5f6ddc632cf9c85f4e000fe01388b129e42bf2c1b12a0f74.json",
+            "bytes": 1024776,
+            "fileSha256": "sha256:2acebdf8972b1955d45c2bedee10933479514f759b9d8ad180e9199fddf3bf86"
+          },
+          {
+            "path": "artifact-sets/3cc6c5ef579029d72f545cb208738ed94c733ff1c53883850ccd11d9371ece9f.json",
+            "bytes": 677212,
+            "fileSha256": "sha256:79b58d303ee13730c49f7e05da6c8147f961f285199a292b980e042befe89fb3"
+          },
+          {
+            "path": "artifact-sets/6bfb79c5cd9539ef93754a33fa9f1d3ae9ce061e9014792fc00bb108c8e82822.json",
+            "bytes": 4470,
+            "fileSha256": "sha256:0cb9fd5556ef15062d2df5d074269e9b1d46c9b77fac11e77181869ba3f24e20"
+          },
+          {
+            "path": "artifact-sets/8df27f140032a5b97bd68c2fe1fa9685d52295e1a5ab2006e995aa28a30c6ec7.json",
+            "bytes": 162575,
+            "fileSha256": "sha256:dcdd578071768625c327aa77361b6df22bcd87159c5ef9893b1697d84370ed8e"
+          },
+          {
+            "path": "artifact-sets/990dbdcc5a4d4d838c0cc19169afe9ea2f4a04cf924c610cfcc4a72c1c2be2ac.json",
+            "bytes": 5793821,
+            "fileSha256": "sha256:201d55bc432b485579769eddeb8dcc52643a14251f322c036d8b4bb19386cd0b"
+          },
+          {
+            "path": "artifact-sets/9b6b9076837b6a214c9f483c6434d5b0cb2dfd97f07281c658699e131e3cb9cd.json",
+            "bytes": 111803,
+            "fileSha256": "sha256:70f7dfb633e42bf75a43a9f14265678ee9bf91b4233c1122cc131079de316429"
+          },
+          {
+            "path": "artifact-sets/dd70756234a575d8b5b9aae548d29a57be921b9d03f4f97f068bc463673f4609.json",
+            "bytes": 18623,
+            "fileSha256": "sha256:2a108ef0c622de0218a3042ac7baeebf90323608688d99f24b44e13556d66496"
+          },
+          {
+            "path": "config.json",
+            "bytes": 1529,
+            "fileSha256": "sha256:8ff1ca69d07344e02a609088022089ce831caf81d7d202a508829b604e3ab83b"
+          },
+          {
+            "path": "events.jsonl",
+            "bytes": 4312,
+            "fileSha256": "sha256:863153ed998f16e237a0b3acdd65e70e8a058ec6bf6da024c115a262f2175858"
+          },
+          {
+            "path": "index.json",
+            "bytes": 15556,
+            "fileSha256": "sha256:9cc99aa726a0c5461b4ce0990b5f2f3051732f117c45afe2b428b1f92728fbca"
+          }
+        ],
+        "directoryCommitment": "sha256:53fff0ee9da6d97f4d7fc97dc22b08d39f3444328216f09b72e42768d5465ae6"
+      },
+      "indexHash": "sha256:20616830d1afd41f3748743e8af5ddcc0d2b8e91c2a75aec69f58eee7cb72482",
+      "head": "sha256:bb557cea042b8ce24acf360b99e105899192b8d8d881968e18bc088725e90dcf",
+      "artifactSets": 7,
+      "candidates": 12642
+    },
+    "empiricalLedger": {
+      "file": {
+        "repositoryRelativePath": "artifacts/empirical-factor-ledger-v4-source-replay-20260902/ledger.json",
+        "bytes": 6006015,
+        "fileSha256": "sha256:1b2bce6c152627beecf15d5aa3a49139c360029cfc968023752e8b2e32c37d1d"
+      },
+      "ledgerHash": "sha256:2216169a2a6b6260e8782e5d5713dc3ecfb537248038d577f21a4852a8cf7abc",
+      "sourceProfiles": 6,
+      "factorRows": 463
+    }
+  },
+  "pinnedDroidSourceObjects": [
+    {
+      "name": "gcs-objects.json",
+      "repositoryRelativePath": "artifacts/curate-droid100-20260819/source/gcs-objects.json",
+      "bytes": 7784,
+      "fileSha256": "sha256:40271fa70ba18e7048cb0577cdecfaff53fd40d0ed6159f325b946235bda1e60"
+    },
+    {
+      "name": "dataset_info.json",
+      "repositoryRelativePath": "artifacts/curate-droid100-20260819/source/dataset_info.json",
+      "bytes": 760,
+      "fileSha256": "sha256:58646aa75fd054a0d8670edd676620267adb32550dc228545d70a3418abb1834"
+    },
+    {
+      "name": "features.json",
+      "repositoryRelativePath": "artifacts/curate-droid100-20260819/source/features.json",
+      "bytes": 18665,
+      "fileSha256": "sha256:4c556e2e38e179e41089e07cf54273b1540d67d3c78a420898370329813c9a25"
+    },
+    {
+      "name": "r2d2_faceblur-train.tfrecord-00000-of-00031",
+      "repositoryRelativePath": "artifacts/curate-droid100-20260819/source/r2d2_faceblur-train.tfrecord-00000-of-00031",
+      "bytes": 27488816,
+      "fileSha256": "sha256:37d04d3586fbde386d14122320d8f7d866b37007ff7a8d96625e72a3994dda70"
+    }
+  ],
+  "currentReplay": {
+    "droid": {
+      "verificationLevel": "FULL_SOURCE_REPRODUCED",
+      "sourceArtifactsReverified": true
+    },
+    "stage1": {
+      "verificationLevel": "FULL_SIX_KNOWN_SOURCE_ARTIFACT_SETS_AND_WAVE3_METADATA_REPRODUCED",
+      "sourceArtifactsReverified": true,
+      "fullSourceArtifactSetsReverified": 6,
+      "fullSourceCandidatesReverified": 12370,
+      "wave3MetadataCandidatesReverified": 272
+    },
+    "empirical": {
+      "verificationLevel": "FULL_SIX_SOURCE_REPRODUCED",
+      "sourceArtifactsReverified": true,
+      "ledgerHash": "sha256:2216169a2a6b6260e8782e5d5713dc3ecfb537248038d577f21a4852a8cf7abc",
+      "factorRows": 463
+    }
+  },
+  "dependencyEdges": [
+    "PINNED_DROID_SOURCE_OBJECTS->DROID_V5",
+    "DROID_V5->STAGE1_REGISTRY_V4",
+    "DROID_V5+STAGE1_REGISTRY_V4+FIVE_ADJACENT_SOURCES->EMPIRICAL_LEDGER_V4"
+  ],
+  "preservation": {
+    "oldArtifactBytesPreserved": true,
+    "oldChainMutatedByThisManifest": false,
+    "supersessionMarkerSourceReplaysOldProjection": false,
+    "oldProjectionFailureCode": "DROID100_PILOT_SOURCE_EPISODE_PROJECTION_MISMATCH"
+  },
+  "boundary": {
+    "routingMetadataOnly": true,
+    "authority": "none",
+    "causalExperienceUnits": 0,
+    "automaticTraining": false,
+    "productionTraining": false,
+    "pricing": false,
+    "guarantee": false,
+    "settlement": false,
+    "remoteOrPhysicalAction": false
+  },
+  "manifestHash": "sha256:2e1f34bcf3354cdfe32ee6607b95be28960ccf22e85b89ccb6cb5908b9ef72b1"
+}

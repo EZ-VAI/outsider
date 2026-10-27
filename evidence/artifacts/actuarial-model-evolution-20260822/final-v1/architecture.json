@@ -1,0 +1,1892 @@
+{
+  "schema": "outsider/actuarial-model-evolution/v1",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-22T04:00:00.000Z",
+  "generatedAtTrust": "FIXED_CANONICAL_BUILD_PARAMETER_NOT_OBSERVATION_TIME",
+  "artifactLifecycle": {
+    "status": "CURRENT_LOCAL_CANONICAL_MODEL_ARCHITECTURE_DIAGNOSTIC",
+    "rawAndCanonicalArtifactsRemainGitignored": true,
+    "sourceCodeTestsAndDocumentationArePackageEligible": true
+  },
+  "upstreamMathBinding": {
+    "repositoryRelativePath": "artifacts/real-responsibility-math-diagnostics-20260821/final-v4/diagnostics.json",
+    "artifactPathRole": "FROZEN_CANONICAL_REAL_RESPONSIBILITY_MATH_DIAGNOSTICS_JSON",
+    "generatedAt": "2026-08-21T16:15:00.000Z",
+    "artifactHash": "sha256:739193173128aa8481210dcad00748a11cb11402959eb6ede8d1547961f51466",
+    "artifactFileHash": "sha256:32090580fd5da780091711da72c1b0ac225cc53d8c8c88c64d5229e01f60eea4",
+    "artifactFileBytes": 410261,
+    "factorDictionaryHash": "sha256:0e87daad064a2efc98bb1933806c3c4a536d2da9cdf1d6a75109ac53ee08bd20",
+    "standaloneMathProjectionReproduced": true,
+    "fullSourceReplayRequiredForFullVerification": true
+  },
+  "epistemicPolicy": {
+    "realWorldCasesRemainRealWorldEvidence": true,
+    "collectorOriginIsNotAQualityRank": true,
+    "evidenceUseAndOperationalAuthorityAreSeparate": true,
+    "sourceDomainEvidenceDoesNotTransferBySimilarityAlone": true,
+    "factorQuantityDoesNotCreatePredictiveReadiness": true,
+    "noSourceLanePooling": true,
+    "noTargetEstimateOrPriceFromReferenceEvidence": true
+  },
+  "benchmarkReferenceBoundary": {
+    "references": [
+      {
+        "referenceId": "ASOP_23_DATA_QUALITY",
+        "sourceClass": "ADOPTED_ACTUARIAL_STANDARD",
+        "url": "https://www.actuarialstandardsboard.org/asops/data-quality/",
+        "designUse": "DATA_SELECTION_REVIEW_LIMITATIONS_AND_DISCLOSURE"
+      },
+      {
+        "referenceId": "ASOP_25_CREDIBILITY",
+        "sourceClass": "ADOPTED_ACTUARIAL_STANDARD",
+        "url": "https://www.actuarialstandardsboard.org/asops/credibility-procedures/",
+        "designUse": "RELEVANT_EXPERIENCE_HOMOGENEITY_AND_CREDIBILITY_PROCEDURES"
+      },
+      {
+        "referenceId": "ASOP_43_UNPAID_CLAIMS",
+        "sourceClass": "ADOPTED_ACTUARIAL_STANDARD",
+        "url": "https://www.actuarialstandardsboard.org/asops/propertycasualty-unpaid-claim-estimates/",
+        "designUse": "RESERVE_METHOD_MODEL_DATA_RECOVERABLE_AND_EXTERNAL_CONDITION_SCOPE"
+      },
+      {
+        "referenceId": "ASOP_53_FUTURE_COSTS",
+        "sourceClass": "ADOPTED_ACTUARIAL_STANDARD",
+        "url": "https://www.actuarialstandardsboard.org/asops/estimating-future-costs-prospective-propertycasualty-risk-transfer-risk-retention/",
+        "designUse": "PROSPECTIVE_COST_ESTIMAND_AND_INTENDED_MEASURE_BOUNDARY"
+      },
+      {
+        "referenceId": "ASOP_56_MODELING",
+        "sourceClass": "ADOPTED_ACTUARIAL_STANDARD",
+        "url": "https://www.actuarialstandardsboard.org/asops/modeling-3/",
+        "designUse": "INTENDED_PURPOSE_SPECIFICATION_GOVERNANCE_HOLDOUT_AND_MODEL_RISK"
+      },
+      {
+        "referenceId": "CAS_MONOGRAPH_5_GLMS",
+        "sourceClass": "PROFESSIONAL_PRIMARY_MONOGRAPH",
+        "url": "https://www.casact.org/publications-research/publications/flagship-publications/cas-monographs",
+        "designUse": "FREQUENCY_SEVERITY_GLMS_OFFSETS_DIAGNOSTICS_AND_VALIDATION"
+      },
+      {
+        "referenceId": "CAS_MONOGRAPHS_3_4_8_RESERVING",
+        "sourceClass": "PROFESSIONAL_PRIMARY_MONOGRAPH_SERIES",
+        "url": "https://www.casact.org/publications-research/publications/flagship-publications/cas-monographs",
+        "designUse": "GLM_ODP_BOOTSTRAP_MACK_BAYESIAN_RESERVING_AND_PREDICTIVE_TESTING"
+      },
+      {
+        "referenceId": "MACK_1993_CHAIN_LADDER_MSEP",
+        "sourceClass": "PRIMARY_PEER_REVIEWED_PAPER",
+        "url": "https://doi.org/10.2143/AST.23.2.2005092",
+        "designUse": "DISTRIBUTION_FREE_CHAIN_LADDER_PREDICTION_ERROR"
+      },
+      {
+        "referenceId": "BUHLMANN_1967_CREDIBILITY",
+        "sourceClass": "PRIMARY_PEER_REVIEWED_PAPER",
+        "url": "https://doi.org/10.1017/S0515036100008989",
+        "designUse": "HETEROGENEITY_AND_CREDIBILITY_ARCHITECTURE"
+      },
+      {
+        "referenceId": "WOOD_2011_GAM_REML",
+        "sourceClass": "PRIMARY_PEER_REVIEWED_PAPER",
+        "url": "https://doi.org/10.1111/j.1467-9868.2010.00749.x",
+        "designUse": "PENALIZED_NONLINEAR_EFFECTS_AND_SMOOTHNESS_SELECTION"
+      },
+      {
+        "referenceId": "KAPLAN_MEIER_1958",
+        "sourceClass": "PRIMARY_PEER_REVIEWED_PAPER",
+        "url": "https://doi.org/10.1080/01621459.1958.10501452",
+        "designUse": "RIGHT_CENSORING_AND_TIME_TO_EVENT_ESTIMATION"
+      },
+      {
+        "referenceId": "GNEITING_RAFTERY_2007",
+        "sourceClass": "PRIMARY_PEER_REVIEWED_PAPER",
+        "url": "https://doi.org/10.1198/016214506000001437",
+        "designUse": "STRICTLY_PROPER_PROBABILISTIC_FORECAST_SCORING"
+      }
+    ],
+    "browsedReferenceDocumentsAreArchitectureCitationsNotEmpiricalTrainingRows": true,
+    "referenceCitationDoesNotClaimProfessionalConformanceOrIndependentReview": true,
+    "currentStandardsMustBeRecheckedAtAnyOperationalUseDate": true
+  },
+  "architectureDefectsAndCorrections": [
+    {
+      "defectId": "FACTOR_LEDGER_CONFLATED_WITH_DESIGN_MATRIX",
+      "priorFailureMode": "87_RETROSPECTIVE_EVIDENCE_ITEMS_COULD_BE_MISREAD_AS_87_MODEL_FEATURES",
+      "correction": "EXECUTABLE_FACTOR_ROLE_AUDIT_WITH_ZERO_TARGET_PRE_ACTION_PREDICTORS"
+    },
+    {
+      "defectId": "NO_EXPLICIT_ESTIMAND_COMPONENT_DAG",
+      "priorFailureMode": "BOOLEAN_MISSING_REQUIREMENTS_DID_NOT_ENCODE_MODEL_DEPENDENCIES",
+      "correction": "ACYCLIC_ESTIMAND_DATA_MODEL_VALIDATION_GOVERNANCE_GRAPH"
+    },
+    {
+      "defectId": "NO_FORMAL_OBSERVATION_AND_MULTI_CLOCK_CONTRACT",
+      "priorFailureMode": "EVENT_REPORT_PAYMENT_CLOSE_AND_REOPEN_TIME_COULD_BE_COLLAPSED",
+      "correction": "SEPARATE_TARGET_OBSERVATION_ECONOMIC_LOSS_AND_MULTI_CLOCK_ROOT_NODES"
+    },
+    {
+      "defectId": "NO_DISTRIBUTION_ADEQUACY_TEST",
+      "priorFailureMode": "DESCRIPTIVE_RATE_COULD_BE_MISTAKEN_FOR_A_POISSON_MODEL",
+      "correction": "FRA_INTERCEPT_ONLY_EXPOSURE_OFFSET_PEARSON_AND_DEVIANCE_DIAGNOSTIC"
+    },
+    {
+      "defectId": "NO_LABORATORY_MODEL_FAMILY_BENCHMARK",
+      "priorFailureMode": "GLM_GAM_CREDIBILITY_SURVIVAL_RESERVE_TAIL_AND_VALIDATION_GAPS_NOT_COMPARABLE",
+      "correction": "SEVEN_FAMILY_SPECIFICATION_REQUIREMENT_AND_STATE_MATRIX"
+    },
+    {
+      "defectId": "UNCERTAINTY_NOT_COMPONENTIZED",
+      "priorFailureMode": "NO_EXPLICIT_ALEATORIC_PARAMETER_MODEL_DATA_AND_TRANSFER_UNCERTAINTY_CONTRACT",
+      "correction": "PREDICTIVE_DISTRIBUTION_AND_PROSPECTIVE_PROPER_SCORE_GATE"
+    },
+    {
+      "defectId": "PROMOTION_GATES_NOT_MINIMAL_OR_CAUSAL",
+      "priorFailureMode": "MORE_SOURCE_FACTORS_COULD_APPEAR_TO_ADVANCE_PRICE_READINESS",
+      "correction": "ROOT_MISSING_EVIDENCE_CUT_SET_AND_NO_FACTOR_COUNT_CREDIT"
+    }
+  ],
+  "factorRoleAudit": {
+    "priorLabel": "TYPED_RETROSPECTIVE_SOURCE_DOMAIN_FACTORS",
+    "correctedArchitectureMeaning": "EVIDENCE_AND_DIAGNOSTIC_FIELDS_NOT_A_TARGET_MODEL_DESIGN_MATRIX",
+    "factorCount": 87,
+    "sourceDomainRetrospectiveUsesAdmitted": 87,
+    "targetPreActionPredictorCandidatesAdmitted": 0,
+    "targetPriceFactorsAdmitted": 0,
+    "postOutcomeLeakageRows": 72,
+    "roleCounts": {
+      "DATA_REGIME_IDENTITY_OR_DEDUP_CONTROL": 3,
+      "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC": 72,
+      "RESPONSIBILITY_GOVERNANCE_CONSTRAINT": 5,
+      "SOURCE_DOMAIN_EXPOSURE_OFFSET_DESCRIPTOR": 7
+    },
+    "rows": [
+      {
+        "factorId": "maude_reported_event_type_composition",
+        "sourceDomain": "FDA_MAUDE_PASSIVE_SURVEILLANCE",
+        "sourceLaneId": "FDA_MAUDE_PASSIVE_REPORTS",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "POST_REPORT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "dmv_selected_collision_report_presence",
+        "sourceDomain": "CA_DMV_AV_REPORTING",
+        "sourceLaneId": "CA_DMV_AV_PERMIT_COLLISION_EXPOSURE",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "POST_COLLISION_REPORT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "gao_recommendation_nonimplementation_counterexample",
+        "sourceDomain": "GAO_BID_PROTEST_FY2025",
+        "sourceLaneId": "GAO_BID_PROTEST",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "POST_RECOMMENDATION_REPORTING",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "maude_change_stream_precedence",
+        "sourceDomain": "FDA_MAUDE_PASSIVE_SURVEILLANCE",
+        "sourceLaneId": "FDA_MAUDE_PASSIVE_REPORTS",
+        "originalCategory": "REVISION",
+        "temporality": "POST_REPORT_REVISION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "maude_followup_evidence_flag",
+        "sourceDomain": "FDA_MAUDE_PASSIVE_SURVEILLANCE",
+        "sourceLaneId": "FDA_MAUDE_PASSIVE_REPORTS",
+        "originalCategory": "REVISION",
+        "temporality": "POST_REPORT_REVISION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fdic_downward_cumulative_dividend_revision",
+        "sourceDomain": "US_BANK_RECEIVERSHIP",
+        "sourceLaneId": "INSTITUTIONAL_CAPITAL_CLAIMS_REFERENCE",
+        "originalCategory": "REVISION",
+        "temporality": "POST_PAYMENT_REVISION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "cpsc_historical_revision_chain_observed",
+        "sourceDomain": "CPSC_RECALL_MPR",
+        "sourceLaneId": "CFPB_FTC_CPSC_PAYMENT_REMEDY_RECOVERY",
+        "originalCategory": "REVISION",
+        "temporality": "POST_REMEDY_REPORT_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "dmv_enhanced_reporting_regime_transition",
+        "sourceDomain": "CA_DMV_AV_REPORTING",
+        "sourceLaneId": "CA_DMV_AV_PERMIT_COLLISION_EXPOSURE",
+        "originalCategory": "REVISION",
+        "temporality": "REGULATORY_REGIME_TRANSITION",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "DATA_REGIME_IDENTITY_OR_DEDUP_CONTROL",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "judgment_fund_current_snapshot_revision_state",
+        "sourceDomain": "TREASURY_JUDGMENT_FUND_2026_PAYMENT_REPORTS",
+        "sourceLaneId": "TREASURY_JUDGMENT_FUND",
+        "originalCategory": "REVISION",
+        "temporality": "POST_PUBLICATION_FROZEN_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "maude_event_date_missing",
+        "sourceDomain": "FDA_MAUDE_PASSIVE_SURVEILLANCE",
+        "sourceLaneId": "FDA_MAUDE_PASSIVE_REPORTS",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_REPORT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "cpsc_core_remedy_field_missing",
+        "sourceDomain": "CPSC_RECALL_MPR",
+        "sourceLaneId": "CFPB_FTC_CPSC_PAYMENT_REMEDY_RECOVERY",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_REMEDY_REPORT_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nfip_unique_loss_identity_unobserved",
+        "sourceDomain": "NFIP_NC_2024_CLAIM_TRANSACTIONS",
+        "sourceLaneId": "FEMA_NFIP_CLAIMS_EXPOSURE_APPEALS",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_PAYMENT_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "rma_zero_reported_loss_exposure_cell",
+        "sourceDomain": "USDA_RMA_CROP_INSURANCE_2024",
+        "sourceLaneId": "USDA_RMA_CROP_INSURANCE_EXPERIENCE",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "RETROSPECTIVE_COVERAGE_YEAR_PUBLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "cas_triangle_maturity_and_tail_missingness",
+        "sourceDomain": "CAS_SCHEDULE_P",
+        "sourceLaneId": "CAS_SCHEDULE_P_RESERVE_BACKTEST",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_DEVELOPMENT_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fdic_resolution_cost_missing",
+        "sourceDomain": "US_BANK_RESOLUTION",
+        "sourceLaneId": "INSTITUTIONAL_CAPITAL_CLAIMS_REFERENCE",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_FAILURE_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fdic_dividend_final_event_censoring",
+        "sourceDomain": "US_BANK_RECEIVERSHIP",
+        "sourceLaneId": "INSTITUTIONAL_CAPITAL_CLAIMS_REFERENCE",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_RECEIVERSHIP_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "judgment_fund_claim_linkage_unobserved",
+        "sourceDomain": "TREASURY_JUDGMENT_FUND_2026_PAYMENT_REPORTS",
+        "sourceLaneId": "TREASURY_JUDGMENT_FUND",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_PUBLICATION_FROZEN_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "judgment_fund_event_to_payment_latency_unobserved",
+        "sourceDomain": "TREASURY_JUDGMENT_FUND_2026_PAYMENT_REPORTS",
+        "sourceLaneId": "TREASURY_JUDGMENT_FUND",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_PUBLICATION_FROZEN_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "gao_public_decision_corpus_completeness",
+        "sourceDomain": "GAO_BID_PROTEST_FY2025",
+        "sourceLaneId": "GAO_BID_PROTEST",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_FISCAL_YEAR_PUBLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "gao_published_rate_operand_missingness",
+        "sourceDomain": "GAO_BID_PROTEST_FY2025",
+        "sourceLaneId": "GAO_BID_PROTEST",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_FISCAL_YEAR_PUBLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "rma_earning_policy_cell_count",
+        "sourceDomain": "USDA_RMA_CROP_INSURANCE_2024",
+        "sourceLaneId": "USDA_RMA_CROP_INSURANCE_EXPERIENCE",
+        "originalCategory": "EXPOSURE",
+        "temporality": "RETROSPECTIVE_COVERAGE_YEAR",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "SOURCE_DOMAIN_EXPOSURE_OFFSET_DESCRIPTOR",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "dmv_legacy_public_road_test_miles",
+        "sourceDomain": "CA_DMV_LEGACY_AV_TESTING",
+        "sourceLaneId": "CA_DMV_AV_PERMIT_COLLISION_EXPOSURE",
+        "originalCategory": "EXPOSURE",
+        "temporality": "RETROSPECTIVE_REPORTING_PERIOD",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "SOURCE_DOMAIN_EXPOSURE_OFFSET_DESCRIPTOR",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nfip_current_contracts_in_force",
+        "sourceDomain": "NFIP_RESIDENTIAL_PENETRATION_2026",
+        "sourceLaneId": "FEMA_NFIP_CLAIMS_EXPOSURE_APPEALS",
+        "originalCategory": "EXPOSURE",
+        "temporality": "POST_LOSS_CURRENT_SNAPSHOT",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "SOURCE_DOMAIN_EXPOSURE_OFFSET_DESCRIPTOR",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nfip_net_payment_per_publisher_record",
+        "sourceDomain": "NFIP_NC_2024_CLAIM_TRANSACTIONS",
+        "sourceLaneId": "FEMA_NFIP_CLAIMS_EXPOSURE_APPEALS",
+        "originalCategory": "PAYMENT",
+        "temporality": "POST_PAYMENT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nfip_most_recent_payment_latency_days",
+        "sourceDomain": "NFIP_NC_2024_CLAIM_TRANSACTIONS",
+        "sourceLaneId": "FEMA_NFIP_CLAIMS_EXPOSURE_APPEALS",
+        "originalCategory": "PAYMENT",
+        "temporality": "POST_PAYMENT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "cas_cumulative_paid_lag10_backtest_error",
+        "sourceDomain": "CAS_SCHEDULE_P",
+        "sourceLaneId": "CAS_SCHEDULE_P_RESERVE_BACKTEST",
+        "originalCategory": "PAYMENT",
+        "temporality": "OUT_OF_TIME_POST_DEVELOPMENT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "rma_aggregate_reported_indemnity",
+        "sourceDomain": "USDA_RMA_CROP_INSURANCE_2024",
+        "sourceLaneId": "USDA_RMA_CROP_INSURANCE_EXPERIENCE",
+        "originalCategory": "PAYMENT",
+        "temporality": "RETROSPECTIVE_COVERAGE_YEAR_PUBLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "judgment_fund_published_payment_component_amount",
+        "sourceDomain": "TREASURY_JUDGMENT_FUND_2026_PAYMENT_REPORTS",
+        "sourceLaneId": "TREASURY_JUDGMENT_FUND",
+        "originalCategory": "PAYMENT",
+        "temporality": "POST_PAYMENT_REPORT_PUBLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "cfpb_publisher_distributed_amount",
+        "sourceDomain": "CFPB_CIVIL_PENALTY_FUND",
+        "sourceLaneId": "CFPB_FTC_CPSC_PAYMENT_REMEDY_RECOVERY",
+        "originalCategory": "PAYMENT",
+        "temporality": "POST_DISTRIBUTION_REPORT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ftc_consumers_sent_payment",
+        "sourceDomain": "FTC_CLOSED_REFUND_PROGRAMS_2024",
+        "sourceLaneId": "CFPB_FTC_CPSC_PAYMENT_REMEDY_RECOVERY",
+        "originalCategory": "PAYMENT",
+        "temporality": "POST_DISTRIBUTION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nfip_recorded_claim_payment_recovery",
+        "sourceDomain": "NFIP_NC_2024_CLAIM_TRANSACTIONS",
+        "sourceLaneId": "FEMA_NFIP_CLAIMS_EXPOSURE_APPEALS",
+        "originalCategory": "RECOVERY",
+        "temporality": "POST_RECOVERY",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fdic_cumulative_dividend_percent",
+        "sourceDomain": "US_BANK_RECEIVERSHIP",
+        "sourceLaneId": "INSTITUTIONAL_CAPITAL_CLAIMS_REFERENCE",
+        "originalCategory": "RECOVERY",
+        "temporality": "POST_DIVIDEND_EVENT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fdic_closure_to_dividend_latency_days",
+        "sourceDomain": "US_BANK_RECEIVERSHIP",
+        "sourceLaneId": "INSTITUTIONAL_CAPITAL_CLAIMS_REFERENCE",
+        "originalCategory": "RECOVERY",
+        "temporality": "POST_DIVIDEND_EVENT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ftc_consumer_cashed_at_least_one_payment",
+        "sourceDomain": "FTC_CLOSED_REFUND_PROGRAMS_2024",
+        "sourceLaneId": "CFPB_FTC_CPSC_PAYMENT_REMEDY_RECOVERY",
+        "originalCategory": "RECOVERY",
+        "temporality": "POST_CASHING",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "cpsc_publisher_reported_correction_count",
+        "sourceDomain": "CPSC_RECALL_MPR",
+        "sourceLaneId": "CFPB_FTC_CPSC_PAYMENT_REMEDY_RECOVERY",
+        "originalCategory": "RECOVERY",
+        "temporality": "POST_REMEDY_REPORT_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fema_second_appeal_status",
+        "sourceDomain": "FEMA_PUBLIC_ASSISTANCE_SECOND_APPEALS",
+        "sourceLaneId": "FEMA_NFIP_CLAIMS_EXPOSURE_APPEALS",
+        "originalCategory": "ADJUDICATION",
+        "temporality": "POST_ADJUDICATION_OR_PENDING",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fema_signed_second_appeal_elapsed_days",
+        "sourceDomain": "FEMA_PUBLIC_ASSISTANCE_SECOND_APPEALS",
+        "sourceLaneId": "FEMA_NFIP_CLAIMS_EXPOSURE_APPEALS",
+        "originalCategory": "ADJUDICATION",
+        "temporality": "POST_ADJUDICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "gao_sustain_merit_decision_composition",
+        "sourceDomain": "GAO_BID_PROTEST_FY2025",
+        "sourceLaneId": "GAO_BID_PROTEST",
+        "originalCategory": "ADJUDICATION",
+        "temporality": "POST_FISCAL_YEAR_PUBLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "gao_hundred_day_aggregate",
+        "sourceDomain": "GAO_BID_PROTEST_FY2025",
+        "sourceLaneId": "GAO_BID_PROTEST",
+        "originalCategory": "ADJUDICATION",
+        "temporality": "POST_FISCAL_YEAR_PUBLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fdic_estimated_resolution_cost_to_deposits",
+        "sourceDomain": "US_BANK_RESOLUTION",
+        "sourceLaneId": "INSTITUTIONAL_CAPITAL_CLAIMS_REFERENCE",
+        "originalCategory": "CAPITAL",
+        "temporality": "POST_FAILURE_REVISED_ESTIMATE",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "sec_unpaid_claim_liability_reconciliation",
+        "sourceDomain": "SELECTED_PUBLIC_PROPERTY_CASUALTY_INSURER_FILING",
+        "sourceLaneId": "INSTITUTIONAL_CAPITAL_CLAIMS_REFERENCE",
+        "originalCategory": "CAPITAL",
+        "temporality": "REPORTING_PERIOD_END",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "sec_statutory_capital_scope",
+        "sourceDomain": "SELECTED_PUBLIC_PROPERTY_CASUALTY_INSURER_FILING",
+        "sourceLaneId": "INSTITUTIONAL_CAPITAL_CLAIMS_REFERENCE",
+        "originalCategory": "CAPITAL",
+        "temporality": "REPORTING_PERIOD_END",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "RESPONSIBILITY_GOVERNANCE_CONSTRAINT",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "treasury_collateral_custody_role_structure",
+        "sourceDomain": "US_PUBLIC_FUNDS_COLLATERAL",
+        "sourceLaneId": "INSTITUTIONAL_CAPITAL_CLAIMS_REFERENCE",
+        "originalCategory": "CUSTODY",
+        "temporality": "INSTITUTIONAL_CONTEXT",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "RESPONSIBILITY_GOVERNANCE_CONSTRAINT",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "sec_restricted_regulatory_deposit",
+        "sourceDomain": "SELECTED_PUBLIC_PROPERTY_CASUALTY_INSURER_FILING",
+        "sourceLaneId": "INSTITUTIONAL_CAPITAL_CLAIMS_REFERENCE",
+        "originalCategory": "CUSTODY",
+        "temporality": "REPORTING_PERIOD_END",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "RESPONSIBILITY_GOVERNANCE_CONSTRAINT",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "cfpb_fiduciary_fund_description",
+        "sourceDomain": "CFPB_BUREAU_ADMINISTERED_REDRESS",
+        "sourceLaneId": "CFPB_FTC_CPSC_PAYMENT_REMEDY_RECOVERY",
+        "originalCategory": "CUSTODY",
+        "temporality": "INSTITUTIONAL_CONTEXT",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "RESPONSIBILITY_GOVERNANCE_CONSTRAINT",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "judgment_fund_certification_offset_disbursement_roles",
+        "sourceDomain": "TREASURY_JUDGMENT_FUND_PROCESS",
+        "sourceLaneId": "TREASURY_JUDGMENT_FUND",
+        "originalCategory": "CUSTODY",
+        "temporality": "INSTITUTIONAL_CONTEXT",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "RESPONSIBILITY_GOVERNANCE_CONSTRAINT",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ntsb_probable_cause_and_finding_text",
+        "sourceDomain": "NTSB_COMPLETED_PARTIAL_AUTOMATION_INVESTIGATIONS",
+        "sourceLaneId": "NTSB_COMPLETED_PARTIAL_AUTOMATION_INVESTIGATIONS",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "POST_INVESTIGATION_ADOPTION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ntsb_adopted_final_report_binding",
+        "sourceDomain": "NTSB_COMPLETED_PARTIAL_AUTOMATION_INVESTIGATIONS",
+        "sourceLaneId": "NTSB_COMPLETED_PARTIAL_AUTOMATION_INVESTIGATIONS",
+        "originalCategory": "ADJUDICATION",
+        "temporality": "POST_INVESTIGATION_ADOPTION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ntsb_complete_docket_bytes_captured",
+        "sourceDomain": "NTSB_COMPLETED_PARTIAL_AUTOMATION_INVESTIGATIONS",
+        "sourceLaneId": "NTSB_COMPLETED_PARTIAL_AUTOMATION_INVESTIGATIONS",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_INVESTIGATION_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ntsb_postfreeze_revision_observed",
+        "sourceDomain": "NTSB_COMPLETED_PARTIAL_AUTOMATION_INVESTIGATIONS",
+        "sourceLaneId": "NTSB_COMPLETED_PARTIAL_AUTOMATION_INVESTIGATIONS",
+        "originalCategory": "REVISION",
+        "temporality": "POST_FREEZE_REVISION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "bls_soii_private_total_recordable_rate",
+        "sourceDomain": "BLS_SOII_2024_PRIVATE_INDUSTRY",
+        "sourceLaneId": "BLS_IIF_2024_SOII_CFOI_OIICS",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "REFERENCE_YEAR_2024",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "bls_soii_private_employee_hours",
+        "sourceDomain": "BLS_SOII_2024_PRIVATE_INDUSTRY",
+        "sourceLaneId": "BLS_IIF_2024_SOII_CFOI_OIICS",
+        "originalCategory": "EXPOSURE",
+        "temporality": "REFERENCE_YEAR_2024",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "SOURCE_DOMAIN_EXPOSURE_OFFSET_DESCRIPTOR",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "bls_soii_relative_standard_error",
+        "sourceDomain": "BLS_SOII_2024_PRIVATE_INDUSTRY",
+        "sourceLaneId": "BLS_IIF_2024_SOII_CFOI_OIICS",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "REFERENCE_YEAR_2024_PUBLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "bls_cfoi_fatal_occupational_injury_count",
+        "sourceDomain": "BLS_CFOI_2024",
+        "sourceLaneId": "BLS_IIF_2024_SOII_CFOI_OIICS",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "REFERENCE_YEAR_2024",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "bls_cfoi_hours_based_rate",
+        "sourceDomain": "BLS_CFOI_2024",
+        "sourceLaneId": "BLS_IIF_2024_SOII_CFOI_OIICS",
+        "originalCategory": "EXPOSURE",
+        "temporality": "REFERENCE_YEAR_2024",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "bls_suppression_marker",
+        "sourceDomain": "BLS_IIF_2024_TABLES",
+        "sourceLaneId": "BLS_IIF_2024_SOII_CFOI_OIICS",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "REFERENCE_YEAR_2024_PUBLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "bls_oiics_version",
+        "sourceDomain": "BLS_IIF_CLASSIFICATION",
+        "sourceLaneId": "BLS_IIF_2024_SOII_CFOI_OIICS",
+        "originalCategory": "REVISION",
+        "temporality": "CLASSIFICATION_CONTEXT",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "DATA_REGIME_IDENTITY_OR_DEDUP_CONTROL",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ncua_audited_ncusif_financial_position",
+        "sourceDomain": "NCUA_NCUSIF_2025_FINANCIAL_STATEMENTS",
+        "sourceLaneId": "NCUA_NCUSIF_2025_AUDITED_EXPERIENCE",
+        "originalCategory": "CAPITAL",
+        "temporality": "REPORTING_PERIOD_END_2025_12_31",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ncua_insurance_liability_and_loss_provision",
+        "sourceDomain": "NCUA_NCUSIF_2025_FINANCIAL_STATEMENTS",
+        "sourceLaneId": "NCUA_NCUSIF_2025_AUDITED_EXPERIENCE",
+        "originalCategory": "CAPITAL",
+        "temporality": "REPORTING_PERIOD_END_2025_12_31",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ncua_preliminary_audited_scope_boundary",
+        "sourceDomain": "NCUA_NCUSIF_2025_FINANCIAL_STATEMENTS",
+        "sourceLaneId": "NCUA_NCUSIF_2025_AUDITED_EXPERIENCE",
+        "originalCategory": "REVISION",
+        "temporality": "POST_PERIOD_PUBLICATION_COMPARISON",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "pbgc_heterogeneous_availability_frames",
+        "sourceDomain": "PBGC_PENSION_INSURANCE_2024_2025",
+        "sourceLaneId": "PBGC_PENSION_INSURANCE_2024_2025_EXPERIENCE",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_PUBLICATION_AVAILABILITY",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "pbgc_direct_benefit_payment",
+        "sourceDomain": "PBGC_PENSION_INSURANCE_2024_2025",
+        "sourceLaneId": "PBGC_PENSION_INSURANCE_2024_2025_EXPERIENCE",
+        "originalCategory": "PAYMENT",
+        "temporality": "POST_FISCAL_YEAR_PAYMENT_REPORT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "pbgc_traditional_and_sfa_payment_separation",
+        "sourceDomain": "PBGC_PENSION_INSURANCE_2024_2025",
+        "sourceLaneId": "PBGC_PENSION_INSURANCE_2024_2025_EXPERIENCE",
+        "originalCategory": "PAYMENT",
+        "temporality": "POST_FISCAL_YEAR_PAYMENT_REPORT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "pbgc_sfa_death_audit_repayment",
+        "sourceDomain": "PBGC_PENSION_INSURANCE_2024_2025",
+        "sourceLaneId": "PBGC_PENSION_INSURANCE_2024_2025_EXPERIENCE",
+        "originalCategory": "RECOVERY",
+        "temporality": "POST_AUDIT_REPAYMENT_REPORT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "msha_reported_accident_outcome_rows",
+        "sourceDomain": "MSHA_REPORTED_ACCIDENT_AND_EMPLOYMENT_2000_2026",
+        "sourceLaneId": "MSHA_ACCIDENT_AND_EMPLOYMENT_2000_2026",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "POST_ACCIDENT_REPORT_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "msha_quarterly_employment_hours",
+        "sourceDomain": "MSHA_REPORTED_ACCIDENT_AND_EMPLOYMENT_2000_2026",
+        "sourceLaneId": "MSHA_ACCIDENT_AND_EMPLOYMENT_2000_2026",
+        "originalCategory": "EXPOSURE",
+        "temporality": "RETROSPECTIVE_COMPLETE_THROUGH_2026_Q2",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "SOURCE_DOMAIN_EXPOSURE_OFFSET_DESCRIPTOR",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "msha_current_window_denominator_mismatch",
+        "sourceDomain": "MSHA_REPORTED_ACCIDENT_AND_EMPLOYMENT_2000_2026",
+        "sourceLaneId": "MSHA_ACCIDENT_AND_EMPLOYMENT_2000_2026",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "FROZEN_SNAPSHOT_2026_08_21",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "cdi_filing_acceptance_disposition_boundary",
+        "sourceDomain": "CDI_RATE_FILING_AND_REGISTRY",
+        "sourceLaneId": "CDI_RATE_FILING_AND_REGISTRY_EXPERIENCE",
+        "originalCategory": "ADJUDICATION",
+        "temporality": "POST_FILING_ADMINISTRATIVE_STATUS",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "cdi_filed_experience_reconciliation",
+        "sourceDomain": "CDI_RATE_FILING_AND_REGISTRY",
+        "sourceLaneId": "CDI_RATE_FILING_AND_REGISTRY_EXPERIENCE",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_FILING_PUBLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "cdi_filed_earned_exposure",
+        "sourceDomain": "CDI_RATE_FILING_AND_REGISTRY",
+        "sourceLaneId": "CDI_RATE_FILING_AND_REGISTRY_EXPERIENCE",
+        "originalCategory": "EXPOSURE",
+        "temporality": "RETROSPECTIVE_FILED_EXPERIENCE",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "SOURCE_DOMAIN_EXPOSURE_OFFSET_DESCRIPTOR",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ncigf_statutory_assessment_capacity",
+        "sourceDomain": "NCIGF_ASSESSMENT_CAPACITY",
+        "sourceLaneId": "NCIGF_ASSESSMENT_CAPACITY_EXPERIENCE",
+        "originalCategory": "CAPITAL",
+        "temporality": "PARTIAL_YEAR_2026_Q2_REPORT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ncigf_assessment_refund_net_reconciliation",
+        "sourceDomain": "NCIGF_ASSESSMENT_CAPACITY",
+        "sourceLaneId": "NCIGF_ASSESSMENT_CAPACITY_EXPERIENCE",
+        "originalCategory": "CAPITAL",
+        "temporality": "PARTIAL_YEAR_2026_Q2_REPORT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "ncigf_publisher_verification_and_estimate_boundary",
+        "sourceDomain": "NCIGF_ASSESSMENT_CAPACITY",
+        "sourceLaneId": "NCIGF_ASSESSMENT_CAPACITY_EXPERIENCE",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_PUBLICATION_QUALIFICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fra_calendar_year_reported_outcomes",
+        "sourceDomain": "FRA_FORM54_FORM55_2015_2019",
+        "sourceLaneId": "FRA_FORM54_FORM55_2015_2019",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "POST_CALENDAR_YEAR_REPORTING",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fra_calendar_year_operational_exposure",
+        "sourceDomain": "FRA_FORM54_FORM55_2015_2019",
+        "sourceLaneId": "FRA_FORM54_FORM55_2015_2019",
+        "originalCategory": "EXPOSURE",
+        "temporality": "RETROSPECTIVE_MATCHED_CALENDAR_YEAR",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "SOURCE_DOMAIN_EXPOSURE_OFFSET_DESCRIPTOR",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fra_calendar_year_rate_diagnostics",
+        "sourceDomain": "FRA_FORM54_FORM55_2015_2019",
+        "sourceLaneId": "FRA_FORM54_FORM55_2015_2019",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "POST_OUTCOME_RETROSPECTIVE_RATE",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fra_reported_accident_damage_cost",
+        "sourceDomain": "FRA_FORM54_FORM55_2015_2019",
+        "sourceLaneId": "FRA_FORM54_FORM55_2015_2019",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "POST_ACCIDENT_OPERATOR_REPORT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fra_canonical_query_chain",
+        "sourceDomain": "FRA_FORM54_FORM55_2015_2019",
+        "sourceLaneId": "FRA_FORM54_FORM55_2015_2019",
+        "originalCategory": "REVISION",
+        "temporality": "FROZEN_SOURCE_SNAPSHOT_2026_08_21",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fra_threshold_and_population_missingness",
+        "sourceDomain": "FRA_FORM54_FORM55_2015_2019",
+        "sourceLaneId": "FRA_FORM54_FORM55_2015_2019",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_FREEZE_POPULATION_ASSESSMENT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "fra_deduplication_and_correlation_boundary",
+        "sourceDomain": "FRA_FORM54_FORM55_2015_2019",
+        "sourceLaneId": "FRA_FORM54_FORM55_2015_2019",
+        "originalCategory": "REVISION",
+        "temporality": "POST_FREEZE_DEDUPLICATION",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nhtsa_recall_campaign_identity_and_dedup",
+        "sourceDomain": "NHTSA_RECALL_REMEDY_2026_08_21",
+        "sourceLaneId": "NHTSA_RECALL_AND_REMEDY_STATUS_REFERENCE",
+        "originalCategory": "REVISION",
+        "temporality": "FROZEN_SOURCE_SNAPSHOT_2026_08_21",
+        "outcomeDerived": false,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "DATA_REGIME_IDENTITY_OR_DEDUP_CONTROL",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": false,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nhtsa_quarterly_latest_status_composition",
+        "sourceDomain": "NHTSA_RECALL_REMEDY_2026_08_21",
+        "sourceLaneId": "NHTSA_RECALL_AND_REMEDY_STATUS_REFERENCE",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "LATEST_OBSERVED_AT_FROZEN_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nhtsa_annual_latest_status_composition",
+        "sourceDomain": "NHTSA_RECALL_REMEDY_2026_08_21",
+        "sourceLaneId": "NHTSA_RECALL_AND_REMEDY_STATUS_REFERENCE",
+        "originalCategory": "OUTCOME_SENSING",
+        "temporality": "LATEST_OBSERVED_AT_FROZEN_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nhtsa_latest_status_revision_selection",
+        "sourceDomain": "NHTSA_RECALL_REMEDY_2026_08_21",
+        "sourceLaneId": "NHTSA_RECALL_AND_REMEDY_STATUS_REFERENCE",
+        "originalCategory": "REVISION",
+        "temporality": "POST_STATUS_REPORT_REVISION_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nhtsa_status_right_censoring",
+        "sourceDomain": "NHTSA_RECALL_REMEDY_2026_08_21",
+        "sourceLaneId": "NHTSA_RECALL_AND_REMEDY_STATUS_REFERENCE",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "RIGHT_CENSORED_AT_2026_08_21_FREEZE",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nhtsa_recall_status_population_reconciliation",
+        "sourceDomain": "NHTSA_RECALL_REMEDY_2026_08_21",
+        "sourceLaneId": "NHTSA_RECALL_AND_REMEDY_STATUS_REFERENCE",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_LINKAGE_FROZEN_SNAPSHOT",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      },
+      {
+        "factorId": "nhtsa_malformed_period_and_component_anomalies",
+        "sourceDomain": "NHTSA_RECALL_REMEDY_2026_08_21",
+        "sourceLaneId": "NHTSA_RECALL_AND_REMEDY_STATUS_REFERENCE",
+        "originalCategory": "MISSINGNESS",
+        "temporality": "POST_SOURCE_QUALITY_REPLAY",
+        "outcomeDerived": true,
+        "sourceDomainRetrospectiveUseAdmitted": true,
+        "architectureRole": "POST_OUTCOME_LABEL_OR_RETROSPECTIVE_DIAGNOSTIC",
+        "usableAsTargetPreActionPredictor": false,
+        "leakageIfUsedAsTargetPreActionPredictor": true,
+        "targetTransferEstablished": false
+      }
+    ]
+  },
+  "laboratoryModelFamilyBenchmark": [
+    {
+      "familyId": "FREQUENCY_GLM_GAM",
+      "canonicalForm": "g(E[N_i|x_i])=beta_0+x_i^T beta+s(x_i)+log(exposure_i)",
+      "candidateDistributions": [
+        "POISSON",
+        "NEGATIVE_BINOMIAL",
+        "QUASI_POISSON"
+      ],
+      "laboratoryControls": [
+        "OFFSET",
+        "DISPERSION",
+        "RESIDUALS",
+        "NONLINEARITY",
+        "ROOT_DISJOINT_OUT_OF_TIME_VALIDATION"
+      ],
+      "outsiderCurrentState": "SOURCE_DOMAIN_AGGREGATE_ADEQUACY_DIAGNOSTIC_ONLY",
+      "fitAuthorized": false
+    },
+    {
+      "familyId": "CONDITIONAL_SEVERITY_AND_COMPOUND_LOSS",
+      "canonicalForm": "S=sum_{j=1}^{N}Y_j; E[S|x]=E[N|x]E[Y|N>0,x] only after dependence is tested",
+      "candidateDistributions": [
+        "GAMMA",
+        "LOGNORMAL",
+        "TWEEDIE",
+        "MIXTURE_OR_HURDLE"
+      ],
+      "laboratoryControls": [
+        "UNIQUE_LOSS_UNIT",
+        "DEDUCTIBLE_LIMIT_INFLATION_BASIS",
+        "TRUNCATION_CENSORING",
+        "TAIL_DIAGNOSTICS",
+        "FREQUENCY_SEVERITY_DEPENDENCE"
+      ],
+      "outsiderCurrentState": "REAL_PAYMENT_FRAGMENTS_NOT_MODEL_READY_SEVERITIES",
+      "fitAuthorized": false
+    },
+    {
+      "familyId": "CREDIBILITY_HIERARCHICAL",
+      "canonicalForm": "theta_g~population; observations_g|theta_g with exposure-weighted partial pooling",
+      "candidateDistributions": [
+        "BUHLMANN_STRAUB",
+        "GLMM",
+        "BAYESIAN_HIERARCHICAL"
+      ],
+      "laboratoryControls": [
+        "RELEVANT_EXPERIENCE",
+        "HOMOGENEITY",
+        "GROUP_ROOTS",
+        "VOLUME_AND_VARIANCE",
+        "TRANSFER_SENSITIVITY"
+      ],
+      "outsiderCurrentState": "NO_TARGET_SUBJECT_EXPERIENCE_AND_NO_ADMISSIBLE_RELEVANT_POOL",
+      "fitAuthorized": false
+    },
+    {
+      "familyId": "DELAY_SURVIVAL_MULTI_STATE",
+      "canonicalForm": "S(t)=product_{t_j<=t}(1-d_j/n_j); event->report->pay->close->reopen states",
+      "candidateDistributions": [
+        "KAPLAN_MEIER",
+        "COX",
+        "AFT",
+        "COMPETING_RISKS"
+      ],
+      "laboratoryControls": [
+        "INDIVIDUAL_TIME_ORIGIN",
+        "RIGHT_CENSOR_FLAG",
+        "LEFT_TRUNCATION",
+        "STATE_TRANSITIONS",
+        "INFORMATIVE_CENSORING_SENSITIVITY"
+      ],
+      "outsiderCurrentState": "AGGREGATE_LATENCY_AND_CENSORING_DESCRIPTIONS_ONLY",
+      "fitAuthorized": false
+    },
+    {
+      "familyId": "STOCHASTIC_RESERVING",
+      "canonicalForm": "incremental triangle with accident/development/calendar effects and predictive MSEP",
+      "candidateDistributions": [
+        "MACK_CHAIN_LADDER",
+        "ODP_BOOTSTRAP",
+        "RESERVING_GLM",
+        "BAYESIAN_MCMC"
+      ],
+      "laboratoryControls": [
+        "TRIANGLE_SCALE",
+        "TAIL",
+        "CALENDAR_EFFECTS",
+        "DEPENDENCE",
+        "PAID_INCURRED_RECONCILIATION",
+        "OUT_OF_TIME_BACKTEST"
+      ],
+      "outsiderCurrentState": "CAS_SOURCE_BACKTEST_ONLY_NO_TARGET_TRIANGLE_OR_TAIL",
+      "fitAuthorized": false
+    },
+    {
+      "familyId": "TAIL_AND_DEPENDENCE",
+      "canonicalForm": "P(Y-u<=y|Y>u) approximated by GPD; joint roots modeled separately from marginals",
+      "candidateDistributions": [
+        "PEAKS_OVER_THRESHOLD_GPD",
+        "COPULA",
+        "SHARED_SHOCK",
+        "CATASTROPHE_SCENARIO"
+      ],
+      "laboratoryControls": [
+        "THRESHOLD_STABILITY",
+        "TAIL_SAMPLE_SIZE",
+        "CLUSTER_DECLUSTERING",
+        "TAIL_DEPENDENCE",
+        "STRESS_AND_MODEL_RISK"
+      ],
+      "outsiderCurrentState": "NO_ADMISSIBLE_TARGET_TAIL_OR_DEPENDENCE_SAMPLE",
+      "fitAuthorized": false
+    },
+    {
+      "familyId": "PROBABILISTIC_VALIDATION_UNCERTAINTY_DRIFT",
+      "canonicalForm": "predict full F_i; score only on preregistered future dependence-root-disjoint outcomes",
+      "candidateDistributions": [
+        "LOG_SCORE",
+        "CRPS",
+        "PIT_OR_RANDOMIZED_PIT",
+        "INTERVAL_COVERAGE",
+        "CALIBRATION_CURVE"
+      ],
+      "laboratoryControls": [
+        "TRAIN_CALIBRATION_TEST_SEPARATION",
+        "PROPER_SCORE",
+        "CALIBRATION_AND_SHARPNESS",
+        "ALEATORIC_PARAMETER_MODEL_DATA_TRANSFER_UNCERTAINTY",
+        "DRIFT_THRESHOLDS_AND_RECALIBRATION_GOVERNANCE"
+      ],
+      "outsiderCurrentState": "NO_PREDICTIONS_OR_PROSPECTIVE_TARGET_HOLDOUT",
+      "fitAuthorized": false
+    }
+  ],
+  "sourceDomainModelAdequacyDiagnostics": {
+    "fraInterceptOnlyPoisson": {
+      "diagnosticId": "FRA_INTERCEPT_ONLY_POISSON_EXPOSURE_OFFSET_ADEQUACY",
+      "sourceDomain": "FRA_FORM54_FORM55_2015_2019",
+      "estimand": "PUBLISHER_REPORTED_ABOVE_THRESHOLD_INCIDENT_COUNT_PER_TRAIN_MILE",
+      "modelUnderDiagnostic": "N_y~Poisson(mu_y); log(mu_y)=beta_0+log(train_miles_y)",
+      "fittedParameterCount": 1,
+      "calendarRootCount": 5,
+      "totalObservedReportedIncidents": 10449,
+      "totalTrainMileExposure": "3529396874",
+      "pooledRatePerMillionTrainMiles": "2.960562491",
+      "nominalResidualDf": 4,
+      "pearsonChiSquare": "42.346533703",
+      "poissonDispersionPearsonOverNominalDf": "10.586633426",
+      "poissonDeviance": "41.859068457",
+      "cells": [
+        {
+          "calendarRoot": "2015",
+          "observedReportedIncidents": 2116,
+          "trainMileExposure": "738315727",
+          "interceptOnlyPoissonExpected": "2185.829847659",
+          "pearsonResidualContribution": "2.230826717"
+        },
+        {
+          "calendarRoot": "2016",
+          "observedReportedIncidents": 1917,
+          "trainMileExposure": "689636111",
+          "interceptOnlyPoissonExpected": "2041.710802467",
+          "pearsonResidualContribution": "7.617525574"
+        },
+        {
+          "calendarRoot": "2017",
+          "observedReportedIncidents": 1976,
+          "trainMileExposure": "705746026",
+          "interceptOnlyPoissonExpected": "2089.405212545",
+          "pearsonResidualContribution": "6.155216879"
+        },
+        {
+          "calendarRoot": "2018",
+          "observedReportedIncidents": 2215,
+          "trainMileExposure": "714882438",
+          "interceptOnlyPoissonExpected": "2116.454131211",
+          "pearsonResidualContribution": "4.588470930"
+        },
+        {
+          "calendarRoot": "2019",
+          "observedReportedIncidents": 2225,
+          "trainMileExposure": "680816572",
+          "interceptOnlyPoissonExpected": "2015.600006118",
+          "pearsonResidualContribution": "21.754493602"
+        }
+      ],
+      "inferencePValue": null,
+      "inferencePValueWithheldBecauseCalendarRootsAreNotEstablishedIid": true,
+      "equidispersedPoissonAdequateClaimed": false,
+      "negativeBinomialOrTrendFitPerformed": false,
+      "whyNoEscalatedFit": [
+        "ONLY_FIVE_CORRELATED_CALENDAR_ROOTS",
+        "ABOVE_THRESHOLD_OPERATOR_REPORTED_POPULATION",
+        "NO_OPERATOR_LEVEL_PRE_ACTION_FEATURE_MATRIX_IN_FROZEN_MATH",
+        "NO_PROSPECTIVE_ROOT_DISJOINT_HOLDOUT",
+        "NO_TARGET_DOMAIN_TRANSFER"
+      ],
+      "admittedUse": "SOURCE_DOMAIN_MODEL_MISSPECIFICATION_WARNING_AND_FUTURE_DATA_CONTRACT_DESIGN",
+      "targetFrequencyEstimate": null,
+      "priceInput": null
+    }
+  },
+  "sourceLaneComponentContributions": [
+    {
+      "lane": "FRA_FORM54_FORM55_2015_2019",
+      "contribution": "MATCHED_CALENDAR_YEAR_REPORTED_INCIDENT_AND_TRAIN_MILE_RATE_DIAGNOSTIC",
+      "modelComponentsAdvanced": [
+        "SOURCE_DOMAIN_FREQUENCY_ADEQUACY_DIAGNOSTIC"
+      ],
+      "blocker": "FIVE_CORRELATED_ABOVE_THRESHOLD_AGGREGATES_NO_TARGET_TRANSFER"
+    },
+    {
+      "lane": "USDA_RMA_CROP_INSURANCE_2024",
+      "contribution": "REAL_EXPOSURE_PREMIUM_LIABILITY_AND_AGGREGATE_INDEMNITY",
+      "modelComponentsAdvanced": [
+        "EXPOSURE_AND_AGGREGATE_LOSS_DATA_CONTRACT_REFERENCE"
+      ],
+      "blocker": "COUNT_ANOMALIES_NONUNIQUE_POLICYHOLDERS_AND_NO_INDIVIDUAL_SEVERITY"
+    },
+    {
+      "lane": "CAS_SCHEDULE_P",
+      "contribution": "REAL_TRIANGLES_AND_OUT_OF_TIME_LAG10_BACKTEST",
+      "modelComponentsAdvanced": [
+        "RESERVE_BACKTEST_REFERENCE"
+      ],
+      "blocker": "NO_POST_LAG10_TAIL_SCALE_CALENDAR_SHOCK_OR_CROSS_ENTITY_DEPENDENCE"
+    },
+    {
+      "lane": "NFIP_NC_2024_CLAIM_TRANSACTIONS",
+      "contribution": "REAL_PAYMENT_RECOVERY_AND_EMPIRICAL_TRANSACTION_AMOUNT_DISTRIBUTION",
+      "modelComponentsAdvanced": [
+        "SEVERITY_AND_PAYMENT_DATA_CONTRACT_REFERENCE"
+      ],
+      "blocker": "UNIQUE_LOSS_UNOBSERVED_AND_2026_EXPOSURE_NOT_MATCHED_TO_2024"
+    },
+    {
+      "lane": "FEMA_PUBLIC_ASSISTANCE_SECOND_APPEALS",
+      "contribution": "REAL_RIGHT_CENSORING_PENDING_BOUNDS_AND_SIGNED_DECISION_LATENCY",
+      "modelComponentsAdvanced": [
+        "SURVIVAL_AND_ADJUDICATION_DATA_CONTRACT_REFERENCE"
+      ],
+      "blocker": "FROZEN_MATH_RETAINS_AGGREGATES_NOT_INDIVIDUAL_MULTI_STATE_SURVIVAL_INPUT"
+    },
+    {
+      "lane": "NHTSA_RECALL_REMEDY_2026_08_21",
+      "contribution": "REAL_CUMULATIVE_REMEDY_STATUS_REVISION_CENSORING_AND_ANOMALIES",
+      "modelComponentsAdvanced": [
+        "LONGITUDINAL_STATUS_AND_QUALITY_DATA_CONTRACT_REFERENCE"
+      ],
+      "blocker": "MANUFACTURER_STATUS_NOT_INDEPENDENT_REPAIR_RECEIPT_LOSS_OR_CLOSED_COHORT"
+    },
+    {
+      "lane": "FDA_MAUDE_PASSIVE_SURVEILLANCE",
+      "contribution": "REAL_PASSIVE_REPORT_REVISION_MISSINGNESS_AND_EVENT_TYPE_COMPOSITION",
+      "modelComponentsAdvanced": [
+        "OUTCOME_SENSING_AND_REVISION_DATA_CONTRACT_REFERENCE"
+      ],
+      "blocker": "NO_DEVICE_USE_DENOMINATOR_CAUSALITY_OR_UNDERREPORTING_RESOLUTION"
+    },
+    {
+      "lane": "CA_DMV_AV_REPORTING",
+      "contribution": "REAL_REGIME_DATES_LEGACY_MILES_PERMITS_AND_SELECTED_FORMS",
+      "modelComponentsAdvanced": [
+        "ROBOT_EXPOSURE_REGIME_DATA_CONTRACT_REFERENCE"
+      ],
+      "blocker": "SELECTED_FORMS_NOT_COMPLETE_MANIFEST_OR_PAIRED_NUMERATOR"
+    }
+  ],
+  "estimandComponentGraph": {
+    "graphMeaning": "REQUIRED_DEPENDENCIES_NOT_A_PROGRESS_SCORE",
+    "nodes": [
+      {
+        "nodeId": "TARGET_OBSERVATION_CONTRACT",
+        "nodeType": "DATA",
+        "currentState": "MISSING",
+        "requiredEvidence": "UNIQUE_TARGET_UNIT_EXPOSURE_WINDOW_OUTCOME_REVISION_AND_AS_OF_KEYS"
+      },
+      {
+        "nodeId": "TARGET_PRE_ACTION_FEATURE_CONTRACT",
+        "nodeType": "DATA",
+        "currentState": "MISSING",
+        "requiredEvidence": "PROSPECTIVELY_FROZEN_FEATURES_AVAILABLE_BEFORE_ACTION_AND_OUTCOME"
+      },
+      {
+        "nodeId": "TARGET_DEPENDENCE_ROOT_CONTRACT",
+        "nodeType": "DATA",
+        "currentState": "MISSING",
+        "requiredEvidence": "SHARED_AGENT_PROVIDER_TASK_TIME_CATASTROPHE_AND_AFFECTED_PARTY_ROOTS"
+      },
+      {
+        "nodeId": "TARGET_ECONOMIC_LOSS_CONTRACT",
+        "nodeType": "DATA",
+        "currentState": "MISSING",
+        "requiredEvidence": "UNIQUE_ADJUDICATED_GROSS_RECOVERY_NET_PAYMENT_AND_CURRENCY_BASIS"
+      },
+      {
+        "nodeId": "TARGET_MULTI_CLOCK_CONTRACT",
+        "nodeType": "DATA",
+        "currentState": "MISSING",
+        "requiredEvidence": "EVENT_REPORT_ADJUDICATION_PAYMENT_CLOSE_REOPEN_TIMES_AND_CENSOR_FLAGS"
+      },
+      {
+        "nodeId": "FREQUENCY_MODEL",
+        "nodeType": "MODEL",
+        "currentState": "BLOCKED",
+        "requiredEvidence": "MATCHED_COMPLETE_EXPOSURE_AND_ZERO_OUTCOME_WINDOWS_WITH_OFFSET"
+      },
+      {
+        "nodeId": "SEVERITY_MODEL",
+        "nodeType": "MODEL",
+        "currentState": "BLOCKED",
+        "requiredEvidence": "UNIQUE_LOSS_AMOUNTS_WITH_LIMIT_DEDUCTIBLE_INFLATION_AND_TRUNCATION"
+      },
+      {
+        "nodeId": "DELAY_SURVIVAL_MODEL",
+        "nodeType": "MODEL",
+        "currentState": "BLOCKED",
+        "requiredEvidence": "INDIVIDUAL_MULTI_STATE_TIMES_AND_CENSORING_MECHANISM"
+      },
+      {
+        "nodeId": "RESERVE_MODEL",
+        "nodeType": "MODEL",
+        "currentState": "BLOCKED",
+        "requiredEvidence": "TARGET_PAID_INCURRED_TRIANGLES_TAIL_SCALE_CALENDAR_AND_RECOVERABLES"
+      },
+      {
+        "nodeId": "TAIL_MODEL",
+        "nodeType": "MODEL",
+        "currentState": "BLOCKED",
+        "requiredEvidence": "TARGET_TAIL_SAMPLE_THRESHOLD_STABILITY_DECLUSTERING_AND_STRESS"
+      },
+      {
+        "nodeId": "DEPENDENCE_MODEL",
+        "nodeType": "MODEL",
+        "currentState": "BLOCKED",
+        "requiredEvidence": "JOINT_OUTCOMES_AND_STABLE_SHARED_ROOTS_NOT_ROW_COUNT_PROXIES"
+      },
+      {
+        "nodeId": "PREDICTIVE_DISTRIBUTION",
+        "nodeType": "MODEL",
+        "currentState": "BLOCKED",
+        "requiredEvidence": "JOINT_FREQUENCY_SEVERITY_DELAY_TAIL_DEPENDENCE_UNCERTAINTY"
+      },
+      {
+        "nodeId": "PROSPECTIVE_VALIDATION",
+        "nodeType": "VALIDATION",
+        "currentState": "MISSING",
+        "requiredEvidence": "PREREGISTERED_TEMPORAL_DEPENDENCE_ROOT_DISJOINT_HOLDOUT_AND_PROPER_SCORES"
+      },
+      {
+        "nodeId": "DRIFT_AND_RECALIBRATION",
+        "nodeType": "CONTROL",
+        "currentState": "MISSING",
+        "requiredEvidence": "PREREGISTERED_INPUT_LABEL_CALIBRATION_DRIFT_LIMITS_AND_CHANGE_AUTHORITY"
+      },
+      {
+        "nodeId": "INDEPENDENT_ACTUARIAL_REVIEW",
+        "nodeType": "GOVERNANCE",
+        "currentState": "MISSING",
+        "requiredEvidence": "QUALIFIED_INDEPENDENT_REVIEW_OF_DATA_MODEL_ASSUMPTIONS_OUTPUT_AND_LIMITS"
+      },
+      {
+        "nodeId": "LEGAL_CAPITAL_CUSTODY_CLAIMS_AUTHORITY",
+        "nodeType": "GOVERNANCE",
+        "currentState": "MISSING",
+        "requiredEvidence": "LICENSED_ISSUER_CONTRACT_CAPITAL_CUSTODIAN_ADJUDICATOR_AND_PAYMENT_EXECUTION"
+      },
+      {
+        "nodeId": "RESPONSIBILITY_BEARING_DECISION",
+        "nodeType": "DECISION",
+        "currentState": "BLOCKED",
+        "requiredEvidence": "ALL_UPSTREAM_COMPONENTS_VERIFIED_FOR_EXACT_INTENDED_PURPOSE"
+      }
+    ],
+    "edges": [
+      [
+        "TARGET_OBSERVATION_CONTRACT",
+        "FREQUENCY_MODEL"
+      ],
+      [
+        "TARGET_PRE_ACTION_FEATURE_CONTRACT",
+        "FREQUENCY_MODEL"
+      ],
+      [
+        "TARGET_DEPENDENCE_ROOT_CONTRACT",
+        "FREQUENCY_MODEL"
+      ],
+      [
+        "TARGET_OBSERVATION_CONTRACT",
+        "SEVERITY_MODEL"
+      ],
+      [
+        "TARGET_ECONOMIC_LOSS_CONTRACT",
+        "SEVERITY_MODEL"
+      ],
+      [
+        "TARGET_PRE_ACTION_FEATURE_CONTRACT",
+        "SEVERITY_MODEL"
+      ],
+      [
+        "TARGET_OBSERVATION_CONTRACT",
+        "DELAY_SURVIVAL_MODEL"
+      ],
+      [
+        "TARGET_MULTI_CLOCK_CONTRACT",
+        "DELAY_SURVIVAL_MODEL"
+      ],
+      [
+        "TARGET_ECONOMIC_LOSS_CONTRACT",
+        "RESERVE_MODEL"
+      ],
+      [
+        "TARGET_MULTI_CLOCK_CONTRACT",
+        "RESERVE_MODEL"
+      ],
+      [
+        "SEVERITY_MODEL",
+        "TAIL_MODEL"
+      ],
+      [
+        "TARGET_DEPENDENCE_ROOT_CONTRACT",
+        "TAIL_MODEL"
+      ],
+      [
+        "FREQUENCY_MODEL",
+        "DEPENDENCE_MODEL"
+      ],
+      [
+        "SEVERITY_MODEL",
+        "DEPENDENCE_MODEL"
+      ],
+      [
+        "TARGET_DEPENDENCE_ROOT_CONTRACT",
+        "DEPENDENCE_MODEL"
+      ],
+      [
+        "FREQUENCY_MODEL",
+        "PREDICTIVE_DISTRIBUTION"
+      ],
+      [
+        "SEVERITY_MODEL",
+        "PREDICTIVE_DISTRIBUTION"
+      ],
+      [
+        "DELAY_SURVIVAL_MODEL",
+        "PREDICTIVE_DISTRIBUTION"
+      ],
+      [
+        "RESERVE_MODEL",
+        "PREDICTIVE_DISTRIBUTION"
+      ],
+      [
+        "TAIL_MODEL",
+        "PREDICTIVE_DISTRIBUTION"
+      ],
+      [
+        "DEPENDENCE_MODEL",
+        "PREDICTIVE_DISTRIBUTION"
+      ],
+      [
+        "PREDICTIVE_DISTRIBUTION",
+        "PROSPECTIVE_VALIDATION"
+      ],
+      [
+        "TARGET_DEPENDENCE_ROOT_CONTRACT",
+        "PROSPECTIVE_VALIDATION"
+      ],
+      [
+        "PROSPECTIVE_VALIDATION",
+        "DRIFT_AND_RECALIBRATION"
+      ],
+      [
+        "PREDICTIVE_DISTRIBUTION",
+        "INDEPENDENT_ACTUARIAL_REVIEW"
+      ],
+      [
+        "PROSPECTIVE_VALIDATION",
+        "INDEPENDENT_ACTUARIAL_REVIEW"
+      ],
+      [
+        "DRIFT_AND_RECALIBRATION",
+        "RESPONSIBILITY_BEARING_DECISION"
+      ],
+      [
+        "INDEPENDENT_ACTUARIAL_REVIEW",
+        "RESPONSIBILITY_BEARING_DECISION"
+      ],
+      [
+        "LEGAL_CAPITAL_CUSTODY_CLAIMS_AUTHORITY",
+        "RESPONSIBILITY_BEARING_DECISION"
+      ]
+    ],
+    "verification": {
+      "acyclic": true,
+      "nodeCount": 17,
+      "edgeCount": 29,
+      "topologicalOrder": [
+        "LEGAL_CAPITAL_CUSTODY_CLAIMS_AUTHORITY",
+        "TARGET_DEPENDENCE_ROOT_CONTRACT",
+        "TARGET_ECONOMIC_LOSS_CONTRACT",
+        "TARGET_MULTI_CLOCK_CONTRACT",
+        "RESERVE_MODEL",
+        "TARGET_OBSERVATION_CONTRACT",
+        "DELAY_SURVIVAL_MODEL",
+        "TARGET_PRE_ACTION_FEATURE_CONTRACT",
+        "FREQUENCY_MODEL",
+        "SEVERITY_MODEL",
+        "DEPENDENCE_MODEL",
+        "TAIL_MODEL",
+        "PREDICTIVE_DISTRIBUTION",
+        "PROSPECTIVE_VALIDATION",
+        "DRIFT_AND_RECALIBRATION",
+        "INDEPENDENT_ACTUARIAL_REVIEW",
+        "RESPONSIBILITY_BEARING_DECISION"
+      ]
+    },
+    "allTargetNodesClosed": false,
+    "responsibilityDecisionBlocked": true
+  },
+  "promotionProtocol": {
+    "states": [
+      "REAL_SOURCE_REFERENCE",
+      "SOURCE_DOMAIN_DIAGNOSTIC",
+      "SOURCE_DOMAIN_MODEL_CANDIDATE",
+      "TARGET_SHADOW_CANDIDATE",
+      "PROSPECTIVELY_VALIDATED_TARGET_MODEL",
+      "INDEPENDENTLY_REVIEWED_MODEL",
+      "RESPONSIBILITY_AUTHORIZED"
+    ],
+    "currentHighestState": "SOURCE_DOMAIN_DIAGNOSTIC",
+    "factorCountCanAdvanceState": false,
+    "eachTransitionRequiresExactEstimandDataAndGovernanceEvidence": true,
+    "rootMissingEvidenceCutSet": [
+      "TARGET_OBSERVATION_CONTRACT",
+      "TARGET_PRE_ACTION_FEATURE_CONTRACT",
+      "TARGET_DEPENDENCE_ROOT_CONTRACT",
+      "TARGET_ECONOMIC_LOSS_CONTRACT",
+      "TARGET_MULTI_CLOCK_CONTRACT",
+      "PROSPECTIVE_VALIDATION",
+      "DRIFT_AND_RECALIBRATION",
+      "INDEPENDENT_ACTUARIAL_REVIEW",
+      "LEGAL_CAPITAL_CUSTODY_CLAIMS_AUTHORITY"
+    ],
+    "rootMissingEvidenceCutSetCount": 9,
+    "targetModelComponentsFitted": 0,
+    "targetModelComponentsValidated": 0,
+    "targetModelComponentsIndependentlyReviewed": 0,
+    "targetModelComponentsAuthorized": 0
+  },
+  "trainingBoundary": {
+    "automaticallyAdmittedTargetTrainingRows": 0,
+    "automaticallyAdmittedTargetPredictors": 0,
+    "postOutcomeLeakageRowsPrevented": 72,
+    "sourceReferenceFactsRemainAvailableForSchemaAnomalyAndMeasurementDesign": true,
+    "useAsTargetSupervisionRequiresSeparateClaimSpecificAdmission": true
+  },
+  "outputs": {
+    "targetFrequencyEstimate": null,
+    "targetSeverityEstimate": null,
+    "targetDelayDistribution": null,
+    "targetReserveEstimate": null,
+    "targetTailEstimate": null,
+    "targetDependenceEstimate": null,
+    "targetPredictiveDistribution": null,
+    "premium": null,
+    "price": null,
+    "capital": null,
+    "coverage": null,
+    "guarantee": null
+  },
+  "readiness": {
+    "factorRoleArchitectureEvolved": true,
+    "estimandComponentDagImplemented": true,
+    "laboratoryBenchmarkImplemented": true,
+    "sourceDomainPoissonAdequacyDiagnosticImplemented": true,
+    "sourceDomainEvidenceAdvancedWithoutDowngradingReality": true,
+    "targetObservationContractComplete": false,
+    "targetPreActionFeatureContractComplete": false,
+    "targetProspectiveHoldoutComplete": false,
+    "targetModelCalibrated": false,
+    "readyToPrice": false,
+    "readyToBearResponsibility": false
+  },
+  "authority": {
+    "professionalActuarialOpinion": false,
+    "independentActuarialReview": false,
+    "targetDomainTransfer": false,
+    "priceAuthority": false,
+    "underwritingAuthority": false,
+    "capitalAuthority": false,
+    "custodyAuthority": false,
+    "claimsAuthority": false,
+    "paymentAuthority": false,
+    "operationalAuthorityGranted": false
+  },
+  "artifactHash": "sha256:a5a9a324e1b47c43501f03d4a05c2c0b4b3e552681f6888d9dc7e3da5904f1ee"
+}

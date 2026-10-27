@@ -1,0 +1,16 @@
+{
+  "schema": "outsider/artifact-supersession/v1",
+  "status": "SUPERSEDED_DO_NOT_USE_AS_CANONICAL",
+  "supersededAt": "2026-08-22T09:00:00.000Z",
+  "reason": "FINAL_V2_FIXES_CALLER_CONTROLLED_CANONICAL_TIME_AND_REPLACES_PROSPECTIVE_SOUNDING_TERMINOLOGY_WITH_PUBLISHER_RECORDED_INDEMNITY_AND_HISTORICAL_LOSS_COST",
+  "supersededArtifact": "indication.json",
+  "supersededArtifactHash": "sha256:dc85256a5dc6f719fea263b0341f2bce38592a9f74c2d183694c8e2391997d10",
+  "supersededArtifactFileHash": "sha256:4ddcb9e6985654fec723ba408916070d8ccaee6959fd72e1f5b1750e7c816209",
+  "supersededFileBytes": 6620,
+  "supersededArtifactBytesPreserved": true,
+  "supersededBy": "../final-v2/historical-loss-cost.json",
+  "replacementArtifactHash": "sha256:e44e14fc5bce5c26483b1435104a99ff8113cb49c830db3554e5aaff25a229a6",
+  "replacementArtifactFileHash": "sha256:6ddf593d753a47b05a1d9e787cdd59d7024781741a3540fd7aca349bc9dafddb",
+  "sourceArtifactsReverifiedByMarker": false,
+  "rightsTermsSourceReplayed": false
+}
