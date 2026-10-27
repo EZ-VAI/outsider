@@ -13,8 +13,8 @@ const pkg = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
 const output = path.join(root, "dist");
 mkdirSync(output, { recursive: true });
 
-function run(command, args, cwd = root) {
-  const result = spawnSync(command, args, { cwd, encoding: "utf8", stdio: "pipe" });
+function run(command, args, cwd = root, stdio = "pipe") {
+  const result = spawnSync(command, args, { cwd, encoding: "utf8", stdio });
   if (result.status !== 0) {
     process.stderr.write(result.stdout ?? "");
     process.stderr.write(result.stderr ?? "");
@@ -33,7 +33,7 @@ const universalPlugin = validateOpenAIUniversalPlugin({ root });
 if (!universalPlugin.ok) {
   throw new Error(`OPENAI_UNIVERSAL_PLUGIN_INVALID:${universalPlugin.errors.join(",")}`);
 }
-run("npm", ["test"]);
+run("npm", ["test"], root, "inherit");
 run("npm", ["run", "test:corpus"]);
 const pluginArtifact = path.join(output, `${pkg.name}-${pkg.version}-claude.plugin.zip`);
 if (existsSync(pluginArtifact)) rmSync(pluginArtifact);
