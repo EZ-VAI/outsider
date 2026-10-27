@@ -32,7 +32,10 @@ test('an MCP agent connects through the owner gateway to an already open browser
   const profile = path.join(directory, 'profile'), accessFile = path.join(directory, 'access.json');
   writeFileSync(accessFile, JSON.stringify({ owner: 'owner-test-token', 'personal-agent': 'agent-test-token' }), { mode: 0o600 });
   const chrome = spawn(chromePath, ['--headless=new', '--no-sandbox', '--no-first-run', '--no-default-browser-check',
-    '--remote-debugging-port=0', `--user-data-dir=${profile}`, pageUrl], { stdio: 'ignore' });
+    '--disable-dev-shm-usage', '--disable-background-networking', '--remote-debugging-port=0',
+    `--user-data-dir=${profile}`, pageUrl], { stdio: ['ignore', 'ignore', 'pipe'] });
+  let chromeLog = '';
+  chrome.stderr.on('data', chunk => { chromeLog = (chromeLog + chunk.toString()).slice(-4000); });
   let connectedBrowser, gateway, agent;
   t.after(async () => {
     await agent?.close();
@@ -50,11 +53,12 @@ test('an MCP agent connects through the owner gateway to an already open browser
     rmSync(directory, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
   });
   const activePort = path.join(profile, 'DevToolsActivePort');
-  for (let i = 0; i < 200 && !existsSync(activePort); i++) {
-    if (chrome.exitCode !== null) throw new Error('CHROME_EXITED_BEFORE_CDP');
+  const startupDeadline = Date.now() + 30_000;
+  while (Date.now() < startupDeadline && !existsSync(activePort)) {
+    if (chrome.exitCode !== null || chrome.signalCode !== null) throw new Error(`CHROME_EXITED_BEFORE_CDP:${chromeLog}`);
     await delay(50);
   }
-  assert.ok(existsSync(activePort), 'Chrome must expose its DevTools port');
+  assert.ok(existsSync(activePort), `Chrome must expose its DevTools port: ${chromeLog}`);
   const cdp = `http://127.0.0.1:${readFileSync(activePort, 'utf8').split('\n')[0]}`;
   connectedBrowser = await chromium.connectOverCDP(cdp);
   let page;
