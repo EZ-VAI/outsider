@@ -1,0 +1,115 @@
+{
+  "schema": "outsider/matraix-persona-maintainer-reviewed-source/v1",
+  "reviewedAt": "2026-08-27T06:50:12.000Z",
+  "reviewScope": "PUBLISHER_METADATA_ONLY_NO_UPSTREAM_SOURCE_BYTES",
+  "sources": {
+    "github": {
+      "repository": "MatrAIx-ai/MatrAIx-Persona-8B",
+      "url": "https://github.com/MatrAIx-ai/MatrAIx-Persona-8B",
+      "revision": "39d850270917db25535dac3f7aa2561732050e82",
+      "revisionKind": "REPOSITORY_HEAD_OBSERVED",
+      "reviewedPaths": [
+        "README.md",
+        "docs/persona/README.md",
+        "docs/persona/pipeline.md"
+      ],
+      "sourceBytesDownloaded": false,
+      "rootCodeLicenseDeclared": "MIT"
+    },
+    "huggingFace": {
+      "dataset": "MatrAIx2026/MatrAIx_Persona_1M",
+      "url": "https://huggingface.co/datasets/MatrAIx2026/MatrAIx_Persona_1M",
+      "revision": "74f1edf9c9d024e6d3e412c3fda0efccfb2029c7",
+      "revisionKind": "DATASET_REPOSITORY_HEAD_OBSERVED",
+      "payloadTreeRevisionEstablished": false,
+      "sourceBytesDownloaded": false,
+      "parquetShardsDownloaded": 0,
+      "hubCardLicenseTagObserved": null,
+      "datasetOverallLicenseDeclared": null,
+      "sourceLicensesAndTermsContinueToApply": true
+    },
+    "paper": {
+      "arxivId": "2608.04205",
+      "version": "v1",
+      "url": "https://arxiv.org/html/2608.04205v1",
+      "submittedAt": "2026-08-04T20:04:49.000Z",
+      "sourceBytesDownloaded": false
+    }
+  },
+  "publisherMetadata": {
+    "schemaTopology": {
+      "dimensionCount": 1290,
+      "dimensionType": "CATEGORICAL",
+      "dimensionIdentifiersReplayed": false,
+      "categoricalValueDomainsReplayed": false,
+      "groups": [
+        { "id": "BACKGROUND", "dimensions": 238 },
+        { "id": "PSYCHOLOGY", "dimensions": 210 },
+        { "id": "CAPABILITY", "dimensions": 331 },
+        { "id": "BEHAVIOR_AND_INTERACTION", "dimensions": 124 },
+        { "id": "LIFESTYLE", "dimensions": 387 }
+      ]
+    },
+    "coreset": {
+      "releasedRows": 999847,
+      "humanGroundedRows": 599847,
+      "syntheticRows": 400000,
+      "parquetShardsClaimed": 10,
+      "publisherDisplayedApproximateCompressedSize": "4.17 GB",
+      "sourceCounts": [
+        { "id": "WIKIPEDIA_EXTRACTION", "rows": 323438 },
+        { "id": "AMAZON_REVIEW_EXTRACTION", "rows": 97915 },
+        { "id": "STACK_OVERFLOW_SURVEY_EXTRACTION", "rows": 113120 },
+        { "id": "PRISM_ALIGNMENT", "rows": 1487 },
+        { "id": "GENERAL_SOCIAL_SURVEY", "rows": 63532 },
+        { "id": "MATRAIX_VOLUNTEER_SURVEY", "rows": 355 },
+        { "id": "FULL_DAG_SYNTHETIC", "rows": 400000 }
+      ]
+    },
+    "missingness": {
+      "publisherClaimsNullBitmap": true,
+      "publisherClaimsMissingValuesNeverImputed": true,
+      "rowLevelMissingnessReplayed": false,
+      "perDimensionMissingnessRatesReplayed": false,
+      "missingMeansZero": false
+    },
+    "calibration": {
+      "publisherClaimedMarginals": [
+        "AGE_BRACKET",
+        "REGION",
+        "GENDER_IDENTITY",
+        "URBANICITY"
+      ],
+      "bestEffortMarginalsOnly": true,
+      "jointCoverageOver1290DimensionsRepresentative": false,
+      "humanGroundedSourcesPopulationRepresentative": false,
+      "releaseSplitIsRealWorldSourceRatioEstimate": false,
+      "publisherClaimsAuditShipsWithRelease": true,
+      "publisherClaimsManifestShipsWithRelease": true,
+      "publisherClaimsPerFileHashesShipWithRelease": true,
+      "auditBytesReplayed": false,
+      "manifestBytesReplayed": false,
+      "perFileHashesReplayed": false
+    },
+    "privacy": {
+      "publisherClaimsDirectIdentifiersRemoved": true,
+      "publisherClaimsVolunteerInstrumentCollectedNoNameContactOrAccountId": true,
+      "independentlyVerified": false,
+      "rawRowsInspected": 0,
+      "reidentificationAssessmentComplete": false
+    }
+  },
+  "maintainerBoundary": {
+    "realityClass": "SIMULATED_DERIVED_METADATA",
+    "trainingRows": 0,
+    "causalExperienceUnits": 0,
+    "realityCensusEligible": false,
+    "affectedPartyRegisterEligible": false,
+    "effectGroundTruthEligible": false,
+    "actionAuthority": false,
+    "delegationAuthority": false,
+    "pricingAuthority": false,
+    "guaranteeAuthority": false,
+    "settlementAuthority": false
+  }
+}

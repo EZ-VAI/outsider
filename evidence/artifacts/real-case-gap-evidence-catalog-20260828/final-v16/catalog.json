@@ -1,0 +1,1250 @@
+{
+  "schema": "outsider/real-case-gap-evidence-catalog/v1",
+  "schemaVersion": "1.6.0",
+  "asOf": "2026-08-28T06:44:46.038Z",
+  "searchScope": {
+    "method": "SYSTEMATIC_PRIMARY_SOURCE_WEB_AND_OPEN_DATA_PORTAL_SEARCH",
+    "exhaustiveInternetClaimed": false,
+    "reasonNoExhaustiveInternetClaim": "THE_BROWSABLE_WEB_IS_UNBOUNDED_AND_CHANGES_CONTINUOUSLY",
+    "coveredSourceFamilies": [
+      "AI_AGENT_AND_ROBOT_EXECUTION",
+      "WORKPLACE_AND_AI_INCIDENTS",
+      "DEVICE_AND_AV_REGULATORY_REPORTING",
+      "INSURANCE_EXPOSURE_CLAIMS_AND_RESERVES",
+      "APPEALS_TRIBUNALS_AND_CONSUMER_COMPLAINTS",
+      "ACTUARIAL_SOLVENCY_AND_CAPITAL_STANDARDS",
+      "DEPOSIT_AND_PENSION_INSURANCE_CAPITAL_AND_BENEFIT_PAYMENT",
+      "CLINICAL_PROTOCOL_REGISTRATION_AND_POSTED_AGGREGATE_RESULTS",
+      "IDENTITY_TRANSPARENCY_CUSTODY_AND_PAYMENT_INFRASTRUCTURE"
+    ],
+    "primarySourcesPreferred": true,
+    "searchIsRepeatableSnapshotNotA_CompletenessProof": true
+  },
+  "evidencePrinciple": {
+    "realCasesRemainRealCases": true,
+    "realExperienceRemainsRealExperience": true,
+    "publicOriginAutomaticallyDowngrades": false,
+    "outsiderOriginAutomaticallyUpgrades": false,
+    "sourceQualityAndClaimFitControlAdmission": true,
+    "rightsAndAuthorityRemainSeparate": true
+  },
+  "sources": [
+    {
+      "sourceId": "CODEX_APP_SERVER_LOCAL_PROBE",
+      "publisher": "OpenAI",
+      "url": "https://github.com/openai/codex/blob/main/codex-rs/app-server/README.md",
+      "sourceKind": "PLATFORM_SCHEMA_AND_ZERO_MODEL_LOCAL_HOST_PROBE",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:6ebfe26fa86ee4af28942aad698d0af555d7494d68288b6c13e623ca9cf02eef",
+      "localArtifactHashKind": "ZERO_MODEL_LOCAL_PROBE_RECORD_HASH",
+      "qualityBoundary": "REAL_INSTALLED_CODEX_0_144_5_METADATA_WITHOUT_MODEL_OR_PROMPT; CURRENT_HOOKS_UNTRUSTED; APP_SERVER_HOOK_ITEM_ID_ABSENT; CONTROL_LEVEL_UNCONTROLLED"
+    },
+    {
+      "sourceId": "DEEPSEEK_HARNESS_CORDIS_CANARY",
+      "publisher": "DeepSeek",
+      "url": "https://github.com/deepseek-ai/deepseek-harness",
+      "sourceKind": "COOPERATIVE_WORKER_DELIVERY_PROTOCOL_CANARY",
+      "realityStatus": "CONTROLLED_REAL_EXECUTION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:b3b16618bf586753cbeb638863f482171fb11d945760f923bcaf52376cbafb20",
+      "localArtifactHashKind": "CORDIS_CANARY_RECORD_HASH",
+      "qualityBoundary": "REAL_CORDIS_WATERFALL_AND_OFFICIAL_MESSAGE_FACTORY_DELIVERY_OBSERVED; SOURCE_BINARY_EQUIVALENCE_UNPROVEN; SEMANTIC_OUTCOME_CAUSAL_EFFECT_AND_AUTHORITY_NOT_ESTABLISHED"
+    },
+    {
+      "sourceId": "TRACE_COMMONS_WAVE5",
+      "publisher": "Trace Commons",
+      "url": "https://huggingface.co/datasets/trace-commons/agent-traces",
+      "sourceKind": "CONSENTED_ORGANIC_AGENT_SESSION_SAMPLE",
+      "realityStatus": "REAL_CASE_RECORDED",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:60849386032e4a10c8c1327188d4a154356dc0526388d10c2bde304f10005f48",
+      "localArtifactHashKind": "WAVE5_SOURCE_VERIFICATION_HASH",
+      "qualityBoundary": "REAL_DONATED_SESSIONS; OUTCOME_BLIND_SAMPLE; EMBEDDED_RIGHTS_AND_OUTCOME_DENOMINATORS_INCOMPLETE"
+    },
+    {
+      "sourceId": "ROBUST_ROS_WAVE5_TAXONOMY",
+      "publisher": "ROBUST / ROSIN",
+      "url": "https://github.com/robust-rosin/robust",
+      "sourceKind": "SOURCE_AWARE_ORGANIC_ROS_BUG_FIX_MECHANISM_TAXONOMY",
+      "realityStatus": "REAL_CASE_RECORDED",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:2d40c4e44a7d9edb37ce15b526c8aa07bdca694db7cece8e9b3437c8307192ad",
+      "localArtifactHashKind": "WAVE5_INTAKE_FINAL_V3_SNAPSHOT_HASH",
+      "qualityBoundary": "REAL_ORGANIC_ROS_ISSUE_AND_FIX_METADATA_FOR_46_PINNED_BUG_RECORDS; ROOT_LICENSE_NOT_DETECTED; PHYSICAL_EXECUTION_OUTCOME_EXPOSURE_AND_ECONOMIC_LOSS_NOT_OBSERVED; WHOLE_RECORD_TAXONOMY_IS_RETROSPECTIVE_NOT_A_PREACTION_TARGET_PREDICTOR; ZERO_TRAINER_PRICE_OR_AUTHORITY_ADMISSION"
+    },
+    {
+      "sourceId": "DROID_REAL_ROBOT",
+      "publisher": "DROID dataset publishers",
+      "url": "https://droid-dataset.github.io/",
+      "sourceKind": "REAL_ROBOT_EXECUTION",
+      "realityStatus": "CONTROLLED_REAL_EXECUTION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:1a50d3abe37ef4efc0ded680c53f9f64680cbaf74d4ad8503de460b4bbf8fd5b",
+      "localArtifactHashKind": "DROID_CANONICAL_PILOT_REPORT_HASH",
+      "qualityBoundary": "REAL_PHYSICAL_RETROSPECTIVE_EPISODES; CONVENIENCE_SLICE; OUTCOME_AND_CAUSALITY_UNADJUDICATED"
+    },
+    {
+      "sourceId": "OSHA_SIR_ROBOT_AGV",
+      "publisher": "U.S. Occupational Safety and Health Administration",
+      "url": "https://www.osha.gov/severeinjury",
+      "sourceKind": "REGULATORY_SEVERE_INJURY_REPORTS",
+      "realityStatus": "REAL_CASE_RECORDED",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:93b030c608f0534b5a655bc784d67b63b975755b122f64c4571bb7ab8127c3c0",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_PHYSICAL_EMPLOYER_REPORTS; NO_EXPOSURE_DENOMINATOR; NO_INDEPENDENT_CAUSAL_ADJUDICATION"
+    },
+    {
+      "sourceId": "AIID_ALLOWED_COLLECTIONS",
+      "publisher": "AI Incident Database",
+      "url": "https://incidentdatabase.ai/research/snapshots/",
+      "sourceKind": "AI_INCIDENT_AND_CLASSIFICATION_RECORDS",
+      "realityStatus": "REAL_CASE_RECORDED",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:0d884cc2ecd2838424f38e7ab28f3107d82ef5bdcf5152acfb7392327563c304",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "ALLOWED_COLLECTIONS_ONLY; REPORT_TEXT_AND_SUBMISSIONS_EXCLUDED; INCIDENT_EXISTENCE_AND_LABEL_TRUTH_VARY"
+    },
+    {
+      "sourceId": "NHTSA_SGO_ADS",
+      "publisher": "U.S. National Highway Traffic Safety Administration",
+      "url": "https://www.nhtsa.gov/laws-regulations/standing-general-order-crash-reporting",
+      "sourceKind": "REGULATORY_ADS_ADAS_CRASH_REPORTS",
+      "realityStatus": "REAL_CASE_RECORDED",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:550e0ed06c844335960607b53baa0cd8e7ff2a41b8ede4d4f4acd0046360e585",
+      "localArtifactHashKind": "EMPIRICAL_LEDGER_HASH_CONTAINING_NHTSA_SOURCE_REPLAY_PROFILE",
+      "qualityBoundary": "REAL_CRASH_REPORTS; MULTIPLE_REPORTERS_AND_VERSIONS; NO_DEPLOYMENT_DENOMINATOR; REPORTED_CAUSAL_LINK_UNVERIFIED"
+    },
+    {
+      "sourceId": "USDA_RMA_2024",
+      "publisher": "U.S. Department of Agriculture Risk Management Agency",
+      "url": "https://www.rma.usda.gov/tools-reports/summary-of-business/state-county-crop-summary-business",
+      "sourceKind": "ADMINISTRATIVE_CROP_INSURANCE_EXPERIENCE",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:5ed89ea0108b403095dd1a8ca609fe6d2fb7c505a0d8865adef73f8de5446dce",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_EARNING_EXPOSURE_PREMIUM_LIABILITY_AND_INDEMNITY; COUNT_ANOMALIES_QUARANTINE_FREQUENCY; CLAIM_LEVEL_FINALITY_ABSENT; DOWNLOADED_OBJECT_ACCESS_OBSERVED_BUT_WEB_POLICY_BYTES_NOT_REPLAYED"
+    },
+    {
+      "sourceId": "CAS_SCHEDULE_P_2025",
+      "publisher": "Casualty Actuarial Society",
+      "url": "https://www.casact.org/publications-research/research/research-resources/loss-reserving-data-pulled-naic-schedule-p",
+      "sourceKind": "INSURANCE_RESERVE_DEVELOPMENT_TRIANGLES",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:649653b6b901ed29247d99194b1efcfd141f144adf462574ababd56c71023a38",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_PAID_AND_INCURRED_DEVELOPMENT; SCALE_AND_TAIL_LIMITS; CROSS_ENTITY_DEPENDENCE_UNESTABLISHED"
+    },
+    {
+      "sourceId": "DOJ_EEOC_AI_REMEDY",
+      "publisher": "U.S. Department of Justice and EEOC",
+      "url": "https://www.justice.gov/crt/case/united-states-v-meta-platforms-inc-fka-facebook-inc-sdny",
+      "sourceKind": "AI_REMEDY_JUDGMENTS_AND_MONITORING",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:9d8692811ef20225d31503c9c2c6c2d37d8925b47ac78882bc4b09d442096c1b",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_JUDGMENT_SETTLEMENT_AND_MONITORING_OBLIGATIONS; IMPLEMENTATION_PAYMENT_RECOVERY_AND_AFFECTED_PARTY_ACCEPTANCE_NOT_FULLY_OBSERVED"
+    },
+    {
+      "sourceId": "OPENFEMA_NFIP",
+      "publisher": "U.S. Federal Emergency Management Agency",
+      "url": "https://www.fema.gov/openfema-data-page/nfip-redacted-claims-v3",
+      "sourceKind": "FLOOD_INSURANCE_CLAIMS_AND_POLICY_EXPOSURE",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:8e4a0c2c6e170e69f9bcaf1f2c6c8715956a367999d2d48412c14e76b94e6e5c",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_REDACTED_NFIP_CLAIM_TRANSACTIONS_V3; RESIDENTIAL_EXPOSURE_SNAPSHOT_FROM_PENETRATION_RATES_V1; POLICY_TRANSACTION_COUNT_IS_NOT_POLICIES_IN_FORCE; EXPOSURE_SNAPSHOT_IS_NOT_A_2024_CONTEMPORANEOUS_CLAIM_DENOMINATOR"
+    },
+    {
+      "sourceId": "FEMA_PA_APPEALS",
+      "publisher": "U.S. Federal Emergency Management Agency",
+      "url": "https://www.fema.gov/assistance/public/appeals",
+      "sourceKind": "PUBLIC_ASSISTANCE_APPEAL_DECISIONS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:8e4a0c2c6e170e69f9bcaf1f2c6c8715956a367999d2d48412c14e76b94e6e5c",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_FULL_TRACKER_SNAPSHOT_AND_TWO_FULL_DECISION_BODIES; TRACKER_PUBLICATION_IDENTITIES_ARE_NOT_STABLE_LONGITUDINAL_KEYS; REMAINING_DECISION_BODIES_NOT_ACQUIRED"
+    },
+    {
+      "sourceId": "CBCA_FEMA_ARBITRATIONS",
+      "publisher": "U.S. Civilian Board of Contract Appeals",
+      "url": "https://www.cbca.gov/decisions/fema.html",
+      "sourceKind": "EXTERNAL_TO_FEMA_IMPARTIAL_ARBITRATION_PANEL_DECISIONS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:8e4a0c2c6e170e69f9bcaf1f2c6c8715956a367999d2d48412c14e76b94e6e5c",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_EXTERNAL_TO_FEMA_IMPARTIAL_PANEL_INDEX_WITH_TWO_OF_349_DECISION_BODIES_ACQUIRED; EXECUTIVE_BRANCH_INSTITUTIONAL_INDEPENDENCE_NOT_ESTABLISHED; FEMA_DOMAIN_ONLY; NOT_OUTSIDER_CLAIM_AUTHORITY"
+    },
+    {
+      "sourceId": "FDA_MAUDE",
+      "publisher": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/medical-devices/medical-device-reporting-mdr-how-report-medical-device-problems/mdr-data-files",
+      "sourceKind": "MEDICAL_DEVICE_ADVERSE_EVENT_REPORTS",
+      "realityStatus": "REAL_CASE_RECORDED",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:450da676c54f9e8781cff0589618e5f8fbbbf66286c0b38316ae4eb95f643c73",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_PASSIVE_SURVEILLANCE_REPORT_STREAM; MONTHLY_ADD_CHANGE_SCOPE_NOT_FULL_HISTORY; REPORTS_NOT_INCIDENTS; UNDERREPORTING_INACCURACY_DUPLICATES_CAUSALITY_AND_USE_DENOMINATOR_LIMITATIONS_PUBLISHER_DISCLOSED"
+    },
+    {
+      "sourceId": "FDA_GUDID",
+      "publisher": "U.S. Food and Drug Administration and National Library of Medicine",
+      "url": "https://accessgudid.nlm.nih.gov/download",
+      "sourceKind": "REGULATED_DEVICE_IDENTITY_REGISTRY",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "OFFICIAL_BROWSABLE_SOURCE_IDENTIFIED",
+      "localArtifactHash": null,
+      "localArtifactHashKind": null,
+      "qualityBoundary": "REAL_PUBLISHED_DEVICE_IDENTIFIERS_WITH_RELEASE_CHECKSUMS; IDENTITY_NOT_OPERATIONAL_TELEMETRY_OR_OUTCOME"
+    },
+    {
+      "sourceId": "CA_DMV_AV",
+      "publisher": "California Department of Motor Vehicles",
+      "url": "https://www.dmv.ca.gov/portal/vehicle-industry-services/autonomous-vehicles/",
+      "sourceKind": "AV_PERMITS_COLLISIONS_DISENGAGEMENTS_AND_MILES",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:1894ff1026062b9459cd532a3f75c49c8544d8e87c7aec3e76cfb01389e79138",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_PERMITTEE_REPORTS_AND_EXACT_2023_2024_MILE_COHORTS; NEW_2026_CSV_REGIME_NOT_YET_DUE; FOUR_COLLISION_FORMS_ARE_NONPROBABILITY_MANUFACTURER_SUBMISSIONS; REGIMES_NEVER_POOLED"
+    },
+    {
+      "sourceId": "CFPB_COMPLAINTS",
+      "publisher": "U.S. Consumer Financial Protection Bureau",
+      "url": "https://www.consumerfinance.gov/data-research/consumer-complaints/",
+      "sourceKind": "CONSUMER_COMPLAINT_AND_COMPANY_RESPONSE_RECORDS",
+      "realityStatus": "REAL_CASE_RECORDED",
+      "state": "OFFICIAL_BROWSABLE_SOURCE_IDENTIFIED",
+      "localArtifactHash": null,
+      "localArtifactHashKind": null,
+      "qualityBoundary": "REAL_COMPLAINTS_AND_COMPANY_RESPONSES; NOT_A_STATISTICAL_SAMPLE; CONSUMER_CLAIMS_NOT_INDEPENDENTLY_VERIFIED"
+    },
+    {
+      "sourceId": "CFPB_HARMED_CONSUMER_PAYMENTS",
+      "publisher": "U.S. Consumer Financial Protection Bureau",
+      "url": "https://www.consumerfinance.gov/enforcement/payments-harmed-consumers/",
+      "sourceKind": "ENFORCEMENT_REDRESS_ALLOCATIONS_AND_PAYMENTS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:0d27c736a6c1a9ca6473b5656ea603f26593ef51a3cc154bedbbc660328a9997",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_FY2025_ALLOCATIONS_INITIATED_AND_CONCLUDED_DISTRIBUTIONS; ALLOCATION_IS_NOT_RECEIPT_AND_PROGRAM_CONCLUSION_IS_NOT_COMPLETE_INDIVIDUAL_RECOVERY"
+    },
+    {
+      "sourceId": "FTC_CONSUMER_REFUNDS",
+      "publisher": "U.S. Federal Trade Commission",
+      "url": "https://www.ftc.gov/enforcement/ftc-refund-programs/data-refunds-consumers",
+      "sourceKind": "ENFORCEMENT_REFUND_CASES_AMOUNTS_AND_RECIPIENT_COUNTS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:0d27c736a6c1a9ca6473b5656ea603f26593ef51a3cc154bedbbc660328a9997",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_COMPLETE_2024_CLOSED_REFUND_PROGRAM_TABLE; PAYMENT_SENT_IS_NOT_PAYMENT_CASHED_AND CLOSED_PROGRAM_IS_NOT_COMPLETE_RECOVERY"
+    },
+    {
+      "sourceId": "CPSC_RECALLS_AND_MPR",
+      "publisher": "U.S. Consumer Product Safety Commission",
+      "url": "https://www.cpsc.gov/Data/Monthly-Progress-Reports",
+      "sourceKind": "RECALL_REMEDY_AND_MONTHLY_PROGRESS_REPORTS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:0d27c736a6c1a9ca6473b5656ea603f26593ef51a3cc154bedbbc660328a9997",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_CURRENT_MONTHLY_PROGRESS_CASES_JOINED_TO_A_COMPLETE_DATE_BOUNDED_RECALL_API_SLICE; FIRM_REPORTING_IS_NOT_INDEPENDENT_SENSING_AND COMPLETION_EXPOSURE_AND_AFFECTED_CONSUMER_ACCEPTANCE_REMAIN_CENSORED"
+    },
+    {
+      "sourceId": "GAO_BID_PROTESTS",
+      "publisher": "U.S. Government Accountability Office",
+      "url": "https://www.gao.gov/legal/bid-protests",
+      "sourceKind": "PROCUREMENT_CHALLENGE_DECISIONS_CORRECTIVE_ACTION_AND_ANNUAL_DISPOSITION_COUNTS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:e10699896cd8e7de3ca420f4f7092d4871324110a0a299e8cd9c07f19263109e",
+      "localArtifactHashKind": "JUDGMENT_FUND_GAO_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_FY2025_STATUTORY_CHALLENGE_AGGREGATE_PARSED_FROM_PINNED_OFFICIAL_TABLES; ROUTINE_DISMISSALS_NOT_PUBLIC_AND_NO_OUTCOME_NEUTRAL_DECISION_SAMPLE; RECOMMENDATION_NONIMPLEMENTATION_OBSERVED; PROCUREMENT_DOMAIN_ONLY_AND_NOT_AN_OUTSIDER_CLAIMS_APPOINTMENT"
+    },
+    {
+      "sourceId": "CA_DOI_SERFF_RATE_FILINGS",
+      "publisher": "California Department of Insurance",
+      "url": "https://www.insurance.ca.gov/0250-insurers/0800-rate-filings/0050-viewing-room/",
+      "sourceKind": "PUBLIC_RATE_FILINGS_EXPERIENCE_AND_ACTUARIAL_CERTIFICATIONS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:2ee3625eac2c35e1be5113a78477ac1128d6a663d2e2ee6c66e53570d09b086a",
+      "localArtifactHashKind": "CDI_NCIGF_COMBINED_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_COMPLETE_129_PAGE_FILED_EARNED_PREMIUM_INCURRED_CLAIMS_EXPOSURE_PROPOSED_RATE_AND_ACTUARIAL_CERTIFICATION_PLUS_OFFICIAL_REGISTRIES; ASSIGNED_OR_ACCEPTED_WITH_BLANK_DISPOSITION_IS_NOT_APPROVED_OR_CHARGED_PRICE; ONE_DOLLAR_SOURCE_RECONCILIATION_DIFFERENCE_RETAINED"
+    },
+    {
+      "sourceId": "NCIGF_ASSESSMENT_LIABILITY",
+      "publisher": "National Conference of Insurance Guaranty Funds",
+      "url": "https://www.ncigf.org/assessment-liability-information",
+      "sourceKind": "GUARANTY_FUND_CAPACITY_ASSESSMENTS_AND_REFUNDS",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:2ee3625eac2c35e1be5113a78477ac1128d6a663d2e2ee6c66e53570d09b086a",
+      "localArtifactHashKind": "CDI_NCIGF_COMBINED_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_STATUTORY_FUND_CAPACITY_NET_ASSESSABLE_PREMIUM_ASSESSMENT_AND_REFUND_RECORDS_WITH_LABEL_AND_ARITHMETIC_DRIFT_PRESERVED; PUBLISHER_DISCLOSES_THIRD_PARTY_INPUTS_ESTIMATES_AND_NO_INDEPENDENT_VERIFICATION; CAPACITY_AND_AUTHORIZED_ASSESSMENT_ARE_NOT_OUTSIDER_CASH_CAPITAL_CUSTODY_OR_GUARANTEE"
+    },
+    {
+      "sourceId": "NCUA_SHARE_INSURANCE_FUND",
+      "publisher": "U.S. National Credit Union Administration",
+      "url": "https://ncua.gov/news/publication-search/annual-report/2025-annual-report",
+      "sourceKind": "FEDERAL_SHARE_INSURANCE_CAPITAL_RESERVE_AND_LOSS_EXPERIENCE",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:ddc277d4548b097e7053487ae8572385046e7162246175f2a664d1f87be14973",
+      "localArtifactHashKind": "NCUA_PBGC_MSHA_COMBINED_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_COMPLETE_2025_AUDITED_SHARE_INSURANCE_FUND_REPORT_AND_SEPARATE_PRELIMINARY_UNAUDITED_DECEMBER_HIGHLIGHTS; ASSETS_NET_POSITION_RESERVES_AND_INSURANCE_LOSS_EXPERIENCE_ARE_SOURCE_DOMAIN_FACTS_NOT_OUTSIDER_CAPITAL_CUSTODY_OR_GUARANTEE"
+    },
+    {
+      "sourceId": "PBGC_PENSION_INSURANCE",
+      "publisher": "U.S. Pension Benefit Guaranty Corporation",
+      "url": "https://www.pbgc.gov/about/reports/pension-insurance-data",
+      "sourceKind": "FEDERAL_PENSION_INSURANCE_EXPOSURE_CLAIMS_BENEFITS_AND_TRUSTEESHIP",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:ddc277d4548b097e7053487ae8572385046e7162246175f2a664d1f87be14973",
+      "localArtifactHashKind": "NCUA_PBGC_MSHA_COMBINED_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_COMPLETE_2024_FIRST_INSTALLMENT_PENSION_TABLES_AND_FY2025_REPORT; PLAN_YEAR_AND_FISCAL_YEAR_DENOMINATORS_DIRECT_BENEFITS_TRADITIONAL_AND_SPECIAL_ASSISTANCE_AND_REPAYMENTS_REMAIN_SEPARATE; PBGC_CLAIMS_DEFINITION_IS_NOT_OUTSIDER_CLAIM_SEVERITY"
+    },
+    {
+      "sourceId": "SIGSTORE_REKOR",
+      "publisher": "Sigstore",
+      "url": "https://docs.sigstore.dev/logging/overview/",
+      "sourceKind": "PUBLIC_APPEND_ONLY_SIGNATURE_TRANSPARENCY_LOG",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "OFFICIAL_BROWSABLE_SOURCE_IDENTIFIED",
+      "localArtifactHash": null,
+      "localArtifactHashKind": null,
+      "qualityBoundary": "REAL_THIRD_PARTY_LOG_AND_CHECKPOINT_MECHANISM; DOES_NOT_YET_CONTAIN_OR_VERIFY_THE_OUTSIDER_CHAIN"
+    },
+    {
+      "sourceId": "ASB_ASOPS",
+      "publisher": "Actuarial Standards Board",
+      "url": "https://www.actuarialstandardsboard.org/standards-of-practice/",
+      "sourceKind": "ADOPTED_ACTUARIAL_STANDARDS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:19b972d0ed9590bbd91b4cc998615b9bd32b8b937d294c957189bd57814e9b03",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_PROFESSIONAL_STANDARDS_FOR_DATA_QUALITY_RISK_CLASSIFICATION_PRICING_RESERVES_AND_CAPITAL; NOT_A_REVIEW_OF_OUTSIDER"
+    },
+    {
+      "sourceId": "NAIC_FDR_SBS",
+      "publisher": "National Association of Insurance Commissioners",
+      "url": "https://content.naic.org/insurance-topics/financial-data-repository",
+      "sourceKind": "INSURER_SOLVENCY_FILING_AND_LICENSING_INFRASTRUCTURE",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "OFFICIAL_BROWSABLE_SOURCE_IDENTIFIED",
+      "localArtifactHash": null,
+      "localArtifactHashKind": null,
+      "qualityBoundary": "REAL_REGULATORY_SOLVENCY_AND_IDENTITY_INFRASTRUCTURE; DETAILED_BULK_DATA_MAY_REQUIRE_LICENSE_AND_PAYMENT"
+    },
+    {
+      "sourceId": "SEC_EDGAR_INSURER_XBRL",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/edgar/sec-api-documentation",
+      "sourceKind": "PUBLIC_INSURER_XBRL_FILINGS",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:19b972d0ed9590bbd91b4cc998615b9bd32b8b937d294c957189bd57814e9b03",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_FILED_SELECTED_RLI_2025_CAPITAL_CLAIM_LIABILITY_RECOVERABLE_AND_RESTRICTED_DEPOSIT_DISCLOSURES; SINGLE_PUBLIC_INSURER_AND_ENTITY_SCOPE_DIFFERENCES_BLOCK_TRANSFER"
+    },
+    {
+      "sourceId": "FDIC_CALL_REPORTS",
+      "publisher": "U.S. Federal Deposit Insurance Corporation",
+      "url": "https://www.fdic.gov/bank-data-guide/data-downloads",
+      "sourceKind": "REGULATED_BANK_CAPITAL_AND_DEPOSIT_DATA",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "OFFICIAL_BROWSABLE_SOURCE_IDENTIFIED",
+      "localArtifactHash": null,
+      "localArtifactHashKind": null,
+      "qualityBoundary": "REAL_REGULATED_CAPITAL_DEPOSIT_AND_FAILURE_DATA; BANKING_REFERENCE_NOT_INSURANCE_OR_OUTSIDER_CAPITAL"
+    },
+    {
+      "sourceId": "TREASURY_FISCAL_DATA",
+      "publisher": "U.S. Department of the Treasury",
+      "url": "https://fiscaldata.treasury.gov/api-documentation/",
+      "sourceKind": "FEDERAL_PAYMENT_AND_ACCOUNTING_DATA",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "OFFICIAL_BROWSABLE_SOURCE_IDENTIFIED",
+      "localArtifactHash": null,
+      "localArtifactHashKind": null,
+      "qualityBoundary": "REAL_FEDERAL_PAYMENT_AND_ACCOUNTING_RECORDS; AGGREGATE_PROGRAM_DATA_NOT_OUTSIDER_CUSTODY_RECEIPTS"
+    },
+    {
+      "sourceId": "FDIC_FAILURES_AND_RECEIVERSHIP_DIVIDENDS",
+      "publisher": "U.S. Federal Deposit Insurance Corporation",
+      "url": "https://closedbanks.fdic.gov/dividends/",
+      "sourceKind": "BANK_FAILURE_RESOLUTION_COST_AND_RECEIVERSHIP_DIVIDEND_EVENTS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:19b972d0ed9590bbd91b4cc998615b9bd32b8b937d294c957189bd57814e9b03",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_FAILURE_ASSET_DEPOSIT_COST_AND_RECEIVERSHIP_DIVIDEND_EVENTS; MISSING_AND_NEGATIVE_COSTS_DUPLICATES_DOWNWARD_REVISIONS_AND_LONG_CENSORING_RETAINED"
+    },
+    {
+      "sourceId": "TREASURY_TCMM_COLLATERAL",
+      "publisher": "U.S. Department of the Treasury Bureau of the Fiscal Service",
+      "url": "https://fiscal.treasury.gov/payments-to-government/treasury-collateral-management-monitoring-tcmm",
+      "sourceKind": "FEDERAL_COLLATERAL_CUSTODY_PROGRAM_STRUCTURE",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:19b972d0ed9590bbd91b4cc998615b9bd32b8b937d294c957189bd57814e9b03",
+      "localArtifactHashKind": "CANONICAL_LOCAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_COLLATERAL_PROGRAM_AND_CUSTODY_STRUCTURE; POLICY_PAGE_NOT_TRANSACTION_LEDGER_ASSET_BALANCE_OR_OUTSIDER_CUSTODIAN_ACK"
+    },
+    {
+      "sourceId": "TREASURY_JUDGMENT_FUND_CERTIFICATION",
+      "publisher": "U.S. Department of the Treasury Bureau of the Fiscal Service",
+      "url": "https://fiscal.treasury.gov/payments-from-government/judgment-fund/award-payment-process",
+      "sourceKind": "FINAL_AWARD_CERTIFICATION_OFFSET_AND_DISBURSEMENT_PROCESS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:e10699896cd8e7de3ca420f4f7092d4871324110a0a299e8cd9c07f19263109e",
+      "localArtifactHashKind": "JUDGMENT_FUND_GAO_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_PINNED_FINAL_AWARD_CERTIFICATION_FUNDING_SOURCE_CHECK_JUDGMENT_DEBT_SETOFF_ADMINISTRATIVE_OFFSET_AND_DISBURSING_OFFICIAL_HANDOFF; TREASURY_ADMINISTERS_PAYMENT_BUT_DOES_NOT_REVIEW_MERITS; NOT_OUTSIDER_CUSTODY_OR_PAYMENT_AUTHORITY"
+    },
+    {
+      "sourceId": "TREASURY_JUDGMENT_FUND_BIWEEKLY_PAYMENTS",
+      "publisher": "U.S. Department of the Treasury Bureau of the Fiscal Service",
+      "url": "https://fiscal.treasury.gov/payments-from-government/judgment-fund/bi-weekly-payment-report",
+      "sourceKind": "STATUTORILY_PUBLISHED_FINAL_AWARD_PAYMENT_REPORTS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:e10699896cd8e7de3ca420f4f7092d4871324110a0a299e8cd9c07f19263109e",
+      "localArtifactHashKind": "JUDGMENT_FUND_GAO_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_FOURTEEN_CONTIGUOUS_2026_PAYMENT_REPORTS_THROUGH_JULY_REPLAYED_WITH_16154_COMPONENT_ROWS_AND_PRIVACY_MINIMIZED_AGGREGATES; COMPONENTS_ARE_NOT_UNIQUE_CLAIMS_OR_EXPOSURE; PUBLISHER_REVISION_HISTORY_RECIPIENT_SETTLEMENT_RECOVERY_AND_ACCEPTANCE_UNOBSERVED; NOT_OUTSIDER_PAYMENT_OR_RECOVERY"
+    },
+    {
+      "sourceId": "CLINICALTRIALS_GOV",
+      "publisher": "U.S. National Library of Medicine",
+      "url": "https://clinicaltrials.gov/data-api/api",
+      "sourceKind": "PROSPECTIVE_PROTOCOL_AND_POSTED_AGGREGATE_RESULT_REGISTRY",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:93ae703761d069b7adbdc8ad781cc2ebb1d91b836aa21e027a5f6657f84840a6",
+      "localArtifactHashKind": "CLINICALTRIALS_POSTED_RESULTS_FINAL_V3_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_COMPLETE_RESULTS_FIRST_POSTED_2026_07_01_QUERY_WINDOW_WITH_EIGHTEEN_SPONSOR_OR_INVESTIGATOR_POSTED_AGGREGATE_STUDY_RECORDS; DERIVED_ARTIFACT_STRIPS_SPONSOR_PERSON_NAMES_AND_COMMITS_ONLY_PRIVACY_MINIMIZED_RECORDS; TERMS_AND_DISCLAIMER_ARE_URL_ONLY_NOT_REPLAYED_SO_RIGHTS_REMAIN_NOT_ESTABLISHED; NLM_QUALITY_CONTROL_IS_NOT_SCIENTIFIC_ACCURACY_REVIEW; NO_CROSS_STUDY_OR_TERM_POOLING; CAUSALITY_INDEPENDENT_ADJUDICATION_TRAINING_RIGHT_TARGET_TRANSFER_PRICE_AND_AUTHORITY_ARE_FALSE"
+    },
+    {
+      "sourceId": "NHTSA_RECALLS_ENFORCEMENT",
+      "publisher": "U.S. National Highway Traffic Safety Administration",
+      "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
+      "sourceKind": "VEHICLE_RECALL_AND_MANUFACTURER_REPORTED_REMEDY_STATUS_RECORDS",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:afad74141571a82e40564f7b43bcacb0ccea2671684f3809e4bf4717af069034",
+      "localArtifactHashKind": "NHTSA_RECALL_REMEDY_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_POST_2010_RECALL_CAMPAIGNS_AND_QUARTERLY_ANNUAL_MANUFACTURER_REPORTED_REMEDY_STATUS_REPLAYED_WITH_REVISION_POPULATION_AND_ANOMALY_BOUNDARIES; STATUS_IS_NOT_AFFECTED_PARTY_RECEIPT_COMPLETE_REPAIR_INDEPENDENT_CAUSAL_FINDING_LOSS_OR_ENFORCEMENT_ORDER"
+    },
+    {
+      "sourceId": "BLS_IIF",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "url": "https://www.bls.gov/iif/data.htm",
+      "sourceKind": "WORKPLACE_INJURY_FATALITY_COUNTS_RATES_AND_EXPOSURE",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:da933b03d6ed8c3c56cc80561373f03bb2060b93adce45995eb88f13c8ff4792",
+      "localArtifactHashKind": "NTSB_BLS_COMBINED_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_2024_SOII_SURVEY_AND_CFOI_CENSUS_COUNTS_WITH_HOURS_OR_FTE_DENOMINATORS; RSE_SUPPRESSION_PUBLICATION_THRESHOLDS_DENOMINATOR_EXCLUSIONS_AND_CLASSIFICATION_VERSIONS_PRESERVED; SOURCE_STATUS_REPRODUCED_BUT_UNDERLYING_WORLD_TRUTH_NOT_INDEPENDENTLY_REOBSERVED"
+    },
+    {
+      "sourceId": "NTSB_ACCIDENT_INVESTIGATIONS",
+      "publisher": "U.S. National Transportation Safety Board",
+      "url": "https://www.ntsb.gov/Advocacy/SafetyIssues/Pages/Partial%20Automation.aspx",
+      "sourceKind": "TRANSPORT_ACCIDENT_INVESTIGATIONS_FINDINGS_AND_PROBABLE_CAUSE",
+      "realityStatus": "REAL_INSTITUTIONAL_OPERATION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:da933b03d6ed8c3c56cc80561373f03bb2060b93adce45995eb88f13c8ff4792",
+      "localArtifactHashKind": "NTSB_BLS_COMBINED_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_SIX_COMPLETED_PARTIAL_AUTOMATION_INVESTIGATIONS_WITH_CASE_PAGES_DOCKETS_FIVE_ADOPTED_FINAL_REPORTS_AND_SELECTED_FACTUAL_REPORTS; ONE_FINAL_REPORT_BINDS_TWO_CASES; PUBLISHER_TYPOS_QUARANTINED; PROBABLE_CAUSE_IS_NTSB_FINDING_NOT_OUTSIDER_LEGAL_LIABILITY"
+    },
+    {
+      "sourceId": "FRA_SAFETY_DATA",
+      "publisher": "U.S. Federal Railroad Administration",
+      "url": "https://railroads.fra.dot.gov/safety-data",
+      "sourceKind": "RAIL_ACCIDENT_INCIDENT_CASUALTY_CROSSING_AND_OPERATIONAL_DATA",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:faf6c83de86433ad2e97abfb63fca2a1b6045692acd39a8ff56916fcd9082836",
+      "localArtifactHashKind": "FRA_PHMSA_COMBINED_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_2015_2019_FORM54_JOINTCD_ONE_REPRESENTATIVE_INCIDENT_RECORDS_AND_SAME_YEAR_FORM55_OPERATIONAL_EXPOSURE_REPLAYED_THROUGH_SEVEN_EXACT_CANONICAL_SOQL_RECEIPTS; REPORTING_THRESHOLDS_REVISIONS_OPERATOR_CORRELATION_AND_ONE_EXACT_DUPLICATE_REMAIN_EXPLICIT; REPORTED_DAMAGE_IS_NOT_PAID_INCURRED_OR_ULTIMATE_LOSS"
+    },
+    {
+      "sourceId": "PHMSA_PIPELINE_SAFETY",
+      "publisher": "U.S. Pipeline and Hazardous Materials Safety Administration",
+      "url": "https://www.phmsa.dot.gov/data-and-statistics/pipeline/pipeline-safety-data-report-index",
+      "sourceKind": "PIPELINE_INCIDENT_COST_MILEAGE_AND_FACILITY_DATA",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:faf6c83de86433ad2e97abfb63fca2a1b6045692acd39a8ff56916fcd9082836",
+      "localArtifactHashKind": "FRA_PHMSA_COMBINED_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_1589_ROW_BY_468_COLUMN_OPERATOR_REPORTED_GAS_DISTRIBUTION_INCIDENT_SNAPSHOT_CAPTURED_AND_BYTE_REPLAYED; MATCHED_ANNUAL_EXPOSURE_RIGHTS_AND_PUBLISHER_VERSION_BINDING_ARE_MISSING_SO_FREQUENCY_SEVERITY_MODEL_AND_PRICE_INPUTS_ARE_MACHINE_DEFERRED; INCIDENT_COSTS_ARE_NOT_ADJUDICATED_CLAIM_LOSS"
+    },
+    {
+      "sourceId": "MSHA_ACCIDENT_INJURY_EMPLOYMENT",
+      "publisher": "U.S. Mine Safety and Health Administration",
+      "url": "https://arlweb.msha.gov/OpenGovernmentData/OGIMSHA.asp",
+      "sourceKind": "MINE_ACCIDENT_INJURY_ILLNESS_AND_EMPLOYMENT_EXPOSURE_DATA",
+      "realityStatus": "REAL_CASE_RECORDED",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:ddc277d4548b097e7053487ae8572385046e7162246175f2a664d1f87be14973",
+      "localArtifactHashKind": "NCUA_PBGC_MSHA_COMBINED_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_FULL_OPERATOR_CONTRACTOR_REPORTED_ACCIDENT_INJURY_ILLNESS_AND_EMPLOYMENT_EXPORTS; ACCIDENTS_EXTEND_TO_2026_Q3_WHILE_EXPOSURE_ENDS_2026_Q2_SO_NO_CURRENT_RATE_IS_DERIVED; REPORTING_THRESHOLDS_REVISION_CORRELATION_AND_INDEPENDENT_EVENT_TRUTH_REMAIN_EXPLICIT"
+    },
+    {
+      "sourceId": "BERKELEY_RAIL_BRIDGEDATA_V2_TFDS_1_0_0_MINIMAL_RECORD_20260822",
+      "publisher": "UC Berkeley Robotic AI and Learning Lab",
+      "url": "https://rail-berkeley.github.io/bridgedata/",
+      "sourceKind": "REAL_LAB_ROBOT_TRAJECTORY_AND_PUBLISHER_TFDS_METADATA",
+      "realityStatus": "CONTROLLED_REAL_EXECUTION",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:1db2d9b893cdb6cfc604154a787d70092b5a6c03d2122f2b81f56fa9e79e97c2",
+      "localArtifactHashKind": "BRIDGEDATA_V2_FINAL_V5_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_LAB_ROBOT_TRAJECTORY_BYTES_AND_PUBLISHER_METADATA; EXACTLY_ONE_COMPLETE_TFRECORD_IS_CAPTURED_FROM_A_RANGE_OF_THE_FIRST_PARENT_SHARD_WHILE_53192_TRAIN_EXAMPLES_AND_1024_TRAIN_SHARDS_ARE_PUBLISHER_METADATA_NOT_A_REPLAYED_CORPUS; TRAINING_CANDIDATE_IS_HOLD_WITH_ZERO_TRAINER_ROWS; FULL_CORPUS_SCHEMA_SEMANTIC_CORRELATION_TARGET_TRANSFER_AND_TRAINING_ADMISSION_ARE_FALSE; NO_OUTCOME_FAILURE_ASSIGNMENT_OR_SURVIVAL_EVIDENCE_IS_ESTABLISHED"
+    },
+    {
+      "sourceId": "WAYMO_SAFETY_IMPACT_DATA_HUB_20260624_CAPTURED_20260822",
+      "publisher": "Waymo",
+      "url": "https://waymo.com/safety/impact/",
+      "sourceKind": "RIDER_ONLY_OPERATIONAL_EXPOSURE_SGO_LINKED_OUTCOMES_AND_PUBLISHER_BENCHMARKS",
+      "realityStatus": "REAL_EXPERIENCE_AGGREGATE",
+      "state": "ADAPTER_SOURCE_REPLAYED_LOCAL",
+      "localArtifactHash": "sha256:edccce782d93f0f8f6f01c14f427d44e4137d0b1cf5c040a0c84d0ada9da0a7a",
+      "localArtifactHashKind": "WAYMO_SAFETY_IMPACT_FINAL_V5_CANONICAL_ARTIFACT_HASH",
+      "qualityBoundary": "REAL_PUBLISHER_OPERATIONAL_EXPOSURE_AND_SGO_LINKED_OUTCOME_REFERENCE_WITH_220613000_DISPLAYED_ROUNDED_RIDER_ONLY_MILES; 164_PUBLISHED_NAN_TOKENS_AND_DUPLICATE_OUTCOME_LOCATION_AND_BENCHMARK_CONFLICTS_ARE_RETAINED; RETROSPECTIVE_CALENDAR_SPLIT_IS_NOT_A_PROSPECTIVE_OR_EXTERNAL_TARGET_HOLDOUT_AND_CSV4_202503_IS_NOT_WINDOW_ALIGNED_WITH_CSV1_TO_CSV3_202603; PUBLISHER_SOURCE_REPLAY_IS_ESTABLISHED_BUT_UNDERLYING_TRUTH_INDEPENDENT_ADJUDICATION_TARGET_TRANSFER_TRAINING_PRICE_AND_AUTHORITY_ARE_FALSE"
+    }
+  ],
+  "gaps": [
+    {
+      "gapId": "S05_CURRENT_ARTIFACT_R1_R5_CONFORMANCE",
+      "stage": "MEASURE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "OUTSIDER_SPECIFIC_EXECUTION_CANNOT_BE_SUBSTITUTED",
+      "sourceIds": [],
+      "referenceEvidenceCoverage": "NO_WEB_SUBSTITUTE_FOR_TARGET_EXECUTION",
+      "publicEvidenceCanEstablish": "PUBLIC_STANDARDS_CAN_DEFINE_TEST_SHAPES_BUT_NOT_RUN_THE_CURRENT_OUTSIDER_PACKAGE",
+      "targetSpecificRemainder": "CURRENT_PACKAGE_R1_R5_RUNS",
+      "referencePhenomenonEvidencePresent": false,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S05_EXTERNAL_USER_REPOSITORIES_AND_SECOND_MACHINES",
+      "stage": "MEASURE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "TRACE_COMMONS_WAVE5",
+        "ROBUST_ROS_WAVE5_TAXONOMY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "UNRELATED_REAL_AGENT_SESSION_SHAPES_AND_ORGANIC_ROS_BUG_FIX_MECHANISM_RECORDS",
+      "targetSpecificRemainder": "CURRENT_OUTSIDER_PACKAGE_RUNS_ON_INDEPENDENT_MACHINES",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S05_CORRECTION_EFFECT_AND_FALSE_INTERRUPTION_RATES",
+      "stage": "MEASURE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "OUTSIDER_SPECIFIC_EXECUTION_CANNOT_BE_SUBSTITUTED",
+      "sourceIds": [
+        "TRACE_COMMONS_WAVE5",
+        "ROBUST_ROS_WAVE5_TAXONOMY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "NATURALISTIC_SESSION_SHAPES_AND_BUG_FIX_MECHANISM_TAXONOMY_WITHOUT_A_COMMON_OUTCOME_OR_EXPOSURE_DENOMINATOR",
+      "targetSpecificRemainder": "PREREGISTERED_OUTSIDER_INTERVENTION_AND_CONTROL_OUTCOMES",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S05_CODEX_NATIVE_ITEM_BINDING_AND_CORRECTION_DELIVERY",
+      "stage": "MEASURE",
+      "readinessCategory": "EXTERNAL_PLATFORM_CAPABILITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "PLATFORM_CAPABILITY_DOCUMENTATION",
+      "sourceIds": [
+        "CODEX_APP_SERVER_LOCAL_PROBE"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "PUBLIC_VENDOR_SCHEMA_AND_REAL_ZERO_MODEL_LOCAL_HOST_PROBE_ESTABLISH_EXPOSED_FIELDS_CURRENT_HOOK_TRUST_AND_ITEM_BINDING_ABSENCE",
+      "targetSpecificRemainder": "VENDOR_AUTHENTICATED_ITEM_BINDING_AND_MODEL_VISIBLE_DELIVERY",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S05_OTHER_WORKER_NATIVE_CONTROL_SURFACES",
+      "stage": "MEASURE",
+      "readinessCategory": "EXTERNAL_PLATFORM_CAPABILITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "PLATFORM_CAPABILITY_DOCUMENTATION",
+      "sourceIds": [
+        "DEEPSEEK_HARNESS_CORDIS_CANARY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "PROVIDER_IMPLEMENTATION_AND_REAL_COOPERATIVE_CANARY_ESTABLISH_DELIVERY_SURFACE_AND_FAIL_VISIBLE_RUNTIME_BEHAVIOR",
+      "targetSpecificRemainder": "AUTHENTICATED_PROVIDER_SPECIFIC_CONTROL_RECEIPTS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S1_REAL_CONTRIBUTED_RUNS",
+      "stage": "ATTEST",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "TRACE_COMMONS_WAVE5"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_CONSENTED_DONATION_AND_SESSION_CONTENT_PATTERNS",
+      "targetSpecificRemainder": "OUTSIDER_LIVE_REGISTRY_CONTRIBUTION_RECEIPTS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S1_THIRD_PARTY_CHAIN_VERIFICATION",
+      "stage": "ATTEST",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "SIGSTORE_REKOR"
+      ],
+      "referenceEvidenceCoverage": "OFFICIAL_BROWSABLE_REFERENCE_IDENTIFIED",
+      "publicEvidenceCanEstablish": "THIRD_PARTY_APPEND_ONLY_INCLUSION_AND_CHECKPOINT_VERIFICATION_MECHANISM",
+      "targetSpecificRemainder": "INCLUSION_AND_MONITORING_OF_THE_EXACT_OUTSIDER_CHAIN",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S1_EXTERNALLY_GOVERNED_TRUST_TIME_RIGHTS_REGISTRY",
+      "stage": "ATTEST",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "SIGSTORE_REKOR",
+        "AIID_ALLOWED_COLLECTIONS"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "EXTERNAL_TRUST_ROOT_TIME_LOG_AND_SOURCE_SPECIFIC_RIGHTS_PRECEDENTS",
+      "targetSpecificRemainder": "GOVERNANCE_AND_RIGHTS_POLICY_ADOPTED_FOR_OUTSIDER_IDENTITIES",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S15_REAL_PROSPECTIVE_DEVICE_CONTROLS",
+      "stage": "CURATE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "DROID_REAL_ROBOT",
+        "CA_DMV_AV",
+        "BERKELEY_RAIL_BRIDGEDATA_V2_TFDS_1_0_0_MINIMAL_RECORD_20260822",
+        "WAYMO_SAFETY_IMPACT_DATA_HUB_20260624_CAPTURED_20260822"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_DEVICE_EXECUTION_AND_REGULATED_TEST_OPERATION_PATTERNS",
+      "targetSpecificRemainder": "PREREGISTERED_OUTSIDER_CONTROL_ASSIGNMENTS_ON_A_REAL_DEVICE",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S15_INDEPENDENT_OUTCOME_SENSING_AND_PLATFORM_PARAMETERS",
+      "stage": "CURATE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "OSHA_SIR_ROBOT_AGV",
+        "NHTSA_SGO_ADS",
+        "FDA_MAUDE",
+        "CA_DMV_AV",
+        "BLS_IIF",
+        "NTSB_ACCIDENT_INVESTIGATIONS",
+        "FRA_SAFETY_DATA",
+        "PHMSA_PIPELINE_SAFETY",
+        "MSHA_ACCIDENT_INJURY_EMPLOYMENT",
+        "WAYMO_SAFETY_IMPACT_DATA_HUB_20260624_CAPTURED_20260822"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_REPORTED_PHYSICAL_OUTCOMES_AND_PLATFORM_REGIMES_WITH_SOURCE_SPECIFIC_REVIEW_LEVELS",
+      "targetSpecificRemainder": "OUTSIDER_EXECUTION_BOUND_INDEPENDENT_SENSOR_ROOTS_AND_ENGINEER_APPROVED_LIMITS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S15_DATASET_AND_EXPERIENCE_RIGHTS_EVIDENCE",
+      "stage": "CURATE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "AIID_ALLOWED_COLLECTIONS",
+        "TRACE_COMMONS_WAVE5",
+        "ROBUST_ROS_WAVE5_TAXONOMY",
+        "BERKELEY_RAIL_BRIDGEDATA_V2_TFDS_1_0_0_MINIMAL_RECORD_20260822"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "SOURCE_SPECIFIC_TERMS_LICENSE_AND_CONSENT_BOUNDARIES_INCLUDING_A_PINNED_NO_ROOT_LICENSE_NEGATIVE_CASE",
+      "targetSpecificRemainder": "RIGHTS_FOR_EACH_EXACT_FUTURE_OUTSIDER_EXPERIENCE_AND_REUSE",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S15_DEVICE_ACQUISITION_ROOT",
+      "stage": "CURATE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "FDA_GUDID",
+        "CA_DMV_AV"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REGULATED_DEVICE_AND_PERMIT_IDENTITY_ROOT_STRUCTURES",
+      "targetSpecificRemainder": "IDENTITY_AND_KEY_ROOT_FOR_THE_EXACT_OUTSIDER_CONTROLLED_DEVICE",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S15_OWNER_AFFECTED_PARTY_EXPERIMENT_GOVERNANCE",
+      "stage": "CURATE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "CLINICALTRIALS_GOV",
+        "DOJ_EEOC_AI_REMEDY",
+        "CFPB_COMPLAINTS"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_PREREGISTRATION_NOTICE_CHALLENGE_AND_REMEDY_GOVERNANCE_PATTERNS",
+      "targetSpecificRemainder": "RESOURCE_OWNER_AND_AFFECTED_PARTY_ADOPTION_FOR_OUTSIDER_EXPERIMENTS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S15_RIGHTS_REUSE_GOVERNANCE",
+      "stage": "CURATE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "AIID_ALLOWED_COLLECTIONS",
+        "SIGSTORE_REKOR",
+        "ROBUST_ROS_WAVE5_TAXONOMY",
+        "BERKELEY_RAIL_BRIDGEDATA_V2_TFDS_1_0_0_MINIMAL_RECORD_20260822"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_TERMS_REVOCATION_ATTRIBUTION_AND_AUDIT_PRECEDENTS_PLUS_AN_UNRESOLVED_ROOT_LICENSE_QUARANTINE_CASE",
+      "targetSpecificRemainder": "ENFORCEABLE_REUSE_GOVERNANCE_OVER_OUTSIDER_MODEL_UPDATES",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S15_REAL_CAUSAL_JUDGE_SURVIVAL_EVIDENCE",
+      "stage": "CURATE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "CLINICALTRIALS_GOV",
+        "DROID_REAL_ROBOT",
+        "BERKELEY_RAIL_BRIDGEDATA_V2_TFDS_1_0_0_MINIMAL_RECORD_20260822"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "PROSPECTIVE_PROTOCOL_AND_REAL_EXECUTION_REFERENCE_STRUCTURES; BRIDGEDATA_CONTRIBUTES_ONLY_REAL_EXECUTION_SCHEMA_NOT_OUTCOME_FAILURE_ASSIGNMENT_OR_SURVIVAL_EVIDENCE",
+      "targetSpecificRemainder": "OUTSIDER_PREREGISTERED_ASSIGNMENTS_INDEPENDENT_OUTCOMES_AND_COMPLETE_DENOMINATOR",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S2_COMPLETE_ZERO_LOSS_EXPOSURE_WINDOWS",
+      "stage": "PRICE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "USDA_RMA_2024",
+        "OPENFEMA_NFIP",
+        "CA_DMV_AV",
+        "BLS_IIF",
+        "FRA_SAFETY_DATA",
+        "PHMSA_PIPELINE_SAFETY",
+        "MSHA_ACCIDENT_INJURY_EMPLOYMENT"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_EXPOSURE_WINDOWS_INCLUDING_ZERO_REPORTED_LOSS_WITHIN_SOURCE_DOMAINS",
+      "targetSpecificRemainder": "COMPLETE_OUTSIDER_TARGET_DOMAIN_EXPOSURE_WINDOWS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S2_ADJUDICATED_ECONOMIC_LOSS_SEVERITY",
+      "stage": "PRICE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "OPENFEMA_NFIP",
+        "FEMA_PA_APPEALS",
+        "CBCA_FEMA_ARBITRATIONS",
+        "TREASURY_JUDGMENT_FUND_BIWEEKLY_PAYMENTS",
+        "DOJ_EEOC_AI_REMEDY",
+        "CFPB_HARMED_CONSUMER_PAYMENTS",
+        "FTC_CONSUMER_REFUNDS",
+        "PHMSA_PIPELINE_SAFETY",
+        "PBGC_PENSION_INSURANCE"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_CLAIMED_PAID_APPROVED_DENIED_AND_ADJUDICATED_AMOUNTS_WITH_SOURCE_SPECIFIC_FINALITY",
+      "targetSpecificRemainder": "OUTSIDER_EXECUTION_LINK_AND_TARGET_POLICY_COVERAGE",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S2_EXTERNAL_HOLDOUT_AND_CORRELATION_VALIDATION",
+      "stage": "PRICE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "CAS_SCHEDULE_P_2025",
+        "USDA_RMA_2024",
+        "CA_DMV_AV",
+        "BLS_IIF",
+        "NTSB_ACCIDENT_INVESTIGATIONS",
+        "FRA_SAFETY_DATA",
+        "PHMSA_PIPELINE_SAFETY",
+        "MSHA_ACCIDENT_INJURY_EMPLOYMENT",
+        "NCUA_SHARE_INSURANCE_FUND",
+        "PBGC_PENSION_INSURANCE",
+        "WAYMO_SAFETY_IMPACT_DATA_HUB_20260624_CAPTURED_20260822"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_TEMPORAL_REVISION_WINDOW_CORRELATION_AND_HOLDOUT_DESIGN_REFERENCES; WAYMO_IS_RETROSPECTIVE_ONLY_NOT_A_PROSPECTIVE_OR_EXTERNAL_TARGET_HOLDOUT_AND_ITS_CSV4_AND_CSV1_TO_CSV3_WINDOWS_DIFFER",
+      "targetSpecificRemainder": "INDEPENDENT_OUTSIDER_TARGET_CUSTOMER_OPERATOR_HOLDOUT",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S2_PROSPECTIVE_PREACTION_FACTOR_STREAM",
+      "stage": "PRICE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "CLINICALTRIALS_GOV",
+        "CA_DMV_AV",
+        "FDA_GUDID",
+        "FRA_SAFETY_DATA",
+        "PHMSA_PIPELINE_SAFETY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_PREDECLARED_PROTOCOL_DEVICE_AND_PERMIT_FACTORS_AVAILABLE_BEFORE_REPORTED_OUTCOMES",
+      "targetSpecificRemainder": "SOURCE_REPLAYED_FACTORS_BOUND_BEFORE_EACH_OUTSIDER_EXECUTION",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S2_INDEPENDENT_ACTUARIAL_REVIEW",
+      "stage": "PRICE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "ASB_ASOPS",
+        "CAS_SCHEDULE_P_2025",
+        "NAIC_FDR_SBS",
+        "CA_DOI_SERFF_RATE_FILINGS"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "ADOPTED_DATA_QUALITY_PRICING_RESERVING_AND_CAPITAL_REVIEW_STANDARDS",
+      "targetSpecificRemainder": "QUALIFIED_ACTUARY_REVIEW_OF_EXACT_OUTSIDER_MODEL_DATA_TAILS_AND_WORDING",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S2_EXTERNAL_ADJUDICATION_FRAUD_TRUST",
+      "stage": "PRICE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "FEMA_PA_APPEALS",
+        "CBCA_FEMA_ARBITRATIONS",
+        "GAO_BID_PROTESTS",
+        "CFPB_COMPLAINTS",
+        "DOJ_EEOC_AI_REMEDY",
+        "NTSB_ACCIDENT_INVESTIGATIONS"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_AGENCY_TRIBUNAL_COMPLAINT_RESPONSE_AND_ENFORCEMENT_INSTITUTIONS",
+      "targetSpecificRemainder": "OUTSIDER_POLICY_BOUND_ADJUDICATOR_CONFLICT_FRAUD_AND_KEY_GOVERNANCE",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S2_LEGAL_PRODUCT_CLASSIFICATION",
+      "stage": "PRICE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "NAIC_FDR_SBS",
+        "ASB_ASOPS",
+        "CA_DOI_SERFF_RATE_FILINGS"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_INSURANCE_REGULATORY_AND_PROFESSIONAL_CLASSIFICATION_FRAMEWORKS",
+      "targetSpecificRemainder": "JURISDICTION_SPECIFIC_COUNSEL_CLASSIFICATION_OF_EXACT_OUTSIDER_PRODUCT",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S3_REAL_FUNDED_SHADOW_PILOT",
+      "stage": "GUARANTEE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "OUTSIDER_SPECIFIC_EXECUTION_CANNOT_BE_SUBSTITUTED",
+      "sourceIds": [
+        "DOJ_EEOC_AI_REMEDY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_FUNDED_REMEDY_AND_MONITORING_PRECEDENT",
+      "targetSpecificRemainder": "EXACT_EXTERNALLY_CONTRACTED_FUNDED_OUTSIDER_PILOT",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S3_GATE_BYPASS_REVOCATION_FAILURE_EVIDENCE",
+      "stage": "GUARANTEE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "NHTSA_RECALLS_ENFORCEMENT",
+        "DOJ_EEOC_AI_REMEDY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_BYPASS_REPORTING_FAILURE_RECALL_AND_MONITORING_PATTERNS",
+      "targetSpecificRemainder": "LIVE_OUTSIDER_OWNER_GATE_FAILURE_INJECTION_RECEIPTS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S3_STANDING_ISSUER_AND_LEGAL_AUTHORITY",
+      "stage": "GUARANTEE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "NAIC_FDR_SBS",
+        "SEC_EDGAR_INSURER_XBRL"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_LICENSED_INSURER_IDENTITY_CAPITAL_AND_FILING_PRECEDENTS",
+      "targetSpecificRemainder": "A_STANDING_ISSUER_AUTHORIZED_TO_BIND_THE_OUTSIDER_PRODUCT",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S3_RESOURCE_OWNER_ADOPTION",
+      "stage": "GUARANTEE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "OUTSIDER_SPECIFIC_EXECUTION_CANNOT_BE_SUBSTITUTED",
+      "sourceIds": [
+        "DOJ_EEOC_AI_REMEDY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_OWNER_ADOPTED_MONITORING_AND_CONTROL_OBLIGATION_PRECEDENTS",
+      "targetSpecificRemainder": "RESOURCE_OWNER_MAKES_OUTSIDER_THE_ACTUAL_WRITE_PRECONDITION",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S3_CAPITAL_CUSTODY_POLICY_COUNTERPARTIES",
+      "stage": "GUARANTEE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "SEC_EDGAR_INSURER_XBRL",
+        "NAIC_FDR_SBS",
+        "FDIC_CALL_REPORTS",
+        "FDIC_FAILURES_AND_RECEIVERSHIP_DIVIDENDS",
+        "TREASURY_FISCAL_DATA",
+        "TREASURY_TCMM_COLLATERAL",
+        "TREASURY_JUDGMENT_FUND_CERTIFICATION",
+        "TREASURY_JUDGMENT_FUND_BIWEEKLY_PAYMENTS",
+        "NCIGF_ASSESSMENT_LIABILITY",
+        "NCUA_SHARE_INSURANCE_FUND",
+        "PBGC_PENSION_INSURANCE",
+        "CFPB_HARMED_CONSUMER_PAYMENTS",
+        "FTC_CONSUMER_REFUNDS"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_CAPITAL_RESERVE_RESTRICTED_DEPOSIT_CUSTODY_AND_PAYMENT_ACCOUNTING_STRUCTURES",
+      "targetSpecificRemainder": "FUNDED_ASSETS_AND_BINDING_COUNTERPARTIES_FOR_OUTSIDER_OBLIGATIONS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S3_AFFECTED_PARTY_STANDING_POLICY_TERMS",
+      "stage": "GUARANTEE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "FEMA_PA_APPEALS",
+        "CFPB_COMPLAINTS",
+        "CFPB_HARMED_CONSUMER_PAYMENTS",
+        "FTC_CONSUMER_REFUNDS",
+        "DOJ_EEOC_AI_REMEDY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_STANDING_NOTICE_APPEAL_RESPONSE_RECOVERY_AND_REMEDY_TERMS",
+      "targetSpecificRemainder": "ADOPTED_OUTSIDER_POLICY_TERMS_AND_REPRESENTATION_PROCESS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S4_REAL_EXECUTION_LOSS_CLAIM",
+      "stage": "SETTLE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "OPENFEMA_NFIP",
+        "FEMA_PA_APPEALS",
+        "OSHA_SIR_ROBOT_AGV",
+        "FDA_MAUDE",
+        "MSHA_ACCIDENT_INJURY_EMPLOYMENT"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_EXECUTIONS_EVENTS_CLAIMS_AND_REPORTED_OR_PAID_LOSS_AMOUNTS_IN_SOURCE_DOMAINS",
+      "targetSpecificRemainder": "ONE_OUTSIDER_COVERED_EXECUTION_WITH_POLICY_BOUND_LOSS_IDENTITY",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S4_FINAL_ADJUDICATION_APPEAL_EVIDENCE",
+      "stage": "SETTLE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "FEMA_PA_APPEALS",
+        "CBCA_FEMA_ARBITRATIONS",
+        "GAO_BID_PROTESTS",
+        "DOJ_EEOC_AI_REMEDY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_FINAL_AGENCY_TRIBUNAL_AND_COURT_RESOLUTION_RECORDS",
+      "targetSpecificRemainder": "FINAL_APPEAL_ON_AN_OUTSIDER_POLICY_BOUND_CLAIM",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S4_PAYMENT_AND_RECOVERY_EVIDENCE",
+      "stage": "SETTLE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "OPENFEMA_NFIP",
+        "TREASURY_FISCAL_DATA",
+        "TREASURY_JUDGMENT_FUND_CERTIFICATION",
+        "TREASURY_JUDGMENT_FUND_BIWEEKLY_PAYMENTS",
+        "FDIC_FAILURES_AND_RECEIVERSHIP_DIVIDENDS",
+        "PBGC_PENSION_INSURANCE",
+        "DOJ_EEOC_AI_REMEDY",
+        "NHTSA_RECALLS_ENFORCEMENT",
+        "CFPB_HARMED_CONSUMER_PAYMENTS",
+        "FTC_CONSUMER_REFUNDS",
+        "CPSC_RECALLS_AND_MPR"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_PAID_CLAIM_DISTRIBUTION_PAYMENT_AND_REMEDY_LIFECYCLE_FIELDS_WHERE_PUBLISHED",
+      "targetSpecificRemainder": "CUSTODIAN_ACK_AND_INDEPENDENT_RECOVERY_FOR_AN_OUTSIDER_CLAIM",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S4_LONGITUDINAL_CONSEQUENCE_MATURITY",
+      "stage": "SETTLE",
+      "readinessCategory": "EXTERNAL_EVIDENCE",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "DIRECT_REAL_CASE_OR_EXPERIENCE",
+      "sourceIds": [
+        "FDA_MAUDE",
+        "NHTSA_SGO_ADS",
+        "NHTSA_RECALLS_ENFORCEMENT",
+        "CPSC_RECALLS_AND_MPR",
+        "NTSB_ACCIDENT_INVESTIGATIONS",
+        "FRA_SAFETY_DATA",
+        "PHMSA_PIPELINE_SAFETY",
+        "DOJ_EEOC_AI_REMEDY",
+        "WAYMO_SAFETY_IMPACT_DATA_HUB_20260624_CAPTURED_20260822"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_SUPPLEMENTS_REPORT_VERSIONS_MONITORING_REPORTS_RECALLS_AND_REMEDY_HORIZONS",
+      "targetSpecificRemainder": "COMPLETE_MANDATORY_HORIZONS_FOR_EVERY_OUTSIDER_AFFECTED_PARTY_AND_CHANNEL",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S4_INDEPENDENT_CLAIMS_ADJUDICATOR",
+      "stage": "SETTLE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "CBCA_FEMA_ARBITRATIONS",
+        "FEMA_PA_APPEALS",
+        "GAO_BID_PROTESTS",
+        "DOJ_EEOC_AI_REMEDY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_ADJUDICATION_STRUCTURES_AND_EXTERNAL_TO_FEMA_IMPARTIAL_PANEL_PRECEDENT; CROSS_INSTITUTIONAL_INDEPENDENCE_NOT_ESTABLISHED_BY_REFERENCE_DATA",
+      "targetSpecificRemainder": "INSTITUTION_AUTHORIZED_TO_ADJUDICATE_OUTSIDER_CLAIMS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S4_CUSTODIAN_PAYMENT_RAIL",
+      "stage": "SETTLE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "TREASURY_FISCAL_DATA",
+        "TREASURY_TCMM_COLLATERAL",
+        "TREASURY_JUDGMENT_FUND_CERTIFICATION",
+        "TREASURY_JUDGMENT_FUND_BIWEEKLY_PAYMENTS",
+        "FDIC_CALL_REPORTS",
+        "FDIC_FAILURES_AND_RECEIVERSHIP_DIVIDENDS",
+        "NCUA_SHARE_INSURANCE_FUND",
+        "PBGC_PENSION_INSURANCE",
+        "SEC_EDGAR_INSURER_XBRL",
+        "CFPB_HARMED_CONSUMER_PAYMENTS",
+        "FTC_CONSUMER_REFUNDS"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_PAYMENT_CUSTODY_DEPOSIT_AND_IDEMPOTENT_ACCOUNTING_REFERENCE_STRUCTURES",
+      "targetSpecificRemainder": "AUTHORIZED_CUSTODIAN_RAIL_BOUND_TO_OUTSIDER_ONE_USE_INSTRUCTIONS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S4_CLOSURE_REOPENING_AUTHORITY",
+      "stage": "SETTLE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "FEMA_PA_APPEALS",
+        "CBCA_FEMA_ARBITRATIONS",
+        "NHTSA_RECALLS_ENFORCEMENT",
+        "CPSC_RECALLS_AND_MPR",
+        "FTC_CONSUMER_REFUNDS",
+        "DOJ_EEOC_AI_REMEDY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_FINALITY_RECALL_REOPENING_AND_MONITORING_CONTINUITY_PRECEDENTS",
+      "targetSpecificRemainder": "INSTITUTION_AUTHORIZED_TO_CLOSE_AND_REOPEN_OUTSIDER_OBLIGATIONS",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    },
+    {
+      "gapId": "S4_AFFECTED_PARTY_CHALLENGE_INSTITUTION",
+      "stage": "SETTLE",
+      "readinessCategory": "EXTERNAL_INSTITUTION_AUTHORITY",
+      "readinessStatus": "BLOCKED_EXTERNAL",
+      "contributionKind": "REAL_INSTITUTIONAL_PRECEDENT_OR_STANDARD",
+      "sourceIds": [
+        "CFPB_COMPLAINTS",
+        "FEMA_PA_APPEALS",
+        "CBCA_FEMA_ARBITRATIONS",
+        "GAO_BID_PROTESTS",
+        "DOJ_EEOC_AI_REMEDY"
+      ],
+      "referenceEvidenceCoverage": "SOURCE_REPLAYED_REAL_CASE_REFERENCE_PRESENT",
+      "publicEvidenceCanEstablish": "REAL_COMPLAINT_NOTICE_RESPONSE_APPEAL_TRIBUNAL_AND_REMEDY_PATHS",
+      "targetSpecificRemainder": "OPERATIVE_OUTSIDER_AFFECTED_PARTY_STANDING_REPRESENTATION_AND_ENFORCEMENT",
+      "referencePhenomenonEvidencePresent": true,
+      "outsiderSpecificGapClosed": false,
+      "institutionalAuthorityGranted": false
+    }
+  ],
+  "counts": {
+    "sources": 45,
+    "adapterSourceReplayedLocal": 39,
+    "officialBrowsableIdentified": 6,
+    "gaps": 36,
+    "gapsWithReferencePhenomenonEvidence": 35,
+    "outsiderSpecificGapsClosed": 0,
+    "institutionalAuthorityGapsClosed": 0
+  },
+  "verificationBoundary": {
+    "verificationLevel": "CODE_FIXED_CATALOG_STRUCTURE_ONLY",
+    "sourceArtifactsReverified": false,
+    "webCompletenessEstablished": false,
+    "targetTransferEstablished": false,
+    "productionReady": false
+  },
+  "catalogHash": "sha256:35679945e3f6f357934198b04aea3ef2cb435c8ff62709a3280d9346fd6c1bf7"
+}

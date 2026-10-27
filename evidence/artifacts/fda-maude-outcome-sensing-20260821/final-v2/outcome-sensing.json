@@ -1,0 +1,683 @@
+{
+  "schema": "outsider/fda-maude-outcome-sensing/v1",
+  "generatedAt": "2026-08-21T10:30:00.000Z",
+  "source": {
+    "sourceId": "FDA_MAUDE_MONTHLY_ADD_AND_CHANGE_2026_08",
+    "publisher": "UNITED_STATES_FOOD_AND_DRUG_ADMINISTRATION",
+    "sourceReality": "REAL_REGULATORY_PASSIVE_SURVEILLANCE_REPORT_STREAM",
+    "profileMatchedAtBuild": true,
+    "captureKind": "MONTHLY_ADD_AND_CHANGE_STREAMS_NOT_FULL_POPULATION",
+    "capturedThrough": "2026-07-31",
+    "files": [
+      {
+        "name": "mdr-data-files-20260821.html",
+        "kind": "DATA_INDEX_HTML",
+        "bytes": 86238,
+        "sha256": "sha256:d398fd3db492484ae5c126fba1586a17ed951e7e2230778a9cdcee45707e5d8c",
+        "entryName": null,
+        "entryBytes": null,
+        "rows": null
+      },
+      {
+        "name": "maude-about-20260821.html",
+        "kind": "LIMITATIONS_HTML",
+        "bytes": 56703,
+        "sha256": "sha256:0b7c74c3926e2dd557095a8eb4bd1aaa91ca310d933584a0af45dfff75ebcee4",
+        "entryName": null,
+        "entryBytes": null,
+        "rows": null
+      },
+      {
+        "name": "mdrfoiadd.zip",
+        "kind": "BASE_ADD",
+        "bytes": 11548269,
+        "sha256": "sha256:1f0525ac706e741e5951948e9ca5946829d7c5ac66321a4588f541b02c9325fb",
+        "entryName": "mdrfoiAdd.txt",
+        "entryBytes": 119622110,
+        "rows": 344157
+      },
+      {
+        "name": "mdrfoichange.zip",
+        "kind": "BASE_CHANGE",
+        "bytes": 30078879,
+        "sha256": "sha256:6e3657c226494941f76bbea76a82ed3a71bd7aaf3fd5b8cd1c4bdb1686ef07e0",
+        "entryName": "mdrfoiChange.txt",
+        "entryBytes": 276342476,
+        "rows": 771511
+      },
+      {
+        "name": "deviceadd.zip",
+        "kind": "DEVICE_ADD",
+        "bytes": 11624514,
+        "sha256": "sha256:c5f2e20160e3362589f05b0cc51d21d6c117e4e3c5b9801197934348e08b8a51",
+        "entryName": "DEVICEAdd.txt",
+        "entryBytes": 84010636,
+        "rows": 344154
+      },
+      {
+        "name": "devicechange.zip",
+        "kind": "DEVICE_CHANGE",
+        "bytes": 29192523,
+        "sha256": "sha256:b50911a00c2efa9ad16aefc5096b6de422dcce99b8f7d25df559bb1872976fbd",
+        "entryName": "DEVICEChange.txt",
+        "entryBytes": 193875416,
+        "rows": 771545
+      }
+    ]
+  },
+  "ontology": {
+    "unit": "MDR_MASTER_REPORT_AFTER_PUBLISHER_CHANGE_STREAM_PRECEDENCE",
+    "sourceEnvironmentIsReal": true,
+    "reportIsIncident": false,
+    "reportIsIndependentlyObservedOutcome": false,
+    "reportEstablishesDeviceCausality": false,
+    "reportEstablishesAdjudicatedLoss": false,
+    "reportEstablishesExposure": false,
+    "researchOrShadowIsUseBoundaryNotSourceReality": true
+  },
+  "revisionAccounting": {
+    "baseAdd": {
+      "rows": 344157,
+      "uniquePrimaryKeys": 344157,
+      "missingPrimaryKeyRows": 0,
+      "duplicatePrimaryKeyRows": 0,
+      "duplicateRowsWithDifferentContent": 0
+    },
+    "baseChange": {
+      "rows": 771511,
+      "uniquePrimaryKeys": 771511,
+      "missingPrimaryKeyRows": 0,
+      "duplicatePrimaryKeyRows": 0,
+      "duplicateRowsWithDifferentContent": 0
+    },
+    "baseCrossStreamOverlap": 336371,
+    "baseCrossStreamChangedContent": 38,
+    "effectiveMdrReportKeys": 779297,
+    "changeStreamPrecedence": "BASE_CHANGE_SUPERSEDES_BASE_ADD_FOR_EQUAL_MDR_REPORT_KEY",
+    "numericVersionColumnPresent": false,
+    "versionEvidenceUsed": [
+      "TYPE_OF_REPORT",
+      "SUPPL_DATES_FDA_RECEIVED",
+      "SUPPL_DATES_MFR_RECEIVED",
+      "DATE_CHANGED"
+    ],
+    "reportsWithFollowupEvidence": 231310,
+    "reportsWithSupplementDateEvidence": 231310,
+    "multipleReporterDuplicateRiskRetained": true,
+    "rowCountMustNotBeCalledEventCount": true
+  },
+  "outcomeSensing": {
+    "effectiveReportRows": 779297,
+    "reportedEventTypeCounts": {
+      "D": 3405,
+      "IN": 222744,
+      "M": 552845,
+      "O": 303
+    },
+    "reporterSourceCodeCounts": {
+      "D": 25397,
+      "M": 751169,
+      "P": 2010,
+      "U": 721
+    },
+    "reportSourceTypeCounts": {
+      "99": 28,
+      "*": 1,
+      "00": 71434,
+      "01": 277384,
+      "02": 4299,
+      "03": 3803,
+      "04": 327431,
+      "05": 243689,
+      "06": 80106,
+      "07": 195107,
+      "08": 34442,
+      "COMPANY REPRESENT": 1,
+      "COMPANY REPRESENTATI": 1,
+      "COMPANY REPRESENTATIVE": 16,
+      "CONSUMER": 43,
+      "FOREIGN": 1,
+      "HEALTH PROFESSIONAL": 1,
+      "UNKNOWN": 2
+    },
+    "adverseEventFlaggedReports": 226448,
+    "productProblemFlaggedReports": 595727,
+    "manufacturerLinkedReports": 751170,
+    "eventKeyPresent": 0,
+    "distinctNonmissingEventKeys": 0,
+    "repeatedNonmissingEventKeys": 0,
+    "eventKeyMissing": 779297,
+    "reportNumberPresent": 779297,
+    "distinctNonmissingReportNumbers": 737976,
+    "repeatedNonmissingReportNumbers": 5613,
+    "reportNumberMissing": 0,
+    "summaryReports": 1465,
+    "summaryEventCountPresent": 1465,
+    "summaryEventCountMissing": 0,
+    "missingEventDate": 41813,
+    "missingReportDate": 46816,
+    "pmaPmnPresent": 709899,
+    "exemptionPresent": 2822,
+    "fieldQuality": {
+      "numberDevicesMissing": 779297,
+      "numberDevicesInvalid": 0,
+      "numberPatientsMissing": 779297,
+      "numberPatientsInvalid": 0
+    },
+    "deterministicPrivacyMinimizedCases": [
+      {
+        "fingerprint": "sha256:000001f78c18213a67ef2824b07efc6c4331ffa093dbf0687b276ba041fbaf7e",
+        "reportedMonth": "2026-06",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "PSV"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:00000667a8fb30917506865408408238998dae8c8055cef81309b6e69dd61b1a",
+        "reportedMonth": "2026-05",
+        "reporterSourceCode": "M",
+        "reportedEventType": "IN",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QZI"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:00000884808568151735c994251279ccaf7e4d3aa3cca8e96c423e3cc23f3af7",
+        "reportedMonth": "2026-06",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "BZD"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:00002c1be54a767f6e48ab4faf2e07b0a31a4bd95dde94e182b64a1542311e17",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "OZP"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:00004921fbdde78edf6245fa374d8b119761d17b158b9aed7d42f2507366f87c",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "BZD"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:000050c93d769fed9393097c92f0aaea7ada4372b402743b9779293527b09a8f",
+        "reportedMonth": "2026-05",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "FDI"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:000082910624df15447c6ac32d2bcd1e07bc2cd1537d3aa98ca2c5a9ce2cf9f1",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QFG"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:000085d92233a94c428891db768a7b5bd09a96cdd847056f5b861df5d5f8e918",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QFG"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:00008800d6a200093158ca41540ed9920d5d4b8028bca790cc0a97285b91763b",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "IN",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "DZE"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:000094abdfa39c0ff5067acb884852bd65da8f8f79caf94214234614838f75ba",
+        "reportedMonth": "2026-06",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "DSP"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:000095cff0be5b8cd97682b3af6ab0b24951fb99eabd822c1319322164d9ffa5",
+        "reportedMonth": "2026-06",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "FET"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:00009a735029c26a89f94b26f5e522ebc5b3cdf1e68e308bc7a5cf5495c1ba8a",
+        "reportedMonth": null,
+        "reporterSourceCode": "D",
+        "reportedEventType": "IN",
+        "manufacturerLinkFlag": "N",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "DZE"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:00009e2aaf9db227c7904d23e93f20bef1225051b584e25ae52574052dc79769",
+        "reportedMonth": "2026-05",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QBJ"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:0000b6569e100cb19b57f3c1dca99ad7958091c16f87d6222d40cf8b2eb53dd8",
+        "reportedMonth": "2026-06",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QBJ"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:0000bb77d3c54c7259f12996e6b48b6ba8cf51c88e4aa05eb9419f05fdfda2d7",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "IN",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "MHY"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:0000c815561c37481dbcf9575f46dabfbd394291db5e4880bdf6ad819c3168f6",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "IN",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QCB"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:0000d50bc45a8cd71ca7ded9c86354b73e69b5209b1ab16ca9827cdea1af3a5d",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "IN",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "LXH"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:0000db5f65ebd4f3c8b4c954c981ba4e2b31360b967cc3028b8a3613b4b549e3",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QBJ"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:00010082a7128a97d35203adba672e938966acba2b3f52b8a75fa8336e4bc641",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QBJ"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:00011b0f04b147b787b0ba3b05402ffeeb81f84728f5a81d7d755fefe09e4623",
+        "reportedMonth": "2026-06",
+        "reporterSourceCode": "M",
+        "reportedEventType": "IN",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "GAP"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:000125f9d9f09c56eb80f62e3e98c028b2aaa8d62b403ab68c255449984e9d11",
+        "reportedMonth": "2026-03",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "FOZ"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:00012c20313fc2de52387977309989801c7ed34e70b4ecfa32793c2d5f8357e5",
+        "reportedMonth": "2026-06",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QBJ"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:00013a270bb9a9ad7b48534d377ffa966c35efc85c65b66992e1698411c6c0af",
+        "reportedMonth": null,
+        "reporterSourceCode": "D",
+        "reportedEventType": "IN",
+        "manufacturerLinkFlag": "N",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "DZE"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:00014de35c3ce38e3b0bef12271d55b5adca8a77b87e75aff28353ad595f86d0",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QJI"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:00016baa63b1e652c0ccccdc55700407c8cdfe0e8afaa4bcc7e986fd825232f1",
+        "reportedMonth": "2026-06",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QBJ"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:0001a88fb5fa47fc913b4e2f80192811468aa0d27386eac03022e18f3413dd64",
+        "reportedMonth": "2026-06",
+        "reporterSourceCode": "M",
+        "reportedEventType": "IN",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "DZE"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:0001bdd0f84b95ab96cc0aeaaee28ff439bb5c3ac4d6300f6d4e6317520889f5",
+        "reportedMonth": "2026-05",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QBJ"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:0001cb0ceb1266b6b3473636cfba9f150e78b7da36de6e232109a5be8600ffd7",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "KNW"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:0001e59670b258ced36ef1cd58e298ee19c12c7c7701a16a4b826380b74e6bc1",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "IN",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "LWR"
+        ],
+        "deviceRecordCount": 1,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:0001f8c9a51034e9d2a2f013f6105b774e205101d388c740b2d9e7b2a50ca682",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QFG"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": true
+      },
+      {
+        "fingerprint": "sha256:000205978b8b9ce8ac48e4843f91bb7ef29f308166bf25a8943b9096a724a4b5",
+        "reportedMonth": "2026-07",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "QBJ"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": false
+      },
+      {
+        "fingerprint": "sha256:0002069608fd54457c08ec2642ad7ee5db41a3aa6dd25f23f73d65c5cfed3b5b",
+        "reportedMonth": "2026-06",
+        "reporterSourceCode": "M",
+        "reportedEventType": "M",
+        "manufacturerLinkFlag": "Y",
+        "summaryReportFlag": "N",
+        "productCodes": [
+          "FPA"
+        ],
+        "deviceRecordCount": 2,
+        "hasUdiDi": true
+      }
+    ]
+  },
+  "deviceCorrelation": {
+    "deviceAdd": {
+      "rows": 344154,
+      "uniquePrimaryKeys": 344154,
+      "missingPrimaryKeyRows": 0,
+      "duplicatePrimaryKeyRows": 0,
+      "duplicateRowsWithDifferentContent": 0
+    },
+    "deviceChange": {
+      "rows": 771545,
+      "uniquePrimaryKeys": 771545,
+      "missingPrimaryKeyRows": 0,
+      "duplicatePrimaryKeyRows": 0,
+      "duplicateRowsWithDifferentContent": 0
+    },
+    "deviceCrossStreamOverlap": 1,
+    "deviceCrossStreamChangedContent": 0,
+    "effectiveDeviceRows": 1115698,
+    "deviceRowsJoinedToEffectiveBase": 1115698,
+    "deviceRowsOutsideEffectiveBase": 0,
+    "reportsWithDeviceRows": 779294,
+    "reportsWithoutDeviceRows": 3,
+    "reportsWithMultipleDeviceRows": 336400,
+    "productCodePresent": 1115698,
+    "udiDiPresent": 748493,
+    "udiPublicPresent": 678738,
+    "evaluatedByManufacturer": {
+      "yes": 378506,
+      "no": 499354,
+      "missingOrOther": 237838
+    },
+    "accessGudidFullReleaseReplayed": false,
+    "accessGudidDailyDeltaTreatedAsPopulation": false,
+    "deviceIdentityIndependentlyResolved": false
+  },
+  "missingnessAndBias": {
+    "passiveSurveillanceUnderreportingUnresolved": true,
+    "reportInaccuracyUnresolved": true,
+    "deviceCausalityUnverified": true,
+    "deviceUseDenominatorAbsent": true,
+    "reportingProcessChangeCanMoveCounts": true,
+    "followupAndMultipleReporterDuplicationUnresolvedBeyondAvailableKeys": true,
+    "currentMonthlyStreamsAreNotFullHistoricalPopulation": true,
+    "noIncidencePrevalenceTrendOrCrossDeviceRatePermitted": true
+  },
+  "privacy": {
+    "officialPageStatesFoaAndPrivacyRedactions": true,
+    "narrativesAcquired": false,
+    "patientTableAcquired": false,
+    "namesAddressesPhonesProjected": false,
+    "rawReportKeysProjected": false,
+    "deterministicCaseFingerprintsArePseudonymousAndPotentiallyLinkable": true,
+    "deterministicCaseFingerprintsAreIrreversiblyAnonymous": false,
+    "linkageRiskBasis": "KNOWN_DOMAIN_AND_LOW_ENTROPY_SEQUENTIAL_MDR_KEYS_MAY_BE_ENUMERATED_OFFLINE"
+  },
+  "rights": {
+    "officialPublicDownloadObserved": true,
+    "officialBytesAndLimitationsReplayed": true,
+    "rawRedistributionRightConcluded": false,
+    "commercialUseRightConcluded": false,
+    "automaticTrainingRightConcluded": false,
+    "legalConclusionMade": false,
+    "allowedUse": [
+      "DESCRIPTIVE_SOURCE_REPLAY",
+      "SHADOW_OUTCOME_SENSING"
+    ]
+  },
+  "stageProgress": {
+    "stage1_5": {
+      "evidenceGained": [
+        "REAL_PASSIVE_SURVEILLANCE_REPORTS",
+        "REVISION_AND_LINKAGE_SENSING"
+      ],
+      "externalReadinessGapClosed": false
+    },
+    "stage2": {
+      "evidenceGained": [
+        "REPORTED_CONSEQUENCE_CATEGORIES",
+        "DEVICE_CORRELATION_ROOTS"
+      ],
+      "externalReadinessGapClosed": false
+    },
+    "rateCalibrationAdmitted": false,
+    "causalCalibrationAdmitted": false,
+    "lossCalibrationAdmitted": false,
+    "productionReadiness": false
+  },
+  "authority": {
+    "PRICE": false,
+    "GUARANTEE": false,
+    "SETTLE": false,
+    "TRAIN": false,
+    "CLOSE": false,
+    "EXECUTE": false
+  },
+  "admission": "ADMIT_FDA_MAUDE_PASSIVE_REPORT_OUTCOME_SENSING_ONLY",
+  "artifactHash": "sha256:450da676c54f9e8781cff0589618e5f8fbbbf66286c0b38316ae4eb95f643c73"
+}

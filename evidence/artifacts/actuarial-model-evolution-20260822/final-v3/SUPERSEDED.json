@@ -1,0 +1,15 @@
+{
+  "schema": "outsider/actuarial-model-evolution-supersession/v1",
+  "schemaVersion": "1.0.0",
+  "status": "SUPERSEDED",
+  "supersededRelease": "final-v3",
+  "supersededArtifactPath": "artifacts/actuarial-model-evolution-20260822/final-v3/architecture.json",
+  "supersededArtifactHash": "sha256:84a1facbef396e7377150151799763119dffa186b8a6cdbc894f901fdf7a1724",
+  "supersededArtifactFileHash": "sha256:a9888340812f5d2a4c6134e08faee7fcc0ebdcd3573f31a7626b5f5e1026eb24",
+  "supersededArtifactFileBytes": 188142,
+  "supersededArtifactBytesPreserved": true,
+  "supersededByRelease": "final-v4",
+  "currentCanonicalPath": "artifacts/actuarial-model-evolution-20260822/final-v4/architecture.json",
+  "selectionAuthority": "CODE_FIXED_CURRENT_RELEASE_IN_OUTSIDER_ACTUARIAL_MODEL_EVOLUTION",
+  "markerHash": "sha256:7d6e9a36e70f45e434ba7f25979888dc0376ca0cae24d49f61a225c3ee870e71"
+}

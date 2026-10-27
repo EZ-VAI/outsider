@@ -1,0 +1,9 @@
+{
+  "description": "Conservative Boston launch-area expansion for merchant-declared metro service areas. This is not a claim that every municipality in the metropolitan area is covered. Merchants can enter individual towns instead.",
+  "groups": [
+    {
+      "names": ["Greater Boston", "Boston metro", "Boston metropolitan area", "大波士顿", "波士顿周边"],
+      "members": ["Boston", "Brookline", "Allston", "Brighton", "Cambridge", "Watertown", "Newton", "Somerville", "Medford", "Quincy", "Waltham", "Dedham"]
+    }
+  ]
+}

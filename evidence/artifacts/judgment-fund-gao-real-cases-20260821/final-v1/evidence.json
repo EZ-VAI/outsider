@@ -1,0 +1,2697 @@
+{
+  "schema": "outsider/judgment-fund-gao-real-institutional-cases/v1",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-21T12:30:00.000Z",
+  "generatedAtTrust": "SELF_ASSERTED_LOCAL_TIME",
+  "sourceBinding": {
+    "sourceId": "TREASURY_JUDGMENT_FUND_2026_THROUGH_0731_AND_GAO_FY2025_20260821",
+    "sourceObjects": [
+      {
+        "path": "payment-report-01-01-26-thru-01-15-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/files/judgment-fund/2026/payment-report-01-01-26-thru-01-15-26.xlsx",
+        "interval": {
+          "start": "2026-01-01",
+          "end": "2026-01-15"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 50735,
+        "sha256": "sha256:4cee678baa6ef6169d8d863ce7ee66b09ebeb899ecf0e0cf56d1467a07cde92a"
+      },
+      {
+        "path": "payment-report-01-16-26-thru-01-31-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/files/judgment-fund/2026/payment-report-01-16-26-thru-01-31-26.xlsx",
+        "interval": {
+          "start": "2026-01-16",
+          "end": "2026-01-31"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 45327,
+        "sha256": "sha256:7a0fdba623ef24999a2267d9f135d2055b5c5f6626da7de0e92bc2de165d9d33"
+      },
+      {
+        "path": "payment-report-02-01-26-thru-02-15-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-03/payment-report-02-01-26-thru-02-15-26.xlsx",
+        "interval": {
+          "start": "2026-02-01",
+          "end": "2026-02-15"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 267118,
+        "sha256": "sha256:3d7cd670f64a7e3ff7648edfd6a5193bbbec12305a39e4ee60a743181cd2dec8"
+      },
+      {
+        "path": "payment-report-02-16-26-thru-02-28-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-03/payment-report-02-16-26-thru-02-28-26.xlsx",
+        "interval": {
+          "start": "2026-02-16",
+          "end": "2026-02-28"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 52763,
+        "sha256": "sha256:9e96c05662ba5e86099fbd8377dc3977bad5de7ad938732b7c68888f695a45d8"
+      },
+      {
+        "path": "payment-report-03-01-26-thru-03-15-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-03/payment-report-03-01-26-thru-03-15-26.xlsx",
+        "interval": {
+          "start": "2026-03-01",
+          "end": "2026-03-15"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 175164,
+        "sha256": "sha256:ec82f82057f688bd80a0850df795cbfbb0df4a309c45fe76372b36a73cd14c05"
+      },
+      {
+        "path": "payment-report-03-16-26-thru-03-31-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-04/payment-report-03-16-26-thru-03-31-26.xlsx",
+        "interval": {
+          "start": "2026-03-16",
+          "end": "2026-03-31"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 50243,
+        "sha256": "sha256:8822e4ce2ccf31fb2418660065f129c2bf87279b8f6ac23d83b8fb5c88a018b7"
+      },
+      {
+        "path": "payment-report-04-01-26-thru-04-15-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-04/payment-report-04-01-26-thru-04-15-26.xlsx",
+        "interval": {
+          "start": "2026-04-01",
+          "end": "2026-04-15"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 51877,
+        "sha256": "sha256:019d5d8d231dab32ded968d1fcaab2cf9ea2111c78237157bccea057abf4f703"
+      },
+      {
+        "path": "payment-report-04-16-26-thru-04-30-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-05/payment-report-04-16-26-thru-04-30-26.xlsx",
+        "interval": {
+          "start": "2026-04-16",
+          "end": "2026-04-30"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 63859,
+        "sha256": "sha256:7774f11d23afb1cfcd4585489e0bb3c8610f6e5b7f2891da0e2f536850890732"
+      },
+      {
+        "path": "payment-report-05-01-26-thru-05-15-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-05/payment-report-05-01-26-thru-05-15-26.xlsx",
+        "interval": {
+          "start": "2026-05-01",
+          "end": "2026-05-15"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 65876,
+        "sha256": "sha256:37f6e10077ed74eaab2a206644d6e7b9ca1c687b949b29c5df0855041de76eea"
+      },
+      {
+        "path": "payment-report-05-16-26-thru-05-31-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-06/payment-report-05-16-26-thru-05-31-26.xlsx",
+        "interval": {
+          "start": "2026-05-16",
+          "end": "2026-05-31"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 53273,
+        "sha256": "sha256:2fc1d9bf7fec2a3d2e031a91594830d1ed5c6c4da862d0473400b414cc3df15a"
+      },
+      {
+        "path": "payment-report-06-01-26-thru-06-15-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-06/payment-report-06-01-26-thru-06-15-26.xlsx",
+        "interval": {
+          "start": "2026-06-01",
+          "end": "2026-06-15"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 58586,
+        "sha256": "sha256:a576d68c5eb64e644cf6dc8205797054269abcc450fe5fb90ea19d8a8b1643a8"
+      },
+      {
+        "path": "payment-report-06-16-26-thru-06-30-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-07/payment-report-06-16-26-thru-06-30-26.xlsx",
+        "interval": {
+          "start": "2026-06-16",
+          "end": "2026-06-30"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 81000,
+        "sha256": "sha256:e4fd53631ae43dd6045c82c46f5609b0ae383d934930f954ae6d43f01a4711b2"
+      },
+      {
+        "path": "payment-report-07-01-26-thru-07-15-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-07/payment-report-07-01-26-thru-07-15-26.xlsx",
+        "interval": {
+          "start": "2026-07-01",
+          "end": "2026-07-15"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 875368,
+        "sha256": "sha256:cc1d40f9b1381370426e7ee900d6a4f0079cd966da55ad940d8ee877285e4262"
+      },
+      {
+        "path": "payment-report-07-16-26-thru-07-31-26.xlsx",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_PAYMENT_REPORT_XLSX",
+        "url": "https://fiscal.treasury.gov/system/files/2026-08/payment-report-07-16-26-thru-07-31-26.xlsx",
+        "interval": {
+          "start": "2026-07-16",
+          "end": "2026-07-31"
+        },
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": true,
+        "sizeBytes": 864817,
+        "sha256": "sha256:36a76299f4b001190e9f5cd4db5e68bc692a8d0fb241ea453a62ce18c462002f"
+      },
+      {
+        "path": "31cfr256.pdf",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_JUDGMENT_FUND_REGULATION_PDF",
+        "url": "https://fiscal.treasury.gov/system/files/files/judgment-fund/31cfr256.pdf",
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 65251,
+        "sha256": "sha256:460ea381b7bc3896e78d854db45e7473bd229378c93a8f1969d65cd4fcde53ba"
+      },
+      {
+        "path": "31cfr256.txt",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_JUDGMENT_FUND_REGULATION_TEXT",
+        "url": "https://fiscal.treasury.gov/system/files/files/judgment-fund/31cfr256.txt",
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 23265,
+        "sha256": "sha256:f5d4775fba83e38914bcd200a972b2f81023f9049ec17e8f9bb4130d02ba1c48"
+      },
+      {
+        "path": "form-197.pdf",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_CURRENT_VOUCHER_FOR_PAYMENT_PDF",
+        "url": "https://fiscal.treasury.gov/system/files/files/judgment-fund/form-197.pdf",
+        "captureRepresentation": "EXACT_PUBLISHER_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 234626,
+        "sha256": "sha256:4e6dbf571d84532b61c27fd2308d27485ecdf93894f22388c10d85f86003e0ca"
+      },
+      {
+        "path": "treasury-award-payment-process.html",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_AWARD_PAYMENT_PROCESS_HTML",
+        "url": "https://fiscal.treasury.gov/payments-from-government/judgment-fund/award-payment-process",
+        "captureRepresentation": "EXACT_HTTP_RESPONSE_BODY_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 116289,
+        "sha256": "sha256:53f440dc0f810d477e93fd522f5ffa7e8da3dc1b431993c62891d13babf21d28"
+      },
+      {
+        "path": "treasury-biweekly-index.html",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_BIWEEKLY_REPORT_INDEX_HTML",
+        "url": "https://fiscal.treasury.gov/payments-from-government/judgment-fund/bi-weekly-payment-report",
+        "captureRepresentation": "EXACT_HTTP_RESPONSE_BODY_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 260899,
+        "sha256": "sha256:dd56667fea268d2646cb6f21ac1f56175ac33e3bda5e357753828f78d4aa8e7e"
+      },
+      {
+        "path": "treasury-faq.html",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_JUDGMENT_FUND_FAQ_HTML",
+        "url": "https://fiscal.treasury.gov/payments-from-government/judgment-fund/faqs",
+        "captureRepresentation": "EXACT_HTTP_RESPONSE_BODY_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 129696,
+        "sha256": "sha256:87248d8f091f2f789cf0d1b0f6f2f22d7e96ee573ff2c296aa7784ae247b044f"
+      },
+      {
+        "path": "treasury-forms.html",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_ELECTRONIC_FILING_AND_FORM_INDEX_HTML",
+        "url": "https://fiscal.treasury.gov/payments-from-government/judgment-fund/forms",
+        "captureRepresentation": "EXACT_HTTP_RESPONSE_BODY_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 115804,
+        "sha256": "sha256:655083fffed2269d2888ddd19dd2c13d3f1446f8b1d02bff59e1acd8ffddbbcc"
+      },
+      {
+        "path": "treasury-judgment-fund-home.html",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_JUDGMENT_FUND_HOME_HTML",
+        "url": "https://fiscal.treasury.gov/payments-from-government/judgment-fund",
+        "captureRepresentation": "EXACT_HTTP_RESPONSE_BODY_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 118178,
+        "sha256": "sha256:61b73b5331261038f4afeeee922ac51bca6af34dc38b5eafab957f1e38d69b69"
+      },
+      {
+        "path": "treasury-offsets.html",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_JUDGMENT_FUND_OFFSETS_HTML",
+        "url": "https://fiscal.treasury.gov/payments-from-government/judgment-fund/offsets",
+        "captureRepresentation": "EXACT_HTTP_RESPONSE_BODY_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 120818,
+        "sha256": "sha256:a17bc8328525076547dd665bf921a77667241f001e393b6742bb83dfb58fd449"
+      },
+      {
+        "path": "treasury-regulations.html",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_REGULATION_AND_GUIDANCE_HTML",
+        "url": "https://fiscal.treasury.gov/payments-from-government/judgment-fund/regulations",
+        "captureRepresentation": "EXACT_HTTP_RESPONSE_BODY_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 124123,
+        "sha256": "sha256:145cb75769e2c61c8c2062f400f3ec64e414c95bea390d8b4dca57826c809506"
+      },
+      {
+        "path": "treasury-tfm-6-3100.html",
+        "lane": "TREASURY_JUDGMENT_FUND",
+        "kind": "OFFICIAL_TREASURY_FINANCIAL_MANUAL_HTML",
+        "url": "https://tfx.treasury.gov/tfm/volume1/part6/chapter-3100-certifying-payments-and-recording-corresponding-intragovernmental",
+        "captureRepresentation": "EXACT_HTTP_RESPONSE_BODY_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 87927,
+        "sha256": "sha256:ef8ef247d963b78ac54ae470cadf65b1de0870b9ff67163fcded78b76f66b481"
+      },
+      {
+        "path": "gao-copyright-rendered.html",
+        "lane": "GAO_BID_PROTEST",
+        "kind": "OFFICIAL_GAO_COPYRIGHT_TERMS_RENDERED_DOM",
+        "url": "https://www.gao.gov/copyright",
+        "captureRepresentation": "BROWSER_RENDERED_DOCUMENT_OUTER_HTML",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 35717,
+        "sha256": "sha256:65f7f0cbb47014ae486736214b052b055d2af5984b3c096356bb75c1ddd1467d"
+      },
+      {
+        "path": "gao-faq-rendered.html",
+        "lane": "GAO_BID_PROTEST",
+        "kind": "OFFICIAL_GAO_BID_PROTEST_FAQ_RENDERED_DOM",
+        "url": "https://www.gao.gov/legal/bid-protests/faqs",
+        "captureRepresentation": "BROWSER_RENDERED_DOCUMENT_OUTER_HTML",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 70374,
+        "sha256": "sha256:7fafa113f8f1b05f8bf5376fdf77d1ec6f067de234736ba1d5d2fc3ded713f9c"
+      },
+      {
+        "path": "gao-file-process-rendered.html",
+        "lane": "GAO_BID_PROTEST",
+        "kind": "OFFICIAL_GAO_FILING_PROCESS_RENDERED_DOM",
+        "url": "https://www.gao.gov/legal/bid-protests/file-a-bid-protest",
+        "captureRepresentation": "BROWSER_RENDERED_DOCUMENT_OUTER_HTML",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 41653,
+        "sha256": "sha256:9a5dcc6c149e1ffcae6ab0b3a43b0c4eabbd3de4963ea13cbf828f1c00d68c5f"
+      },
+      {
+        "path": "gao-fy2025-annual-report-rendered.html",
+        "lane": "GAO_BID_PROTEST",
+        "kind": "OFFICIAL_GAO_FY2025_ANNUAL_REPORT_RENDERED_DOM",
+        "url": "https://www.gao.gov/products/gao-26-900695",
+        "captureRepresentation": "BROWSER_RENDERED_DOCUMENT_OUTER_HTML",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 82276,
+        "sha256": "sha256:ef74426cd4d5bb5a04f2dfd5a44e2f25ba852985df0ec7f588dff8df2c4f5972"
+      },
+      {
+        "path": "gao-fy2025-annual-report.pdf",
+        "lane": "GAO_BID_PROTEST",
+        "kind": "OFFICIAL_GAO_FY2025_ANNUAL_REPORT_PDF",
+        "url": "https://www.gao.gov/assets/890/882727.pdf",
+        "captureRepresentation": "BROWSER_DOWNLOAD_EXACT_FILE_BYTES",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 216237,
+        "sha256": "sha256:66cd0b0b545d34c0c7b5aeef99c000bdfb1d3f16e9dc2d3ca1bc871cd66c6ee2"
+      },
+      {
+        "path": "gao-reference-materials-rendered.html",
+        "lane": "GAO_BID_PROTEST",
+        "kind": "OFFICIAL_GAO_REGULATIONS_AND_REFERENCE_RENDERED_DOM",
+        "url": "https://www.gao.gov/legal/bid-protests/reference-materials",
+        "captureRepresentation": "BROWSER_RENDERED_DOCUMENT_OUTER_HTML",
+        "independentRedownloadByteStabilityEstablishedAtFreeze": false,
+        "sizeBytes": 104261,
+        "sha256": "sha256:5ff7eae5cf66fc19be42f27129eefe1f4e367d9e6e7b2e48a0447fffebcea371"
+      }
+    ],
+    "sourceObjectSetHash": "sha256:0073a8cf314aeadda25d281aa1d89db6ac00b5214093fcbb50069f29c8d81fe5",
+    "acquisitionManifestSha256": "sha256:59db45ff6ef406ad2be7151082333d917353cc1920b59085b28c6370fc5acab8",
+    "independentRedownloadByteStabilityEstablishedObjectCount": 14,
+    "independentRedownloadByteStabilityNotEstablishedObjectCount": 17,
+    "sourceArtifactsReverifiedByStandaloneArtifact": false,
+    "officialPublisherIdentityRequiresFullSourceReplay": true,
+    "collectionTransportAttested": false
+  },
+  "treasuryJudgmentFund": {
+    "realityStatus": "REAL_INSTITUTIONAL_PAYMENT_OPERATION",
+    "publisher": "U.S. Department of the Treasury, Bureau of the Fiscal Service",
+    "snapshot": {
+      "start": "2026-01-01",
+      "end": "2026-07-31",
+      "reportIntervals": 14,
+      "latestFullyPublishedIntervalAtFreeze": true,
+      "rightCensoredAfter": "2026-07-31"
+    },
+    "reports": [
+      {
+        "sourcePath": "payment-report-01-01-26-thru-01-15-26.xlsx",
+        "sourceSha256": "sha256:4cee678baa6ef6169d8d863ce7ee66b09ebeb899ecf0e0cf56d1467a07cde92a",
+        "worksheetName": "January 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-01-01",
+          "end": "2026-01-15"
+        },
+        "reportCreatedOn": "2026-01-20",
+        "workbookFilterLastRow": 436,
+        "lastParsedPaymentRow": 501,
+        "paymentComponentRows": 496,
+        "rowsOutsideWorkbookFilter": 65,
+        "zeroTotalPublishedAmountRows": 189,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 14,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 4346358384,
+          "attorneyFeesAmountCents": 18878875,
+          "costAmountCents": 23468513,
+          "interestAmountCents": 13468,
+          "totalPublishedAmountCents": 4388719240
+        }
+      },
+      {
+        "sourcePath": "payment-report-01-16-26-thru-01-31-26.xlsx",
+        "sourceSha256": "sha256:7a0fdba623ef24999a2267d9f135d2055b5c5f6626da7de0e92bc2de165d9d33",
+        "worksheetName": "January 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-01-16",
+          "end": "2026-01-31"
+        },
+        "reportCreatedOn": "2026-02-04",
+        "workbookFilterLastRow": 389,
+        "lastParsedPaymentRow": 388,
+        "paymentComponentRows": 383,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 88,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 12,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 4727988238,
+          "attorneyFeesAmountCents": 50857364,
+          "costAmountCents": 4222026,
+          "interestAmountCents": 162493827,
+          "totalPublishedAmountCents": 4945561455
+        }
+      },
+      {
+        "sourcePath": "payment-report-02-01-26-thru-02-15-26.xlsx",
+        "sourceSha256": "sha256:3d7cd670f64a7e3ff7648edfd6a5193bbbec12305a39e4ee60a743181cd2dec8",
+        "worksheetName": "February 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-02-01",
+          "end": "2026-02-15"
+        },
+        "reportCreatedOn": "2026-02-19",
+        "workbookFilterLastRow": 4122,
+        "lastParsedPaymentRow": 4122,
+        "paymentComponentRows": 4117,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 3835,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 14,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 5454000080,
+          "attorneyFeesAmountCents": 237246251,
+          "costAmountCents": 7247082,
+          "interestAmountCents": 2705992,
+          "totalPublishedAmountCents": 5701199405
+        }
+      },
+      {
+        "sourcePath": "payment-report-02-16-26-thru-02-28-26.xlsx",
+        "sourceSha256": "sha256:9e96c05662ba5e86099fbd8377dc3977bad5de7ad938732b7c68888f695a45d8",
+        "worksheetName": "February 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-02-16",
+          "end": "2026-02-28"
+        },
+        "reportCreatedOn": "2026-03-04",
+        "workbookFilterLastRow": 591,
+        "lastParsedPaymentRow": 591,
+        "paymentComponentRows": 586,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 313,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 13,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 3559497003,
+          "attorneyFeesAmountCents": 60369551,
+          "costAmountCents": 3409200,
+          "interestAmountCents": 4382097,
+          "totalPublishedAmountCents": 3627657851
+        }
+      },
+      {
+        "sourcePath": "payment-report-03-01-26-thru-03-15-26.xlsx",
+        "sourceSha256": "sha256:ec82f82057f688bd80a0850df795cbfbb0df4a309c45fe76372b36a73cd14c05",
+        "worksheetName": "March 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-03-01",
+          "end": "2026-03-15"
+        },
+        "reportCreatedOn": "2026-03-18",
+        "workbookFilterLastRow": 2709,
+        "lastParsedPaymentRow": 2709,
+        "paymentComponentRows": 2704,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 2378,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 37,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 56852981520,
+          "attorneyFeesAmountCents": 173282226,
+          "costAmountCents": 5116977,
+          "interestAmountCents": 357516397,
+          "totalPublishedAmountCents": 57388897120
+        }
+      },
+      {
+        "sourcePath": "payment-report-03-16-26-thru-03-31-26.xlsx",
+        "sourceSha256": "sha256:8822e4ce2ccf31fb2418660065f129c2bf87279b8f6ac23d83b8fb5c88a018b7",
+        "worksheetName": "March 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-03-16",
+          "end": "2026-03-31"
+        },
+        "reportCreatedOn": "2026-04-03",
+        "workbookFilterLastRow": 493,
+        "lastParsedPaymentRow": 493,
+        "paymentComponentRows": 488,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 102,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 11,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 8322409609,
+          "attorneyFeesAmountCents": 15348424,
+          "costAmountCents": 4309256,
+          "interestAmountCents": 577082,
+          "totalPublishedAmountCents": 8342644371
+        }
+      },
+      {
+        "sourcePath": "payment-report-04-01-26-thru-04-15-26.xlsx",
+        "sourceSha256": "sha256:019d5d8d231dab32ded968d1fcaab2cf9ea2111c78237157bccea057abf4f703",
+        "worksheetName": "April 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-04-01",
+          "end": "2026-04-15"
+        },
+        "reportCreatedOn": "2026-04-20",
+        "workbookFilterLastRow": 529,
+        "lastParsedPaymentRow": 529,
+        "paymentComponentRows": 524,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 120,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 15,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 12722027599,
+          "attorneyFeesAmountCents": 111835883,
+          "costAmountCents": 3598595,
+          "interestAmountCents": 49892836,
+          "totalPublishedAmountCents": 12887354913
+        }
+      },
+      {
+        "sourcePath": "payment-report-04-16-26-thru-04-30-26.xlsx",
+        "sourceSha256": "sha256:7774f11d23afb1cfcd4585489e0bb3c8610f6e5b7f2891da0e2f536850890732",
+        "worksheetName": "April 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-04-16",
+          "end": "2026-04-30"
+        },
+        "reportCreatedOn": "2026-05-05",
+        "workbookFilterLastRow": 663,
+        "lastParsedPaymentRow": 663,
+        "paymentComponentRows": 658,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 160,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 20,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 125813271135,
+          "attorneyFeesAmountCents": 29241746,
+          "costAmountCents": 4304176,
+          "interestAmountCents": 68164,
+          "totalPublishedAmountCents": 125846885221
+        }
+      },
+      {
+        "sourcePath": "payment-report-05-01-26-thru-05-15-26.xlsx",
+        "sourceSha256": "sha256:37f6e10077ed74eaab2a206644d6e7b9ca1c687b949b29c5df0855041de76eea",
+        "worksheetName": "May 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-05-01",
+          "end": "2026-05-15"
+        },
+        "reportCreatedOn": "2026-05-19",
+        "workbookFilterLastRow": 696,
+        "lastParsedPaymentRow": 696,
+        "paymentComponentRows": 691,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 177,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 17,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 15354647806,
+          "attorneyFeesAmountCents": 200745662,
+          "costAmountCents": 4135734,
+          "interestAmountCents": 1288536,
+          "totalPublishedAmountCents": 15560817738
+        }
+      },
+      {
+        "sourcePath": "payment-report-05-16-26-thru-05-31-26.xlsx",
+        "sourceSha256": "sha256:2fc1d9bf7fec2a3d2e031a91594830d1ed5c6c4da862d0473400b414cc3df15a",
+        "worksheetName": "May 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-05-16",
+          "end": "2026-05-31"
+        },
+        "reportCreatedOn": "2026-06-04",
+        "workbookFilterLastRow": 545,
+        "lastParsedPaymentRow": 545,
+        "paymentComponentRows": 540,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 188,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 14,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 9559757405,
+          "attorneyFeesAmountCents": 38064132,
+          "costAmountCents": 3219200,
+          "interestAmountCents": 94488580,
+          "totalPublishedAmountCents": 9695529317
+        }
+      },
+      {
+        "sourcePath": "payment-report-06-01-26-thru-06-15-26.xlsx",
+        "sourceSha256": "sha256:a576d68c5eb64e644cf6dc8205797054269abcc450fe5fb90ea19d8a8b1643a8",
+        "worksheetName": "June 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-06-01",
+          "end": "2026-06-15"
+        },
+        "reportCreatedOn": "2026-06-18",
+        "workbookFilterLastRow": 635,
+        "lastParsedPaymentRow": 635,
+        "paymentComponentRows": 630,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 230,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 14,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 9739525681,
+          "attorneyFeesAmountCents": 149154030,
+          "costAmountCents": 3735796,
+          "interestAmountCents": 6243845,
+          "totalPublishedAmountCents": 9898659352
+        }
+      },
+      {
+        "sourcePath": "payment-report-06-16-26-thru-06-30-26.xlsx",
+        "sourceSha256": "sha256:e4fd53631ae43dd6045c82c46f5609b0ae383d934930f954ae6d43f01a4711b2",
+        "worksheetName": "June 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-06-16",
+          "end": "2026-06-30"
+        },
+        "reportCreatedOn": "2026-07-08",
+        "workbookFilterLastRow": 635,
+        "lastParsedPaymentRow": 1085,
+        "paymentComponentRows": 1080,
+        "rowsOutsideWorkbookFilter": 450,
+        "zeroTotalPublishedAmountRows": 771,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 14,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 8214795278,
+          "attorneyFeesAmountCents": 57480412,
+          "costAmountCents": 3045980,
+          "interestAmountCents": 15866691,
+          "totalPublishedAmountCents": 8291188361
+        }
+      },
+      {
+        "sourcePath": "payment-report-07-01-26-thru-07-15-26.xlsx",
+        "sourceSha256": "sha256:cc1d40f9b1381370426e7ee900d6a4f0079cd966da55ad940d8ee877285e4262",
+        "worksheetName": "July 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-07-01",
+          "end": "2026-07-15"
+        },
+        "reportCreatedOn": "2026-07-17",
+        "workbookFilterLastRow": 5,
+        "lastParsedPaymentRow": 1977,
+        "paymentComponentRows": 1972,
+        "rowsOutsideWorkbookFilter": 1972,
+        "zeroTotalPublishedAmountRows": 1570,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 10,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 31335677621,
+          "attorneyFeesAmountCents": 113038269,
+          "costAmountCents": 4042773,
+          "interestAmountCents": 20723519,
+          "totalPublishedAmountCents": 31473482182
+        }
+      },
+      {
+        "sourcePath": "payment-report-07-16-26-thru-07-31-26.xlsx",
+        "sourceSha256": "sha256:36a76299f4b001190e9f5cd4db5e68bc692a8d0fb241ea453a62ce18c462002f",
+        "worksheetName": "July 2026",
+        "worksheetMember": "xl/worksheets/sheet1.xml",
+        "reportInterval": {
+          "start": "2026-07-16",
+          "end": "2026-07-31"
+        },
+        "reportCreatedOn": "2026-08-10",
+        "workbookFilterLastRow": 1290,
+        "lastParsedPaymentRow": 1290,
+        "paymentComponentRows": 1285,
+        "rowsOutsideWorkbookFilter": 0,
+        "zeroTotalPublishedAmountRows": 845,
+        "rawNumericCellsWithMoreThanTwoDecimalPlaces": 9,
+        "formulaCellCount": 0,
+        "formulaCachedValueUsed": false,
+        "unsupportedTypedCellCount": 0,
+        "amounts": {
+          "currency": "USD",
+          "principalAmountCents": 18628684925,
+          "attorneyFeesAmountCents": 28248521,
+          "costAmountCents": 7362091,
+          "interestAmountCents": 780174671,
+          "totalPublishedAmountCents": 19444470208
+        }
+      }
+    ],
+    "totals": {
+      "paymentComponentRows": 16154,
+      "zeroTotalPublishedAmountRows": 10966,
+      "rowsOutsideWorkbookFilter": 2487,
+      "rawNumericCellsWithMoreThanTwoDecimalPlaces": 214,
+      "exactFullRawRowsRepeatedOccurrencesWithinReports": 10927,
+      "amounts": {
+        "currency": "USD",
+        "principalAmountCents": 314631622284,
+        "attorneyFeesAmountCents": 1283791346,
+        "costAmountCents": 81217399,
+        "interestAmountCents": 1496435705,
+        "totalPublishedAmountCents": 317493066734
+      }
+    },
+    "responsibleAgencyAggregates": [
+      {
+        "name": "Adm Ofc of US Courts",
+        "paymentComponentRows": 11,
+        "principalAmountCents": 32865076,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 32865076
+      },
+      {
+        "name": "Agricultural Res Svc",
+        "paymentComponentRows": 11,
+        "principalAmountCents": 14190696,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 14190696
+      },
+      {
+        "name": "Alcohol Tobacco Fire",
+        "paymentComponentRows": 28,
+        "principalAmountCents": 39161058,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 39161058
+      },
+      {
+        "name": "Animal & Plant Hlth",
+        "paymentComponentRows": 20,
+        "principalAmountCents": 35579506,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 35579506
+      },
+      {
+        "name": "Architect of the Capitol",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 347752,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 347752
+      },
+      {
+        "name": "Bonneville Power",
+        "paymentComponentRows": 12,
+        "principalAmountCents": 12170838,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 12170838
+      },
+      {
+        "name": "Bur of Indian Affair",
+        "paymentComponentRows": 26,
+        "principalAmountCents": 220106232,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 220106232
+      },
+      {
+        "name": "Bur of Indian Education",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 1326836,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1326836
+      },
+      {
+        "name": "Bur of Land Mgmt",
+        "paymentComponentRows": 375,
+        "principalAmountCents": 223599065,
+        "attorneyFeesAmountCents": 56231394,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 279830459
+      },
+      {
+        "name": "Bur of Reclamation",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 169889161,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 169889161
+      },
+      {
+        "name": "Bureau of Industry and Security",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 5004058,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 5004058
+      },
+      {
+        "name": "Bureau of Ocean Energy Management",
+        "paymentComponentRows": 17,
+        "principalAmountCents": 104818883900,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 104818883900
+      },
+      {
+        "name": "Bureau of Prisons",
+        "paymentComponentRows": 4130,
+        "principalAmountCents": 815588095,
+        "attorneyFeesAmountCents": 49634801,
+        "costAmountCents": 560226,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 865783122
+      },
+      {
+        "name": "Bureau of the Census",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 34000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 34000000
+      },
+      {
+        "name": "Central Intelligence Agency",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 1006119,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1006119
+      },
+      {
+        "name": "Coast Guard",
+        "paymentComponentRows": 45,
+        "principalAmountCents": 90436616,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 16555,
+        "totalPublishedAmountCents": 90453171
+      },
+      {
+        "name": "Coast Guard at DHS",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 0,
+        "attorneyFeesAmountCents": 75000000,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 75000000
+      },
+      {
+        "name": "Corp for Natl & Community Service",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 1268646,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1268646
+      },
+      {
+        "name": "Ctr for Disease Cont",
+        "paymentComponentRows": 16,
+        "principalAmountCents": 4121014200,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 4121014200
+      },
+      {
+        "name": "Ctrs for Medicare & Medicaid Serv",
+        "paymentComponentRows": 2122,
+        "principalAmountCents": 52906672985,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 52906672985
+      },
+      {
+        "name": "Customs and Border Protection",
+        "paymentComponentRows": 145,
+        "principalAmountCents": 1481483448,
+        "attorneyFeesAmountCents": 33553444,
+        "costAmountCents": 0,
+        "interestAmountCents": 110816449,
+        "totalPublishedAmountCents": 1625853341
+      },
+      {
+        "name": "Def Contract Audit",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 219401989,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 219401989
+      },
+      {
+        "name": "Def Intelligence Agy",
+        "paymentComponentRows": 12,
+        "principalAmountCents": 3622156,
+        "attorneyFeesAmountCents": 700000,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 4322156
+      },
+      {
+        "name": "Def Logistics Agency",
+        "paymentComponentRows": 11,
+        "principalAmountCents": 16858914,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 16858914
+      },
+      {
+        "name": "Department of Agriculture",
+        "paymentComponentRows": 31,
+        "principalAmountCents": 311381536,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 311381536
+      },
+      {
+        "name": "Department of Commerce",
+        "paymentComponentRows": 13,
+        "principalAmountCents": 128855565,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 128855565
+      },
+      {
+        "name": "Department of Education",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 0,
+        "attorneyFeesAmountCents": 5000000,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 5000000
+      },
+      {
+        "name": "Department of Energy",
+        "paymentComponentRows": 78,
+        "principalAmountCents": 45793984139,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 45793984139
+      },
+      {
+        "name": "Department of Health and Human Services",
+        "paymentComponentRows": 11,
+        "principalAmountCents": 10301259,
+        "attorneyFeesAmountCents": 28159132,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 38460391
+      },
+      {
+        "name": "Department of Housing and Urban Development",
+        "paymentComponentRows": 56,
+        "principalAmountCents": 55305569,
+        "attorneyFeesAmountCents": 23226390,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 78531959
+      },
+      {
+        "name": "Department of Justice",
+        "paymentComponentRows": 18,
+        "principalAmountCents": 59289779,
+        "attorneyFeesAmountCents": 1520000,
+        "costAmountCents": 197000,
+        "interestAmountCents": 13115,
+        "totalPublishedAmountCents": 61019894
+      },
+      {
+        "name": "Department of Labor",
+        "paymentComponentRows": 6,
+        "principalAmountCents": 6750000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 6750000
+      },
+      {
+        "name": "Department of State",
+        "paymentComponentRows": 23,
+        "principalAmountCents": 90783748,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 90783748
+      },
+      {
+        "name": "Department of the Air Force",
+        "paymentComponentRows": 180,
+        "principalAmountCents": 5865860336,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 636491,
+        "interestAmountCents": 2264886,
+        "totalPublishedAmountCents": 5868761713
+      },
+      {
+        "name": "Department of the Army",
+        "paymentComponentRows": 451,
+        "principalAmountCents": 4404543654,
+        "attorneyFeesAmountCents": 2944961,
+        "costAmountCents": 679098,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 4408167713
+      },
+      {
+        "name": "Department of the Interior",
+        "paymentComponentRows": 47,
+        "principalAmountCents": 58064683,
+        "attorneyFeesAmountCents": 93362800,
+        "costAmountCents": 153469,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 151580952
+      },
+      {
+        "name": "Department of the Navy",
+        "paymentComponentRows": 4106,
+        "principalAmountCents": 43534056251,
+        "attorneyFeesAmountCents": 4302391,
+        "costAmountCents": 16121815,
+        "interestAmountCents": 278505,
+        "totalPublishedAmountCents": 43554758962
+      },
+      {
+        "name": "Department of the Treasury",
+        "paymentComponentRows": 6,
+        "principalAmountCents": 0,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 0
+      },
+      {
+        "name": "Department of Veterans Affairs",
+        "paymentComponentRows": 572,
+        "principalAmountCents": 5802138154,
+        "attorneyFeesAmountCents": 60094171,
+        "costAmountCents": 73552,
+        "interestAmountCents": 254308,
+        "totalPublishedAmountCents": 5862560185
+      },
+      {
+        "name": "DFAS - Defense Finance Accounting S",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 1600000,
+        "attorneyFeesAmountCents": 87500,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1687500
+      },
+      {
+        "name": "DHS - Federal Protection Service",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 1954730,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1954730
+      },
+      {
+        "name": "DHS - Immigration  & Customs Enforcement (ICE)",
+        "paymentComponentRows": 4,
+        "principalAmountCents": 46929494,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 19025,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 46948519
+      },
+      {
+        "name": "DHS - Immigration & Customs Enforcement (ICE)",
+        "paymentComponentRows": 51,
+        "principalAmountCents": 48343093,
+        "attorneyFeesAmountCents": 20174,
+        "costAmountCents": 78470,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 48441737
+      },
+      {
+        "name": "DHS - TSA  Trans. SEC. Admin.",
+        "paymentComponentRows": 5,
+        "principalAmountCents": 2825715,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 2825715
+      },
+      {
+        "name": "DHS - TSA Trans. SEC. Admin.",
+        "paymentComponentRows": 24,
+        "principalAmountCents": 18550789974,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 18550789974
+      },
+      {
+        "name": "Drug Enforcement Adm",
+        "paymentComponentRows": 346,
+        "principalAmountCents": 1333361089,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1333361089
+      },
+      {
+        "name": "Environmental Protection Agency",
+        "paymentComponentRows": 13,
+        "principalAmountCents": 700082,
+        "attorneyFeesAmountCents": 18717875,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 19417957
+      },
+      {
+        "name": "Farm Service Agency",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 1011417,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1011417
+      },
+      {
+        "name": "Fed Aviation Admin",
+        "paymentComponentRows": 37,
+        "principalAmountCents": 1705426229,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 117016,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1705543245
+      },
+      {
+        "name": "Fed Bureau of Invest",
+        "paymentComponentRows": 232,
+        "principalAmountCents": 1361258668,
+        "attorneyFeesAmountCents": 37818954,
+        "costAmountCents": 4239070,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1403316692
+      },
+      {
+        "name": "Federal Emergency Management Agency",
+        "paymentComponentRows": 9,
+        "principalAmountCents": 600117250,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 600117250
+      },
+      {
+        "name": "Fish & Wildlife Svc",
+        "paymentComponentRows": 36,
+        "principalAmountCents": 8437310,
+        "attorneyFeesAmountCents": 13982921,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 22420231
+      },
+      {
+        "name": "Food & Drug Adm",
+        "paymentComponentRows": 4,
+        "principalAmountCents": 1743436,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1743436
+      },
+      {
+        "name": "Food Safety & Inspec",
+        "paymentComponentRows": 8,
+        "principalAmountCents": 32612608,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 32612608
+      },
+      {
+        "name": "Foreign Agricultural Service",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 3500000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 3500000
+      },
+      {
+        "name": "Forest Service",
+        "paymentComponentRows": 52,
+        "principalAmountCents": 141795126,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 141795126
+      },
+      {
+        "name": "General Services Administration",
+        "paymentComponentRows": 25,
+        "principalAmountCents": 860916568,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 521859,
+        "totalPublishedAmountCents": 861438427
+      },
+      {
+        "name": "Geological Survey",
+        "paymentComponentRows": 9,
+        "principalAmountCents": 8163836,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 8163836
+      },
+      {
+        "name": "HHS-OIG",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 663634,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 663634
+      },
+      {
+        "name": "Homeland Security",
+        "paymentComponentRows": 41,
+        "principalAmountCents": 370500000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 370500000
+      },
+      {
+        "name": "Indian Health Svc",
+        "paymentComponentRows": 47,
+        "principalAmountCents": 10197507633,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 1339648325,
+        "totalPublishedAmountCents": 11537155958
+      },
+      {
+        "name": "Internal Revenue Service/S&E",
+        "paymentComponentRows": 31,
+        "principalAmountCents": 3333469,
+        "attorneyFeesAmountCents": 22258600,
+        "costAmountCents": 1152996,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 26745065
+      },
+      {
+        "name": "JFK - Center for the Performing Arts",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 500000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 500000
+      },
+      {
+        "name": "Marine Corps",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 30440422,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 30440422
+      },
+      {
+        "name": "Maritime Admin",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 28606000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 28606000
+      },
+      {
+        "name": "Marshals Service",
+        "paymentComponentRows": 102,
+        "principalAmountCents": 135482678,
+        "attorneyFeesAmountCents": 1625000,
+        "costAmountCents": 371794,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 137479472
+      },
+      {
+        "name": "Mine Safety & Health",
+        "paymentComponentRows": 17,
+        "principalAmountCents": 2898883,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 2898883
+      },
+      {
+        "name": "National Aeronautics and Space Administration",
+        "paymentComponentRows": 5,
+        "principalAmountCents": 0,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 0
+      },
+      {
+        "name": "National Nuclear Security Admin",
+        "paymentComponentRows": 7,
+        "principalAmountCents": 4740041,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 4740041
+      },
+      {
+        "name": "Natl Guard Bureau",
+        "paymentComponentRows": 9,
+        "principalAmountCents": 22555704,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 25208,
+        "totalPublishedAmountCents": 22580912
+      },
+      {
+        "name": "Natl Inst of Stds",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 100,
+        "attorneyFeesAmountCents": 19730000,
+        "costAmountCents": 871285,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 20601385
+      },
+      {
+        "name": "Natl Marine Fisher",
+        "paymentComponentRows": 4,
+        "principalAmountCents": 0,
+        "attorneyFeesAmountCents": 328321398,
+        "costAmountCents": 4241008,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 332562406
+      },
+      {
+        "name": "Natl Oceanic & Atmos",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 7036358,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 7036358
+      },
+      {
+        "name": "Natl Park Service",
+        "paymentComponentRows": 55,
+        "principalAmountCents": 539264465,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 539264465
+      },
+      {
+        "name": "Natl Security Agency",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 10000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 10000000
+      },
+      {
+        "name": "Natural Resource C",
+        "paymentComponentRows": 27,
+        "principalAmountCents": 7513063,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 7513063
+      },
+      {
+        "name": "OFC OF ASSIST SEC FOR CIVIL RIGHTS",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 0,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 0
+      },
+      {
+        "name": "Off of the Secretary",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 258091,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 258091
+      },
+      {
+        "name": "Office of Personnel Management",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 0,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 85776,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 85776
+      },
+      {
+        "name": "Office of the Secretary of Defense - Agencies",
+        "paymentComponentRows": 31,
+        "principalAmountCents": 63100953,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 2627,
+        "totalPublishedAmountCents": 63103580
+      },
+      {
+        "name": "Public Health Svc",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 78000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 78000000
+      },
+      {
+        "name": "Rural Housing Srvc",
+        "paymentComponentRows": 36,
+        "principalAmountCents": 616224600,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 616224600
+      },
+      {
+        "name": "Secret Service at Homeland Security",
+        "paymentComponentRows": 45,
+        "principalAmountCents": 1109700103,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1109700103
+      },
+      {
+        "name": "Senate",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 711159,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 711159
+      },
+      {
+        "name": "Smithsonian Institution",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 1564622,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1564622
+      },
+      {
+        "name": "Social Security Administration",
+        "paymentComponentRows": 1305,
+        "principalAmountCents": 31827700,
+        "attorneyFeesAmountCents": 4040500,
+        "costAmountCents": 51562768,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 87430968
+      },
+      {
+        "name": "Surface Transportation Board",
+        "paymentComponentRows": 844,
+        "principalAmountCents": 1610707501,
+        "attorneyFeesAmountCents": 402233940,
+        "costAmountCents": 0,
+        "interestAmountCents": 42556007,
+        "totalPublishedAmountCents": 2055497448
+      },
+      {
+        "name": "The Judiciary",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 858632,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 858632
+      },
+      {
+        "name": "U.S. Capitol Police",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 48195449,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 48195449
+      },
+      {
+        "name": "U.S. Equal Employment Opportunity Comm.",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 25000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 25000000
+      },
+      {
+        "name": "US Army Corps of Engineers",
+        "paymentComponentRows": 54,
+        "principalAmountCents": 3547287491,
+        "attorneyFeesAmountCents": 1225000,
+        "costAmountCents": 56540,
+        "interestAmountCents": 37861,
+        "totalPublishedAmountCents": 3548606892
+      },
+      {
+        "name": "Western Area Power",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 24000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 24000000
+      },
+      {
+        "name": "Women's Bureau",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 15864889,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 15864889
+      }
+    ],
+    "submittingAgencyAggregates": [
+      {
+        "name": "Adm Ofc of US Courts",
+        "paymentComponentRows": 6,
+        "principalAmountCents": 3615076,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 3615076
+      },
+      {
+        "name": "Agricultural Res Svc",
+        "paymentComponentRows": 8,
+        "principalAmountCents": 6634384,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 6634384
+      },
+      {
+        "name": "Alcohol Tobacco Fire",
+        "paymentComponentRows": 26,
+        "principalAmountCents": 27161058,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 27161058
+      },
+      {
+        "name": "Animal & Plant Hlth",
+        "paymentComponentRows": 17,
+        "principalAmountCents": 10989235,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 10989235
+      },
+      {
+        "name": "Architect of the Capitol",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 347752,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 347752
+      },
+      {
+        "name": "Bonneville Power",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 2855638,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 2855638
+      },
+      {
+        "name": "Bureau of Industry and Security",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 2774058,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 2774058
+      },
+      {
+        "name": "Bureau of Prisons",
+        "paymentComponentRows": 165,
+        "principalAmountCents": 16029109,
+        "attorneyFeesAmountCents": 14735,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 16043844
+      },
+      {
+        "name": "Central Intelligence Agency",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 1006119,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1006119
+      },
+      {
+        "name": "Coast Guard",
+        "paymentComponentRows": 35,
+        "principalAmountCents": 25063004,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 25063004
+      },
+      {
+        "name": "Corp for Natl & Community Service",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 1268646,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1268646
+      },
+      {
+        "name": "Customs and Border Protection",
+        "paymentComponentRows": 112,
+        "principalAmountCents": 533172105,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 3419336,
+        "totalPublishedAmountCents": 536591441
+      },
+      {
+        "name": "Department of Agriculture",
+        "paymentComponentRows": 32,
+        "principalAmountCents": 9818390,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 9818390
+      },
+      {
+        "name": "Department of Health and Human Services",
+        "paymentComponentRows": 17,
+        "principalAmountCents": 41258152,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 41258152
+      },
+      {
+        "name": "Department of Justice",
+        "paymentComponentRows": 12527,
+        "principalAmountCents": 262446891335,
+        "attorneyFeesAmountCents": 1243531129,
+        "costAmountCents": 76254002,
+        "interestAmountCents": 928578015,
+        "totalPublishedAmountCents": 264695254481
+      },
+      {
+        "name": "Department of Labor",
+        "paymentComponentRows": 17,
+        "principalAmountCents": 18364889,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 18364889
+      },
+      {
+        "name": "Department of State",
+        "paymentComponentRows": 10,
+        "principalAmountCents": 5321352,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 5321352
+      },
+      {
+        "name": "Department of the Air Force",
+        "paymentComponentRows": 123,
+        "principalAmountCents": 2052844936,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 636491,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 2053481427
+      },
+      {
+        "name": "Department of the Army",
+        "paymentComponentRows": 308,
+        "principalAmountCents": 1402309908,
+        "attorneyFeesAmountCents": 2194961,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1404504869
+      },
+      {
+        "name": "Department of the Interior",
+        "paymentComponentRows": 80,
+        "principalAmountCents": 64783431,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 64783431
+      },
+      {
+        "name": "Department of the Navy",
+        "paymentComponentRows": 1697,
+        "principalAmountCents": 38149032250,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 278505,
+        "totalPublishedAmountCents": 38149310755
+      },
+      {
+        "name": "Department of Veterans Affairs",
+        "paymentComponentRows": 427,
+        "principalAmountCents": 3141559696,
+        "attorneyFeesAmountCents": 20410571,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 3161970267
+      },
+      {
+        "name": "DHS - Federal Protection Service",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 1954730,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1954730
+      },
+      {
+        "name": "DHS - Immigration  & Customs Enforcement (ICE)",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 929494,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 929494
+      },
+      {
+        "name": "DHS - Immigration & Customs Enforcement (ICE)",
+        "paymentComponentRows": 35,
+        "principalAmountCents": 22717875,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 22717875
+      },
+      {
+        "name": "DHS - TSA  Trans. SEC. Admin.",
+        "paymentComponentRows": 5,
+        "principalAmountCents": 2825715,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 2825715
+      },
+      {
+        "name": "DHS - TSA Trans. SEC. Admin.",
+        "paymentComponentRows": 16,
+        "principalAmountCents": 27649974,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 27649974
+      },
+      {
+        "name": "Drug Enforcement Adm",
+        "paymentComponentRows": 54,
+        "principalAmountCents": 38811729,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 38811729
+      },
+      {
+        "name": "Environmental Protection Agency",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 502082,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 502082
+      },
+      {
+        "name": "Executive Office for US Attorneys",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 2400000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 2400000
+      },
+      {
+        "name": "Fed Aviation Admin",
+        "paymentComponentRows": 15,
+        "principalAmountCents": 12926229,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 12926229
+      },
+      {
+        "name": "Fed Bureau of Invest",
+        "paymentComponentRows": 165,
+        "principalAmountCents": 147724727,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 4239070,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 151963797
+      },
+      {
+        "name": "Federal Emergency Management Agency",
+        "paymentComponentRows": 4,
+        "principalAmountCents": 7617250,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 7617250
+      },
+      {
+        "name": "Food Safety & Inspec",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 4576724,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 4576724
+      },
+      {
+        "name": "Forest Service",
+        "paymentComponentRows": 41,
+        "principalAmountCents": 41599955,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 41599955
+      },
+      {
+        "name": "General Services Administration",
+        "paymentComponentRows": 5,
+        "principalAmountCents": 499520310,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 521859,
+        "totalPublishedAmountCents": 500042169
+      },
+      {
+        "name": "Health Resources & Services Admin",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 373487,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 373487
+      },
+      {
+        "name": "Indian Health Svc",
+        "paymentComponentRows": 8,
+        "principalAmountCents": 4649483924,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 563637990,
+        "totalPublishedAmountCents": 5213121914
+      },
+      {
+        "name": "Internal Revenue Service/S&E",
+        "paymentComponentRows": 21,
+        "principalAmountCents": 3333469,
+        "attorneyFeesAmountCents": 16414950,
+        "costAmountCents": 31296,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 19779715
+      },
+      {
+        "name": "JFK - Center for the Performing Arts",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 500000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 500000
+      },
+      {
+        "name": "Marshals Service",
+        "paymentComponentRows": 90,
+        "principalAmountCents": 44755733,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 44755733
+      },
+      {
+        "name": "National Nuclear Security Admin",
+        "paymentComponentRows": 7,
+        "principalAmountCents": 4740041,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 4740041
+      },
+      {
+        "name": "Natl Oceanic & Atmos",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 536358,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 536358
+      },
+      {
+        "name": "OFFICE OF THE SOLICITOR",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 398883,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 398883
+      },
+      {
+        "name": "Secret Service at Homeland Security",
+        "paymentComponentRows": 42,
+        "principalAmountCents": 1060050521,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1060050521
+      },
+      {
+        "name": "Senate",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 711159,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 711159
+      },
+      {
+        "name": "Smithsonian Institution",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 914622,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 914622
+      },
+      {
+        "name": "The Judiciary",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 858632,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 858632
+      },
+      {
+        "name": "US Army Corps of Engineers",
+        "paymentComponentRows": 11,
+        "principalAmountCents": 90108138,
+        "attorneyFeesAmountCents": 1225000,
+        "costAmountCents": 56540,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 91389678
+      }
+    ],
+    "principalCitationAggregates": [
+      {
+        "name": " | ",
+        "paymentComponentRows": 197,
+        "principalAmountCents": 0,
+        "attorneyFeesAmountCents": 218934195,
+        "costAmountCents": 8009632,
+        "interestAmountCents": 10885171,
+        "totalPublishedAmountCents": 237828998
+      },
+      {
+        "name": "[MISSING] | [MISSING]",
+        "paymentComponentRows": 1287,
+        "principalAmountCents": 0,
+        "attorneyFeesAmountCents": 479034790,
+        "costAmountCents": 71347922,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 550382712
+      },
+      {
+        "name": "10-USC-1552 | Corrections Of Military Records/Back Pay",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 5603300,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 5603300
+      },
+      {
+        "name": "10-USC-2733 | Military Claims Act",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 44649997,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 44649997
+      },
+      {
+        "name": "10-USC-2733a | Military Claims Act - Med Mal",
+        "paymentComponentRows": 8,
+        "principalAmountCents": 400000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 400000000
+      },
+      {
+        "name": "10-USC-2734b | SOFA\" Torts In U.S.",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 462415,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 462415
+      },
+      {
+        "name": "11-USC-362 | Bankruptcy - Violation Of Automatic Stay",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 550000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 550000
+      },
+      {
+        "name": "11-USC-524 | Bankruptcy - Violation of Discharge",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 120000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 120000
+      },
+      {
+        "name": "15-USC-1681n | FCRA Civil liability for willful noncompliance",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 1600000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1600000
+      },
+      {
+        "name": "22-USC-2669 | State Dept Tort Claims In Foreign Countries",
+        "paymentComponentRows": 8,
+        "principalAmountCents": 2807700,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 2807700
+      },
+      {
+        "name": "25 USC 162a | Tribal Trust Claims in District Courts Deposit, Care, and Investment of Indian Moneys",
+        "paymentComponentRows": 5,
+        "principalAmountCents": 187500000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 187500000
+      },
+      {
+        "name": "25 USC 5331 general | Indian Self Determination Contracts - General",
+        "paymentComponentRows": 10,
+        "principalAmountCents": 9648736300,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 1339648325,
+        "totalPublishedAmountCents": 10988384625
+      },
+      {
+        "name": "28 USC 1346(b) Med Mal | Federal Tort Claims Act/Court Judgment/Med Mal",
+        "paymentComponentRows": 13,
+        "principalAmountCents": 343805900,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 560226,
+        "interestAmountCents": 254308,
+        "totalPublishedAmountCents": 344620434
+      },
+      {
+        "name": "28 USC 1346(b) Miscellany | Federal Tort Claims Act/Court Judgment/Miscellany",
+        "paymentComponentRows": 12,
+        "principalAmountCents": 54117979,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 54117979
+      },
+      {
+        "name": "28 USC 1346(b) Prop-Maint | Federal Tort Claims Act/Court Judgment/Prop-Maint",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 18600000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 18600000
+      },
+      {
+        "name": "28 USC 1346(b) Traffic | Federal Tort Claims Act/Court Judgment/Traffic",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 175921131,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 175921131
+      },
+      {
+        "name": "28-USC-1346(b) Water/CLJA | Federal Tort Claims Act/Court Judgment/Camp Lejeune Justice Act 2022 (CLJA)",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 40000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 40000000
+      },
+      {
+        "name": "28-USC-1491 Express Contr | Breach of Express Contract (Not a CDA Claim)",
+        "paymentComponentRows": 2612,
+        "principalAmountCents": 202343859601,
+        "attorneyFeesAmountCents": 56231394,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 202400090995
+      },
+      {
+        "name": "28-USC-1491 Implied Contr | Breach of Implied Contract",
+        "paymentComponentRows": 4,
+        "principalAmountCents": 20000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 20000000
+      },
+      {
+        "name": "28-USC-1498 | Patent/Copyright Infringement",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 18500000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 18500000000
+      },
+      {
+        "name": "28-USC-2412(a) | Costs Per 28 USC 1920",
+        "paymentComponentRows": 7,
+        "principalAmountCents": 376036,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 376036
+      },
+      {
+        "name": "28-USC-2414 | Attny Gen Cert - Settlements/State&Foreign Cts ONLY",
+        "paymentComponentRows": 27,
+        "principalAmountCents": 1090900566,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1090900566
+      },
+      {
+        "name": "28-USC-2465 | Return Of Property - Attny Fees&Costs",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 68252,
+        "attorneyFeesAmountCents": 1520000,
+        "costAmountCents": 0,
+        "interestAmountCents": 13115,
+        "totalPublishedAmountCents": 1601367
+      },
+      {
+        "name": "28-USC-2672 Aircrash | Federal Tort Claims AcAircrasht/Admin/Aircrash",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 13317500,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 13317500
+      },
+      {
+        "name": "28-USC-2672 Fire-Flood | Federal Tort Claims Act/Admin/Fire-Flood",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 2115952,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 2115952
+      },
+      {
+        "name": "28-USC-2672 Med Mal | Federal Tort Claims Act/Admin/Med Mal",
+        "paymentComponentRows": 328,
+        "principalAmountCents": 3257111284,
+        "attorneyFeesAmountCents": 20410571,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 3277521855
+      },
+      {
+        "name": "28-USC-2672 Miscellany | Federal Tort Claims Act/Admin/Miscellany",
+        "paymentComponentRows": 252,
+        "principalAmountCents": 1710673934,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1710673934
+      },
+      {
+        "name": "28-USC-2672 Prop-Maint | Federal Tort Claims Act/Admin/Prop-Maint",
+        "paymentComponentRows": 37,
+        "principalAmountCents": 47870033,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 47870033
+      },
+      {
+        "name": "28-USC-2672 Traffic | Federal Tort Claims Act/Admin/Traffic",
+        "paymentComponentRows": 1332,
+        "principalAmountCents": 1566041049,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1566041049
+      },
+      {
+        "name": "28-USC-2672 Water/CLJA | Federal Tort Claims Act/Admin/Camp Lejeune Justice Act 2022 (CLJA)",
+        "paymentComponentRows": 1450,
+        "principalAmountCents": 36610000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 36610000000
+      },
+      {
+        "name": "28-USC-2677 Aircrash | Federal Tort Claims Act/Settlement/Aircrash",
+        "paymentComponentRows": 20,
+        "principalAmountCents": 1692500000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1692500000
+      },
+      {
+        "name": "28-USC-2677 Fls-Arrest | Federal Tort Claims Act/Settlement/Fls-Arrest",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 131500000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 131500000
+      },
+      {
+        "name": "28-USC-2677 Med Mal | Federal Tort Claims Act/Settlement/Med Mal",
+        "paymentComponentRows": 178,
+        "principalAmountCents": 5556541622,
+        "attorneyFeesAmountCents": 19100000,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 5575641622
+      },
+      {
+        "name": "28-USC-2677 Miscellany | Federal Tort Claims Act/Settlement/Miscellany",
+        "paymentComponentRows": 2395,
+        "principalAmountCents": 6987495990,
+        "attorneyFeesAmountCents": 1225000,
+        "costAmountCents": 56540,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 6988777530
+      },
+      {
+        "name": "28-USC-2677 Prop-Maint | Federal Tort Claims Act/Settlement/Prop-Maint",
+        "paymentComponentRows": 26,
+        "principalAmountCents": 551780000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 551780000
+      },
+      {
+        "name": "28-USC-2677 Prop-Seize | Federal Tort Claims Act/Settlement/Prop-Seize",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 700000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 700000
+      },
+      {
+        "name": "28-USC-2677 Traffic | Federal Tort Claims Act/Settlement/Traffic",
+        "paymentComponentRows": 222,
+        "principalAmountCents": 2530252519,
+        "attorneyFeesAmountCents": 1625000,
+        "costAmountCents": 371794,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 2532249313
+      },
+      {
+        "name": "28-USC-2677 Water/CLJA | Federal Tort Claims Act/Settlement/Camp Lejeune Justice Act 2022 (CLJA)",
+        "paymentComponentRows": 4,
+        "principalAmountCents": 33440500,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 33440500
+      },
+      {
+        "name": "29-USC-206(d) CT of F Cl | Equal Pay Act/FLSA",
+        "paymentComponentRows": 3701,
+        "principalAmountCents": 189953411,
+        "attorneyFeesAmountCents": 61897958,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 251851369
+      },
+      {
+        "name": "29-USC-633A | Age Discrimination In Empl Act - Fed Employ",
+        "paymentComponentRows": 3,
+        "principalAmountCents": 173238333,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 173238333
+      },
+      {
+        "name": "29-USC-794a | Disability discrim-federal employment",
+        "paymentComponentRows": 15,
+        "principalAmountCents": 155330000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 155330000
+      },
+      {
+        "name": "31-USC-3723 | Small Claims Act",
+        "paymentComponentRows": 169,
+        "principalAmountCents": 3046414,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 3046414
+      },
+      {
+        "name": "41-USC-7101et seq | Contract Disputes Act",
+        "paymentComponentRows": 57,
+        "principalAmountCents": 7029438017,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 100731642,
+        "totalPublishedAmountCents": 7130169659
+      },
+      {
+        "name": "42-USC-2000e-16 | Title VII, Discrimination In Federal Employment",
+        "paymentComponentRows": 313,
+        "principalAmountCents": 1553828660,
+        "attorneyFeesAmountCents": 19730000,
+        "costAmountCents": 871285,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 1574429945
+      },
+      {
+        "name": "42-USC-9607 | CERCLA/Superfund",
+        "paymentComponentRows": 299,
+        "principalAmountCents": 10223005937,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 2347137,
+        "totalPublishedAmountCents": 10225353074
+      },
+      {
+        "name": "46-USC-30104 | Jones Act - Recovery for Injury or Death of a Seaman",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 40000000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 40000000
+      },
+      {
+        "name": "46-USC-30901et seq | Suits In Admiralty Act",
+        "paymentComponentRows": 5,
+        "principalAmountCents": 42651493,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 42651493
+      },
+      {
+        "name": "46-USC-31101et seq | Public Vessels Act",
+        "paymentComponentRows": 2,
+        "principalAmountCents": 16356000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 16356000
+      },
+      {
+        "name": "5 AMND TAK | 5th Amendment Taking/Inverse Condemnation",
+        "paymentComponentRows": 845,
+        "principalAmountCents": 1611707501,
+        "attorneyFeesAmountCents": 402233940,
+        "costAmountCents": 0,
+        "interestAmountCents": 42556007,
+        "totalPublishedAmountCents": 2056497448
+      },
+      {
+        "name": "5-USC-5596 | Back Pay Act",
+        "paymentComponentRows": 272,
+        "principalAmountCents": 14533758,
+        "attorneyFeesAmountCents": 1848498,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 16382256
+      },
+      {
+        "name": "7-USC-136m | FIFRA (Fed Insecticide, Fungicide, $ Rodenticide Act)",
+        "paymentComponentRows": 1,
+        "principalAmountCents": 198000,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 198000
+      },
+      {
+        "name": "FRCP 37 | Rule 37 - Failure To Comply With Discovery",
+        "paymentComponentRows": 8,
+        "principalAmountCents": 7315200,
+        "attorneyFeesAmountCents": 0,
+        "costAmountCents": 0,
+        "interestAmountCents": 0,
+        "totalPublishedAmountCents": 7315200
+      }
+    ],
+    "amountAndUnitBoundary": {
+      "workbookRowsArePublishedPaymentComponentsNotUniqueClaims": true,
+      "claimsAtOrAboveOneHundredMillionMayBeSplitAcrossComponents": true,
+      "controlNumberNeededToRecombineButAbsentFromWorkbookProjection": true,
+      "paymentComponentRowCountIsClaimCount": false,
+      "paymentComponentRowCountIsAffectedPopulationExposure": false,
+      "publishedAmountsAreIndividualEconomicLoss": false,
+      "publishedAmountsNetOfAllOffsetsIdentifiablePerRow": false,
+      "recipientBankSettlementObservedPerRow": false,
+      "claimantAcceptanceObservedPerRow": false,
+      "completeRecoveryObservedPerRow": false
+    },
+    "certificationCustodyAndDisbursementBoundary": {
+      "judgmentOrSettlementMustBeFinalForCertification": true,
+      "fiscalServiceAdministersFundButDoesNotReviewOrEvaluateMerits": true,
+      "judgmentFundSectionChecksProperFundingSourceAndCertifiesVoucher": true,
+      "judgmentDebtSetoffOccursAtCertificationLevel": true,
+      "administrativeOffsetOccursAtDisbursingLevelAfterCertification": true,
+      "disbursingOfficialPaysAccordingToCertifiedVoucher": true,
+      "certificationIsDisbursement": false,
+      "disbursementIsRecipientRecoveryOrAcceptance": false,
+      "thisProcessIsOutsiderCustodyOrPaymentRail": false
+    },
+    "privacyProjection": {
+      "rawReportsContainClaimantAndCounselColumns": true,
+      "publisherStatesIndividualNamesRedactedUnderPrivacyAct": true,
+      "entityAndCounselNamesCanRemainInRawReports": true,
+      "rawReportFilesRemainGitignored": true,
+      "claimantNamesPersistedInArtifact": false,
+      "claimantCounselPersistedInArtifact": false,
+      "factNarrativesPersistedInArtifact": false,
+      "claimantCounselOrRawRowFingerprintsPersistedInArtifact": false,
+      "deterministicPseudonymousCaseLinksCreated": false
+    },
+    "revisionAndDedupBoundary": {
+      "currentPublisherSnapshotOnly": true,
+      "allFourteenWorkbooksByteStableAcrossIndependentRedownloadAtFreeze": true,
+      "publisherRevisionHistoryAvailable": false,
+      "publisherVersionIdentifiersAvailable": false,
+      "exactRepeatedRawRowsCountedButNotPersistedOrDeduplicated": true,
+      "repeatedRowsMayRepresentDistinctComponentsOrPayees": true,
+      "recordsDeduplicated": 0,
+      "crossIntervalClaimLinkageAttempted": false,
+      "workbookFilterRangeTreatedAsCompletenessBoundary": false,
+      "semanticPaymentRowsOutsidePublisherFilterIncludedAndCounted": true
+    }
+  },
+  "gaoBidProtest": {
+    "realityStatus": "REAL_INSTITUTIONAL_ADJUDICATION_EXPERIENCE_AGGREGATE",
+    "publisher": "U.S. Government Accountability Office",
+    "fiscalYear": 2025,
+    "annualAggregate": {
+      "casesFiled": 1688,
+      "protestsFiled": 1617,
+      "costClaimsFiled": 24,
+      "reconsiderationRequestsFiled": 47,
+      "casesClosed": 1737,
+      "protestsClosed": 1676,
+      "costClaimsClosed": 20,
+      "reconsiderationRequestsClosed": 41,
+      "taskOrderCasesClosed": 359,
+      "meritDecisions": 380,
+      "sustains": 53,
+      "recomputedSustainRatePercent": 13.94736842105263,
+      "publisherRoundedSustainRatePercent": 14,
+      "publisherEffectivenessRatePercent": 52,
+      "adrCasesUsed": 53,
+      "publisherRoundedAdrSuccessRatePercent": 91,
+      "hearings": 3,
+      "publisherRoundedHearingsPercentOfFullyDevelopedCases": 0.5,
+      "finalDecisionsOverOneHundredDays": 0,
+      "agencyNonimplementationInstancesReported": 1
+    },
+    "denominatorAndOutcomeBoundary": {
+      "casesAreDocketNumbersNotUniqueProcurements": true,
+      "casesIncludeProtestsCostClaimsAndReconsiderationRequests": true,
+      "filedAndClosedCohortsNeedNotBeSameCases": true,
+      "effectivenessRateMeansSomeReliefReportedToGaoFromCorrectiveActionOrSustain": true,
+      "effectivenessRateNumeratorNotPublishedInAnnualTable": true,
+      "adrSuccessNumeratorNotPublishedInAnnualTable": true,
+      "hearingDenominatorNotPublishedInAnnualTable": true,
+      "routineDismissalsNotMadePublic": true,
+      "agencyCorrectiveActionReasonsNeedNotBeReported": true,
+      "publicDecisionCorpusCompleteForAllClosures": false
+    },
+    "adjudicationAndConsequenceBoundary": {
+      "gaoForumIndependentFromProcuringAgency": true,
+      "gaoIsArticleThreeJudiciary": false,
+      "gaoDecisionIsJudicialFinality": false,
+      "sustainRecommendationIsSelfExecuting": false,
+      "agencyMustAdviseWhetherItWillComply": true,
+      "realNonimplementationCounterexampleObservedInAnnualReport": true,
+      "recommendationEqualsImplementation": false,
+      "reliefEqualsFullEconomicRecovery": false,
+      "gaoAuthorityIsOutsiderAuthority": false
+    },
+    "decisionSample": {
+      "included": false,
+      "reason": "NO_BOUNDED_OUTCOME_NEUTRAL_COMPLETE_PUBLIC_DECISION_SAMPLE; ROUTINE_DISMISSALS_ARE_NOT_PUBLIC_AND_ANNUAL_REPORT_EXEMPLARS_ARE_SUSTAIN_SELECTED",
+      "outcomeLeakageAvoided": true
+    }
+  },
+  "qualityAndRightsBoundary": {
+    "publicOriginAutomaticallyDowngradesReality": false,
+    "outsiderCollectionAutomaticallyUpgradesReality": false,
+    "sourceByteIdentityAndPublisherSemanticsReplayedByFullVerifier": true,
+    "gaoRenderedDomSnapshotsAreOriginalHttpResponseBytes": false,
+    "gaoPdfAndTreasuryFilesHaveExactBytePins": true,
+    "treasuryDisclosureMandatedByPublicLawReferencedOnPublisherPage": true,
+    "gaoProductsNotProtectedByUsCopyrightSubjectToThirdPartyMaterialCaveat": true,
+    "publicAccessIsAutomaticTrainingPermission": false,
+    "legalReuseRightsForAutomaticTrainingEstablished": false,
+    "rawSourceRedistributionByPackageAuthorized": false,
+    "targetDomainTransferEstablished": false
+  },
+  "stageContribution": {
+    "stage3": {
+      "realPublicCapitalDisbursementAndOffsetProcessReference": true,
+      "realPaymentAmountComponentExperienceReference": true,
+      "outsiderCapitalAdequacyEstablished": false,
+      "outsiderCustodyOrLicensedPaymentRailEstablished": false
+    },
+    "stage4": {
+      "realExternalToProcuringAgencyAdministrativeReviewReference": true,
+      "realRecommendationNonimplementationConsequenceReference": true,
+      "outsiderStandingAdjudicationSettlementOrClosureAuthorityEstablished": false
+    }
+  },
+  "authority": {
+    "automaticTrainingEligible": false,
+    "PRICE": false,
+    "GUARANTEE": false,
+    "CAPITALIZE": false,
+    "CUSTODY": false,
+    "PAY": false,
+    "SETTLE": false,
+    "CLOSE": false,
+    "REOPEN": false,
+    "affectedPartyStandingGranted": false,
+    "ownerGateInputEligible": false
+  },
+  "artifactHash": "sha256:e10699896cd8e7de3ca420f4f7092d4871324110a0a299e8cd9c07f19263109e"
+}

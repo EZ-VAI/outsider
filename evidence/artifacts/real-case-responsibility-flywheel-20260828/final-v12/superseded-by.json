@@ -1,0 +1,20 @@
+{
+  "schema": "outsider/local-artifact-supersession-pointer/v1",
+  "status": "SUPERSEDED_CANDIDATE_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "final-v12/flywheel.json",
+    "fileSha256": "sha256:c9dbc5360b700c1b02dd1c410522da5a08486ab1f4f827b1b1e10e0d9b39564e",
+    "fileBytes": 610204,
+    "artifactHash": "sha256:de40dd04f28ab22bc4f5fc7282c23c4abf7732f7361b77bc68d26ed0c74b2bc0",
+    "reasonCodes": ["DECLARED_GENERATED_AT_AFTER_IMMUTABLE_ARTIFACT_MTIME"]
+  },
+  "canonical": {
+    "path": "../final-v14/flywheel.json",
+    "fileSha256": "sha256:082d0e35642543f48383ad49eaee09f8de4cd82ff7f9238bcec9414ef7d00f28",
+    "fileBytes": 610204,
+    "artifactHash": "sha256:126458452cfe9347ce446366e74ba3cabeafbdefd5f3c0f686721efdbe7f6c77",
+    "requiredVerificationLevel": "FULL_REQUIRED_LANE_SOURCE_REPLAY_AND_FILE_MTIME_TEMPORAL_GATE"
+  },
+  "oldArtifactBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false
+}

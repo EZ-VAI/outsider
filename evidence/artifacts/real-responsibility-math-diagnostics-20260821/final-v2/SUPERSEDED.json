@@ -1,0 +1,23 @@
+{
+  "schema": "outsider/artifact-supersession-marker/v1",
+  "generatedAt": "2026-08-21T14:45:00.000Z",
+  "supersededArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v2/diagnostics.json",
+    "artifactHash": "sha256:b2bda24fe32d5155570ffe93d361298aea1965f8124a1b34ba7cf17870064fc7",
+    "serializedFileHash": "sha256:251a1253e68dc3838e3ebcf99be78b13eb3ee12c8dcbe62171b4df2e3b8cfac3",
+    "serializedBytes": 322647,
+    "bytePreserved": true,
+    "remainsValidForItsFrozenProjection": true,
+    "isCurrentProjection": false
+  },
+  "currentArtifact": {
+    "path": "artifacts/real-responsibility-math-diagnostics-20260821/final-v3/diagnostics.json",
+    "artifactHash": "sha256:d370e36697ac26acfaba57a541be538729d975add18936d96caf1ec9cd0c0e88",
+    "serializedFileHash": "sha256:649088d5d15b05124f750e694d0bca42730f50ab09a298fc968a14aaaa2dcd05",
+    "serializedBytes": 368359,
+    "isCurrentProjection": true
+  },
+  "reason": "The current projection exact-binds the frozen eleven-receipt flywheel final-v4, adds separately bounded FRA source-domain rate diagnostics, and keeps PHMSA at receipt-only zero factor and model admission.",
+  "targetDomainTransferEstablished": false,
+  "operationalAuthorityGranted": false
+}

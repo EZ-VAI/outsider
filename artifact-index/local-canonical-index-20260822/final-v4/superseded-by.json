@@ -1,0 +1,25 @@
+{
+  "schema": "outsider/local-artifact-index-supersession/v2",
+  "status": "SUPERSEDED_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v4/index.json",
+    "indexHash": "sha256:0e0d98afd5f121cf3ed3ea80e8c41ba360fde1c1c5f3ccc041ade5c5c2a8bfd3",
+    "fileSha256": "sha256:5a9574ab9931d8273bf168e7a058d9115b05cdaa8e2d1db90772ce4f260da156",
+    "fileBytes": 213884
+  },
+  "successor": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v5/index.json",
+    "schema": "outsider/local-artifact-canonical-index/v2",
+    "indexHash": "sha256:6dcc25077129a1335455356beffd5c50cc678a4d3b73f71485ebdd167d738ce5",
+    "fileSha256": "sha256:f3234617c2c6b14c11b235eea407ad9994ed62c5d699b93e30e63d5201b1958a",
+    "fileBytes": 213877,
+    "indexedAt": "2026-08-22T04:36:00.000Z",
+    "versionedFamilyCount": 22
+  },
+  "reason": "V5 corrects the Wave5 intake canonical leaf from the registry verification sidecar to final-v3/snapshot.json and snapshotHash, matching the frozen packet, flywheel, math diagnostics, Stage2 source graph, verifier and documentation. All release and quarantine bytes are otherwise unchanged.",
+  "oldBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false,
+  "sourceTruthEstablishedByThisMarker": false,
+  "markerHashDomain": "outsider/local-artifact-index-supersession/v2",
+  "markerHash": "sha256:4708856194824e9fafbd31aaa92acff657d820d019d2d3a2c96e0ad1c4602e89"
+}

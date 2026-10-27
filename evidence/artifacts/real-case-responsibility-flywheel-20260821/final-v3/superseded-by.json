@@ -1,0 +1,27 @@
+{
+  "schema": "outsider/real-case-responsibility-flywheel-supersession/v1",
+  "recordedAt": "2026-08-21T14:30:00.000Z",
+  "superseded": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v3/flywheel.json",
+    "artifactHash": "sha256:deffbe8380002b96be07e0cf6b1a7a095eda05ecdbc474fd1280e2c12f67826f",
+    "artifactFileHash": "sha256:d5f5b4d8cfa3823ed1a39d0204c2a76b8c9ee578d96050e58751cc81182350b9",
+    "artifactFileBytes": 464683,
+    "receiptCount": 10,
+    "laneCount": 20
+  },
+  "successor": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v4/flywheel.json",
+    "artifactHash": "sha256:7774f984eecb30394bff6a5a70183a667ebb50cb8a414ff01441e01b3c9b8e67",
+    "artifactFileHash": "sha256:5d902a78d6a6d911c93434f17010a71610a9f1d29cf964a15af5619d9c050904",
+    "artifactFileBytes": 509305,
+    "receiptCount": 11,
+    "laneCount": 22
+  },
+  "reason": "SOURCE_AWARE_FRA_DIAGNOSTIC_AND_PHMSA_DEFERRED_RECEIPT_LANES_ADDED",
+  "previousArtifactBytesPreserved": true,
+  "previousArtifactIsCurrentCanonical": false,
+  "successorRequiresFullSourceReplay": true,
+  "targetSpecificGapClosureCredit": 0,
+  "operationalAuthorityGranted": false,
+  "markerHash": "sha256:e22391d35f5884a8d6cd147c7d3948d4a8285eb77f29e56d38688e38a65e7f60"
+}

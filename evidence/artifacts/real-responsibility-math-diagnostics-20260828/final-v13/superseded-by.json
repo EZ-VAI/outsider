@@ -1,0 +1,31 @@
+{
+  "schema": "outsider/local-artifact-supersession-pointer/v1",
+  "status": "SUPERSEDED_BY_TEMPORAL_AUTHENTICITY_QUARANTINE_SUCCESSOR",
+  "superseded": {
+    "path": "final-v13/diagnostics.json",
+    "fileSha256": "sha256:7bce06a14e6aa8350e4cbe0f3744d918bc58f4bc28cff7ebbcea32cebe7a1fa4",
+    "fileBytes": 488665,
+    "artifactHash": "sha256:a4e0a8a34ddaff32d32445dd03330a7dc2319c37a26491313b7978148f6f1b31"
+  },
+  "canonical": {
+    "path": "../final-v14/diagnostics.json",
+    "generatedAt": "2026-08-28T09:03:30.091Z",
+    "fileSha256": "sha256:4e582303848e304500344121fbd0a7b415df430db29fb6ba6ab60320b87a70c8",
+    "fileBytes": 539149,
+    "artifactHash": "sha256:201199fbaec303e82ae41ea3b5555cbffdc24173536a8a1a33e347e95d01655e",
+    "requiredVerificationLevel": "FULL_SOURCE_DOMAIN_MATH_WITH_SAME_CALL_FLYWHEEL_REPLAY_AND_TEMPORAL_QUARANTINE_HOLD"
+  },
+  "temporalAudit": {
+    "manifestHash": "sha256:9ab9517173af2b49f58dddd51a59d3b71ec76bfa6acb10cd5a84c4a426dcd453",
+    "temporallyOrderedCurrentReceiptCount": 9,
+    "temporalQuarantineReceiptCount": 7,
+    "currentCoverageReceiptCount": 9
+  },
+  "oldArtifactBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false,
+  "closureCredit": false,
+  "causalExperienceUnits": 0,
+  "trainingAdmission": false,
+  "pricingAdmission": false,
+  "operationalAuthorityGranted": false
+}

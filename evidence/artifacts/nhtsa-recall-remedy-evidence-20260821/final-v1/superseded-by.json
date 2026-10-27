@@ -1,0 +1,6 @@
+{
+  "schema": "outsider/artifact-supersession/v1",
+  "supersededArtifactHash": "sha256:5da28515feb7fb92e7d81461d8b3f6eb16aae30d417202b5cb62808ce5f6448f",
+  "supersededBy": "../final-v2/evidence.json",
+  "reason": "Added explicit cross-campaign vehicle-overlap, manufacturer-status audit, and quarterly-versus-annual cohort-comparability boundaries before freeze."
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "outsider/network-node-sdk-package-profile/v1",
+  "schemaVersion": "1.0.0",
+  "package": {
+    "name": "@outsider/network-node-sdk",
+    "version": "0.1.0-research-preview.0"
+  },
+  "boundary": {
+    "releaseClass": "LOCAL_RESEARCH_PREVIEW_CANDIDATE_ONLY",
+    "status": "HOLD",
+    "decision": "HOLD",
+    "disposition": "QUARANTINED",
+    "publicDeploymentReady": false,
+    "npmPublishAuthorized": false,
+    "defaultFetchAvailable": false,
+    "sendRequiresInjectedFetch": true,
+    "persistencePerformed": false,
+    "transportKeyPersistencePerformed": false,
+    "authority": "NONE",
+    "authorityGrants": 0,
+    "actionReady": false,
+    "executable": false,
+    "automaticTraining": false,
+    "trainingRows": 0,
+    "causalExperienceUnits": 0,
+    "permitsPricing": false,
+    "permitsGuarantee": false,
+    "permitsSettlement": false
+  },
+  "entrypoints": [
+    "src/outsider-network-intake.js",
+    "src/outsider-network-node-client.js",
+    "src/outsider-network-node-sdk.js"
+  ],
+  "sourceFiles": [
+    "src/canonical.js",
+    "src/outsider-network-intake.js",
+    "src/outsider-network-node-client.js",
+    "src/outsider-network-node-sdk.js",
+    "src/outsider-provider-pattern-registry.js"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./sdk": "./src/outsider-network-node-sdk.js",
+    "./client": "./src/outsider-network-node-client.js",
+    "./intake": "./src/outsider-network-intake.js"
+  },
+  "staticFiles": [
+    {
+      "source": "LICENSE",
+      "target": "LICENSE"
+    },
+    {
+      "source": "docs/NETWORK-NODE-SDK-RESEARCH-PREVIEW.md",
+      "target": "README.md"
+    }
+  ],
+  "forbiddenPathPatterns": [
+    "^artifacts/",
+    "^artifact-index/",
+    "^test/",
+    "^scripts/",
+    "^docs/",
+    "^examples/",
+    "^integrations/",
+    "^plugins/",
+    "^node_modules/",
+    "^\\.outsider/",
+    "\\.(?:csv|jsonl|parquet|pdf|tfrecord|zip|tar|tgz|xlsx|xls)$"
+  ]
+}

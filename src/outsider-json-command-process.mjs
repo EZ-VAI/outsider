@@ -138,4 +138,9 @@ child.stderr.on("data", (chunk) => {
 child.once("error", (error) => finish({ code: error?.code ?? "SPAWN_ERROR",
   message: String(error?.message ?? error) }));
 child.once("close", (status, signal) => finish({ status, signal }));
+// A command may produce its result without consuming the entire input. Linux
+// reports the closed input pipe asynchronously; keep collecting its exit/output.
+child.stdin.on("error", error => {
+  if (error.code !== "EPIPE") finish({ code: error.code ?? "STDIN_ERROR", message: error.message });
+});
 child.stdin.end(input);

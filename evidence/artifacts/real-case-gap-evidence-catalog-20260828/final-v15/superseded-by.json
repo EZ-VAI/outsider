@@ -1,0 +1,20 @@
+{
+  "schema": "outsider/local-artifact-supersession-pointer/v1",
+  "status": "SUPERSEDED_CANDIDATE_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "final-v15/catalog.json",
+    "fileSha256": "sha256:3580db74c5d57a397d75c4e999251c4de92bca4b61b5f736195a2eda9d24eca1",
+    "fileBytes": 67501,
+    "artifactHash": "sha256:8cd7d9ec43c7583add55573dfe8f61afa46d7f3e08f97180c3511d80cf29b508",
+    "reasonCodes": ["TIME_SAMPLED_OUTSIDE_CATALOG_BUILD_ENTRY"]
+  },
+  "canonical": {
+    "path": "../final-v16/catalog.json",
+    "fileSha256": "sha256:1f16ec086051fa147817d266dcaabae252a171e4aeb18816233dcaadb0c08a72",
+    "fileBytes": 67501,
+    "artifactHash": "sha256:35679945e3f6f357934198b04aea3ef2cb435c8ff62709a3280d9346fd6c1bf7",
+    "requiredVerificationLevel": "CODE_FIXED_CATALOG_STRUCTURE_ONLY_PLUS_FILE_MTIME_TEMPORAL_GATE"
+  },
+  "oldArtifactBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false
+}

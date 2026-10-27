@@ -1,0 +1,34 @@
+{
+  "schema": "outsider/local-artifact-index-supersession/v4",
+  "status": "SUPERSEDED_DO_NOT_USE_AS_CANONICAL",
+  "lineageScope": "SAME_FAMILY_EXACT_SUCCESSOR",
+  "superseded": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v8/index.json",
+    "schema": "outsider/local-artifact-canonical-index/v3",
+    "indexHash": "sha256:8968dbd1502212b7e31af0f43fcada3f25fa6f5119c32681e1f7decd92abdd3f",
+    "fileSha256": "sha256:4483f45458cf4e344ebc5a26291be7fd6c36e11fc0d67f19096c962218e96b85",
+    "fileBytes": 256899
+  },
+  "successor": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v9/index.json",
+    "schema": "outsider/local-artifact-canonical-index/v4",
+    "indexHash": "sha256:27e3c1337ad20b1e4325f57a0f678c02d570e0d9b96ac8ea07f8f6b414eff870",
+    "fileSha256": "sha256:f97dfdb6885166b1046a6613d7b89c80d67b25b977818a324d92a60b660f17e8",
+    "fileBytes": 273464,
+    "indexedAt": "2026-08-28T11:38:44.962Z",
+    "versionedFamilyCount": 33,
+    "crossFamilyLineageCount": 5
+  },
+  "reason": "INDEX_V9_BINDS_FIVE_EXACT_CROSS_FAMILY_LINEAGES_AND_NTSB_STANDARD_FINAL_V2",
+  "declarationSchema": "outsider/local-artifact-canonical-declaration/v2",
+  "oldBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false,
+  "sourceTruthEstablishedByThisMarker": false,
+  "closureCredit": 0,
+  "causalExperienceUnits": 0,
+  "trainingAdmission": false,
+  "pricingAdmission": false,
+  "operationalAuthorityGranted": false,
+  "markerHashDomain": "outsider/local-artifact-index-supersession/v4",
+  "markerHash": "sha256:290816baf918f7cb9e56aa42dc0cff33de38d5d9a7d2444c2890d274457c5d23"
+}

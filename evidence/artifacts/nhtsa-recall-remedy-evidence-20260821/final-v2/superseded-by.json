@@ -1,0 +1,6 @@
+{
+  "schema": "outsider/artifact-supersession/v1",
+  "supersededArtifactHash": "sha256:16031228a9b20b4385cfb1ac4f9e2201c362965fc01a714b97b84ff2ec724ad6",
+  "supersededBy": "../final-v3/evidence.json",
+  "reason": "Added aggregate campaign-level reconciliation of recall potential-affected and latest status involved denominators, retaining all differences without adjustment."
+}

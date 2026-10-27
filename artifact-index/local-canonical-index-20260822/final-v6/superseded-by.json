@@ -1,0 +1,25 @@
+{
+  "schema": "outsider/local-artifact-index-supersession/v2",
+  "status": "SUPERSEDED_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v6/index.json",
+    "indexHash": "sha256:5b98285fad3a08e95f4be34c07ba08e003296579692f902ac3ecfe8b96fd7f98",
+    "fileSha256": "sha256:1a632a7b4833b0f2b033e464fc4cb54cc36e0114c1de0f1d2ace3162c8d1c947",
+    "fileBytes": 213653
+  },
+  "successor": {
+    "path": "artifact-index/local-canonical-index-20260822/final-v7/index.json",
+    "schema": "outsider/local-artifact-canonical-index/v2",
+    "indexHash": "sha256:e468f6b50d7aa46d05f120a75a0fa861c495b602f736e7ff097de1e3e0e286e8",
+    "fileSha256": "sha256:a62c4c145cdaad86e200136c9f30b0df92d717f88e773995fbeea0889c36d190",
+    "fileBytes": 218967,
+    "indexedAt": "2026-08-22T09:40:00.000Z",
+    "versionedFamilyCount": 25
+  },
+  "reason": "V7 adds three reviewed canonical lanes: corrected RMA temporal benchmark final-v2, Stage0.5 governed-training intake diagnostic final-v1, and corrected Stage2 RMA source-domain historical-loss-cost final-v2. It binds their release and quarantine bytes without asserting target-domain training, target quote, pricing permission, source replay, or source truth.",
+  "oldBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false,
+  "sourceTruthEstablishedByThisMarker": false,
+  "markerHashDomain": "outsider/local-artifact-index-supersession/v2",
+  "markerHash": "sha256:f65fc0a491f2841aee030f2f726bbf605201291172ff41d44b61e85571fd3241"
+}

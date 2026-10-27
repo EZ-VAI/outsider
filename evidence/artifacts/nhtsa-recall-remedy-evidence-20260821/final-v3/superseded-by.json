@@ -1,0 +1,6 @@
+{
+  "schema": "outsider/artifact-supersession/v1",
+  "supersededArtifactHash": "sha256:8808e28829edfd8397d74ec0b742c063c9e79d0750e055c6ab691f2a9e8efe40",
+  "supersededBy": "../final-v4/evidence.json",
+  "reason": "Added an explicit boundary that recall-management/status data are not enforcement orders and no enforcement or consent-order bodies were captured."
+}

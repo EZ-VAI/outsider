@@ -1,0 +1,31 @@
+{
+  "schema": "outsider/source-import-provenance/v1",
+  "preparedOn": "2026-10-27",
+  "baseCommit": "86401cd837be9173b8efc0f52015016d2a484e51",
+  "sourceArchive": {
+    "name": "outsider-hapnex-archive.zip",
+    "sha256": "3263d67e91b2032ca3fafaef3615b661a83ecfbff7e9d543849aecffc94c30ca"
+  },
+  "scope": [
+    "Stage 0.5 controller and evidence",
+    "Stage 1 attestation and Stage 1.5 curation",
+    "Stage 2-4 pricing, guarantee, and claims research",
+    "World-state planning and OutcomeProgram execution/recovery",
+    "Actor, delegation, responsibility, owner capacity and network SDK",
+    "Shared-resource coordination example and tests"
+  ],
+  "excluded": [
+    "HapNex application, customer interfaces, order service and payment product",
+    "Machine-specific launch profiles and historical account authorization",
+    "Credentials, private runtime state and personal order records",
+    "Raw third-party datasets without redistribution review"
+  ],
+  "integrationChanges": [
+    "Preserve existing main history and current Stage 0.5 modules",
+    "Use archive canonical serializer with bounded historical replay support",
+    "Restore file-backed persistence without the application PostgreSQL dependency",
+    "Neutral connector labels keep matching write and reconciliation reads",
+    "Separate offline core tests from source-data research replay tests"
+  ],
+  "evidenceIndex": "../evidence/index.json"
+}

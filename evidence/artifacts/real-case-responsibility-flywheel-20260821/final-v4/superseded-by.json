@@ -1,0 +1,27 @@
+{
+  "schema": "outsider/real-case-responsibility-flywheel-supersession/v1",
+  "recordedAt": "2026-08-21T16:00:00.000Z",
+  "superseded": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v4/flywheel.json",
+    "artifactHash": "sha256:7774f984eecb30394bff6a5a70183a667ebb50cb8a414ff01441e01b3c9b8e67",
+    "artifactFileHash": "sha256:5d902a78d6a6d911c93434f17010a71610a9f1d29cf964a15af5619d9c050904",
+    "artifactFileBytes": 509305,
+    "receiptCount": 11,
+    "laneCount": 22
+  },
+  "successor": {
+    "path": "artifacts/real-case-responsibility-flywheel-20260821/final-v5/flywheel.json",
+    "artifactHash": "sha256:ce12f5a3d7ca21c2759d8e2c2ccc38c95697e4525909d4550d7aba98ba15c714",
+    "artifactFileHash": "sha256:7448884f9f4ead7793fb04b262a1bd4879e13e26fa12e44a83fd30b39b6d206a",
+    "artifactFileBytes": 535084,
+    "receiptCount": 12,
+    "laneCount": 23
+  },
+  "reason": "SOURCE_AWARE_NHTSA_RECALL_AND_REMEDY_STATUS_REFERENCE_LANE_ADDED",
+  "previousArtifactBytesPreserved": true,
+  "previousArtifactIsCurrentCanonical": false,
+  "successorRequiresFullSourceReplay": true,
+  "targetSpecificGapClosureCredit": 0,
+  "operationalAuthorityGranted": false,
+  "markerHash": "sha256:e2ad9420f1007da8716d1b4dcebe64a11ae0d8311981262d96958f014cb289bd"
+}

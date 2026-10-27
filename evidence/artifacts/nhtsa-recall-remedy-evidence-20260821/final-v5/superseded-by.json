@@ -1,0 +1,6 @@
+{
+  "schema": "outsider/artifact-supersession/v1",
+  "supersededArtifactHash": "sha256:92e617a6ce63c98be160ba7432c03ab1c470924e4cf99e9ea91cf7c49fb83505",
+  "supersededBy": "../final-v6/evidence.json",
+  "reason": "P1 fix: lock generatedAt to the canonical frozen build value in builder, standalone schema verification, and source-aware reconstruction; attacker-selected resealed timestamps can no longer receive admission."
+}

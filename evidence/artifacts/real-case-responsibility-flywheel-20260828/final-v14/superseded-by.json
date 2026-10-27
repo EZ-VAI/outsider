@@ -1,0 +1,23 @@
+{
+  "schema": "outsider/local-artifact-supersession-pointer/v1",
+  "status": "SUPERSEDED_BY_TEMPORAL_AUTHENTICITY_QUARANTINE_SUCCESSOR_AFTER_REJECTED_V15",
+  "superseded": {
+    "path": "final-v14/flywheel.json",
+    "fileSha256": "sha256:082d0e35642543f48383ad49eaee09f8de4cd82ff7f9238bcec9414ef7d00f28",
+    "fileBytes": 610204,
+    "artifactHash": "sha256:126458452cfe9347ce446366e74ba3cabeafbdefd5f3c0f686721efdbe7f6c77",
+    "reasonCodes": [
+      "TEMPORAL_AUDIT_NOT_BOUND",
+      "SEVEN_RECEIPTS_AND_SEVENTEEN_CATALOG_SOURCE_ROWS_MISCLASSIFIED_AS_CURRENT_COVERAGE"
+    ]
+  },
+  "canonical": {
+    "path": "../final-v16/flywheel.json",
+    "fileSha256": "sha256:18655bfce66c23d12c300fc7a9bc88a618bb240b0fcf07ca85a634a1aa358f68",
+    "fileBytes": 644539,
+    "artifactHash": "sha256:0a80bf8bd7ad41fa49423a01ec2af3667510b2fa7dcb0f72a234adf1451fcd77",
+    "requiredVerificationLevel": "FULL_PINNED_SOURCE_REPLAY_WITH_TEMPORAL_QUARANTINE"
+  },
+  "oldArtifactBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false
+}

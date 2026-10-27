@@ -1,0 +1,103 @@
+{
+  "templateStatus": "NON_PROTOCOL_INCOMPLETE_BUILDER_INPUT",
+  "profile": "PHYSICAL_ACTION",
+  "builder": "createDevicePlatformParameterManifest",
+  "builderModule": "src/outsider-device-stream-physics-frontier.js",
+  "rawDataPolicy": {
+    "rawBytesEmbedded": false,
+    "sourceObjectsStoredOutOfBand": true,
+    "commitmentsOnlyAfterExactBytesAreOpened": true
+  },
+  "builderInput": {
+    "platformId": null,
+    "platformClass": null,
+    "manifestVersion": null,
+    "coordinateFrames": [
+      {
+        "frameId": null,
+        "parentFrameId": null,
+        "translationUnit": null,
+        "rotationUnit": null,
+        "transformHash": null
+      }
+    ],
+    "joints": [
+      {
+        "jointId": null,
+        "coordinateFrameId": null,
+        "positionUnit": null,
+        "velocityUnit": null,
+        "effortUnit": null,
+        "lowerPosition": null,
+        "upperPosition": null,
+        "maximumVelocity": null
+      }
+    ],
+    "workspace": {
+      "coordinateFrameId": null,
+      "linearUnit": null,
+      "bounds": {
+        "x": {
+          "minimum": null,
+          "maximum": null
+        },
+        "y": {
+          "minimum": null,
+          "maximum": null
+        },
+        "z": {
+          "minimum": null,
+          "maximum": null
+        }
+      }
+    },
+    "control": {
+      "rateHz": null,
+      "expectedPeriodNs": null,
+      "periodToleranceNs": null
+    },
+    "sensors": [
+      {
+        "sensorId": null,
+        "sourceChannel": null,
+        "modality": null,
+        "coordinateFrameId": null,
+        "measurementUnit": null,
+        "required": null,
+        "nominalRateHz": null,
+        "maxSkewNs": null,
+        "calibrationHash": null
+      }
+    ],
+    "fusion": {
+      "referenceSensorId": null,
+      "maxInterSensorSkewNs": null,
+      "maxActionObservationSkewNs": null
+    },
+    "parameterAuthority": {
+      "class": "LOCAL_DECLARATION_UNVERIFIED",
+      "sourceCommitmentHashes": [],
+      "physicsTruthExternallyVerified": false
+    }
+  },
+  "completionState": {
+    "platformParametersKnown": false,
+    "unitsAndFramesKnown": false,
+    "calibrationEvidencePresent": false,
+    "externalEngineerReviewPresent": false,
+    "disposition": "HOLD_INCOMPLETE_PLATFORM_PARAMETERS_AND_EXTERNAL_REVIEW"
+  },
+  "boundary": {
+    "authority": "none",
+    "causalExperienceUnits": 0,
+    "automaticTraining": false,
+    "permits": {
+      "EXECUTE": false,
+      "TRAIN": false,
+      "PRICE": false,
+      "GUARANTEE": false,
+      "SETTLE": false,
+      "CLOSE": false
+    }
+  }
+}

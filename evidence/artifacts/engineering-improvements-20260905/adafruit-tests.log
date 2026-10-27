@@ -1,0 +1,25 @@
+✔ v9 applies exactly one frozen rate then reads a final total and ETA without payment or order (203.932166ms)
+✔ copied and expired grants reject before any provider I/O (218.378584ms)
+✔ a POST transport ambiguity is recorded once and is never retried (119.68975ms)
+✔ a bad prepayment page fails only after its raw response is private (172.14375ms)
+✔ parsers preserve absent total and ETA as unproven (0.521542ms)
+✔ v10 resolves the frozen v9 ambiguity with two GETs and parses only step4 (344.519125ms)
+✔ v10 records a non-step4 current checkout state without inferring the POST result (303.706ms)
+✔ v10 one-use and expiry reject before provider I/O (204.038875ms)
+✔ v10 persists a bad step4 response before parser failure and never POSTs (137.887084ms)
+✔ v10 rejects a non-checkout redirect without extra I/O (114.544584ms)
+✔ v10 records but never follows a second exact checkout redirect (138.859667ms)
+✔ v10 keeps a direct checkout 200 as evidence without guessing its step (127.768459ms)
+✔ v10 records interrupted GET once and preserves the frozen POST tree (101.503542ms)
+✔ v10 retains a complete over-budget quote without advancing its next gate (142.210916ms)
+✔ v10 grant helper refuses intervals outside its frozen evidence before writing (73.5195ms)
+✔ v10 parses the seller payment module with PO help and its selected service label (0.894333ms)
+✔ v10 replays frozen step-4 bytes without new I/O, changing source, or refreshing validity (158.710291ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1930.574542

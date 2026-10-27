@@ -1,0 +1,20 @@
+{
+  "schema": "outsider/local-artifact-supersession-pointer/v1",
+  "status": "SUPERSEDED_CANDIDATE_DO_NOT_USE_AS_CANONICAL",
+  "superseded": {
+    "path": "final-v12/catalog.json",
+    "fileSha256": "sha256:7b4e9a432ba607b677396f01f7927496ba6ac62709aafd7032edb9aaffb9ebd9",
+    "fileBytes": 67501,
+    "artifactHash": "sha256:0a2eb86fb1c93dbdfcb2b0f0f48fe4587bfa2920989e72f6edfe5d127b23cef9",
+    "reasonCodes": ["SUPERSEDED_NHTSA_EMPIRICAL_LEDGER_V2_PIN"]
+  },
+  "canonical": {
+    "path": "../final-v16/catalog.json",
+    "fileSha256": "sha256:1f16ec086051fa147817d266dcaabae252a171e4aeb18816233dcaadb0c08a72",
+    "fileBytes": 67501,
+    "artifactHash": "sha256:35679945e3f6f357934198b04aea3ef2cb435c8ff62709a3280d9346fd6c1bf7",
+    "requiredVerificationLevel": "CODE_FIXED_CATALOG_STRUCTURE_ONLY_PLUS_FILE_MTIME_TEMPORAL_GATE"
+  },
+  "oldArtifactBytesPreserved": true,
+  "sourceArtifactsReverifiedByThisMarker": false
+}

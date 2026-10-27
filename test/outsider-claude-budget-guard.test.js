@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, symlinkSync } from "node:fs";
+import { mkdtempSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -113,14 +113,16 @@ test("the guard remains executable through a claude-named symlink", () => {
   const dir = mkdtempSync(join(tmpdir(), "outsider-budget-link-"));
   const link = join(dir, "claude");
   const log = join(dir, "audit.jsonl");
+  const backend = join(dir, "metadata-backend.mjs");
+  writeFileSync(backend, '#!/usr/bin/env node\nconsole.log(JSON.stringify(process.argv.slice(2)));\n', { mode: 0o755 });
   symlinkSync(new URL("../scripts/claude-budget-guard.mjs", import.meta.url), link);
   const result = spawnSync(link, ["--version"], {
     encoding: "utf8",
-    env: { ...process.env, OUTSIDER_REAL_CLAUDE: "/bin/echo",
+    env: { ...process.env, OUTSIDER_REAL_CLAUDE: backend,
       OUTSIDER_CLAUDE_BUDGET_AUDIT_LOG: log },
   });
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /--version/);
+  assert.deepEqual(JSON.parse(result.stdout), ["--version"]);
   const row = JSON.parse(readFileSync(log, "utf8").trim());
   assert.equal(row.metadataOnly, true);
   assert.equal(row.invocationOrdinal, null);
