@@ -2,7 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-**An open foundation for coordinating outcomes, recovery, and responsibility across agents and real resources.**
+**A mutual layer for agents from different providers to operate on the same interface or device toward one or multiple goals.**
 
 Outsider starts with a simple idea: a person describes something they want to happen, with a budget and an expectation of completion. Software should organize the resources, carry the work through failure, and preserve responsibility until the result is resolved.
 
@@ -13,10 +13,11 @@ This repository contains the reusable infrastructure behind that idea: outcome p
 - **Durable agent workflows.** Compile a defined result into an `OutcomeProgram`, execute its dependency graph, resume after interruption, and activate an already-bound recovery route when the primary fails.
 - **Resource coordination.** Plan over declared capabilities, costs, time windows, and shared capacity. Bind execution to owner-controlled adapters and evaluate results through the configured observation path.
 - **Multi-agent shared-resource access.** Coordinate agents editing the same page or operating the same resource through a lease, fencing token, version check, and idempotent command. An uncertain external effect must be reconciled before the next command proceeds.
+- **Shared goals across providers.** Personal, company, and coding agents can connect through an authenticated HTTP protocol, claim parallel work, hand off verified dependency outputs, and coordinate access across multiple goals. The existing OutcomeProgram runtime schedules the work.
 - **Evidence and responsibility records.** Preserve source-bound observations, actor/delegation bindings, attempts, challenges, and continuing obligations across agent or provider replacement.
 - **Risk and settlement research.** Explore curated evidence, loss/exposure models, non-binding quotes, guarantee gates, and claims lifecycles without treating local records as financial authority.
 
-For example, several personal or company agents may need to update one shared page. A coordinator can serialize access and reject stale writes; the page owner's adapter checks authorization and actually performs each write. The same pattern can support a device adapter. Connecting another provider requires implementing and testing that provider's real control and reconciliation boundary.
+For example, a personal agent writes a page heading, a company agent supplies the terms, and a coding agent publishes their combined result. A second goal can update the same page's branding through the same gateway. Run the four-process example below: it includes a lost write response and recovery without duplicate execution. The same adapter pattern supports a device; each real interface/device needs its owner's control and reconciliation integration.
 
 ## Current implementation
 
@@ -25,6 +26,7 @@ For example, several personal or company agents may need to update one shared pa
 | Outcome planning | Bounded world-state planning over supplied actions/resources, goal interpretation against a capability catalog, and compilation into the existing program format. |
 | Durable execution | Primary/recovery/witness bindings, dependency-aware execution, durable operation identities, restart recovery, observation, and resource lifecycle handling. |
 | Shared resources | A generic coordination mechanism for cooperating agents and an owner-controlled executor boundary. Actual pages and devices need their own adapters. |
+| Shared agent layer | Multiple goals, task claims/renewal, verified dependency handoff, HTTP client/worker, task-scoped resource access, cross-goal contention, restart and uncertain-effect recovery. |
 | Evidence and responsibility | Local integrity verification, lifecycle/source re-verification, actor/delegation records, network intake/conformance, and durable obligation tracking. |
 | Pricing | Research and shadow analysis. The Stage 2 quote frontier returns `NON_BINDING_ABSTAIN`. |
 | Guarantees and settlement | Local accounting, source-binding gates, and candidate claims workflows. Commercial coverage, custody, payment execution, adjudication, and final discharge require actual external integrations. |
@@ -38,7 +40,7 @@ Use **Node.js 22 or newer**; Node.js 24 LTS is recommended.
 ```bash
 npm ci
 npm test
-npm run demo:shared-page -- --once
+npm run demo:shared-goals
 ```
 
 Start with the local planner and orchestrator tests to understand an outcome's lifecycle:
@@ -53,7 +55,7 @@ Tests and examples use explicit fixture adapters. Live provider operations are s
 This is a source contribution repository. Modules are ES modules in `src/`; versioned filenames preserve existing contracts while newer compositions evolve. See [Architecture](docs/ARCHITECTURE.md) for the component map and [Contributing](CONTRIBUTING.md) for focused starting points.
 
 
-See [shared-resource coordination](docs/SHARED-RESOURCE-COORDINATION.md) for the runnable page example and adapter contract. See [data and evidence](docs/DATA-AND-EVIDENCE.md) for source replay and dataset licenses. `npm run test:research` runs the additional research suite and requires its documented source data.
+Start with the [mutual agent layer](docs/MUTUAL-AGENT-LAYER.md) for the V3–V4 composition, HTTP protocol, and provider integration. The underlying lease/adapter contract is in [shared-resource coordination](docs/SHARED-RESOURCE-COORDINATION.md). See [data and evidence](docs/DATA-AND-EVIDENCE.md) for source replay and dataset licenses. `npm run test:research` runs the additional research suite and requires its documented source data.
 
 ## Two views of the system
 

@@ -2,6 +2,8 @@
 
 Several personal or company agents can coordinate writes to one owner-managed page or device through `createSharedResourceCoordinator`. The coordinator provides leases, fencing generations, observed-state checks, durable operation identities, and reconciliation after an uncertain effect.
 
+For agents from different providers cooperating toward one or multiple goals, start with the [mutual agent layer](MUTUAL-AGENT-LAYER.md). It composes this resource primitive with task ownership, dependency handoff, authentication-bound HTTP, and goal acceptance. `npm run demo:shared-goals` runs the complete composition.
+
 The owner must route **all participating writers through one gateway**. This implementation coordinates one resource on one host. It does not control an arbitrary website, stop unrelated external writers, or provide consensus between independent hosts.
 
 ## Run the shared-page example

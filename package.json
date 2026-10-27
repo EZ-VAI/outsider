@@ -81,8 +81,9 @@
     "demo:deploy": "wrangler deploy --config deploy/cloudflare-product-demo/wrangler.jsonc",
     "demo:deploy:dry": "wrangler deploy --dry-run --config deploy/cloudflare-product-demo/wrangler.jsonc",
     "test:research": "node scripts/test-core.mjs --research",
-    "test:coordination": "node --test test/outsider-shared-resource-coordinator.test.js",
+    "test:coordination": "node --test test/outsider-shared-resource-coordinator.test.js test/outsider-shared-goal-coordinator.test.js test/outsider-shared-agent-layer.test.js",
     "demo:shared-page": "node examples/shared-page.mjs",
+    "demo:shared-goals": "node examples/shared-goals.mjs",
     "formation:world-state": "node scripts/outsider-world-state-plan.mjs",
     "formation:digital": "node scripts/outsider-first-committed-reality-production.mjs"
   },

@@ -135,6 +135,14 @@ test("direct argv owns the judge process and returns within its hard timeout", (
   assert.ok(elapsedMs < 2_000, `hard timeout returned after ${elapsedMs}ms`);
 });
 
+test("a judge that closes stdin early still returns its JSON result", () => {
+  const result = runFreshJsonCommand({
+    cmd: [process.execPath, "-e", 'require("node:fs").closeSync(0); process.stdout.write(JSON.stringify({name:"finished"}))'],
+    input: "sealed packet".repeat(200_000), validate: requiredName, timeoutMs: 5_000,
+  });
+  assert.equal(result.ok, true, JSON.stringify(result));
+});
+
 test("hard timeout kills a descendant that inherits the judge output pipe", () => {
   const grandchild = `const { spawn } = require("node:child_process");
     spawn(process.execPath, ["-e", "setInterval(() => {}, 10000)"], {

@@ -58,6 +58,8 @@ Development records include a digital publication composition that ran a failed 
 
 ### 3. Coordinate shared resources
 
+The [mutual agent layer](MUTUAL-AGENT-LAYER.md) connects different agent providers around one or multiple goals and a common interface/device namespace. `outsider-shared-agent-layer.js` supplies authentication-bound HTTP routes, `outsider-shared-agent-client.js` supplies a provider-independent worker, and `outsider-shared-goal-coordinator.js` composes the existing OutcomeProgram scheduler with remote task claims and verified output handoff. All goals share the resource coordinator below. Task ownership gates resource dispatch; neither a new worker nor another goal can bypass an unresolved operation.
+
 Several agents may share a browser page, document, device, or provider account. The shared-resource coordinator orders cooperating callers using an expiring lease, a monotonically advancing fencing token, a resource version, and an idempotency key. Its owner-controlled executor checks the current grant before dispatching an effect.
 
 For a shared page, the flow is:
@@ -70,6 +72,8 @@ For a shared page, the flow is:
 6. Agent B can continue once the prior action is resolved and it holds a current lease/version.
 
 This mechanism establishes one coordinator's ordering over connected callers. It does not acquire ownership of a resource, serialize unrelated external writers, or make several independent coordinator instances a distributed consensus service. Provider-side conditional writes and provider-native idempotency improve the boundary where available. Page and device adapters are separate integrations.
+
+Run `npm run demo:shared-goals` for four separate worker processes contributing to two goals on one actual page. Run `npm run test:coordination` for dependency handoff, task/resource expiry, cross-goal contention, concurrent independent resources, owner restart, and lost write responses.
 
 ### 4. Preserve identity, delegation, and obligations
 

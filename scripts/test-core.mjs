@@ -104,6 +104,8 @@ const coreTests = [
   "test/outsider-outcome-os-lifecycle-v1.test.js",
   "test/outsider-three-layer-outcome-product-contract-v1.test.js",
   "test/outsider-shared-resource-coordinator.test.js",
+  "test/outsider-shared-goal-coordinator.test.js",
+  "test/outsider-shared-agent-layer.test.js",
   "test/outsider-user-held-durable-execution-v2.test.js",
   "test/outsider-native-capacity-production.test.js",
   "test/outsider-calendly-supply-adapter.test.js",

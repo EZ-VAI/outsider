@@ -18,6 +18,7 @@ Run the relevant test file during development, then the default suite before sub
 - Add a planner constraint and demonstrate a feasible and an infeasible plan.
 - Add an adapter for one owner-controlled resource, with tests for duplicate requests, ambiguous responses, and reconciliation.
 - Exercise shared-page/resource coordination with two agents: lease expiry, a stale fencing token, version conflict, or a restart during an external write.
+- Connect a provider's actual agent loop through the [mutual layer](docs/MUTUAL-AGENT-LAYER.md), or contribute an owner-side browser/device adapter with a reproducible multi-goal example. Start with `npm run demo:shared-goals` and `npm run test:coordination`.
 - Add a durable execution scenario where the primary fails, recovery runs, the witness observes, and the program resumes after interruption.
 - Add a source verifier with provenance, validity, and revocation cases.
 - Improve actor/delegation or obligation lifecycle examples.
