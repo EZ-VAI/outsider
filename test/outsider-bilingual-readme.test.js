@@ -13,13 +13,14 @@ test("public README files are complete reciprocal language surfaces", () => {
   assert.match(english, /\[简体中文\]\(README\.zh-CN\.md\)/);
   assert.match(chinese, /\[English\]\(README\.md\)/);
   for (const body of [english, chinese]) {
-    for (const target of ["docs/ARCHITECTURE.md", "CONTRIBUTING.md", "LICENSE"]) {
+    for (const target of ["docs/ARCHITECTURE.md", "docs/MUTUAL-AGENT-LAYER.md", "CONTRIBUTING.md", "LICENSE"]) {
       assert(body.includes(`](${target})`), `README must link to ${target}`);
       assert(existsSync(new URL(`../${target}`, import.meta.url)), `missing ${target}`);
     }
-    assert.match(body, /OutcomeProgram/);
-    assert.match(body, /0\.5 — MEASURE/);
-    assert.match(body, /4 — CLAIMS \/ SETTLE/);
+    assert.match(body, /mutual layer/i);
+    assert.match(body, /MCP/);
+    assert.match(body, /Chrome/);
+    assert.match(body, /Edge/);
   }
 });
 
@@ -36,24 +37,13 @@ test("both README files provide the source contribution workflow", () => {
     assert.match(body, /Node\.js 22/);
     assert.match(body, /npm ci/);
     assert.match(body, /npm test/);
-    for (const target of ["test/outsider-world-state-resource-planner.test.js",
-      "test/outsider-durable-outcome-program-orchestrator-v1.test.js"]) {
-      assert(body.includes(`node --test ${target}`));
-      assert(existsSync(new URL(`../${target}`, import.meta.url)), `missing ${target}`);
-    }
+    assert.match(body, /npm run demo:browser/);
+    assert.match(body, /npm run test:browser/);
   }
 });
 
-test("both README files distinguish local coordination from live adapters and financial authority", () => {
-  for (const body of [english, chinese]) {
-    assert.match(body, /NON_BINDING_ABSTAIN/);
-    assert.match(body, /`HOLD`/);
-    assert.match(body, /adapter/i);
-  }
-  assert.match(english, /Actual pages and devices need their own adapters/);
-  assert.match(english, /does not require a live cloud account or move money/);
-  assert.match(english, /not a claim that a global financial clearing network is operating/);
-  assert.match(chinese, /具体页面和设备需要接入 adapter/);
-  assert.match(chinese, /默认不需要云账号，也不会移动资金/);
-  assert.match(chinese, /目前没有运营覆盖任意现实目标的全球金融清算网络/);
+test("both README files explain the shared browser and owner adapter", () => {
+  for (const body of [english, chinese]) assert.match(body, /Playwright/);
+  assert.match(english, /scripted clients and a local web application/);
+  assert.match(chinese, /脚本客户端和本地 Web 应用/);
 });

@@ -26,6 +26,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+        env:
+          OUTSIDER_REQUIRE_BROWSERS: '1'
       - run: npm run test:corpus
       - run: npm run plugin:validate
       - run: npm run experience:deploy:cloudflare:dry

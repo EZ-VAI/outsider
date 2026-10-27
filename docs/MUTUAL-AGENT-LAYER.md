@@ -1,172 +1,187 @@
-# A mutual layer for agents
+# Browser and agent integration
 
-**A mutual layer for different agents from different providers—personal, corporate, coding, and others—to operate on the same interface or device toward one or multiple goals.**
+Outsider lets agents from different providers share a page and coordinate one or multiple goals. The owner controls the browser and the gateway; agents connect using MCP or the HTTP API.
 
-Outsider supplies shared task ownership, resource access, handoff, operation history, and acceptance. Each provider supplies its own agent reasoning; each resource owner supplies the real interface/device adapter. HTTP connects them without requiring a common model SDK.
-
-## Run it
+## Run the complete example
 
 ```bash
 npm ci
-npm run demo:shared-goals
-npm run demo:shared-goals -- --serve
-npm run test:coordination
+npm run demo:browser
+npm run test:browser
 ```
 
-The demo starts four separate worker processes representing three roles:
+The example opens the same local web application in Chrome and Edge. Three MCP connections, each backed by a separate server process, represent personal and company agents. They complete two goals by writing the heading, summary, footer, and publication status through the actual browser pages. The application synchronizes its state across the browser sessions. The clients are scripted; no model account is needed.
 
-| Goal | Agent | Contribution to the same page |
-| --- | --- | --- |
-| `launch` | Personal agent | Writes the heading. |
-| `launch` | Company agent | Writes the price, independently of the heading task. |
-| `launch` | Coding agent | Publishes after both contributions have been accepted. |
-| `branding` | Company agent | Applies a footer while the launch goal progresses. |
+The focused test also connects to an already-open Chrome tab over CDP, creates a goal through the owner gateway, and drives it with an MCP client. The adapter can instead be supplied with any compatible Playwright `Page`; Chromium CDP connections, Playwright server connections, and other supported browser engines use their respective Playwright connection methods. See [Playwright's browser connection documentation](https://playwright.dev/docs/api/class-browsertype).
 
-All four writes go through one owner gateway. The page, fencing generation, and operation receipts persist in an atomic file. The first write deliberately loses its provider response after committing: the worker reconciles that original operation and continues without another write. The output reports two successful goals, four writes, and at least one reconciliation. `--serve` leaves the resulting page available at the printed localhost origin.
+For an optional live-provider run, sign in to the local Codex and Claude Code CLIs, then run `npm run demo:live-agents`. The agents use separate Chrome and Edge pages, each with an MCP connection, to complete the same goal on the shared demo app. This uses the existing accounts' model usage, with a $0.25 limit on the Claude Code call, and a two-minute timeout per agent. It is not part of the default tests.
 
-Workers in this example are scripted, so it needs no model credentials. Replace `executeDemoTask` with a provider's actual agent/tool loop to use a personal, enterprise, or coding agent. The HTTP requests, independent processes, owner authentication, page effects, dependency handoff, and recovery path are real.
+## Connect an existing page
 
-## Coordination iterations
+The example owner gateway operates on one existing tab shared by its agents. It binds to localhost, authenticates each actor, and uses page criteria supplied by the owner to verify a goal.
 
-These are iterations of the shared-agent feature, separate from the financial/evidence Stage 1–4 modules.
+1. Create private, distinct credentials for the owner and agents:
 
-| Iteration | Implemented behavior |
+   ```bash
+   mkdir -p .outsider
+   node --input-type=module -e 'import { randomBytes } from "node:crypto"; import { writeFileSync } from "node:fs"; const ids = ["owner", "personal-agent", "company-agent", "coding-agent"]; const access = Object.fromEntries(ids.map(id => [id, randomBytes(32).toString("hex")])); writeFileSync(".outsider/access.json", JSON.stringify(access, null, 2), { mode: 0o600, flag: "wx" });'
+   ```
+
+2. Start a Chromium-based browser with a separate profile and CDP enabled, then open the target page. For example, on macOS:
+
+   ```bash
+   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+     --remote-debugging-port=9222 \
+     --user-data-dir="$PWD/.outsider/browser-profile" \
+     https://example.com/
+   ```
+
+   Use the page you intend to operate on. CDP provides browser control, so keep the debugging endpoint on the owner's machine or behind an appropriate authenticated boundary.
+
+3. Start the gateway from the repository directory. `OUTSIDER_PAGE_URL` must exactly match an open tab:
+
+   ```bash
+   export OUTSIDER_BROWSER_CDP=http://127.0.0.1:9222
+   export OUTSIDER_PAGE_URL=https://example.com/
+   export OUTSIDER_STATE_DIR="$PWD/.outsider/owner"
+   export OUTSIDER_ACCESS_FILE="$PWD/.outsider/access.json"
+   export OUTSIDER_GATEWAY_PORT=8787
+   npm run browser:owner
+   ```
+
+   The gateway prints its origin and exposes the browser as resource `page`. It accepts the identities in the access file. The owner can create and activate goals; the allowed actor IDs on each task determine who can claim it.
+
+4. Create and activate a goal using the owner token. Replace the criteria and task descriptions with those appropriate for the page:
+
+   ```js
+   import { readFileSync } from 'node:fs';
+   import { createSharedAgentClient } from './src/outsider-shared-agent-client.js';
+
+   const access = JSON.parse(readFileSync(process.env.OUTSIDER_ACCESS_FILE, 'utf8'));
+   const owner = createSharedAgentClient({ origin: 'http://127.0.0.1:8787', token: access.owner });
+   const definition = {
+     goalId: 'publish-page',
+     goal: 'Prepare and publish the page together',
+     completionDeadline: new Date(Date.now() + 600_000).toISOString(),
+     acceptance: [{ selector: '#status', property: 'text', equals: 'Published' }],
+     tasks: [
+       { taskId: 'draft', title: 'Prepare the draft', dependsOn: [],
+         allowedActorIds: ['personal-agent'], resourceIds: ['page'] },
+       { taskId: 'review', title: 'Review and publish', dependsOn: ['draft'],
+         allowedActorIds: ['company-agent'], resourceIds: ['page'] },
+     ],
+   };
+   const proposed = await owner.createGoal(definition);
+   await owner.goal(definition.goalId).activate({ programHash: proposed.programHash });
+   ```
+
+   Run the snippet as an ES module from the repository directory with `OUTSIDER_ACCESS_FILE` set. The example owner gateway verifies task submissions with `output.done === true` and evaluates every goal criterion on the browser page. Criteria support `text`, `value`, and `checked`. Replace these callbacks with application-specific verification when needed.
+
+## Connect different agent providers
+
+Configure one MCP server process per agent and goal. Each process needs the gateway origin, that agent's token from the access file, and the goal ID. Give each provider a distinct identity/token; the process retains its current task's claim token locally.
+
+For an MCP host using an `mcpServers` JSON configuration, the entry has this shape:
+
+```json
+{
+  "mcpServers": {
+    "outsider": {
+      "command": "node",
+      "args": ["/absolute/path/to/outsider/src/outsider-mcp-server.js"],
+      "env": {
+        "OUTSIDER_COORDINATOR_URL": "http://127.0.0.1:8787",
+        "OUTSIDER_AGENT_TOKEN": "<this-agent-token>",
+        "OUTSIDER_GOAL_ID": "publish-page"
+      }
+    }
+  }
+}
+```
+
+For Codex, the equivalent entry in `config.toml` can forward the three variables from the host environment:
+
+```toml
+[mcp_servers.outsider]
+command = "node"
+args = ["/absolute/path/to/outsider/src/outsider-mcp-server.js"]
+env_vars = ["OUTSIDER_COORDINATOR_URL", "OUTSIDER_AGENT_TOKEN", "OUTSIDER_GOAL_ID"]
+```
+
+See the [official Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) and the chosen host's own MCP configuration instructions. Keep any configuration containing credentials private. The Node.js HTTP client and the REST endpoints below work for clients that do not use MCP.
+
+### MCP tools
+
+| Tool | Purpose |
 | --- | --- |
-| V1: shared resource | Exclusive write lease, fencing generation, observed-state checks, stable operation IDs, unresolved-effect reconciliation. |
-| V2: shared goal | An existing `OutcomeProgram` DAG feeds a durable work queue. Agents claim independent tasks, hand off accepted outputs, renew claims, and take over expired work. |
-| V3: different providers | Authenticated HTTP gateway, provider-independent client, and a worker loop with claim renewal and cancellation signals on ownership loss. |
-| V4: one or multiple goals | Multiple goals share one resource namespace. Task generations gate resource dispatch; uncertain operations survive handoff/restart and block conflicting writes across goals. Owner verifiers accept contributions and then the joint result. |
+| `outsider_inspect_goal` | Read the goal and task statuses. |
+| `outsider_resume_goal` | Resume the goal and recheck pending verification. |
+| `outsider_claim_task` | Claim a ready task and receive accepted dependency outputs and prior effect summaries. |
+| `outsider_renew_task` | Renew the claim; the server also renews it while connected. |
+| `outsider_observe_page` | Read the page's text, controls, current version, and state hash. |
+| `outsider_screenshot_page` | Receive a JPEG viewport image and a page snapshot. |
+| `outsider_act_on_page` | Perform an ordered batch using the observed version and state hash. |
+| `outsider_reconcile_action` | Resolve an uncertain action using its original step ID. |
+| `outsider_complete_task` | Submit `{ submissionId, output }` for task verification. |
+| `outsider_handoff_task` | Release the claim so another agent can continue. |
 
-## How it fits together
+One browser operation contains up to 16 steps. Supported step types are `click`, `fill`, `press`, `select`, `check`, and `uncheck`. Each step has a Playwright selector; `fill`, `press`, and `select` also use a string `value`. An optional `waitFor` checks an element's `text`, `value`, or `checked` after the batch.
 
-```mermaid
-flowchart TD
-  P[Personal agent] --> H[Authenticated owner gateway]
-  C[Company agent] --> H
-  D[Coding agent] --> H
-  H --> A[Goal A: OutcomeProgram and task claims]
-  H --> B[Goal B: OutcomeProgram and task claims]
-  A --> R[Shared resource coordination]
-  B --> R
-  R --> I[Owner adapter: interface or device]
-  I --> E[Operation receipts and observed state]
-  E --> V[Task and goal acceptance]
+```json
+{
+  "resourceId": "page",
+  "stepId": "edit-and-save-1",
+  "expectedVersion": 4,
+  "expectedStateHash": "sha256:<hash-from-observation>",
+  "action": {
+    "steps": [
+      { "type": "fill", "selector": "#title", "value": "New title" },
+      { "type": "click", "selector": "#save" }
+    ],
+    "waitFor": { "selector": "#status", "property": "text", "equals": "Saved" }
+  }
+}
 ```
 
-Task ownership and resource access have different lifetimes. A worker can hold a task while reasoning, waiting on a provider, or working on an independent resource. It acquires the shared resource only around a command. Network/device work runs outside the goal lock; independent resources can execute concurrently. Conflicting writes to the same resource are serialized or receive a retryable contention result.
+Use the actual version and hash returned by observation. A whole batch holds the resource access; another agent cannot interleave its own batch. A successful browser action receipt records that the steps ran; the owner verifier determines whether the task and goal are complete.
 
-The goal coordinator compiles tasks into `compileExecutionOnlyProgramV3` and uses `createDurableOutcomeProgramOrchestratorV1` for dependency scheduling and restart. It adds remote work claims and accepted output delivery rather than introducing another DAG scheduler. The resource layer reuses `createSharedResourceCoordinator`.
+## Multiple browser sessions
 
-## Owner integration
-
-```js
-import { createServer } from 'node:http';
-import { createSharedAgentLayer } from './src/outsider-shared-agent-layer.js';
-
-const layer = createSharedAgentLayer({
-  directory: '/absolute/private/outsider-owner',
-  authorize: ownerPolicy,
-  verifyTask: verifyContribution,
-  verifyGoal: verifyJointResult,
-  resources: {
-    'browser-session': { adapter: ownerBrowserAdapter },
-    'shared-device': { adapter: ownerDeviceAdapter, authorize: devicePolicy },
-  },
-});
-const server = createServer(layer.handler({ authenticate: resolveOwnerIdentity }));
-server.listen(8080, '127.0.0.1');
-```
-
-The named policy, verifier, authentication, and adapter functions are supplied by the owner. The complete local implementation is in [`examples/shared-goals.mjs`](../examples/shared-goals.mjs). A remote deployment can place this gateway behind its normal HTTPS authentication/proxy boundary.
-
-`resolveOwnerIdentity(request)` returns an authenticated `actorId`. Request JSON cannot override that identity. `ownerPolicy` receives `{ actorId, operation, goal, task, resourceId?, action? }` and must return exactly `true`. Operations are `CREATE_GOAL`, `ACTIVATE_GOAL`, `READ_GOAL`, `CLAIM_TASK`, `WORK_TASK`, and `USE_RESOURCE`. The optional resource policy receives the authenticated actor, goal, task, resource ID, and proposed action too.
-
-`verifyContribution({ goal, task, actorId, output, inputs, effects })` returns `{ accepted: boolean, reason?: string }`. A rejected result leaves the claim available for correction with a new submission ID. Accepted dependency outputs, their hashes, and resource receipts accompany later work.
-
-`verifyJointResult({ goal, outputs })` independently evaluates the configured acceptance of the complete goal. Accepted individual tasks do not automatically make the goal succeed. An unavailable/inconclusive verifier keeps the goal active; `resume` repeats observation. These callbacks are owner-configured verification, not a claim of independent institutional authority.
-
-### Define a goal
+`createPlaywrightBrowserAdapter` can use one `page` for every agent or a `resolvePage` function to select an owner-connected Playwright page per actor:
 
 ```js
-const definition = {
-  goalId: 'launch',
-  goal: 'Publish the agreed page',
-  completionDeadline: new Date(Date.now() + 600_000).toISOString(),
-  acceptance: ['Heading and company terms are present and verified'],
-  tasks: [
-    { taskId: 'brief', title: 'Prepare the brief', dependsOn: [],
-      allowedActorIds: ['personal-agent'] },
-    { taskId: 'publish', title: 'Publish the brief', dependsOn: ['brief'],
-      allowedActorIds: ['coding-agent'], resourceIds: ['browser-session'] },
-  ],
-};
-```
+import { createPlaywrightBrowserAdapter } from './src/outsider-playwright-browser-adapter.js';
 
-Use 1–64 tasks with unique IDs and an acyclic dependency graph. Goal, task, and actor IDs start with a letter/number and contain letters, numbers, `.`, `_`, `:`, or `-`, up to 101 characters. `goal_acceptance`, `constructor`, and `prototype` are reserved task IDs. `resourceIds` refer to owner-configured adapters; an empty/missing actor allowlist permits any actor allowed by owner policy. Task `input` can carry a JSON instruction object. Worker outputs are bounded to 64 KiB.
-
-`createGoal` returns a proposed `programHash`; an authorized actor activates that exact hash. This binds the submitted task structure before workers begin. This composition uses the existing execution-only program mode and zero-cost local work admission; it does not reserve paid provider capacity or issue an outcome guarantee.
-
-## Agent integration
-
-```js
-import { createSharedAgentClient, runSharedGoalWorker }
-  from './src/outsider-shared-agent-client.js';
-
-const client = createSharedAgentClient({
-  origin: 'https://owner.example',
-  token: process.env.OWNER_AGENT_TOKEN,
-});
-await runSharedGoalWorker({
-  goal: client.goal('launch'),
-  executeTask: async ({ task, inputs, effects, resource, signal }) => {
-    return providerAgent.execute({ task, inputs, effects, resource, signal });
-  },
+const adapter = createPlaywrightBrowserAdapter({
+  directory: '/absolute/private/browser-receipts',
+  resolvePage: ({ agentId }) => ({
+    'personal-agent': personalBrowserPage,
+    'company-agent': companyBrowserPage,
+  })[agentId],
 });
 ```
 
-The provider's agent loop decides what work to do and returns a JSON output. `inputs` contains accepted dependency outputs and hashes. `effects` contains prior step receipts, including unresolved operations inherited from another worker. `signal` communicates cancellation or ownership loss; a command already dispatched still needs its actual result reconciled.
+`personalBrowserPage` and `companyBrowserPage` are pages connected by the owner. Register the adapter as the same resource ID in `createSharedAgentLayer`. When pages are separate browser sessions, they must observe the same shared application state. If the target application does not synchronize sessions, map all agents to one shared `Page` instead. The default observation includes visible text and controls; the owner may supply `observePage(page)` to select a more stable or narrower state.
 
-`resource.observe({ resourceId })` returns `{ version, stateHash, state }`. Submit a command using `resource.perform({ resourceId, stepId, action, expectedVersion, expectedStateHash })`. Use `resource.reconcile({ resourceId, stepId })` to resolve the original step. The helper binds the current task ID, private claim ID, and generation to all three calls.
+## Handoff and recovery
 
-Resource step statuses are `APPLIED`, `NOT_APPLIED`, `NOT_DISPATCHED`, and `RECONCILIATION_REQUIRED`. A repeated identical step returns its existing result. A changed request under the same step ID is rejected. After a known non-effect, the agent may observe again and explicitly propose a fresh step. An uncertain effect must be reconciled first; completion remains blocked while any of the task's steps is unresolved. The client never automatically retries mutations.
+Claims have an expiry and generation. A replacement agent receives accepted dependency outputs and the prior task's effect summaries. Resource writes use a stable `stepId`, a version check, and a monotonic fencing generation.
 
-The worker renews its task claim, works outside owner locks, and polls for more work. It stops on goal success/failure, a rejected contribution, or cancellation. A rejected contribution returns `TASK_REJECTED` and is handed off, so the provider can decide how to correct it. Set `ttlMs`, `pollMs`, or `signal` when needed; low-level claim/renew/complete methods remain available for existing agent runtimes.
+If a browser action was dispatched but its result cannot be established—for example, the claim expires after a click—the operation remains `RECONCILIATION_REQUIRED`. Repeating the step returns the existing operation rather than clicking again. The owner can provide `reconcileOperation` to consult an authoritative application receipt and return `APPLIED`, `NOT_APPLIED`, or `UNKNOWN`. Until it is resolved, the task cannot complete and other writes to that resource wait.
 
-### HTTP surface
+## HTTP and JavaScript API
 
-All responses are JSON. POST bodies are JSON, bounded to 128 KiB. The client uses an owner-issued bearer credential; the server's authentication callback can resolve whatever transport identity the deployment supports.
+`createSharedAgentLayer` exposes an authenticated gateway with these JSON endpoints:
 
-| Endpoint | Purpose |
+| Endpoint | Operation |
 | --- | --- |
-| `POST /v1/goals` | Create `{ goal: definition }`. |
-| `GET /v1/goals` | List goals readable by this actor. |
-| `GET /v1/goals/:goalId` | Inspect goal, task status, receipt summaries, and audit head. |
-| `POST /v1/goals/:goalId/activate` | Activate `{ programHash }`. |
-| `POST /v1/goals/:goalId/claim` | Claim `{ taskId?, ttlMs? }`; returns a claim or current goal status. |
-| `POST /v1/goals/:goalId/renew` | Renew `{ taskId, leaseId, generation, ttlMs }`. |
-| `POST /v1/goals/:goalId/abandon` | Hand off `{ taskId, leaseId, generation }`. |
-| `POST /v1/goals/:goalId/complete` | Submit those claim fields plus `{ submissionId, output }`. |
-| `POST /v1/goals/:goalId/resume` | Resume the persisted program and repeat pending verification. |
-| `POST /v1/goals/:goalId/resources/observe` | Observe with claim fields and `{ resourceId }`. |
-| `POST /v1/goals/:goalId/resources/perform` | Add `{ resourceId, stepId, action, expectedVersion, expectedStateHash }`. |
-| `POST /v1/goals/:goalId/resources/reconcile` | Reconcile with claim fields and `{ resourceId, stepId }`. |
+| `POST /v1/goals`, `GET /v1/goals` | Create and list goals. |
+| `GET /v1/goals/:goalId` | Inspect a goal. |
+| `POST /v1/goals/:goalId/activate` | Activate the proposed `programHash`. |
+| `POST /v1/goals/:goalId/claim`, `/renew`, `/abandon`, `/complete`, `/resume` | Claim, renew, hand off, complete, or resume work. |
+| `POST /v1/goals/:goalId/resources/observe`, `/capture` | Read the page or capture an image with its snapshot. |
+| `POST /v1/goals/:goalId/resources/perform`, `/reconcile` | Execute or reconcile a resource step. |
 
-The JavaScript client mirrors the operations under `client.goal(goalId)`, plus `createGoal` and `listGoals`. Any other language or agent framework can use the HTTP protocol directly.
+The goal-scoped JavaScript client mirrors these operations. The owner gateway uses one host and local durable storage; remote agents can connect to it over HTTP. Multiple owner hosts need a distributed coordination mechanism. Goal verification records completion at the time of observation; maintaining incompatible goals requires an explicit owner policy.
 
-## Resource and persistence boundary
-
-Register each actual interface/device once in the owner resource namespace. All goals in one `createSharedAgentLayer` instance use the same resource directory; reconstructing the layer with that directory preserves task generations, step identities, and unresolved operations. Standalone goal coordinators must also share their `resourceDirectory` to coordinate with each other.
-
-The adapter contract is the [existing resource contract](SHARED-RESOURCE-COORDINATION.md#adapter-contract-and-write-boundary): observe, conditionally execute, and reconcile a stable operation ID. The goal composition additionally supplies `goalId`, `taskId`, `agentId`, and `claimGeneration` on execution. Owner-side resource actor IDs include the goal, task, and claim generation, so the same personal/company agent working on two goals does not accidentally reuse a resource grant.
-
-A task takeover revokes permission to start another command. A previously dispatched effect stays recorded until its result is known. The next worker reconciles the original operation before moving on. It cannot finish the task merely because the previous worker's claim expired.
-
-This implementation supports remote workers connected to a single owner host, with local durable storage and same-host process exclusion. Multiple owner hosts sharing a filesystem need a distributed lease service. Actual browsers/devices need a real owner adapter. Goal acceptance records completion at observation time; continuously maintaining incompatible goals requires an explicit owner priority/conflict policy.
-
-## Source map
-
-- [`outsider-shared-agent-layer.js`](../src/outsider-shared-agent-layer.js): multiple goals, common resource namespace, authentication-bound HTTP routes.
-- [`outsider-shared-agent-client.js`](../src/outsider-shared-agent-client.js): HTTP client and renewable worker loop.
-- [`outsider-shared-goal-coordinator.js`](../src/outsider-shared-goal-coordinator.js): existing program composition, task claims, output handoff, resource step receipts, acceptance.
-- [`outsider-shared-resource-coordinator.js`](../src/outsider-shared-resource-coordinator.js): exclusive write access, fencing, observed-state checks, operation reconciliation.
-- [`outsider-shared-agent-layer.test.js`](../test/outsider-shared-agent-layer.test.js): real HTTP, multiple goals, concurrent independent resources, takeover, unknown effects, and the four-process page scenario.
+Key sources: [MCP server](../src/outsider-mcp-server.js), [browser adapter](../src/outsider-playwright-browser-adapter.js), [owner gateway example](../examples/browser-owner.mjs), and [two-browser example](../examples/browser-collaboration.mjs).

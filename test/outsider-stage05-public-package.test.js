@@ -51,6 +51,9 @@ test("public npm staging contains only the reviewed Stage 0.5 dependency closure
   assert(paths.includes("src/outsider-federation-producers.js"));
   assert.equal(existsSync(path.join(stage, "test")), false);
   assert.equal(existsSync(path.join(stage, "artifacts")), false);
+  const packagedReadme = readFileSync(path.join(stage, "README.md"), "utf8");
+  assert.match(packagedReadme, /mutual agent layer.*source repository/u);
+  assert.doesNotMatch(packagedReadme, /npm run demo:browser/u);
 
   const smoke = spawnSync("npm", ["test", "--silent"], { cwd: stage, encoding: "utf8" });
   assert.equal(smoke.status, 0, smoke.stderr || smoke.stdout);

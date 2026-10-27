@@ -62,12 +62,12 @@ export function createSharedAgentLayer({ directory, authorize, verifyTask, verif
         if (request.method === 'POST' && pathname === '/v1/goals') {
           send(200, await goal(body.goal?.goalId).create({ actorId, goal: body.goal })); return;
         }
-        const route = /^\/v1\/goals\/([^/]+)(?:\/(activate|claim|renew|abandon|complete|resume|resources\/(?:observe|perform|reconcile)))?$/u.exec(pathname);
+        const route = /^\/v1\/goals\/([^/]+)(?:\/(activate|claim|renew|abandon|complete|resume|resources\/(?:observe|capture|perform|reconcile)))?$/u.exec(pathname);
         if (!route) fail('SHARED_LAYER_ROUTE_NOT_FOUND', 404);
         const coordinator = goal(decodeURIComponent(route[1])), operation = route[2];
         if (request.method === 'GET' && !operation) { send(200, await coordinator.inspect({ actorId })); return; }
         if (request.method !== 'POST' || !operation) fail('SHARED_LAYER_ROUTE_NOT_FOUND', 404);
-        const method = { 'resources/observe': 'observeResource', 'resources/perform': 'performResource',
+        const method = { 'resources/observe': 'observeResource', 'resources/capture': 'captureResource', 'resources/perform': 'performResource',
           'resources/reconcile': 'reconcileResource' }[operation] ?? operation;
         send(200, await coordinator[method]({ ...body, actorId }));
       } catch (error) {

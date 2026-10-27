@@ -106,6 +106,8 @@ const coreTests = [
   "test/outsider-shared-resource-coordinator.test.js",
   "test/outsider-shared-goal-coordinator.test.js",
   "test/outsider-shared-agent-layer.test.js",
+  "test/outsider-browser-coordination.test.js",
+  "test/outsider-browser-owner.test.js",
   "test/outsider-user-held-durable-execution-v2.test.js",
   "test/outsider-native-capacity-production.test.js",
   "test/outsider-calendly-supply-adapter.test.js",
